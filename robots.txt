@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://hawza.netlify.app/sitemap.xml
