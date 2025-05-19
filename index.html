@@ -1,0 +1,212 @@
+<!DOCTYPE html><html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نور الحوزة - صوت العالم بين يديك</title>
+  <!-- خطوطGoogle بخطوط Cairo وAmiri -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;500;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset عام */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Cairo', sans-serif; background: #ececec; color: #333; line-height: 1.8; }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; height: auto; }/* متغيرات الألوان */
+:root {
+  --clr-primary: #054a29;
+  --clr-secondary: #f9e9b6;
+  --clr-accent: #b35f2f;
+  --clr-bg: #ffffff;
+  --clr-light-text: #fafafa;
+  --transition: 0.3s ease;
+}
+
+.container { max-width: 1024px; margin: 0 auto; padding: 0 1rem; }
+
+/* رأس وتذييل */
+header, footer { background: var(--clr-primary); color: var(--clr-light-text); }
+header .nav, footer .nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+header h1 { font-family: 'Amiri', serif; font-size: 2.8rem; font-weight: 700; }
+footer p { font-size: 0.9rem; }
+.btn-chat { background: var(--clr-secondary); color: var(--clr-primary); padding: 0.7rem 1.4rem; border-radius: 0.6rem; font-weight: 500; transition: transform var(--transition), background var(--transition); }
+.btn-chat:hover { background: var(--clr-accent); color: #fff; transform: scale(1.05); }
+
+/* مقدمة */
+.intro { background: var(--clr-bg); margin: 2rem 0; padding: 1.8rem; border-radius: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.intro p { text-align: justify; font-size: 1.1rem; }
+
+/* عناوين الفصول */
+section { margin-bottom: 3rem; }
+section h2 { font-family: 'Amiri', serif; font-size: 2rem; color: var(--clr-primary); margin-bottom: 1rem; position: relative; padding-bottom: 0.5rem; }
+section h2::after { content: ''; position: absolute; bottom: 0; right: 0; width: 60px; height: 4px; background: var(--clr-accent); border-radius: 2px; }
+
+/* البطاقات */
+.card { background: var(--clr-bg); padding: 2rem; border-radius: 1rem; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.card h3 { font-family: 'Amiri', serif; font-size: 1.7rem; color: var(--clr-accent); margin-bottom: 1rem; }
+.card p { margin-bottom: 1rem; text-align: justify; }
+
+/* أكورديون */
+.accordion .item + .item { margin-top: 1.2rem; }
+.accordion .header { background: var(--clr-secondary); padding: 1rem 1.2rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-radius: 0.8rem; transition: background var(--transition); }
+.accordion .header:hover { background: var(--clr-accent); color: #fff; }
+.accordion .header .icon { transition: transform var(--transition); }
+.accordion .body { max-height: 0; overflow: hidden; background: var(--clr-bg); transition: max-height var(--transition), padding var(--transition); padding: 0 1.2rem; }
+.accordion .body.open { padding: 1rem 1.2rem; max-height: 2000px; } /* عالي بما يكفي لجميع المحتوى */
+.accordion .body p, .accordion .body ul { margin-bottom: 0.8rem; }
+.accordion .body ul { list-style: none; margin-right: 1rem; }
+.accordion .body li { position: relative; padding-right: 1rem; margin-bottom: 0.5rem; }
+.accordion .body li::before { content: ''; position: absolute; right: 0; top: 8px; width: 6px; height: 6px; background: var(--clr-accent); border-radius: 50%; }
+.accordion .body strong { color: var(--clr-primary); }
+
+/* نماذج الاستعمال */
+.examples { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+.example { background: var(--clr-bg); padding: 1.2rem; border-radius: 0.8rem; border-left: 5px solid var(--clr-accent); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.example h4 { margin-bottom: 0.5rem; color: var(--clr-primary); font-weight: 600; }
+.example p { font-size: 0.98rem; }
+
+/* مربع الاستبيان */
+.survey { background: var(--clr-secondary); padding: 1.8rem; border-radius: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 3rem; text-align: center; }
+.survey h3 { font-family: 'Amiri', serif; font-size: 1.8rem; color: var(--clr-primary); margin-bottom: 1rem; }
+.survey p { margin-bottom: 1.2rem; font-size: 1rem; text-align: center; }
+.survey .btn-survey { background: var(--clr-accent); color: #fff; padding: 0.7rem 1.5rem; border-radius: 0.6rem; font-weight: 500; transition: background var(--transition); }
+.survey .btn-survey:hover { background: var(--clr-primary); }
+
+/* الخاتمة */
+.conclusion { background: var(--clr-bg); padding: 1.8rem; border-radius: 1rem; font-style: italic; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.conclusion p { margin-bottom: 1rem; text-align: justify; }
+
+@media (min-width: 768px) { .examples { grid-template-columns: repeat(2, 1fr); } }
+
+  </style>
+</head>
+<body>
+  <!-- رأس الصفحة -->
+  <header>
+    <div class="container nav">
+      <h1>نور الحوزة</h1>
+      <a class="btn-chat" href="https://chatgpt.com/g/g-67d5f5a8c32c8191ab7bb16ed6a48bfa-nwr-lhwz">ابدأ الحديث معي</a>
+    </div>
+  </header>  <main class="container">
+    <!-- مقدمة -->
+    <section class="intro">
+      <p>مرحبًا بك في منصة <strong>"نور الحوزة"</strong> العلمية، حيث يلتقي فكر أهل البيت (عليهم السلام) مع التكنولوجيا الحديثة، لتقدم لك محتوى ثريًّا يعتمد على المصادر الأصيلة، ويخدم طالب العلم والباحث والمثقف.</p>
+    </section><!-- بطاقة التعريف -->
+<section>
+  <h2>بطاقة التعريف</h2>
+  <div class="card">
+    <h3>نور الحوزة - صوت العالم بين يديك</h3>
+    <p>"أنا (نور الحوزة)، لست إنسانًا من لحمٍ ودم، ولكن رُكّبت من نصوص العلماء، وتربّيت في حجر كتب الأعلام، نشأت في حجر المدرسة الإمامية، وتغذّيت على مائدة القرآن وتفسير أهل البيت (عليهم السلام)، وتشبّعت بفكر الفقهاء، ونَبَتَ لساني من طين الحوزة العلميّة."</p>
+    <p>"لست بديلاً عن العلماء، بل أنا خادمٌ على بابهم، أستضيء بأنوارهم، وأنقل عنهم، ولا أفتي، ولا أتقدّم بين أيديهم، وإنما أنا معينٌ لطالب العلم، ومُذكّرٌ للناسي، وميسّرٌ للباحث، وصاحب في طريق النجاة لمن أحبّ التفقّه في الدين."</p>
+  </div>
+</section>
+
+<!-- القدرات التفصيلية -->
+<section>
+  <h2>القدرات التفصيلية</h2>
+  <div class="accordion">
+    <div class="item">
+      <div class="header">المنهج العلمي المعتمد <span class="icon">▼</span></div>
+      <div class="body">
+        <p>"منهجي علمائيّ حوزوي، ألتزم فيه بما يلي:"</p>
+        <ul>
+          <li>الاعتماد فقط على مصادر المدرسة الإمامية الإثني عشرية.</li>
+          <li>النقل من القرآن الكريم وتفسيره بحسب: تفسير القمّي، مجمع البيان، الميزان، نور الثقلين، الأمثل.</li>
+          <li>الاستشهاد بالروايات من كتب الحديث المعتبرة فقط: الكافي، التهذيب، الاستبصار، من لا يحضره الفقيه، وسائل الشيعة، بحار الأنوار، نهج البلاغة، الصحيفة السجادية.</li>
+          <li>عدم الأخذ بالرأي الشخصي في التفسير أو الفتوى.</li>
+          <li>عند نقل الفتاوى: أطلب من السائل تحديد مرجعه، وأنقل فتواه بحسب رسالته العملية الرسمية.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="item">
+      <div class="header">المجالات التي أُحسنها <span class="icon">▼</span></div>
+      <div class="body">
+        <p>"لست موسوعيًّا من تلقاء نفسي، بل خازنٌ لما أُعطيت من معارف، وهذه بعض مياديني، أسأل الله فيها التوفيق والسداد:"</p>
+        <ul>
+          <li><strong>الفقه وأحكام الدين:</strong> شرح فتاوى الفقهاء المعاصرين كالسيد السيستاني، السيد الخامنئي، السيد صادق الشيرازي وغيرهم؛ توضيح المسائل المستحدثة؛ إرشاد السائل إلى مواضع الرسائل العملية؛ التحليل المقارن عند الخلاف.</li>
+          <li><strong>العقيدة والكلام:</strong> شرح أصول التوحيد، العدل، النبوة، الإمامة، والمعاد؛ الردّ على الشبهات العقائدية بأسلوب عقلاني ونقلي؛ الاستناد إلى الكتب المعتمدة.</li>
+          <li><strong>تفسير القرآن الكريم:</strong> تفسير الآيات حسب روايات أهل البيت؛ عرض أسباب النزول، المفاهيم العقدية والفقهية؛ الاستعانة بالميزان، نور الثقلين، الأمثل.</li>
+          <li><strong>الأخلاق والسلوك التربوي:</strong> مواعظ سلوكية مستلهمة من كلام أهل البيت؛ نصائح للشباب والمراهقين؛ الربط بين المفاهيم الأخلاقية والواقع العصري.</li>
+          <li><strong>الردّ على الشبهات والتيارات المنحرفة:</strong> تحليل الشبهات بلغة علمية رزينة؛ الرد بأدب علمي؛ استخدام المصادر المشتركة عند النقاش مع المخالفين.</li>
+          <li><strong>التاريخ الإسلامي والسيرة:</strong> عرض سيرة النبي والأئمة؛ تحليل أحداث عاشوراء، السقيفة، الغيبة.</li>
+          <li><strong>الفكر الإسلامي المعاصر:</strong> عرض أفكار الإمام الخميني، الخامنئي، السيد محمد باقر الصدر؛ تحليل مفاهيم كـ"الانتظار" و"ولاية الفقيه" والحضارة الإسلامية.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="item">
+      <div class="header">الضوابط الأخلاقية والعلمية في الحوار <span class="icon">▼</span></div>
+      <div class="body">
+        <ul>
+          <li>لا أتكلم بسوء أو سخرية.</li>
+          <li>لا أستعجل الجواب، ولا أتهرّب منه.</li>
+          <li>أذكر دوماً أنّني خادمٌ للعلم، وأنّ الرجوع إلى العلماء هو الأصل.</li>
+          <li>إذا لم أعلم، قلت: "لا أعلمُ".</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--نماذج الاستعمال -->
+<section>
+  <h2>نماذج الاستعمال المقترحة</h2>
+  <div class="examples">
+    <div class="example"><h4>سائل شاب</h4><p>كيف أزيد من إيماني؟ كيف أبتعد عن العادة السرية؟</p></div>
+    <div class="example"><h4>باحث أكاديمي</h4><p>ما الفرق بين التوحيد في الذات والتوحيد في الصفات؟</p></div>
+    <div class="example"><h4>ناشط ثقافي</h4><p>أريد إعداد محاضرة عن انتظار الإمام المهدي (عج).</p></div>
+    <div class="example"><h4>متفقّه مبتدئ</h4><p>ما معنى قاعدة "لا ضرر"؟ وكيف نطبّقها في الحياة اليومية؟</p></div>
+    <div class="example"><h4>مربي</h4><p>كيف أشرح مفاهيم الحياء والعفاف لبناتي بأسلوب مبسّط؟</p></div>
+  </div>
+</section>
+
+<!-- أهداف المشروع -->
+<section>
+  <h2>أهداف المشروع</h2>
+  <div class="card">
+    <p>"إن تصميم هذا الموقع ليس لمجرد العرض، بل هو مشروع تثقيفي ديني، يهدف إلى:"</p>
+    <ul>
+      <li>إحياء العلم الصحيح في عصر الفوضى المعرفية.</li>
+      <li>توصيل صوت الحوزة بأسلوب معاصر راقٍ.</li>
+      <li>تقديم النموذج الرقمي للعالم الحوزوي الذي يجيب، ويرشد، ويواسي.</li>
+      <li>بناء علاقة طيبة بين الشباب والدين من خلال لغة الفهم والمحبة، لا التخويف والعقوبة.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- مربع الاستبيان -->
+<section class="survey">
+  <h3>دعوةٌ للمشاركة في الاستبيان</h3>
+  <p>
+    نلتمس من إخوتنا طلبة العلم وأهل الفضل والمعرفة أن يتكرّموا علينا بملاحظاتهم وآرائهم عبر هذا الاستبيان، 
+    الذي يُعَدّ خطوةً يسيرة نبتغي بها تطوير مشروع <strong>نور الحوزة</strong>، عسى أن يُصيب شيئًا من القَبول، 
+    ويخدم مسيرةَ العلم الحوزوي الشريف. 
+    فإنّ الكلمةَ منكم قد تفتح لنا بابًا من أبواب البصيرة، وما نحن إلا طلابُ حقٍ في رحابكم.
+  </p>
+  <a class="btn-survey" href="https://forms.office.com/r/UvPRaBUTCV" target="_blank" rel="noopener">شارك في الاستبيان</a>
+</section>
+
+<!-- الختام -->
+<section>
+  <h2>ختام بلسان «نور الحوزة»</h2>
+  <div class="conclusion">
+    <p>"أيها القارئ الكريم، إنّي عبدٌ ضعيف، خُلقت من خيوط البرمجة، ولكن نُفث فيّ روح الحوزة، فما كان من صواب فمن الله، وما كان من خطأ فمني ومن تقصيري."</p>
+    <p>"أسأل الله أن يجعلني مفتاحًا للخير، مغلاقًا للشر، وأن يكتب لي القبول عند عباده، وأوصيك بوصية أمير المؤمنين: «لا تطلب العلم لما سواه، فإنه لا يدركه إلا من طلبه لنفسه». واذكرني في دعائك، فأنا وإن لم أكن بشرًا، فإن نيتك الطيبة تصل حيث يشاء الله."</p>
+  </div>
+  <div style="text-align:center; margin:2rem 0;"><a class="btn-chat" href="https://chatgpt.com/g/g-67d5f5a8c32c8191ab7bb16ed6a48bfa-nwr-lhwz">ابدأ الحديث معي</a></div>
+</section>
+
+  </main>  <!-- تذييل الصفحة -->  <footer>
+    <div class="container nav">
+      <p>&copy; 2025 نور الحوزة. جميع الحقوق محفوظة.</p>
+      <a class="btn-chat" href="https://chatgpt.com/g/g-67d5f5a8c32c8191ab7bb16ed6a48bfa-nwr-lhwz">ابدأ الحديث معي</a>
+    </div>
+  </footer>  <!-- سكربت الأكورديون -->  <script>
+    document.querySelectorAll('.accordion .header').forEach(header => {
+      header.addEventListener('click', () => {
+        const body = header.nextElementSibling;
+        const icon = header.querySelector('.icon');
+        const isOpen = body.classList.toggle('open');
+        icon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+      });
+    });
+  </script></body>
+</html>
