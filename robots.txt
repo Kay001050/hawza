@@ -2,3 +2,5 @@ User-agent: *
 Disallow:
 
 Sitemap: https://hawza.netlify.app/sitemap.xml
+
+google-site-verification: IzJ7mDEiFfZxIkt5Akqq6fa7VvqQCVgV7JG1O3NvQr4
