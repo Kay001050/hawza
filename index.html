@@ -784,6 +784,71 @@
         </div>
     </section>
 
+
+    <section id="ask-nwr-alhawza" class="survey">
+  <h3><i class="fas fa-question-circle"></i> هل لديك سؤالٌ يطرق أبوابَ الفؤاد؟</h3>
+  <p>
+    يا أيها الباحث عن زادِ اليقين، ويا من أرهقته الأسئلةُ في مهبِّ الزمان، إليكَ هذا الركنُ الرقمي المبارك، حيثُ تسألُ، ويجيبُك <strong>نور الحوزة</strong>، لا برأيٍ عابر، ولا بقولٍ مُرسَل، بل بنقلٍ أمين عن العلماءِ الأعلام، ورجالِ الدين العظام.
+  </p>  <div style="background: var(--clr-bg-card); padding: 2rem; border-radius: var(--border-radius-large); box-shadow: var(--shadow-medium);">
+    <label for="questionType" style="display: block; font-weight: bold; margin-bottom: 0.5rem;">اختر نوع سؤالك:</label>
+    <select id="questionType" onchange="updateExample()" style="width: 100%; padding: 0.8rem; border-radius: 0.5rem; font-size: 1rem;">
+      <option value="">-- اختر نوع السؤال --</option>
+      <option value="fiqh">سؤال فقهي محل ابتلاء</option>
+      <option value="aqeedah">سؤال عقائدي يراود الفكر</option>
+      <option value="tafsir">سؤال في تفسير آية</option>
+      <option value="akhlaq">سؤال أخلاقي وسلوكي</option>
+      <option value="shubha">شبهة فكرية تحتاج إلى تفكيك</option>
+      <option value="tarikh">سؤال في سيرة المعصومين</option>
+      <option value="muqaran">سؤال فقهي مقارن بين المراجع</option>
+    </select><div id="exampleBox" style="margin-top: 1.5rem; font-size: 1.1rem; color: var(--clr-text-secondary); background: var(--clr-bg-main); padding: 1rem 1.2rem; border-right: 4px solid var(--clr-accent); border-radius: 0.5rem; display: none;">
+  <!-- سيتم ملؤه تلقائيًا -->
+</div>
+
+<div style="text-align: center; margin-top: 2rem;">
+  <a class="btn btn-chat" href="https://chatgpt.com/g/g-67d5f5a8c32c8191ab7bb16ed6a48bfa-nwr-lhwz" target="_blank" rel="noopener noreferrer">
+    <i class="fas fa-lightbulb"></i> اسأل نور الحوزة الآن... فقد آن أوان الجواب!
+  </a>
+</div>
+
+  </div>
+</section><script>
+  function updateExample() {
+    const type = document.getElementById("questionType").value;
+    const box = document.getElementById("exampleBox");
+    let example = "";
+
+    switch (type) {
+      case "fiqh":
+        example = "مثال: ما حكم استخدام الذكاء الاصطناعي في تحليل فتاوى المراجع؟\nالجواب عند نور الحوزة، بنقلٍ أمين لا يقبل التأويل.";
+        break;
+      case "aqeedah":
+        example = "مثال: هل يمكن لعقل الإنسان أن يُدرك كنه الذات الإلهية؟\nنور الحوزة يهمس إليك من معين علم الكلام، فاسأله...";
+        break;
+      case "tafsir":
+        example = "مثال: ما معنى (الكتاب المبين) في قوله تعالى: \"إِنَّا أَنزَلْنَاهُ فِي لَيْلَةٍ مُّبَارَكَةٍ\"؟\nفاسأل نور الحوزة، فهو يُفسِّر بلسان آل محمد (عليهم السلام).";
+        break;
+      case "akhlaq":
+        example = "مثال: كيف أُزكّي قلبي من الرياء وأحفظ سري من العُجب؟\nالجواب في زوايا العلم الرباني، واسأل نور الحوزة...";
+        break;
+      case "shubha":
+        example = "مثال: لماذا يؤمن الشيعة بالإمامة مع أن القرآن لم يذكرها صراحة؟\nنور الحوزة لا يتهرّب، بل يُبصّرك بالدليل والبرهان.";
+        break;
+      case "tarikh":
+        example = "مثال: كيف نُثبت أن الزهراء (عليها السلام) استُشهدت مظلومة؟\nسل نور الحوزة، ففي صدره خزائن الرواية والتاريخ.";
+        break;
+      case "muqaran":
+        example = "مثال: ما الفرق بين فتوى السيد السيستاني والسيد الخامنئي في زكاة الفطرة؟\nنور الحوزة لا يُفتي، بل ينقل بصدقٍ من رسائلهم العملية.";
+        break;
+      default:
+        box.style.display = "none";
+        return;
+    }
+
+    box.innerText = example;
+    box.style.display = "block";
+  }
+</script>
+
     <section id="survey-section" class="survey">
       <h3><i class="fas fa-edit"></i> دعوةٌ مخلصة للمشاركة في الاستبيان</h3>
       <p>
