@@ -9,7 +9,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="icon" href="/Icon.png" type="image/png">
-
+<link rel="icon" href="Icon.png" type="image/png">
+  
   <style>
     /* بسم الله الرحمن الرحيم، نستلهم من نوره الإلهي جمال التكوين ودقة النظام */
     /* Reset عام محسن وإعدادات أساسية - مستوحاة من index.html */
@@ -23,6 +24,190 @@
       scroll-behavior: smooth;
       font-size: 100%; /* لضمان تجاوب أفضل للخطوط */
     }
+
+    /* ======== أنماط رأس الصفحة الموحد ======== */
+.site-header {
+  background: var(--clr-bg-header-footer, var(--clr-primary, #054a29)); /* */
+  color: var(--clr-text-light, #fafafa); /* */
+  padding: 1rem 0; /* */
+  box-shadow: var(--shadow-medium, 0 6px 20px rgba(0,0,0,0.1)); /* */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: background-color var(--transition-medium, 0.3s ease-in-out);
+}
+
+.site-header .nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  max-width: var(--container-width-main, 1140px); /* */
+  margin: 0 auto;
+  padding: 0 1rem; /* */
+}
+
+.site-header .logo a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--clr-text-light, #fafafa);
+}
+
+.site-header .logo-icon {
+  width: 40px; /* حجم أيقونة الشعار */
+  height: 40px;
+  margin-left: 0.75rem; /* هامش للأيقونة إذا كانت الكتابة بالعربية */
+  border-radius: var(--border-radius-small, 0.3rem);
+  object-fit: cover;
+}
+
+.site-header .logo-title-text {
+  font-family: var(--font-secondary, 'Amiri', serif); /* */
+  font-size: clamp(1.8rem, 4vw, 2.5rem); /* */
+  font-weight: 700; /* */
+  letter-spacing: 0.5px; /* */
+  color: var(--clr-text-light, #fafafa);
+}
+
+.main-navigation ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  gap: 1.5rem; /* المسافة بين عناصر القائمة */
+}
+
+.main-navigation .nav-link {
+  font-family: var(--font-primary, 'Cairo', sans-serif); /* */
+  color: var(--clr-secondary, #f9e9b6); /* */
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--border-radius-small, 0.3rem);
+  transition: color var(--transition-medium, 0.3s ease-in-out), background-color var(--transition-medium, 0.3s ease-in-out);
+  display: flex;
+  align-items: center;
+}
+
+.main-navigation .nav-link i {
+  margin-left: 0.5rem; /* أيقونة قبل النص للغة العربية */
+  font-size: 0.9em;
+}
+
+.main-navigation .nav-link:hover,
+.main-navigation .nav-link:focus {
+  color: var(--clr-text-light, #fafafa); /* */
+  background-color: var(--clr-primary-lighter, #0a6b3e);
+}
+
+.main-navigation .nav-link.active {
+  color: var(--clr-text-light, #fafafa); /* */
+  font-weight: bold; /* */
+  background-color: var(--clr-accent, #b35f2f); /* */
+}
+
+.header-action .btn-chat-cta {
+  background: var(--clr-accent, #b35f2f); /* */
+  color: var(--clr-text-on-accent, #ffffff); /* */
+  padding: 0.6rem 1.2rem; /* */
+  border-radius: var(--border-radius-medium, 0.6rem); /* */
+  font-weight: 600; /* */
+  font-size: 0.9rem; /* */
+  transition: transform var(--transition-medium, 0.3s ease-in-out), background-color var(--transition-medium, 0.3s ease-in-out), box-shadow var(--transition-medium, 0.3s ease-in-out); /* */
+  display: inline-flex; /* لتوسيط الأيقونة والنص */
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.header-action .btn-chat-cta:hover,
+.header-action .btn-chat-cta:focus {
+  background: var(--clr-accent-hover, #934c24); /* */
+  transform: translateY(-3px) scale(1.02); /* */
+  box-shadow: var(--shadow-medium, 0 6px 20px rgba(0,0,0,0.1)); /* */
+}
+
+.mobile-nav-toggle {
+  display: none; /* مخفي على الشاشات الكبيرة */
+  background: none;
+  border: none;
+  color: var(--clr-text-light, #fafafa);
+  font-size: 1.8rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+/* أنماط تجاوبية للرأس */
+@media (max-width: 992px) { /* */
+  .main-navigation {
+    position: absolute;
+    top: 100%; /* أسفل الهيدر تماماً */
+    right: 0;
+    background: var(--clr-primary-darker, #03381f); /* */
+    width: 280px; /* عرض القائمة المنسدلة */
+    box-shadow: -5px 5px 15px rgba(0,0,0,0.2);
+    padding: 1rem;
+    transform: translateX(100%); /* إخفاء القائمة خارج الشاشة جهة اليمين بسبب dir=rtl */
+    transition: transform 0.3s ease-in-out;
+    border-top: 1px solid var(--clr-accent-light, #d88c5c);
+  }
+
+  .main-navigation.active {
+    transform: translateX(0); /* إظهار القائمة */
+  }
+
+  .main-navigation ul {
+    flex-direction: column; /* ترتيب العناصر عمودياً */
+    gap: 0.5rem;
+  }
+
+  .main-navigation .nav-link {
+    display: block;
+    padding: 0.8rem 1rem;
+    font-size: 1.1rem;
+    border-bottom: 1px solid var(--clr-primary-lighter, #0a6b3e);
+  }
+  .main-navigation .nav-link:last-child {
+    border-bottom: none;
+  }
+
+  .main-navigation .nav-link.active {
+     background-color: var(--clr-accent-hover, #934c24);
+  }
+  
+  .mobile-nav-toggle {
+    display: block; /* إظهار زر القائمة على الشاشات الصغيرة */
+  }
+  .site-header .logo-title-text {
+    font-size: clamp(1.6rem, 4vw, 2.2rem); /* تصغير الخط قليلاً في الجوال */
+  }
+  .header-action {
+      margin-left: auto; /* لدفع زر ابدأ الحديث يساراً قبل زر القائمة */
+      padding-right: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-header .logo-icon {
+    width: 30px;
+    height: 30px;
+  }
+  .site-header .logo-title-text {
+    font-size: 1.5rem;
+  }
+  .header-action .btn-chat-cta {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  .main-navigation {
+      width: 100%; /* القائمة تأخذ كامل العرض في الشاشات الصغيرة جداً */
+  }
+}
+
+/* ======== نهاية أنماط رأس الصفحة الموحد ======== */
+
 
     body {
       font-family: 'Cairo', sans-serif; /* الخط الأساسي Cairo */
@@ -472,20 +657,31 @@
 <body>
 
   <header class="site-header">
-    <div class="nav-container">
-      <a href="/" class="logo-title" aria-label="الصفحة الرئيسية لنور الحوزة">نور الحوزة</a>
-      <nav class="header-nav-links">
-        <a href="/">الرئيسية</a>
-        <a href="about.html">من نحن</a>
-        <a href="sources.html" style="color: var(--clr-text-light); font-weight: bold;">مصادرنا</a>
-      </nav>
-      <div class="header-buttons">
-        <a class="btn btn-accent" href="https://chatgpt.com/g/g-67d5f5a8c32c8191ab7bb16ed6a48bfa-nwr-lhwz" target="_blank" rel="noopener noreferrer">
-          <i class="fas fa-comments"></i> ابدأ الحديث
-        </a>
-      </div>
+  <header class="site-header">
+  <div class="nav-container container">
+    <div class="logo">
+      <a href="index.html" aria-label="الصفحة الرئيسية لنور الحوزة">
+        <img src="Icon.png" alt="شعار نور الحوزة" class="logo-icon">
+        <span class="logo-title-text">نور الحوزة</span>
+      </a>
     </div>
-  </header>
+    <nav class="main-navigation" aria-label="القائمة الرئيسية">
+      <ul>
+        <li><a href="index.html" class="nav-link "><i class="fas fa-home"></i> الرئيسية</a></li>
+        <li><a href="about.html" class="nav-link "><i class="fas fa-users"></i> مَنْ نحن</a></li>
+        <li><a href="masadir.html" class="nav-link active"><i class="fas fa-book-open"></i> مصادرنا</a></li>
+      </ul>
+    </nav>
+    <div class="header-action">
+      <a class="btn btn-chat-cta" href="https://chatgpt.com/g/g-67d5f5a8c32c8191ab7bb16ed6a48bfa-nwr-lhwz" target="_blank" rel="noopener noreferrer">
+        <i class="fas fa-comments"></i> ابدأ الحديث
+      </a>
+    </div>
+    <button class="mobile-nav-toggle" aria-label="فتح/إغلاق القائمة" aria-expanded="false">
+      <i class="fas fa-bars"></i> </button>
+  </div>
+</header>
+
 
   <main class="container">
     
@@ -759,5 +955,28 @@
     }
     // ختام السكربت: نسأل الله القبول والتوفيق، وأن يكون هذا العمل نافعًا مباركًا.
   </script>
+<script>
+  // --- سكربت قائمة تصفح الجوال ---
+  const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+  const mainNavigation = document.querySelector('.main-navigation');
+  const navIcon = mobileNavToggle ? mobileNavToggle.querySelector('i') : null;
+
+  if (mobileNavToggle && mainNavigation && navIcon) {
+    mobileNavToggle.addEventListener('click', () => {
+      const isNavOpen = mainNavigation.classList.toggle('active');
+      mobileNavToggle.setAttribute('aria-expanded', isNavOpen);
+      if (isNavOpen) {
+        navIcon.classList.remove('fa-bars');
+        navIcon.classList.add('fa-times'); // أيقونة الإغلاق
+      } else {
+        navIcon.classList.remove('fa-times');
+        navIcon.classList.add('fa-bars'); // أيقونة الهمبرغر
+      }
+    });
+  }
+  // --- نهاية سكربت قائمة تصفح الجوال ---
+</script>
+
+    
 </body>
 </html>
