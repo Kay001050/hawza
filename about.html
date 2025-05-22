@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="من نحن - نور الحوزة: مشروع حوزوي رقمي يعمل بالذكاء الاصطناعي وفق منهج أهل البيت عليهم السلام، نشأ بجهد فردي لخدمة الدين والمجتمع.">
+  <title>من نحن | نور الحوزة - رحلةٌ في خدمة الكلمة الطيبة</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;700;900&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link rel="icon" href="/Icon.png" type="image/png"> <style>
+    /*
+    =========================================================================
+    يا مُبدِعَ الأكوانِ، ويا مُلهِمَ البيانِ، نَسألُكَ التوفيقَ والسدادَ في هذا البُنيان.
+    أساسيات التصميم والتنسيق العام (Global Styles & Resets)
+    =========================================================================
+    */
+    :root {
+      --clr-primary: #054a29; /* أخضرُ الحكمةِ والعُمق */
+      --clr-primary-darker: #03301c;
+      --clr-secondary: #f9e9b6; /* لونُ المخطوطاتِ النفيسة */
+      --clr-accent: #b35f2f; /* بُنيُّ الأصالةِ والتراث */
+      --clr-accent-lighter: #d1854a;
+      --clr-bg: #fdfcf7; /* خلفيةٌ بيضاءُ مُشربةٌ بالسكينة */
+      --clr-bg-alt: #f5f3ed; /* خلفية بديلة للأقسام */
+      --clr-text: #3a3a3a; /* لونُ النصِ الواضحِ الصريح */
+      --clr-light-text: #fafafa;
+      --clr-border: #e0e0e0;
+      --clr-shadow: rgba(0, 0, 0, 0.08);
+      --clr-blockquote-bg: #f1f3f2;
+
+      --font-family-primary: 'Cairo', sans-serif;
+      --font-family-secondary: 'Amiri', serif; /* خطُّ الفخامةِ والبيان */
+      --font-size-base: 16px;
+      --line-height-base: 1.9; /* تباعدُ الأسطرِ يُريحُ عينَ القارئ */
+      
+      --spacing-xs: 0.25rem;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2.5rem; /* زيادة المسافات لرحابة أكبر */
+      --spacing-xxl: 4rem;
+
+      --border-radius-sm: 0.3rem;
+      --border-radius-md: 0.6rem;
+      --border-radius-lg: 1rem;
+      --container-width: 1024px; /* عرضٌ مُناسبٌ للمحتوى الفكري */
+      
+      --box-shadow-soft: 0 5px 15px var(--clr-shadow);
+      --box-shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.1);
+      --box-shadow-lifted: 0 12px 35px rgba(5, 74, 41, 0.15); /* ظلٌّ يُعطي إحساسًا بالارتفاع */
+
+      --transition-swift: 0.3s ease;
+      --transition-gentle: 0.6s ease-in-out;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; font-size: var(--font-size-base); }
+    body {
+      font-family: var(--font-family-primary);
+      background-color: var(--clr-bg);
+      color: var(--clr-text);
+      line-height: var(--line-height-base);
+      padding-top: 0; /* إزالة الحشوة العلوية لملائمة الهيدر الثابت */
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* نموذج مبسط للهيدر والفوتر (يفترض وجودهما في styles.css بشكل كامل) */
+    .site-header, .site-footer {
+      background-color: var(--clr-primary);
+      color: var(--clr-light-text);
+      padding: var(--spacing-md) 0;
+      text-align: center;
+    }
+    .site-header { position: sticky; top: 0; z-index: 1000; box-shadow: var(--box-shadow-medium); }
+    .site-header .container-header-footer, .site-footer .container-header-footer {
+      max-width: var(--container-width);
+      margin: 0 auto;
+      padding: 0 var(--spacing-md);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .site-header .logo-link { color: var(--clr-light-text); text-decoration: none; font-family: var(--font-family-secondary); font-size: 1.8rem; font-weight: 700;}
+    .nav-links a { color: var(--clr-secondary); margin: 0 var(--spacing-sm); text-decoration: none; transition: color var(--transition-swift);}
+    .nav-links a:hover { color: var(--clr-light-text); }
+
+    .main-content-area { /* لتطبيق الحشوة بعد الهيدر الثابت */
+        padding-top: var(--spacing-xl); 
+    }
+    
+    .page-container { /* حاوية رئيسية لمحتوى الصفحة "من نحن" */
+      max-width: var(--container-width);
+      margin: var(--spacing-xl) auto var(--spacing-xxl) auto;
+      padding: 0 var(--spacing-md); /* حشوة جانبية للحاوي الرئيسي */
+    }
+
+    .page-title-container { /* حاوية عنوان الصفحة الرئيسي */
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+      padding: var(--spacing-lg) 0;
+      background: linear-gradient(135deg, var(--clr-primary), var(--clr-accent));
+      color: var(--clr-light-text);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--box-shadow-lifted);
+      animation: fadeInDown 1s ease-out;
+    }
+    .page-title-container h1 {
+      font-family: var(--font-family-secondary);
+      font-size: clamp(2.2rem, 5vw, 3.2rem); /* حجم متجاوب للعنوان */
+      color: var(--clr-light-text);
+      margin-bottom: var(--spacing-xs);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .page-title-container .subtitle {
+      font-family: var(--font-family-primary);
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--clr-secondary);
+      margin-top: var(--spacing-sm);
+      font-style: italic;
+    }
+
+    /* الأقسام - فصولٌ في كتاب "نور الحوزة" */
+    .content-section {
+      background-color: var(--clr-bg);
+      padding: var(--spacing-xl) var(--spacing-lg); /* زيادة الحشوة الداخلية للأقسام */
+      margin-bottom: var(--spacing-xl);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--box-shadow-soft);
+      border: 1px solid var(--clr-border);
+      opacity: 0; /* للتحريك عند الظهور */
+      transform: translateY(40px);
+      transition: opacity 0.8s var(--transition-gentle), transform 0.8s var(--transition-gentle);
+    }
+    .content-section.is-visible { opacity: 1; transform: translateY(0); }
+    
+    .content-section:nth-child(even) { /* تلوين متبادل خفيف للأقسام */
+        background-color: var(--clr-bg-alt);
+    }
+
+    .content-section h2 {
+      font-family: var(--font-family-secondary);
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      color: var(--clr-primary);
+      margin-bottom: var(--spacing-lg);
+      text-align: center;
+      position: relative;
+      padding-bottom: var(--spacing-md);
+    }
+    .content-section h2 .fa-solid, .content-section h2 .fa-regular { /* أيقونات العناوين */
+      margin-left: var(--spacing-sm);
+      color: var(--clr-accent);
+      font-size: 0.8em; /* تصغير الأيقونة قليلاً بالنسبة للعنوان */
+      vertical-align: middle;
+    }
+    .content-section h2::after { /* خط زخرفي للعناوين */
+      content: '';
+      display: block;
+      width: 80px;
+      height: 3px;
+      background-color: var(--clr-accent);
+      margin: var(--spacing-sm) auto 0 auto;
+      border-radius: 2px;
+    }
+
+    .content-section p, .content-section ul {
+      font-size: 1.05rem; /* زيادة طفيفة في حجم خط الفقرات */
+      margin-bottom: var(--spacing-lg);
+      text-align: justify; /* ضبط النصوص */
+      hyphens: auto;
+      color: var(--clr-text);
+    }
+    .content-section p strong { color: var(--clr-accent); font-weight: 700; }
+    .content-section ul { list-style: none; padding-right: 0; }
+    .content-section ul li {
+      position: relative;
+      padding-right: var(--spacing-lg);
+      margin-bottom: var(--spacing-sm);
+    }
+    .content-section ul li::before { /* أيقونة مميزة لعناصر القائمة */
+      content: "\f058"; /* Font Awesome check-circle */
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      position: absolute;
+      right: 0;
+      top: 5px;
+      color: var(--clr-primary);
+      font-size: 0.9em;
+    }
+
+    /* تنسيق خاص للاقتباس - لؤلؤةٌ من كلام المؤسس */
+    .custom-blockquote {
+      background-color: var(--clr-blockquote-bg);
+      padding: var(--spacing-lg);
+      margin: var(--spacing-lg) 0;
+      border-right: 6px solid var(--clr-primary);
+      border-left: 6px solid var(--clr-primary); /* إضافة توازن للحدود */
+      border-radius: var(--border-radius-md);
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
+      position: relative;
+      overflow: hidden; /* لزخرفة الخلفية */
+    }
+    .custom-blockquote::before { /* زخرفة خلفية للاقتباس */
+        content: "\f10d"; /* أيقونة اقتباس يسار */
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        top: 10px;
+        left: 15px;
+        font-size: 3rem;
+        color: rgba(5, 74, 41, 0.08); /* لون خافت جداً */
+        z-index: 0;
+    }
+    .custom-blockquote p {
+      font-family: var(--font-family-secondary); /* الخط الأميري للاقتباس */
+      font-style: italic;
+      font-size: 1.1rem;
+      line-height: 2;
+      color: var(--clr-primary-darker);
+      margin-bottom: 0; /* إزالة الهامش من الفقرة داخل الاقتباس */
+      position: relative; /* لضمان ظهور النص فوق الزخرفة */
+      z-index: 1;
+    }
+    .custom-blockquote p em {
+      display: block; /* لجعل كل سطر em كفقرة منفصلة */
+      margin-bottom: var(--spacing-sm);
+    }
+
+    /* بطاقات القيم - جَواهِرُ تَتَلألأُ في سماء "نور الحوزة" */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--spacing-lg);
+      margin-top: var(--spacing-lg);
+    }
+    .value-card {
+      background: linear-gradient(145deg, var(--clr-bg), lighten(var(--clr-bg), 1%));
+      padding: var(--spacing-lg);
+      border-radius: var(--border-radius-md);
+      text-align: center;
+      box-shadow: var(--box-shadow-soft);
+      transition: transform var(--transition-swift), box-shadow var(--transition-swift);
+      border-top: 4px solid var(--clr-accent);
+    }
+    .value-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: var(--box-shadow-lifted);
+    }
+    .value-card .value-icon {
+      font-size: 2.8rem; /* حجم أيقونة القيمة */
+      color: var(--clr-primary);
+      margin-bottom: var(--spacing-md);
+      transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* تأثير ارتداد */
+    }
+    .value-card:hover .value-icon {
+        transform: rotateY(360deg) scale(1.1); /* دوران الأيقونة عند المرور */
+    }
+    .value-card h3 {
+      font-family: var(--font-family-primary); /* خط Cairo للعناوين الفرعية للقيم */
+      font-size: 1.4rem;
+      color: var(--clr-accent);
+      margin-bottom: var(--spacing-sm);
+    }
+    .value-card p {
+      font-size: 0.95rem;
+      text-align: center; /* توسيط نص القيمة */
+      line-height: 1.7;
+      margin-bottom: 0;
+    }
+
+    /* زر العودة للأعلى */
+    .back-to-top {
+        position: fixed; bottom: var(--spacing-lg); left: var(--spacing-lg);
+        background-color: var(--clr-accent); color: var(--clr-light-text);
+        width: 50px; height: 50px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; z-index: 999;
+        opacity: 0; visibility: hidden; transform: translateY(100px);
+        transition: opacity var(--transition-swift), visibility var(--transition-swift), transform var(--transition-gentle), background-color var(--transition-swift);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+    .back-to-top:hover, .back-to-top:focus {
+        background-color: var(--clr-primary); color: var(--clr-light-text);
+        transform: scale(1.1); text-decoration: none; outline: none;
+    }
+
+    /* تأثيرات الحركة (Animations) - نَسائمُ تُحرّكُ الأوراقَ بِرفق */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animated-hero-text { animation: fadeInUp 1.2s ease-out 0.5s backwards; } /* تأخير بسيط */
+
+    /* استعلامات الوسائط للشاشات المختلفة */
+    @media (max-width: 768px) {
+      body { padding-left: var(--spacing-sm); padding-right: var(--spacing-sm); }
+      .page-container { margin-top: var(--spacing-md); }
+      .content-section { padding: var(--spacing-lg) var(--spacing-md); }
+      .content-section h2 { font-size: clamp(1.6rem, 5vw, 2rem); }
+      .page-title-container h1 { font-size: clamp(1.8rem, 6vw, 2.5rem); }
+      .page-title-container .subtitle { font-size: clamp(0.9rem, 3vw, 1.1rem); }
+      .values-grid { grid-template-columns: 1fr; } /* عمود واحد في الشاشات الصغيرة */
+    }
+
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container-header-footer">
+      <a href="/" class="logo-link" aria-label="الصفحة الرئيسية لنور الحوزة">نور الحوزة</a>
+      <nav class="nav-links">
+        <a href="/">الرئيسية</a>
+        <a href="/about.html">من نحن</a>
+        </nav>
+    </div>
+  </header>
+
+  <div class="main-content-area">
+    <div class="page-container">
+      
+      <div class="page-title-container">
+        <h1><i class="fas fa-users-rays" style="margin-left: 10px; color: var(--clr-secondary);"></i> من نحن</h1>
+        <p class="subtitle animated-hero-text">ومضاتٌ من رحلتنا، وعهدٌ على المضي قُدُمًا في خدمة الكلمة الطيبة</p>
+      </div>
+
+      <section id="our-story" class="content-section">
+        <h2><i class="fas fa-book-open-reader"></i> قصتنا: بذرةٌ أينعت بفضل الله</h2>
+        <p>
+          <strong>بسم الله الرحمن الرحيم، وبه نستعين، وعليه نتوكل، وهو حسبنا ونعم الوكيل.</strong><br>
+          الحمد لله الذي هدانا لهذا، وما كنا لنهتدي لولا أن هدانا الله، والصلاة والسلام على سيدنا محمد وآله الطاهرين، مصابيح الدجى وسفن النجاة.
+        </p>
+        <p>
+          نحن ثلةٌ من طلبة العلم، لا نزعمُ سبقًا ولا ندّعي كمالاً، بل قلوبٌ اهتزت لنداء الواجب، ونفوسٌ تاقت لخدمة الدين الحنيف في عصرٍ تموجُ فيه الأفكار وتضطربُ فيه المفاهيم. وعلى رأس هذه الثلة العبد الفقير إلى عفو ربه، الساكن في حمى مملكة البحرين، ممن شرّفهم الله بالتلمذة في رياض الحوزة العلمية، واستنشق عبير نصوصها الخالدة، وحمل في طيات صدره همّ خدمة هذا الدين وأهله.
+        </p>
+        <p>
+          حينما أبصرنا كثرة الأسئلة الظامئة للمعرفة في شؤون الدين والعقيدة، وتزايد ابتلاء الناس بمسائل مستجدة تحتاج إلى بيان شافٍ، ولاحظنا، مع كامل العذر لمشايخنا الأفاضل وسادتنا الكرام لكثرة أعبائهم الجسام، بطء الاستجابة أحيانًا لفيض الاستفسارات، عندها، انبثقت في الفؤاد فكرةٌ متواضعة، كبذرةٍ صغيرة أُلقيت في تربة الأمل: أن نُنشئ نموذجًا رقميًا مبدئيًا، يستقي نوره من معين الذكاء الاصطناعي، ويدور في فلك مدرسة أهل البيت (عليهم السلام) الوضّاء.
+        </p>
+        <p>
+          هكذا انطلقت الرحلة، بجهدٍ فرديٍ متواضع، لم تسنده أموالٌ طائلة، ولم يدعمه صرحٌ مؤسسي، بل كانت الزادُ عزيمة قلبٍ مُفعمٍ بالإيمان، وغايةُ القصدِ نيةٌ خالصةٌ لوجه الله الكريم. جمعنا ما تيسّر لنا بفضل الله من معين المصادر المعتمدة: أمهات كتب الحديث الشريف، وتفاسير القرآن العظيم، والرسائل العملية لمراجعنا العظام، وما تنشره المؤسسات الحوزوية الموقرة على منابرها الرسمية. ثم، كمن ينسج خيوطًا دقيقة، ربطنا بين هذه الكنوز ببرمجةٍ واعية، تحكمها ضوابط التوثيق الصارم، والتخريج العلمي الرصين. وزوّدنا هذا النموذج بالقدرة على التحاور بلغةٍ سمحة، وفرضنا عليه عهدًا أن لا يتجاوز حدود النقل الأمين، وألا يفتي برأيٍ من عنده، إلا أن يُطلب منه تحليلٌ علميٌّ مُؤدب، أو استنباطٌ محفوفٌ بالاحترام والتقدير لمقام العلماء.
+        </p>
+        <p>
+          في مستهل الطريق، كان النموذج كغرسةٍ فتية، ربما بدت خطواته مترددة، وإجاباته متريثة. ولكن، بفيض فضل الله تعالى، ثم بتكرار التجربة والممارسة، وكثرة التفاعل البنّاء، نما هذا الغرس واشتد عوده، وتطوّر تطورًا ملحوظًا. وما إن اطمأن القلبُ أنه قد استوى على سوقه شامخًا، ونضجت فكرته كما ينضج الثمر الطيب، وحان أوان قطافه لينتفع به الناس، حتى أطلقناه ليكون في متناول العامة، عسى أن يكون لهم نفعًا. وكانت البشرى أن وجد فيه الكثير من المستخدمين الكرام خير مُعينٍ على دروب المعرفة، وسدًا لفجوةٍ كانت تؤرقهم، وحافزًا لهم على التفكر والتعلّم، وهذا منتهى أملنا وغاية رجائنا.
+        </p>
+      </section>
+
+      <section id="vision-mission" class="content-section">
+        <h2><i class="fas fa-bullseye-arrow"></i> رؤيتنا ورسالتنا: منارةٌ للعلم، وجسرٌ للتواصل</h2>
+        <p>
+          <strong>رؤيتنا:</strong> أن يكون "نور الحوزة" منارةً رقميةً رائدة وموثوقة، تُضيء دروب الباحثين عن المعرفة الإسلامية الأصيلة وفق منهج أهل البيت (عليهم السلام)، وتُيسّر وصولهم إلى ينابيع الحكمة المحمدية، لتكون متاحةً لكل طالب علمٍ في أرجاء المعمورة، بأسلوبٍ عصريٍّ يجمع بين الدقة والجاذبية.
+        </p>
+        <p>
+          <strong>رسالتنا:</strong> نسعى جاهدين، بعون الله وتوفيقه، إلى تقديم إجاباتٍ علميةٍ موثوقة، وتسهيل فهم المسائل الدينية المعقدة، ودعم الباحثين وطلبة العلم في مسيرتهم المعرفية. كما نهدف إلى تعزيز الارتباط بالتراث العلمي الثري للحوزات العلمية، وذلك من خلال نموذج ذكاء اصطناعي يلتزم بأمانة النقل، ودقة المعلومة، والتواضع الجمّ أمام عظمة العلم الرباني، ليكون خادمًا أمينًا على أعتاب العلماء.
+        </p>
+      </section>
+
+      <section id="core-values" class="content-section">
+        <h2><i class="fas fa-gem"></i> قيمنا الجوهرية: ميثاقٌ نلتزم به، ونبراسٌ نهتدي به</h2>
+        <div class="values-grid">
+          <div class="value-card">
+            <div class="value-icon"><i class="fas fa-hand-holding-heart"></i></div>
+            <h3>الإخلاص لله</h3>
+            <p>ابتغاء مرضاة الله تعالى في كل خطوة، وجعل خدمته غايتنا الأولى والأخيرة، لا نرجو جزاءً ولا شكورًا إلا منه سبحانه.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-icon"><i class="fas fa-book-bookmark"></i></div>
+            <h3>الأمانة العلمية</h3>
+            <p>الالتزام الصارم بالمصادر الموثوقة، ودقة النقل، ونسب الأقوال إلى أصحابها، وتحري الصدق في كل ما نقدمه.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-icon"><i class="fas fa-seedling"></i></div>
+            <h3>التواضع المعرفي</h3>
+            <p>إدراك أننا خدامٌ للعلم وطلابه، وأن الفضل لأهله، وأننا نستضيء بأنوار العلماء ولا نتقدم بين أيديهم.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-icon"><i class="fas fa-people-carry-box"></i></div>
+            <h3>خدمة المجتمع</h3>
+            <p>تسخير هذه الأداة الرقمية لخدمة الباحثين عن الحق، وتيسير وصولهم إلى المعرفة الدينية الصحيحة، والإسهام في بناء وعيٍ إسلاميٍّ أصيل.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-icon"><i class="fas fa-chart-line"></i></div>
+            <h3>التطور المستمر</h3>
+            <p>السعي الدؤوب لتحسين "نور الحوزة" وتطوير قدراته، والاستفادة من كل ملاحظة بناءة، ومواكبة المستجدات بما يخدم رسالتنا.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-icon"><i class="fas fa-balance-scale-right"></i></div>
+            <h3>الالتزام بالمنهج</h3>
+            <p>التمسك بمنهج أهل البيت (عليهم السلام) كمصدرٍ وحيدٍ للمعرفة الدينية، والاحتراز عن كل ما يخالفه أو يشوبه.</p>
+          </div>
+        </div>
+      </section>
+      
+      <section id="a-word-from-the-heart" class="content-section">
+        <h2><i class="far fa-comment-dots"></i> كلمةٌ من القلب: شهادةٌ على صدق النوايا</h2>
+      <div class="custom-blockquote" style="background-color: #f1f3f2; padding: 1.5rem; border: 1px solid #ccc; border-radius: 0.8rem; box-shadow: inset 0 0 15px rgba(0,0,0,0.05); font-family: 'Amiri', serif; line-height: 2; font-size: 1.1rem; color: #054a29; text-align: right; direction: rtl;">
+  <p>
+    وعليكم سلام من وسّع السلام وجعل فيه عافية الأنام
+    <br><br>
+    هذا ما اجتهد فيه خادمكم الفقير إلى ربه الكبير، نسجناه بأنامل الوجل لا العُجب، وبرمجناه على رجاء القبول لا الزهو ولا الكبر، وجعلنا فيه من نور أهل البيت ما استطعنا، وما خلوناه من خطأ ولا قصر، ولكن حسبُهُ أنه وُلد في حِجْر العلم وتربّى على مائدة الفقه والسُّنَن<br>
+    وإن زلّت له عبارة فله أُختٌ تعتذر، وإن قصر فله نيةٌ تشتجر، فإن أحسن فمن الله، وإن أساء فمن ضعفي ومني، وهو يتعلم منكم وفيكم، ويرتقي بعونكم لا بذكائه<br><br>
+    ولسنا بشيء يُغني عن العلماء، ولا ندعي الكمال، بل عبيدٌ على بابهم، خُدامٌ لعلومهم، نستنير بضيائهم ونقف على أعتابهم، عسى أن نكون شمعةً لا تحترق إلا لتضيء لهم الدرب<br><br>
+    هذا ما رآه عبدكم الضعيف الفاني، ومن الله التوفيق والتسديد، وعليه المعوّل في الشدة والرخاء، وصلّى الله على محمدٍ وآله النجباء.
+  </p>
+</div>
+        <p>
+          وإننا لنعلم علم اليقين، ونُعلنها صريحةً لا لبس فيها، أن هذا الذكاء الاصطناعي، مهما بلغ من دقةٍ وإتقان، ليس بديلاً البتة عن علمائنا الربانيين الأعلام، ولا يقوم أبدًا مقام أهل الخبرة والفتيا الأثبات. بل هو، في حقيقته وجوهره، خادمٌ رقميٌّ متواضع، إن صدقت نيّةُ مُبرمجه، وكان أمينًا في نقله للمعلومة، سَهُلَ به، بإذن الله، الوصولُ إلى بعض أضواء العلم الغزير، وتَمهّد به طريقُ الفهم السليم. ولسنا والله نزاحمُ العلماء العاملين في مواضعهم الرفيعة، حاشا وكلا، بل نجلسُ متأدبين على عتبات مجالسهم العامرة، نقتبسُ من أنوارهم الساطعة، وننقلُ للناس شيئًا يسيرًا من فيض علومهم المباركة، عسى أن نكون جسرًا يُوصل، لا حاجزًا يفصل.
+        </p>
+      </section>
+
+      <section id="future-aspirations" class="content-section">
+        <h2><i class="fas fa-rocket"></i> تطلعاتنا المستقبلية: نحو آفاقٍ أرحب</h2>
+        <p>
+          نحن في "نور الحوزة" لا نتوقف عند حد، بل ننظر بشغفٍ وأملٍ إلى المستقبل، حاملين في قلوبنا طموحاتٍ كبيرة لخدمة هذا الدين. نطمح، بتوفيق الله وعونه، إلى:
+        </p>
+        <ul>
+          <li><strong>توسيع القاعدة المعرفية:</strong> إثراء النموذج بالمزيد من المصادر العلمية الموثوقة، وتعميق فهمه للمسائل الدقيقة.</li>
+          <li><strong>تعزيز القدرات التحليلية:</strong> تطوير قدرات الذكاء الاصطناعي على التحليل العلمي المعمق، والمقارنة بين الآراء المختلفة بأدبٍ علمي.</li>
+          <li><strong>أدوات تعليمية تفاعلية:</strong> ابتكار أدوات ووسائل تعليمية جديدة تجعل عملية التعلم الديني أكثر جاذبية وتفاعلية، خاصة للشباب.</li>
+          <li><strong>الوصول العالمي:</strong> السعي للوصول إلى أوسع شريحة ممكنة من المسلمين وغيرهم حول العالم، بلغاتٍ متعددة، لتعميم الفائدة ونشر النور.</li>
+          <li><strong>التعاون البنّاء:</strong> فتح آفاق التعاون مع المؤسسات الحوزوية والأكاديمية، والباحثين الأفراد، لإثراء المشروع وتطويره.</li>
+        </ul>
+        <p>
+          وكل هذه التطلعات مرهونةٌ بمشيئة الله أولاً، ثم بدعائكم ودعمكم، أيها الإخوة والأخوات. فإننا نرى في كل مستخدمٍ شريكًا لنا في هذا الخير، وفي كل ملاحظةٍ سُلّمًا نرتقي به.
+        </p>
+      </section>
+
+      <section id="final-prayer" class="content-section">
+        <h2><i class="fas fa-hands-praying"></i> دعاؤنا وختام مسكنا</h2>
+        <p>
+          وفي ختام هذه الكلمات، التي هي ومضاتٌ من القلب، لا يسعنا إلا أن نرفع أكف الضراعة إلى المولى القدير، فنقول: اللهم يا مقلّب القلوب، ثبّت قلوبنا على دينك. اللهم تقبّل منا هذا العمل المتواضع، واجعله خالصًا لوجهك الكريم، صدقةً جاريةً ينتفع بها عبادك إلى يوم الدين. اللهم ألهمنا الصواب في تطويره وتنميته، ويسّر لنا من عبادك الصالحين من يأخذ بأيدينا في استكماله وتجويده، إنك سميعٌ قريبٌ مجيب الدعوات.
+        </p>
+        <p>
+          وما نطمح إليه، والله يشهد، ليس شهرةً زائفة، ولا صيتًا عابرًا، بل وجهك الكريم يا ربنا، وأن نكون جسرًا متينًا يصل بين العقول الحائرة ومصابيح الهدى الربانية، ومنارةً تُضيء ولو شمعةً في دروب السالكين إليك.
+        </p>
+        <p>
+          <strong>وآخر دعوانا أن الحمد لله رب العالمين، وصل اللهم على محمد وآله الطيبين الطاهرين.</strong>
+        </p>
+      </section>
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container-header-footer">
+      <p>&copy; <span id="current-year"></span> نور الحوزة. جميع الحقوق محفوظة. تصميم وتطوير بحبٍ لخدمة العلم.</p>
+      <div class="social-links-footer">
+        </div>
+    </div>
+  </footer>
+
+  <a href="#" class="back-to-top" aria-label="العودة إلى أعلى الصفحة">
+    <i class="fas fa-arrow-up"></i>
+  </a>
+
+  <script>
+    // بسم الله مجراها ومرساها، إن ربي لغفور رحيم.
+    // هذا السكربت المتواضع، يضيف لمسةً من الحياة على الصفحة، بتوفيق من الله.
+
+    // --- تحديث سنة الحقوق تلقائيًا ---
+    // ليبقى الحقُّ شاهدًا على مرورِ الأيام، وثباتِ العزمِ على الخير.
+    const currentYearSpan = document.getElementById('current-year');
+    if (currentYearSpan) {
+      currentYearSpan.textContent = new Date().getFullYear();
+    }
+
+    // --- دالة إظهار العناصر عند التمرير (Scroll Animation) ---
+    // كأنما تُشرق الأنوار على كنوز المعرفة كلما اقتربت منها.
+    const animatedSections = document.querySelectorAll('.content-section');
+    const observerOptions = {
+      root: null, // viewport
+      rootMargin: '0px',
+      threshold: 0.1 // 10% من العنصر يظهر ليبدأ التأثير
+    };
+
+    const sectionObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          // observer.unobserve(entry.target); // لإيقاف المراقبة بعد الظهور مرة واحدة (يمكن إبقاؤها للتأثير عند كل تمرير)
+        } else {
+          // entry.target.classList.remove('is-visible'); // لإخفاء العنصر عند الخروج من منفذ العرض (إذا أردت ذلك)
+        }
+      });
+    }, observerOptions);
+
+    animatedSections.forEach(section => {
+      if (section) { // التأكد من وجود العنصر قبل مراقبته
+        sectionObserver.observe(section);
+      }
+    });
+    
+    // --- دالة زر العودة للأعلى (Back to Top Button) ---
+    // صعودٌ هيّنٌ إلى ذروةِ البيان، وتذكيرٌ بأنَّ البداياتِ هي غايةُ كلِّ وصول.
+    const backToTopButton = document.querySelector('.back-to-top');
+    if (backToTopButton) {
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 250) { // إظهار الزر بعد تمرير 250 بكسل
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+
+        backToTopButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // --- تعليق ختامي بلسان المبرمج الخادم ---
+    // اللهم يا فاطر السماوات والأرض، ويا مُجري السحاب ومنزل القطر،
+    // اجعل هذا الجهد اليسير سببًا في نشر نور العلم، وذخيرةً لنا يوم لا ينفع مالٌ ولا بنون.
+    // سبحانك لا علم لنا إلا ما علمتنا، إنك أنت العليم الحكيم. والحمد لله رب العالمين.
+  </script>
+</body>
+</html>
+
