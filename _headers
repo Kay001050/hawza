@@ -1,2 +1,55 @@
+# الصفحة الرئيسية
+/ 
+  Content-Type: text/html; charset=UTF-8
+  Cache-Control: public, max-age=600
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com
+  Permissions-Policy: interest-cohort=()
+
+# صفحة من نحن
+/about.html
+  Content-Type: text/html; charset=UTF-8
+  Cache-Control: public, max-age=86400
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+
+# خريطة الموقع XML
 /sitemap.xml
-  Content-Type: application/xml
+  Content-Type: application/xml; charset=UTF-8
+  Cache-Control: public, max-age=3600
+
+# ملف robots.txt
+/robots.txt
+  Content-Type: text/plain; charset=UTF-8
+  Cache-Control: public, max-age=3600
+
+# صفحة الخطأ 404 المخصصة
+/custom-404.html
+  Content-Type: text/html; charset=UTF-8
+  Cache-Control: no-cache
+
+# صفحة offline.html
+/offline.html
+  Content-Type: text/html; charset=UTF-8
+  Cache-Control: no-store
+
+# ملفات CSS
+/*.css
+  Content-Type: text/css; charset=UTF-8
+  Cache-Control: public, max-age=604800
+
+# ملفات JS
+/*.js
+  Content-Type: application/javascript; charset=UTF-8
+  Cache-Control: public, max-age=604800
+
+# ملفات الصور
+/*.png
+  Content-Type: image/png
+  Cache-Control: public, max-age=604800
+
+# الخطوط (Google Fonts)
+/fonts/*
+  Cache-Control: public, max-age=31536000
