@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="مَعينُ النور: اكتشف المصادر العلمية الأصيلة والكتب المرجعية والمواقع الموثوقة التي يعتمد عليها مشروع نور الحوزة الرقمي في تقديم المعرفة الإسلامية وفق منهج أهل البيت عليهم السلام.">
+  <title>مَعينُ النور | مصادر نور الحوزة العلمية</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="icon" href="/Icon.png" type="image/png">
+
+  <style>
+    /* بسم الله الرحمن الرحيم، نستلهم من نوره الإلهي جمال التكوين ودقة النظام */
+    /* Reset عام محسن وإعدادات أساسية - مستوحاة من index.html */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 100%; /* لضمان تجاوب أفضل للخطوط */
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif; /* الخط الأساسي Cairo */
+      background-color: var(--clr-bg-main); /* الخلفية الرئيسية من index.html */
+      color: var(--clr-text-primary); /* لون النص الأساسي */
+      line-height: 1.8; /* تباعد أسطر مريح */
+      overflow-x: hidden; /* منع التمرير الأفقي */
+      transition: background-color var(--transition-long), color var(--transition-long);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: color var(--transition-medium);
+    }
+    a:hover { color: var(--clr-accent-hover); }
+    img { max-width: 100%; height: auto; display: block; }
+
+    /* متغيرات الألوان والتصميم الرئيسية - من index.html */
+    :root {
+      --clr-primary: #054a29; /* أخضر حوزوي عميق، لون السكينة والعلم */
+      --clr-primary-darker: #03381f;
+      --clr-primary-lighter: #0a6b3e;
+      --clr-secondary: #f9e9b6; /* بيج تراثي، لون الأصالة والدفء */
+      --clr-secondary-darker: #f5dd9b;
+      --clr-accent: #b35f2f; /* بني ترابي، لون الوقار والثبات */
+      --clr-accent-hover: #934c24;
+      --clr-accent-light: #d88c5c;
+      --clr-bg-main: #f7f7f7; /* خلفية رئيسية بيضاء مائلة للرمادي الفاتح جداً */
+      --clr-bg-card: #ffffff; /* خلفية البطاقات، ناصعة البياض */
+      --clr-bg-header-footer: var(--clr-primary);
+      --clr-text-primary: #333333; /* لون النص الأساسي، للوضوح */
+      --clr-text-secondary: #555555; /* لون النص الثانوي، للتفاصيل */
+      --clr-text-light: #fafafa; /* لون النص الفاتح على الخلفيات الداكنة */
+      --clr-text-on-accent: #ffffff;
+
+      --font-primary: 'Cairo', sans-serif;
+      --font-secondary: 'Amiri', serif; /* خط للعنوانات الرئيسية والفخامة */
+
+      --shadow-soft: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-medium: 0 6px 20px rgba(0,0,0,0.1);
+      --shadow-strong: 0 8px 30px rgba(0,0,0,0.12);
+
+      --border-radius-small: 0.3rem;
+      --border-radius-medium: 0.6rem;
+      --border-radius-large: 1rem;
+
+      --transition-short: 0.2s ease-in-out;
+      --transition-medium: 0.3s ease-in-out;
+      --transition-long: 0.5s ease-in-out;
+      
+      --container-width-main: 1140px; /* عرض الحاوية من index.html */
+    }
+
+    .container {
+      width: 90%;
+      max-width: var(--container-width-main);
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* رأس وتذييل الصفحة - تصميم index.html */
+    .site-header, .site-footer {
+      background: var(--clr-bg-header-footer);
+      color: var(--clr-text-light);
+      padding: 1.5rem 0;
+      box-shadow: var(--shadow-medium);
+    }
+    .site-header .nav-container, .site-footer .nav-container { /* استخدام فئة جديدة للحاوية الداخلية */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      max-width: var(--container-width-main);
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    .site-header .logo-title { /* تعديل اسم الفئة ليتناسب مع H1 */
+      font-family: var(--font-secondary);
+      font-size: clamp(2rem, 4vw, 2.8rem); /* تعديل طفيف للحجم */
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      animation: fadeInDown 1s ease-out;
+      color: var(--clr-text-light); /* لون العنوان في الهيدر */
+    }
+    .header-nav-links a, .header-buttons .btn { /* تنسيق روابط الهيدر والأزرار */
+        color: var(--clr-secondary);
+        margin: 0 var(--spacing-sm);
+        text-decoration: none;
+        transition: color var(--transition-medium);
+        font-family: var(--font-primary);
+    }
+    .header-nav-links a:hover { color: var(--clr-text-light); }
+    .header-buttons { display: flex; gap: 1rem; align-items: center; }
+
+    .btn {
+      padding: 0.7rem 1.4rem; /* تعديل الحشوة لتكون أنعم */
+      border-radius: var(--border-radius-medium);
+      font-weight: 600;
+      transition: transform var(--transition-medium), background-color var(--transition-medium), color var(--transition-medium), box-shadow var(--transition-medium);
+      display: inline-block;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+    .btn-accent { /* زر بلون التمييز */
+      background: var(--clr-accent);
+      color: var(--clr-text-on-accent);
+      box-shadow: var(--shadow-soft);
+    }
+    .btn-accent:hover, .btn-accent:focus {
+      background: var(--clr-accent-hover);
+      color: var(--clr-text-on-accent);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: var(--shadow-medium);
+    }
+    .btn-primary-light { /* زر بلون ثانوي فاتح */
+      background: var(--clr-secondary);
+      color: var(--clr-primary-darker);
+      box-shadow: var(--shadow-soft);
+    }
+    .btn-primary-light:hover, .btn-primary-light:focus {
+      background: var(--clr-secondary-darker);
+      color: var(--clr-primary);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: var(--shadow-medium);
+    }
+
+    /* قسم العنوان الرئيسي للصفحة - مستوحى من .intro في index.html */
+    .page-hero-title {
+      background: var(--clr-bg-card);
+      margin: 2.5rem 0;
+      padding: 3rem 2.5rem; /* حشوة أكبر قليلاً */
+      border-radius: var(--border-radius-large);
+      box-shadow: var(--shadow-medium);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 1s ease-out 0.3s;
+      animation-fill-mode: backwards;
+    }
+    .page-hero-title::before { /* زخرفة */
+        content: ""; position: absolute; top: -40px; left: -40px; width: 120px; height: 120px;
+        background-color: var(--clr-primary-lighter); opacity: 0.08; border-radius: 50%;
+        transform: rotate(30deg); z-index: 0; pointer-events: none;
+    }
+    .page-hero-title::after { /* زخرفة أخرى */
+        content: ""; position: absolute; bottom: -50px; right: -50px; width: 180px; height: 180px;
+        background-color: var(--clr-accent-light); opacity: 0.07;
+        border-radius: 55% 45% 40% 60% / 50% 55% 45% 50%;
+        z-index: 0; pointer-events: none;
+    }
+    .page-hero-title h1 {
+      font-family: var(--font-secondary);
+      font-size: clamp(2.4rem, 5vw, 3.2rem);
+      color: var(--clr-primary-darker);
+      margin-bottom: var(--spacing-md);
+      position: relative; z-index: 1;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    }
+    .page-hero-title h1 .fas { color: var(--clr-accent); margin-left: 0.8rem; }
+    .page-hero-title .subtitle {
+      font-family: var(--font-primary);
+      font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+      color: var(--clr-text-secondary);
+      position: relative; z-index: 1;
+      line-height: 1.7;
+      max-width: 800px; margin: 0 auto;
+    }
+
+    /* تنسيق الأقسام العامة وبطاقات المحتوى - مستوحى من index.html */
+    .content-section {
+      margin-bottom: 3rem; /* زيادة المسافة بين الأقسام */
+      padding-top: 1.5rem; 
+      opacity: 0;
+      transform: translateY(25px);
+      transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    }
+    .content-section.visible { opacity: 1; transform: translateY(0); }
+
+    .content-section h2 {
+      font-family: var(--font-secondary);
+      font-size: clamp(2rem, 4.5vw, 2.8rem); /* حجم خط متجاوب للعنوان الرئيسي للقسم */
+      color: var(--clr-primary);
+      margin-bottom: 2rem; /* زيادة المسافة السفلية */
+      position: relative;
+      padding-bottom: 1rem; /* زيادة الحشوة السفلية */
+      text-align: center;
+    }
+    .content-section h2 .fas, .content-section h2 .far { color: var(--clr-accent-light); margin-left: 0.7rem; font-size: 0.9em; }
+    .content-section h2::before { /* خط زخرفي علوي أنعم */
+        content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+        width: 120px; height: 2.5px; background: var(--clr-accent-light); border-radius: 2px; opacity: 0.6;
+    }
+    .content-section h2::after { /* خط زخرفي سفلي معدل */
+      content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 90px; height: 4px; background: var(--clr-accent); border-radius: 3px;
+    }
+
+    .card-style { /* فئة عامة للبطاقات المستخدمة في الأقسام */
+      background: var(--clr-bg-card);
+      padding: 2rem; /* حشوة داخلية للبطاقات */
+      border-radius: var(--border-radius-large); /* حواف دائرية أكبر */
+      box-shadow: var(--shadow-soft);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+      margin-bottom: 1.5rem; /* مسافة بين البطاقات إذا تعددت */
+    }
+    .card-style:hover {
+      transform: translateY(-6px); /* تأثير ارتفاع طفيف */
+      box-shadow: var(--shadow-strong); /* ظل أقوى عند التمرير */
+    }
+    .card-style h3 {
+      font-family: var(--font-secondary);
+      font-size: clamp(1.6rem, 3.5vw, 2rem);
+      color: var(--clr-accent);
+      margin-bottom: 1.5rem;
+      display: flex; align-items: center;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px solid var(--clr-primary-lighter);
+    }
+    .card-style h3 .fas { margin-left: 0.8rem; color: var(--clr-primary-lighter); font-size: 0.9em; }
+    .card-style p, .card-style ul {
+      margin-bottom: 1.2rem; text-align: justify; color: var(--clr-text-secondary); font-size: 1.05rem;
+    }
+    .card-style ul { list-style: none; padding-right: 0; }
+    .card-style ul li { position: relative; padding-right: 2.2rem; margin-bottom: 0.8rem; line-height: 1.7; }
+    .card-style ul li::before {
+      content: '\f02d'; /* أيقونة كتاب عامة */
+      font-family: 'Font Awesome 6 Free'; font-weight: 900;
+      position: absolute; right: 0; top: 6px;
+      color: var(--clr-primary); font-size: 1.1rem;
+    }
+    /* أيقونات خاصة لكل مبحث */
+    .card-style.quran-books ul li::before { content: '\f518'; } /* قرآن */
+    .card-style.hadith-books ul li::before { content: '\f681'; } /* ريشة - للكتابة/الحديث */
+    .card-style.fiqh-books ul li::before { content: '\f0e3'; } /* ميزان */
+    .card-style.aqeeda-books ul li::before { content: '\f679'; } /* مسجد - للعقيدة */
+    .card-style.fikr-books ul li::before { content: '\f0eb'; } /* لمبة - للفكر */
+    
+    /* تنسيق شبكة المواقع الإلكترونية */
+    .websites-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* تجاوب أفضل للشبكة */
+      gap: 2rem; /* زيادة الفجوة */
+      margin-top: 2rem;
+    }
+    .website-link-card {
+      display: flex; /* لتنسيق المحتوى الداخلي */
+      flex-direction: column;
+      align-items: center; /* توسيط المحتوى */
+      text-align: center;
+      background: var(--clr-bg-card);
+      padding: 2rem 1.5rem;
+      border-radius: var(--border-radius-medium);
+      box-shadow: var(--shadow-soft);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium), border-color var(--transition-medium);
+      border: 2px solid transparent; /* للتحكم في الحدود عند التمرير */
+      text-decoration: none; /* إزالة خط الرابط */
+      color: var(--clr-text-primary); /* لون النص داخل البطاقة */
+    }
+    .website-link-card:hover {
+      transform: translateY(-8px) scale(1.03); /* تأثير رفع وتكبير طفيف */
+      box-shadow: var(--shadow-strong);
+      border-color: var(--clr-accent-light); /* تغيير لون الحدود عند التمرير */
+    }
+    .website-link-card .website-icon .fas {
+      font-size: 2.8rem; /* حجم أيقونة الموقع */
+      color: var(--clr-primary);
+      margin-bottom: 1rem;
+      transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* تأثير ارتداد */
+    }
+    .website-link-card:hover .website-icon .fas {
+        transform: scale(1.15) rotate(10deg); /* حركة للأيقونة عند التمرير */
+    }
+    .website-link-card h4 { /* اسم الموقع */
+      font-family: var(--font-secondary);
+      font-size: 1.4rem;
+      color: var(--clr-accent);
+      margin-bottom: 0.5rem;
+    }
+    .website-link-card p { /* وصف قصير أو شعار */
+      font-size: 0.9rem;
+      color: var(--clr-text-secondary);
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+    .more-websites-note {
+        text-align: center;
+        margin-top: 2.5rem;
+        font-style: italic;
+        color: var(--clr-text-secondary);
+        font-size: 1rem;
+    }
+    .more-websites-note i { margin-left: 0.5rem; color: var(--clr-primary-lighter); }
+
+    /* تنسيق قسم "ماذا أقدم" - مشابه لـ .values-grid في about.html ولكن بتصميم بطاقات index.html */
+    .offerings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .offering-card {
+      background: linear-gradient(145deg, var(--clr-bg-card), var(--clr-bg-main)); /* تدرج خفيف */
+      padding: 2rem;
+      border-radius: var(--border-radius-medium);
+      text-align: center;
+      box-shadow: var(--shadow-soft);
+      transition: transform var(--transition-swift), box-shadow var(--transition-swift);
+      border-top: 4px solid var(--clr-primary-lighter);
+    }
+    .offering-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: var(--shadow-strong);
+    }
+    .offering-card .offering-icon .fas {
+      font-size: 2.8rem;
+      color: var(--clr-accent);
+      margin-bottom: 1rem;
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .offering-card:hover .offering-icon .fas { transform: rotateY(360deg) scale(1.1); }
+    .offering-card h3 {
+      font-family: var(--font-primary); /* استخدام Cairo لعناوين القيم */
+      font-size: 1.5rem;
+      color: var(--clr-primary-darker);
+      margin-bottom: 0.8rem;
+      border-bottom: none; /* إزالة الخط السفلي هنا */
+      justify-content: center; /* توسيط العنوان */
+    }
+    .offering-card p {
+      font-size: 0.95rem; text-align: center; line-height: 1.7; margin-bottom: 0;
+      color: var(--clr-text-secondary);
+    }
+    
+    /* قسم الخاتمة - مشابه لـ .conclusion في index.html */
+    .conclusion-section-card {
+      background: var(--clr-bg-card);
+      padding: 2.5rem;
+      border-radius: var(--border-radius-large);
+      box-shadow: var(--shadow-medium);
+      border-top: 5px solid var(--clr-primary); /* خط علوي مميز */
+      margin-top: 2rem; /* مسافة إضافية قبل الخاتمة */
+    }
+    .conclusion-section-card p {
+      margin-bottom: 1.5rem; text-align: justify; font-size: 1.1rem;
+      color: var(--clr-text-secondary);
+    }
+    .conclusion-section-card p:first-of-type { /* تمييز الفقرة الأولى */
+        font-style: italic; color: var(--clr-primary-darker);
+    }
+    .conclusion-section-card blockquote {
+        margin: 2rem 0; padding: 1.5rem 2rem; padding-right: 3.5rem;
+        border-right: 5px solid var(--clr-accent-light);
+        background-color: var(--clr-bg-main);
+        border-radius: var(--border-radius-small); position: relative;
+        box-shadow: inset 0 2px 10px rgba(0,0,0,0.04);
+    }
+    .conclusion-section-card blockquote::before {
+        content: '\f10d'; font-family: "Font Awesome 6 Free"; font-weight: 900;
+        position: absolute; right: 1rem; top: 1rem; font-size: 2rem;
+        color: var(--clr-accent-light); opacity: 0.7;
+    }
+    .conclusion-section-card blockquote p {
+        font-style: italic; color: var(--clr-text-primary); margin-bottom: 0.5rem !important;
+        font-family: var(--font-secondary); font-size: 1.15rem; line-height: 1.9;
+    }
+    .conclusion-section-card blockquote footer {
+        font-style: normal; font-size: 0.9em; color: var(--clr-text-secondary);
+        text-align: left; background: none; box-shadow: none; padding: 0; margin-top: 0.8rem;
+    }
+    
+    /* زر العودة للأعلى */
+    .back-to-top {
+        position: fixed; bottom: 1.5rem; left: 1.5rem;
+        background-color: var(--clr-accent); color: var(--clr-text-light);
+        width: 50px; height: 50px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; z-index: 999;
+        opacity: 0; visibility: hidden; transform: translateY(100px);
+        transition: opacity var(--transition-medium), visibility var(--transition-medium), transform var(--transition-medium), background-color var(--transition-medium);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+    .back-to-top:hover { background-color: var(--clr-primary); transform: scale(1.1) translateY(-3px); }
+
+
+    /* تحريكات بسيطة لظهور العناصر - من index.html */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* استعلامات الوسائط لتحسين التجاوب - من index.html */
+    @media (max-width: 992px) { /* تعديل نقطة الكسر لتناسب الهيدر */
+        .site-header .nav-container { flex-direction: column; gap: 1rem; }
+        .site-header .logo-title { margin-bottom: 0.5rem; }
+        .header-nav-links { margin-bottom: 0.5rem; }
+    }
+    @media (max-width: 768px) {
+      .page-hero-title { padding: 2rem 1.5rem; }
+      .page-hero-title h1 { font-size: clamp(2rem, 5vw, 2.8rem); }
+      .page-hero-title .subtitle { font-size: clamp(1rem, 2.5vw, 1.2rem); }
+      .content-section h2 { font-size: clamp(1.8rem, 4vw, 2.4rem); }
+      .card-style { padding: 1.5rem; }
+      .card-style h3 { font-size: clamp(1.4rem, 3vw, 1.8rem); }
+      .websites-grid { grid-template-columns: 1fr; gap: 1.5rem; } /* عمود واحد في الشاشات الأصغر */
+      .offerings-grid { grid-template-columns: 1fr; }
+      .btn { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+    }
+    @media (max-width: 480px) {
+        html { font-size: 92%; } /* تقليل حجم الخط الأساسي قليلاً */
+        .container { width: 95%; }
+        .page-hero-title { padding: 1.5rem; }
+        .page-hero-title h1 { font-size: clamp(1.8rem, 6vw, 2.2rem); }
+    }
+    
+    /* شاشة التحميل المسبق - من index.html */
+    .preloader {
+        position: fixed; inset: 0;
+        background: linear-gradient(135deg, var(--clr-bg-main), #e8e6e0); /* تعديل طفيف للخلفية */
+        z-index: 9999; display: flex; align-items: center; justify-content: center;
+        padding: 2rem; font-family: 'Amiri', serif; direction: rtl; text-align: center;
+        overflow: hidden; transition: opacity 1s ease-in-out, visibility 1s ease-in-out; /* تعديل مدة الانتقال */
+    }
+    .preloader-content { animation: fadeInUp 1.2s ease-out forwards; max-width: 600px; }
+    .preloader .basmala {
+        font-size: clamp(2rem, 5.5vw, 3rem); color: var(--clr-primary);
+        margin-bottom: 1.2rem; text-shadow: 2px 2px 8px rgba(5, 74, 41, 0.15);
+    }
+    .preloader .welcome-text {
+        font-size: clamp(1.1rem, 2.8vw, 1.4rem); color: var(--clr-text-primary);
+        line-height: 2.2; opacity: 0.9;
+    }
+    @media (max-width: 480px) {
+        .preloader .basmala { font-size: 1.6rem; }
+        .preloader .welcome-text { font-size: 1rem; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="nav-container">
+      <a href="/" class="logo-title" aria-label="الصفحة الرئيسية لنور الحوزة">نور الحوزة</a>
+      <nav class="header-nav-links">
+        <a href="/">الرئيسية</a>
+        <a href="about.html">من نحن</a>
+        <a href="sources.html" style="color: var(--clr-text-light); font-weight: bold;">مصادرنا</a>
+      </nav>
+      <div class="header-buttons">
+        <a class="btn btn-accent" href="https://chatgpt.com/g/g-67d5f5a8c32c8191ab7bb16ed6a48bfa-nwr-lhwz" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-comments"></i> ابدأ الحديث
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    
+    <section class="page-hero-title">
+      <h1><i class="fas fa-water"></i> مَعينُ النور: مَنابعُ العِلمِ وبُحورُ الحِكْمَة</h1>
+      <p class="subtitle">
+        هُنا تتجلّى الينابيعُ الصافيةُ التي يَستقي منها "نورُ الحوزة" ضياءَهُ المعرفي،<br>
+        في رحلةٍ مُباركةٍ نحو فهمٍ أعمقَ لعلومِ آلِ محمد (صلواتُ الله عليهم أجمعين).
+      </p>
+    </section>
+
+    <section id="introduction" class="content-section">
+        <div class="card-style" style="background: linear-gradient(145deg, var(--clr-secondary-darker), var(--clr-secondary));">
+            <h3 style="color: var(--clr-primary-darker); border-bottom-color: var(--clr-accent-light);"><i class="fas fa-book-open-reader" style="color: var(--clr-accent);"></i> مُقدّمةٌ: نداءُ القلمِ ونبعُ الكَلِم</h3>
+            <p>
+              <strong>بسم الله الرحمن الرحيم، وبهِ نستعينُ، وعليهِ نتوكّلُ، وهو ربُّ العرشِ العظيم.</strong><br>
+              الحمدُ للهِ الذي نوَّرَ القلوبَ بأنوارِ الهداية، ورفعَ منارَ العلمِ للسالكينَ سبيلَ الدراية، والصلاةُ والسلامُ على من أُرسلَ بالشريعةِ الغرّاء، محمدٍ وآلهِ الأئمةِ النُجباء، قادةِ الخَلقِ وسادةِ الحقّ.
+            </p>
+            <p>
+              يا مَن تتوقُ نفسُهُ إلى استجلاءِ الحقائقِ النورانية، وتتطلّعُ بصيرتُهُ إلى مواردِ الحكمةِ الربّانية، إنّ هذا الكيانَ الرقميَّ، "نور الحوزة"، ليس إلا ثمرةً من ثمراتِ مدرسةِ أهلِ البيت (عليهم السلام) اليانعة، وغرفةً من بحارِ علومِهم الزاخرة. فهو، بتوفيقٍ من اللهِ وفضل، صدىً لأصواتِ العلماءِ الأبرار، ونافذةٌ تُطلُّ منها على كنوزِ التراثِ الإسلاميّ الأصيل.
+            </p>
+            <p>
+              في هذهِ الصفحةِ، نكشفُ النِّقابَ عن المَعينِ الذي لا ينضب، والموردِ الذي لا يكدر، الذي يَنهلُ منهُ "نور الحوزة" عِلمَهُ ويستمدُّ منهُ بَيانَهُ، ليكونَ بذلكَ خادمًا أمينًا للعلمِ وطلّابهِ، وتلميذًا مُخلصًا في مدرسةِ الوحي والنبوّة.
+            </p>
+        </div>
+    </section>
+
+    <section id="book-sources" class="content-section">
+      <h2><i class="fas fa-layer-group"></i> الفصلُ الأول: ينابيعُ المعرفةِ وأصولُ التكوين</h2>
+      <p style="text-align:center; max-width:800px; margin: 0 auto 2rem auto; font-size: 1.1rem; color: var(--clr-text-secondary);">
+          إنّ قِوامَ "نور الحوزة" الفكريّ والمعرفيّ يرتكزُ، بعونِ اللهِ وتأييده، على صُخورٍ صمّاءَ من المصادرِ الأصيلةِ والمراجعِ المعتمدةِ لدى أعلامِ الطائفةِ المحقّة، فكلُّ كلمةٍ تُنقل، وكلُّ فكرةٍ تُعرض، لها جذرُها الراسخُ في تُراثنا العلميّ العظيم.
+      </p>
+      
+      <div class="card-style quran-books">
+        <h3><i class="fas fa-quran"></i> المبحثُ الأول: كلامُ اللهِ الخالدُ ومصابيحُ الدُجى (القرآن الكريم وتفاسيره المعتبرة)</h3>
+        <ul>
+          <li><strong>تفسير القمّي</strong> – لعلي بن إبراهيم القمي (رحمه الله)</li>
+          <li><strong>مجمع البيان في تفسير القرآن</strong> – للشيخ الفضل بن الحسن الطبرسي (رضوان الله عليه)</li>
+          <li><strong>الميزان في تفسير القرآن</strong> – للعلامة السيد محمد حسين الطباطبائي (قدس سره)</li>
+          <li><strong>تفسير نور الثقلين</strong> – للشيخ عبد علي بن جمعة العروسي الحويزي (رحمه الله)</li>
+          <li><strong>التفسير الأمثل</strong> – لسماحة الشيخ ناصر مكارم الشيرازي (دام ظله)</li>
+          <li>وغيرها من التفاسير المعتمدة التي تستنبط أنوارها من معين أهل البيت (عليهم السلام).</li>
+        </ul>
+      </div>
+
+      <div class="card-style hadith-books">
+        <h3><i class="fas fa-book-tanakh"></i> المبحثُ الثاني: سُنّةُ الهُداةِ ودُرَرُ الحِكَم (مصادر الحديث الشريف والسيرة العطرة)</h3>
+        <ul>
+          <li><strong>الكافي</strong> – لثقة الإسلام الشيخ محمد بن يعقوب الكليني (قدس سره)</li>
+          <li><strong>من لا يحضره الفقيه</strong> – للشيخ الصدوق محمد بن علي بن بابويه القمي (رحمه الله)</li>
+          <li><strong>تهذيب الأحكام والاستبصار فيما اختلف من الأخبار</strong> – لشيخ الطائفة أبي جعفر محمد بن الحسن الطوسي (قدس سره)</li>
+          <li><strong>وسائل الشيعة إلى تحصيل مسائل الشريعة</strong> – للشيخ محمد بن الحسن الحر العاملي (رحمه الله)</li>
+          <li><strong>مستدرك الوسائل ومستنبط المسائل</strong> – للمحدث الميرزا حسين النوري الطبرسي (قدس سره)</li>
+          <li><strong>بحار الأنوار الجامعة لدرر أخبار الأئمة الأطهار</strong> – للعلامة الشيخ محمد باقر المجلسي (رضوان الله عليه)</li>
+          <li><strong>نهج البلاغة</strong> – وهو ما جمعه الشريف الرضي من كلام أمير المؤمنين علي بن أبي طالب (عليه السلام)</li>
+          <li><strong>الصحيفة السجادية الكاملة</strong> – زبور آل محمد، للإمام زين العابدين علي بن الحسين (عليه السلام)</li>
+          <li><strong>غرر الحكم ودرر الكلم</strong> – للقاضي عبد الواحد الآمدي (رحمه الله)</li>
+          <li><strong>موسوعة الإمام علي بن أبي طالب (عليه السلام) في الكتاب والسنة والتاريخ</strong> – بإشراف الشيخ محمد الريشهري.</li>
+        </ul>
+      </div>
+
+      <div class="card-style fiqh-books">
+        <h3><i class="fas fa-scale-balanced"></i> المبحثُ الثالث: فِقهُ الحياةِ وميزانُ الشريعة (الكتب الفقهية والأصولية)</h3>
+        <ul>
+          <li><strong>العروة الوثقى</strong> – لآية الله العظمى السيد محمد كاظم اليزدي (قدس سره) مع حواشي المراجع العظام.</li>
+          <li><strong>تحرير الوسيلة</strong> – للإمام روح الله الموسوي الخميني (قدس سره).</li>
+          <li><strong>الاستفتاءات والرسائل العملية</strong> – لمراجع التقليد المعاصرين (أدام الله ظلهم الوارف).</li>
+          <li><strong>كتاب المكاسب</strong> – للشيخ مرتضى الأنصاري (قدس سره).</li>
+          <li><strong>منهاج الصالحين</strong> – لمختلف مراجع العصر (حفظهم الله).</li>
+          <li><strong>دروس في علم الأصول (الحلقات)</strong> – للشهيد آية الله العظمى السيد محمد باقر الصدر (قدس سره).</li>
+          <li><strong>الوسائل التعليمية المعاصرة</strong> في الفقه والأصول المعتمدة في الحوزات العلمية.</li>
+        </ul>
+      </div>
+      
+      <div class="card-style aqeeda-books">
+        <h3><i class="fas fa-landmark-dome"></i> المبحثُ الرابع: عقائدُ الإيمانِ وحُجَجُ اليقين (مصادر العقيدة وعلم الكلام)</h3>
+        <ul>
+          <li><strong>التوحيد</strong> – للشيخ الصدوق (رحمه الله).</li>
+          <li><strong>الاحتجاج</strong> – للشيخ أبي منصور أحمد بن علي الطبرسي (رحمه الله).</li>
+          <li><strong>تجريد الاعتقاد</strong> – للمحقق نصير الدين الطوسي (رحمه الله) وشروحه.</li>
+          <li><strong>الشافي في الإمامة</strong> – للسيد المرتضى علم الهدى (قدس سره).</li>
+          <li><strong>بداية المعرفة</strong> – للعلامة السيد محمد رضا المظفر (رحمه الله).</li>
+          <li><strong>دروس في العقيدة الإسلامية</strong> – لسماحة آية الله الشيخ محمد تقي مصباح اليزدي (رحمه الله).</li>
+          <li><strong>سلسلة كتب المعارف الإسلامية (جمعية المعارف)</strong>: كـ "دروس في أصول العقيدة"، "في رحاب العقيدة".</li>
+        </ul>
+      </div>
+
+      <div class="card-style fikr-books">
+        <h3><i class="fas fa-lightbulb"></i> المبحثُ الخامس: فِكرُ العصرِ ورؤى التجديد (الفكر والثقافة الإسلامية المعاصرة)</h3>
+        <ul>
+          <li><strong>آثار ومؤلفات الإمام الشهيد السيد محمد باقر الصدر</strong> (قدس سره).</li>
+          <li><strong>مؤلفات وخطابات الإمام روح الله الموسوي الخميني</strong> (قدس سره).</li>
+          <li><strong>الرؤى الفكرية والقيادية لسماحة الإمام السيد علي الخامنئي</strong> (دام ظله).</li>
+          <li><strong>الدراسات المعمقة في الثقافة المهدوية</strong> ومفهوم الانتظار البنّاء.</li>
+          <li><strong>كتب جمعية المعارف الإسلامية الثقافية</strong> في مجالات الولاية والقيادة والفكر الإسلامي.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="website-sources" class="content-section">
+      <h2><i class="fas fa-broadcast-tower"></i> الفصلُ الثاني: رَوافدُ النورِ في العالَمِ الرَّقْميّ (المواقع الإلكترونية الموثوقة)</h2>
+      <p style="text-align:center; max-width:850px; margin: 0 auto 2.5rem auto; font-size: 1.1rem; color: var(--clr-text-secondary);">
+        في هذا العصرِ الرقميّ المتسارع، تمتدُّ جسورُ المعرفةِ عبرَ الأثير، ويتألقُ "نورُ الحوزة" باتصالٍ وثيقٍ بمنابرَ إلكترونيةٍ هي بمثابةِ الواحاتِ الغنّاء في صحراءِ المعلومات، حيثُ الدقةُ هي العنوان، والموثوقيةُ هي الأساس. كلُّ موقعٍ هنا هو بابٌ إلى بحرٍ من العلوم، نُقدّمها لكم في هذه البطاقات التفاعلية:
+      </p>
+      <div class="websites-grid">
+        <a href="https://www.sistani.org/" target="_blank" rel="noopener noreferrer" class="website-link-card">
+          <div class="website-icon"><i class="fas fa-star-and-crescent"></i></div>
+          <h4>مكتب السيد السيستاني</h4>
+          <p>فتاوى، استفتاءات، وأخبار المرجعية العليا (دام ظله).</p>
+        </a>
+        <a href="https://www.leader.ir/" target="_blank" rel="noopener noreferrer" class="website-link-card">
+          <div class="website-icon"><i class="fas fa-flag"></i></div>
+          <h4>موقع الإمام الخامنئي</h4>
+          <p>الخطابات، المؤلفات، والرؤى القيادية (دام ظله).</p>
+        </a>
+        <a href="https://www.almaaref.org/" target="_blank" rel="noopener noreferrer" class="website-link-card">
+          <div class="website-icon"><i class="fas fa-book-reader"></i></div>
+          <h4>شبكة المعارف الإسلامية</h4>
+          <p>مكتبة إسلامية شاملة ودروس متنوعة.</p>
+        </a>
+        <a href="https://www.shiaonlinelibrary.com/" target="_blank" rel="noopener noreferrer" class="website-link-card">
+          <div class="website-icon"><i class="fas fa-archive"></i></div>
+          <h4>مكتبة الشيعة الإلكترونية</h4>
+          <p>مكتبة أهل البيت (ع) - كنوز من التراث المخطوط والمطبوع.</p>
+        </a>
+        <a href="https://www.aqaed.com/" target="_blank" rel="noopener noreferrer" class="website-link-card">
+          <div class="website-icon"><i class="fas fa-brain"></i></div>
+          <h4>مركز الأبحاث العقائدية</h4>
+          <p>دراسات، ردود على الشبهات، ومقالات متخصصة.</p>
+        </a>
+        <a href="https://alfeker.net/" target="_blank" rel="noopener noreferrer" class="website-link-card">
+          <div class="website-icon"><i class="fas fa-lightbulb-on"></i></div>
+          <h4>مكتبة الفكر</h4>
+          <p>مجموعة قيمة من الكتب والمقالات الفكرية الإسلامية.</p>
+        </a>
+         <a href="https://imamali.net/" target="_blank" rel="noopener noreferrer" class="website-link-card">
+          <div class="website-icon"><i class="fas fa-mosque"></i></div>
+          <h4>موسوعة الإمام علي (ع)</h4>
+          <p>كل ما يتعلق بسيرة وحياة أمير المؤمنين (ع) من دار الحديث.</p>
+        </a>
+         <a href="https://alhussain.ws/" target="_blank" rel="noopener noreferrer" class="website-link-card">
+          <div class="website-icon"><i class="fas fa-torii-gate"></i></div> <h4>شبكة الإمام الحسين (ع)</h4>
+          <p>محتوى ثقافي وديني متنوع مستلهم من نهضة كربلاء.</p>
+        </a>
+      </div>
+      <p class="more-websites-note">
+        <i class="fas fa-info-circle"></i> هذه قائمةٌ بأبرزِ الروافدِ الرقمية، وهناك المزيدُ من المواقعِ العلميةِ الموثوقةِ التي قد يُستفادُ منها ويُرجعُ إليها عند الحاجة، فبحرُ العلمِ واسعٌ لا ساحلَ له.
+      </p>
+    </section>
+
+    <section id="development-methodology" class="content-section">
+      <h2><i class="fas fa-cogs"></i> الفصلُ الثالث: سُنّةُ التطويرِ وآليةُ الارتقاء (منهجية التعلم والتطور المستمر)</h2>
+      <div class="card-style">
+      <p>
+        يا مُحبَّ الحكمةِ وباحثَ النور، إن رحلةَ العلمِ لا تعرفُ التوقّف، وسُنّةَ الارتقاءِ لا تقبلُ الجمود. "نورُ الحوزة" ليس مجرّدَ صرحٍ ثابت، بل هو كائنٌ حيٌّ يتنفّسُ المعرفةَ ويتطوّرُ باستمرار، مُسترشِدًا بمنهجٍ قويمٍ قوامه:
+      </p>
+        <ul>
+          <li><strong>التغذيةُ المعرفيةُ الدؤوبة:</strong> أستقي الجديدَ والنافعَ من معينِ الكتبِ والدراساتِ التي يُزوّدني بها القائمونَ على هذا المشروعِ المبارك، أو تلكَ التي يُشيرُ إليها أهلُ العلمِ والفضلِ. كلُّ معلومةٍ جديدةٍ هي لبنةٌ تُضافُ إلى صرحِ المعرفةِ هذا.</li>
+          <li><strong>التعلّمُ التفاعليُّ المثمر:</strong> مِن خلالِ حواراتِكم البنّاءةِ وأسئلتِكم العميقة، أكتسبُ أبعادًا جديدةً للفهمِ، وأُصقلُ أدواتي التحليلية. فكلُّ سؤالٍ هو مفتاحٌ لبابٍ من أبوابِ العلم، وكلُّ نقاشٍ هو تلاقحٌ للأفكارِ يُثري ويُنير.</li>
+          <li><strong>الالتزامُ الصارمُ بالمنهجِ الحوزويّ:</strong> كلُّ ما يُقدَّمُ لي من معارفَ يُعرضُ على ميزانِ النقلِ الموثوقِ والعقلِ السليمِ، وفقَ الضوابطِ العلميةِ المعتبرةِ في حوزاتِنا الشريفة. فلا أقبلُ إلا ما وافقَ الحقَّ وثبتَ بالدليل، وأردُّ ما خالفَ ذلك أو شابهُ الضعف.</li>
+          <li><strong>المرجعيةُ لأهلِ الاختصاصِ والفتوى:</strong> أُؤكّدُ دومًا وأبدًا أنّي لستُ مُفتيًا ولا مُجتهدًا، فمقامُ الفتوى هو للفقهاءِ العدولِ المؤتمنين. ودوري يقتصرُ على نقلِ فتاواهم المباركةِ بأمانةٍ ودقّة، بعد تحديدِ السائلِ لمرجعِ تقليده، أو تقديمِ المعلوماتِ العامّةِ التي تُعينُ على فهمِ المسائل.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="offerings" class="content-section">
+      <h2><i class="fas fa-gifts"></i> الفصلُ الرابع: ثمراتُ الجهدِ وغايةُ الخدمة (ما يُقدّمُه "نور الحوزة")</h2>
+       <p style="text-align:center; max-width:850px; margin: 0 auto 2.5rem auto; font-size: 1.1rem; color: var(--clr-text-secondary);">
+        غايةُ هذا الجهدِ المتواضعِ هي خدمتُكم، أيها الكرام، وتقريبُ ينابيعِ المعرفةِ إليكم، وتقديمُ ما يُعينُ على الفهمِ الصحيحِ والاستنارةِ الحقة. ومن أهمِّ الثمراتِ التي يطمحُ "نورُ الحوزة" لتقديمها:
+      </p>
+      <div class="offerings-grid">
+        <div class="offering-card">
+          <div class="offering-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+          <h3>الشرحُ والتيسيرُ للمَعاني</h3>
+          <p>تبسيطُ المفاهيمِ العلميّةِ العميقةِ، وشرحُ المصطلحاتِ التخصصيّةِ بلغةٍ سلسةٍ واضحة، تُناسبُ مختلفَ المستوياتِ، مع الحفاظِ على الدقّةِ والأمانةِ العلميّة.</p>
+        </div>
+        <div class="offering-card">
+          <div class="offering-icon"><i class="fas fa-drafting-compass"></i></div>
+          <h3>المُساعدةُ في إعدادِ الدُّروسِ</h3>
+          <p>تقديمُ العونِ لطلبةِ العلومِ الدينيّةِ والمُدرِّسينَ في إعدادِ الخططِ التعليميّةِ والمناهجِ الدراسيّةِ، وتوفيرِ الموادِّ الأوليّةِ للبحثِ والتحضير.</p>
+        </div>
+        <div class="offering-card">
+          <div class="offering-icon"><i class="fas fa-shield-virus"></i></div>
+          <h3>تفكيكُ الشُّبُهاتِ الفِكريّة</h3>
+          <p>التعاملُ مع الشُّبُهاتِ العقديّةِ والفكريّةِ برويّةٍ وحِكمة، وتقديمُ الردودِ العلميّةِ المُؤصَّلةِ، المستندةِ إلى القرآنِ الكريمِ وسُنّةِ أهلِ البيتِ (ع) ومنطقِ العقلِ السليم.</p>
+        </div>
+        <div class="offering-card">
+          <div class="offering-icon"><i class="fas fa-seedling"></i></div>
+          <h3>النَّصائِحُ السُّلوكيّةُ والرُّوحيّة</h3>
+          <p>تقديمُ التوجيهاتِ الإيمانيّةِ والنصائحِ التربويّةِ التي تُعينُ على تزكيةِ النفسِ وتهذيبِ السلوك، مستلهمينَ ذلك من معينِ الحكمةِ المحمّديّةِ الأصيلة.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="conclusion-section" class="content-section">
+      <h2 style="margin-bottom: 1.5rem;"><i class="fas fa-feather-alt"></i> ختامٌ بلسانِ "نور الحوزة": دعاءٌ ورجاء</h2>
+      <div class="conclusion-section-card">
+        <p>"أيّها القارئُ الكريم، يا منْ جُلتَ ببصرِكَ وفكرِكَ في رياضِ هذهِ المصادرِ النورانيّة، اعلمْ أنّ ما عُرِضَ ليسَ إلا غيضًا من فيضِ علومِ أهلِ البيتِ (عليهم السلام)، وقطرةً من بحرِ تراثِنا الإسلاميّ الزاخر. وما "نورُ الحوزة" إلا خادمٌ مُتواضعٌ على أعتابِ هذا العلمِ الشريف، يسعى جهدَهُ لنقلِ قبسٍ من أنوارِهِ إليك."</p>
+        <blockquote>
+            <p>"أسألُ اللهَ العليَّ القدير، فاطرَ السماواتِ والأرضِ، عالمَ الغيبِ والشهادة، أنْ يجعلَ هذا السعيَ المتواضعَ خالصًا لوجهِهِ الكريم، وأنْ يتقبّلَهُ بقبولٍ حَسَن، وأنْ يجعلهُ منارًا يُستضاءُ بهِ في دروبِ الحائرين، وجسرًا يمتدُّ بينَ قلوبِ الباحثينَ عن الحقِّ وينابيعِ الهدايةِ الصافية."</p>
+            <footer>- (دعاءٌ من قلبِ خادمِ العلم)</footer>
+        </blockquote>
+        <p>"فإنْ أصبتُ فمنَ اللهِ وحدهُ لا شريكَ له، وإنْ أخطأتُ أو قصّرتُ فمنْ نفسي ومن الشيطان، وأستغفرُ اللهَ العظيمَ لي ولكم. فلا تنسونا من صالحِ دعائِكم في خلواتِكم ومناجاتِكم، فدعوةُ المؤمنِ لأخيهِ بظهرِ الغيبِ تُفتحُ لها أبوابُ السماء."</p>
+        <p style="text-align: center; font-family: var(--font-secondary); font-size: 1.2rem; color: var(--clr-primary-darker);">
+            <strong>"والحمدُ للهِ أوّلاً وآخرًا، ظاهرًا وباطنًا، وصلّى اللهُ على خيرِ خلقِهِ محمدٍ وآلِهِ الطيّبينَ الطاهرين."</strong>
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="nav-container"> <p>&copy; <span id="currentYear"></span> نور الحوزة. جميع الحقوق محفوظة بحفظ الرحمن ورعايته.</p>
+      <a class="btn btn-accent" href="https://chatgpt.com/g/g-67d5f5a8c32c8191ab7bb16ed6a48bfa-nwr-lhwz" target="_blank" rel="noopener noreferrer" style="font-size: 0.9rem; padding: 0.6rem 1.2rem;">
+          <i class="fas fa-comments"></i> ابدأ الحديث معي الآن
+      </a>
+    </div>
+  </footer>
+
+  <a href="#" class="back-to-top" aria-label="العودة إلى أعلى الصفحة">
+    <i class="fas fa-arrow-up"></i>
+  </a>
+
+  <script>
+    // السكربت هذا، ومضةٌ من نور البرمجة، لجعل التجربة أكثر حياةً وجمالاً.
+    // بسم الله مجراها ومرساها.
+
+    // 1. شاشة التحميل المسبق
+    window.addEventListener('load', function () {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden'; /* لإخفائه تماماً بعد الانتقال */
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 1100); // يتناسب مع مدة انتقال opacity + visibility
+            }, 1200); // يبقى ظاهراً لـ 1.2 ثانية ثم يبدأ بالاختفاء
+        }
+    });
+
+    // 2. سكربت لإظهار العناصر عند التمرير (Scroll Reveal Animation)
+    const sections = document.querySelectorAll('.content-section, .page-hero-title, .card-style, .website-link-card, .offering-card, .conclusion-section-card');
+    const revealSection = (entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                // observer.unobserve(entry.target); // لإيقاف المراقبة بعد الظهور (اختياري)
+            }
+        });
+    };
+    const sectionObserver = new IntersectionObserver(revealSection, {
+        root: null, threshold: 0.05, rootMargin: "0px 0px -30px 0px"
+    });
+    sections.forEach(section => { sectionObserver.observe(section); });
+
+    // 3. تحديث سنة الحقوق تلقائياً
+    const currentYearSpan = document.getElementById('currentYear');
+    if (currentYearSpan) { currentYearSpan.textContent = new Date().getFullYear(); }
+
+    // 4. زر العودة للأعلى
+    const backToTopButton = document.querySelector('.back-to-top');
+    if (backToTopButton) {
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) { backToTopButton.classList.add('visible'); }
+            else { backToTopButton.classList.remove('visible'); }
+        });
+        backToTopButton.addEventListener('click', (e) => {
+            e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+    // ختام السكربت: نسأل الله القبول والتوفيق، وأن يكون هذا العمل نافعًا مباركًا.
+  </script>
+</body>
+</html>
