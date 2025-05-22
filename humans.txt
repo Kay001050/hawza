@@ -1,0 +1,10 @@
+/* Team */
+Developer: مجموعة من طلبة العلم
+AI Model: نور الحوزة (نموذج حواري إمامي)
+Framework: HTML, CSS, JavaScript
+Platform: Netlify + ChatGPT
+
+/* Site */
+Last updated: 2025-05-22
+Language: ar (Arabic)
+Purpose: خدمة العلم ونشر المعرفة الحوزوية بشرف وأمانة.
