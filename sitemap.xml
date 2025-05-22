@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- الصفحة الرئيسية -->
+  <url>
+    <loc>https://hawza.netlify.app/</loc>
+    <lastmod>2025-05-22</lastmod>
+    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <!-- أقسام الصفحة (anchors داخل الصفحة الواحدة) -->
+  <url>
+    <loc>https://hawza.netlify.app/#introduction</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://hawza.netlify.app/#identity-card</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://hawza.netlify.app/#capabilities</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://hawza.netlify.app/#usage-examples</loc>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://hawza.netlify.app/#project-goals</loc>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://hawza.netlify.app/#survey-section</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://hawza.netlify.app/#conclusion-section</loc>
+    <priority>0.5</priority>
+  </url>
+
+</urlset>
