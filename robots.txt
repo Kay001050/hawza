@@ -1,4 +1,28 @@
-User-agent: *
-Disallow:
+# -------------------------------
+# Robots.txt - نور الحوزة AI Model
+# يسمح بفهرسة سريعة وذكية لكامل الموقع
+# -------------------------------
 
+User-agent: *
+Allow: /
+
+# تأكيد السماح الكامل لملفات الصور (لمنصات المعاينة والمشاركة مثل WhatsApp، Telegram، Instagram...)
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.webp$
+Allow: /images/
+
+# خفض التأخير بين الطلبات لتحفيز الزحف السريع
+Crawl-delay: 0
+
+# خريطة الموقع - تسهّل الفهرسة المنهجية
 Sitemap: https://hawza.netlify.app/sitemap.xml
+
+# توجيه صريح لاسم المضيف (لبعض محركات البحث مثل Yandex وBaidu)
+Host: hawza.netlify.app
+
+# لا توجد مجلدات أو مسارات محظورة
+# الموقع متاح بأكمله للزحف
+
+# ملاحظة: تأكد أن sitemap.xml محدث دومًا ويحتوي على روابط صفحاتك العامة
