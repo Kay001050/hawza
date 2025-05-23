@@ -1,48 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset 
-  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 
-                      http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- الصفحة الرئيسية -->
   <url>
     <loc>https://hawza.netlify.app/</loc>
     <lastmod>2025-05-22</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <priority>1.00</priority>
   </url>
 
-  <!-- صفحة من نحن -->
   <url>
     <loc>https://hawza.netlify.app/about.html</loc>
     <lastmod>2025-05-22</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.90</priority>
   </url>
 
-  <!-- صفحة المصادر -->
   <url>
     <loc>https://hawza.netlify.app/masadir.html</loc>
     <lastmod>2025-05-22</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
   </url>
 
-  <!-- صفحة عدم الاتصال -->
   <url>
     <loc>https://hawza.netlify.app/offline.html</loc>
     <lastmod>2025-05-22</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
+    <priority>0.40</priority>
   </url>
 
-  <!-- صفحة الخطأ 404 المخصصة -->
   <url>
     <loc>https://hawza.netlify.app/custom-404.html</loc>
     <lastmod>2025-05-22</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
+    <priority>0.30</priority>
   </url>
 
 </urlset>
