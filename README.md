@@ -1,5 +1,7 @@
 # README.md - لسان التعريف بمشروع "نور الحوزة"
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/6114a7a9-0acd-4775-a9c3-01bb3b857465/deploy-status)](https://app.netlify.com/sites/hawza/deploys)
+
 ## الاسم: نور الحوزة
 
 الوصف: مرشد علميّ رقميّ حوزويّ، يمزج بين أصالة التشيّع ووسائل العصر، ويخدم الباحث والمربّي والمثقف وطالب العلم.
