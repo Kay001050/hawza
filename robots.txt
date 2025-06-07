@@ -46,11 +46,6 @@ Sitemap: https://hawza.netlify.app/sitemap.xml
 Sitemap: https://hawza.netlify.app/sitemap-google.xml
 
 # -------------------------------------
-# إعدادات اختيارية لبعض المحركات (Yandex وغيرها)
-# -------------------------------------
-Host: hawza.netlify.app
-
-# -------------------------------------
 # ملاحظات هامة:
 # - لا يوجد حظر لأي مسار، الزحف الكامل مسموح.
 # - تأكد من أن ملفات Sitemap تُخدم بـ content-type الصحيح (application/xml).
