@@ -29,7 +29,7 @@ const list=document.getElementById('questions');
 form.addEventListener('submit',async e=>{
   e.preventDefault();
   const password=document.getElementById('password').value;
-  const res=await fetch('/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password})});
+const res=await fetch('/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password}),credentials:'include'});
   if(res.ok){
     form.style.display='none';
     list.hidden=false;
@@ -37,7 +37,7 @@ form.addEventListener('submit',async e=>{
   }else{alert('كلمة المرور غير صحيحة');}
 });
 async function loadQuestions(){
-  const res=await fetch('/admin/questions');
+  const res=await fetch('/admin/questions',{credentials:'include'});
   if(!res.ok)return alert('فشل جلب الأسئلة');
   const data=await res.json();
   list.innerHTML='';
@@ -57,7 +57,7 @@ async function loadQuestions(){
       btn.addEventListener('click',async()=>{
         const answer=textarea.value.trim();
         if(!answer)return;
-        const r=await fetch('/admin/answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:q.id,answer})});
+        const r=await fetch('/admin/answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:q.id,answer}),credentials:'include'});
         if(r.ok)loadQuestions();
         else alert('فشل حفظ الجواب');
       });
