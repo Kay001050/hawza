@@ -156,6 +156,8 @@ npm install
 node server.js
 ```
 
+بإمكانك نسخ ملف `.env.example` إلى `.env` وتعديل القيم مثل `ADMIN_PASSWORD` و`SESSION_SECRET` قبل تشغيل الخادم.
+
 كلمة المرور الافتراضية للمدير هي **Kjm#82@NwrA!2025** ويمكن تغييرها عبر المتغير `ADMIN_PASSWORD` في ملف البيئة.
 
 ## ملاحظة خاصة بنشر Netlify
