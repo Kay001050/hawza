@@ -19,6 +19,12 @@ app.use(express.static(__dirname));
 const DATA_FILE = path.join(__dirname, 'data', 'questions.json');
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Kjm#82@NwrA!2025';
 
+// Ensure data directory and file exist to prevent runtime errors
+if (!fs.existsSync(DATA_FILE)) {
+  fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
+  fs.writeFileSync(DATA_FILE, '[]', 'utf8');
+}
+
 function loadQuestions() {
   try {
     const data = fs.readFileSync(DATA_FILE, 'utf8');
