@@ -4,7 +4,8 @@
   "description": "[![Netlify Status](https://api.netlify.com/api/v1/badges/6114a7a9-0acd-4775-a9c3-01bb3b857465/deploy-status)](https://app.netlify.com/sites/hawza/deploys)",
   "main": "index.js",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
