@@ -16,8 +16,9 @@
     nav a:hover,nav a.active{color:#fff;}
     h1{text-align:center;margin:2rem 0;}
     ul.answers{list-style:none;padding:0;}
-    ul.answers li{background:#fff;margin-bottom:1rem;padding:1rem;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
-    .answer{margin-top:0.5rem;color:#054a29;}
+    ul.answers li{background:#fff;margin-bottom:1rem;padding:1rem;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.05);line-height:1.6;}
+    ul.answers li strong{color:#b35f2f;}
+    .answer{margin-top:0.5rem;color:#054a29;font-weight:600;}
   </style>
 </head>
 <body>
@@ -47,7 +48,14 @@
       list.innerHTML='';
       data.forEach(q=>{
         const li=document.createElement('li');
-        li.innerHTML=`<strong>${q.date.slice(0,10)}:</strong> ${q.question}<p class='answer'>الجواب: ${q.answer}</p>`;
+        const date=document.createElement('strong');
+        date.textContent=q.date.slice(0,10)+':' ;
+        li.appendChild(date);
+        li.append(' '+q.question);
+        const ans=document.createElement('p');
+        ans.className='answer';
+        ans.textContent=`الجواب: ${q.answer}`;
+        li.appendChild(ans);
         list.appendChild(li);
       });
     }

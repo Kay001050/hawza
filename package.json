@@ -4,15 +4,16 @@
   "description": "[![Netlify Status](https://api.netlify.com/api/v1/badges/6114a7a9-0acd-4775-a9c3-01bb3b857465/deploy-status)](https://app.netlify.com/sites/hawza/deploys)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^5.1.0",
-    "express-session": "^1.17.3",
-    "dotenv": "^16.3.1"
+    "express-session": "^1.17.3"
   }
 }
