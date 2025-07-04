@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="الأسئلة الشائعة حول مشروع نور الحوزة">
+  <title>الأسئلة الشائعة | نور الحوزة</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="icon" href="Icon.png" type="image/png">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; font-size:100%; }
+    body { font-family:'Cairo',sans-serif; background-color:var(--clr-bg-main); color:var(--clr-text-primary); line-height:1.8; overflow-x:hidden; transition:background-color var(--transition-long),color var(--transition-long); }
+    a { text-decoration:none; color:inherit; transition:color var(--transition-medium); }
+    a:hover { color:var(--clr-accent-hover); }
+    img { max-width:100%; height:auto; display:block; }
+    :root {
+      --clr-primary:#054a29; --clr-primary-darker:#03381f; --clr-primary-lighter:#0a6b3e;
+      --clr-secondary:#f9e9b6; --clr-secondary-darker:#f5dd9b; --clr-accent:#b35f2f;
+      --clr-accent-hover:#934c24; --clr-accent-light:#d88c5c; --clr-bg-main:#f7f7f7;
+      --clr-bg-card:#ffffff; --clr-bg-header-footer:var(--clr-primary);
+      --clr-text-primary:#333333; --clr-text-secondary:#555555; --clr-text-light:#fafafa;
+      --clr-text-on-accent:#ffffff;
+      --font-primary:'Cairo',sans-serif; --font-secondary:'Amiri',serif;
+      --shadow-soft:0 4px 12px rgba(0,0,0,0.08); --shadow-medium:0 6px 20px rgba(0,0,0,0.1);
+      --border-radius-small:0.3rem; --border-radius-medium:0.6rem; --border-radius-large:1rem;
+      --transition-short:0.2s ease-in-out; --transition-medium:0.3s ease-in-out; --transition-long:0.5s ease-in-out;
+      --container-width-main:1140px;
+    }
+    .container { width:90%; max-width:var(--container-width-main); margin:0 auto; padding:0 1rem; }
+    .site-header { background:var(--clr-bg-header-footer); color:var(--clr-text-light); padding:1rem 0; box-shadow:var(--shadow-medium); position:sticky; top:0; z-index:1000; transition:background-color var(--transition-medium); }
+    .site-header .nav-container { display:flex; justify-content:space-between; align-items:center; }
+    .site-header .logo a { display:flex; align-items:center; text-decoration:none; color:var(--clr-text-light); }
+    .site-header .logo-icon { width:40px; height:40px; margin-left:0.75rem; border-radius:var(--border-radius-small); object-fit:cover; }
+    .site-header .logo-title-text { font-family:var(--font-secondary); font-size:clamp(1.8rem,4vw,2.5rem); font-weight:700; letter-spacing:0.5px; color:var(--clr-text-light); }
+    .main-navigation ul { list-style:none; display:flex; margin:0; padding:0; gap:1.5rem; }
+    .main-navigation .nav-link { font-family:var(--font-primary); color:var(--clr-secondary); text-decoration:none; font-size:1rem; font-weight:500; padding:0.5rem 0.75rem; border-radius:var(--border-radius-small); transition:color var(--transition-medium),background-color var(--transition-medium); display:flex; align-items:center; }
+    .main-navigation .nav-link i { margin-left:0.5rem; font-size:0.9em; }
+    .main-navigation .nav-link:hover,.main-navigation .nav-link:focus { color:var(--clr-text-light); background-color:var(--clr-primary-lighter); }
+    .main-navigation .nav-link.active { color:var(--clr-text-light); font-weight:bold; background-color:var(--clr-accent); }
+    .header-action .btn-chat-cta { background:var(--clr-accent); color:var(--clr-text-on-accent); padding:0.6rem 1.2rem; border-radius:var(--border-radius-medium); font-weight:600; font-size:0.9rem; transition:transform var(--transition-medium),background-color var(--transition-medium),box-shadow var(--transition-medium); display:inline-flex; align-items:center; gap:0.5rem; text-decoration:none; }
+    .header-action .btn-chat-cta:hover,.header-action .btn-chat-cta:focus { background:var(--clr-accent-hover); transform:translateY(-3px) scale(1.02); box-shadow:var(--shadow-medium); }
+    .mobile-nav-toggle { display:none; background:none; border:none; color:var(--clr-text-light); font-size:1.8rem; cursor:pointer; padding:0.5rem; }
+    @media (max-width:992px){ .main-navigation{ position:absolute; top:100%; right:0; background:var(--clr-primary-darker); width:280px; box-shadow:-5px 5px 15px rgba(0,0,0,0.2); padding:1rem; transform:translateX(100%); transition:transform 0.3s ease-in-out; border-top:1px solid var(--clr-accent-light); } .main-navigation.active{ transform:translateX(0); } .main-navigation ul{ flex-direction:column; gap:0.5rem; } .main-navigation .nav-link{ display:block; padding:0.8rem 1rem; font-size:1.1rem; border-bottom:1px solid var(--clr-primary-lighter); } .main-navigation .nav-link:last-child{ border-bottom:none; } .main-navigation .nav-link.active{ background-color:var(--clr-accent-hover); } .mobile-nav-toggle{ display:block; } }
+    @media(max-width:480px){ .site-header .logo-icon{ width:30px; height:30px; } .site-header .logo-title-text{ font-size:1.5rem; } .header-action .btn-chat-cta{ padding:0.5rem 0.8rem; font-size:0.8rem; } .main-navigation{ width:100%; } }
+    .page-hero-title{ text-align:center; margin-top:2rem; margin-bottom:2rem; }
+    .accordion .item + .item{ margin-top:1.5rem; }
+    .accordion .header{ background:var(--clr-secondary-darker); color:var(--clr-primary-darker); padding:1.2rem 1.5rem; cursor:pointer; display:flex; justify-content:space-between; align-items:center; border-radius:var(--border-radius-medium); transition:background-color var(--transition-medium),color var(--transition-medium),letter-spacing var(--transition-medium); box-shadow:var(--shadow-soft); }
+    .accordion .header:hover,.accordion .header.active{ background:var(--clr-accent); color:var(--clr-text-on-accent); letter-spacing:0.5px; box-shadow:var(--shadow-medium); }
+    .accordion .header .icon{ transition:transform var(--transition-medium) ease-in-out; font-size:1.2rem; }
+    .accordion .body{ max-height:0; overflow:hidden; background:var(--clr-bg-card); transition:max-height 0.5s cubic-bezier(0.4,0,0.2,1),padding var(--transition-long) ease-in-out; padding:0 1.5rem; border-bottom-left-radius:var(--border-radius-medium); border-bottom-right-radius:var(--border-radius-medium); box-shadow:inset 0 3px 8px rgba(0,0,0,0.05); }
+    .accordion .body.open{ padding:1.5rem 1.5rem; max-height:2000px; border-top:1px solid var(--clr-secondary); }
+    .accordion .body p{ margin-bottom:1rem; color:var(--clr-text-secondary); }
+    .site-footer{ background:var(--clr-bg-header-footer); color:var(--clr-text-light); padding:1.5rem 0; box-shadow:var(--shadow-medium); margin-top:3rem; }
+    .back-to-top{ position:fixed; bottom:30px; left:30px; background:var(--clr-accent); color:var(--clr-text-on-accent); padding:0.6rem 0.9rem; border-radius:var(--border-radius-medium); font-size:1rem; display:none; align-items:center; }
+    .back-to-top.visible{ display:flex; }
+    .faq-form{ margin-top:2rem; background:var(--clr-bg-card); padding:1.5rem; border-radius:var(--border-radius-large); box-shadow:var(--shadow-soft); }
+    .faq-form label{ display:block; margin-bottom:0.5rem; font-weight:600; }
+    .faq-form textarea{ width:100%; padding:0.8rem; border-radius:var(--border-radius-small); border:1px solid #ccc; resize:vertical; font-family:inherit; }
+    .faq-form button{ margin-top:1rem; background:var(--clr-primary); color:var(--clr-text-light); padding:0.6rem 1.2rem; border:none; border-radius:var(--border-radius-medium); cursor:pointer; transition:background-color var(--transition-medium); }
+    .faq-form button:hover{ background:var(--clr-primary-lighter); }
+  </style>
+</head>
+<body>
+  <div id="preloader" class="preloader">
+    <div class="preloader-content">
+      <h1 class="basmala">بِسْمِ ٱللّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</h1>
+      <p class="welcome-text">لحظات ويكتمل ظهور صفحة الأسئلة الشائعة...</p>
+    </div>
+  </div>
+  <header class="site-header">
+    <div class="nav-container container">
+      <div class="logo">
+        <a href="index.html" aria-label="الصفحة الرئيسية لنور الحوزة">
+          <img src="Icon.png" alt="شعار نور الحوزة" class="logo-icon">
+          <span class="logo-title-text">نور الحوزة</span>
+        </a>
+      </div>
+      <nav class="main-navigation" aria-label="القائمة الرئيسية">
+        <ul>
+          <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+          <li><a href="about.html" class="nav-link"><i class="fas fa-users"></i> مَنْ نحن</a></li>
+          <li><a href="masadir.html" class="nav-link"><i class="fas fa-book-open"></i> مصادرنا</a></li>
+          <li><a href="faq.html" class="nav-link active"><i class="fas fa-circle-question"></i> الأسئلة الشائعة</a></li>
+        </ul>
+      </nav>
+      <div class="header-action">
+        <a class="btn btn-chat-cta" href="https://chatgpt.com/g/g-67d5f5a8c32c8191ab7bb16ed6a48bfa-nwr-lhwz" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-comments"></i> ابدأ الحديث
+        </a>
+      </div>
+      <button type="button" class="mobile-nav-toggle" aria-label="فتح/إغلاق القائمة" aria-expanded="false">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+  <main class="container">
+    <section class="page-hero-title">
+      <h1><i class="fas fa-circle-question"></i> الأسئلة الشائعة</h1>
+      <p class="subtitle">هنا نجيب عن أبرز التساؤلات التي قد تدور في خلد الزائر الكريم حول مشروعنا المتواضع.</p>
+    </section>
+    <div class="accordion">
+      <div class="item">
+        <div class="header"><span><i class="fas fa-bolt"></i> ما هو الهدف من مشروع "نور الحوزة"؟</span><span class="icon"><i class="fas fa-chevron-down"></i></span></div>
+        <div class="body">
+          <p>يطمح المشروع إلى تسهيل الوصول إلى علوم أهل البيت عليهم السلام، وتقديم محتوى موثوق بأسلوب معاصر يخدم طلبة العلم والباحثين.</p>
+        </div>
+      </div>
+      <div class="item">
+        <div class="header"><span><i class="fas fa-shield-alt"></i> هل يعتمد الموقع على مصادر موثوقة؟</span><span class="icon"><i class="fas fa-chevron-down"></i></span></div>
+        <div class="body">
+          <p>نعم، نعتمد حصراً على المصادر المعتمدة في المدرسة الإمامية الإثني عشرية، سواء في التفسير أو الفقه أو العقيدة.</p>
+        </div>
+      </div>
+      <div class="item">
+        <div class="header"><span><i class="fas fa-user-edit"></i> كيف يمكنني إرسال سؤال غير موجود هنا؟</span><span class="icon"><i class="fas fa-chevron-down"></i></span></div>
+        <div class="body">
+          <p>يمكنك استخدام النموذج أدناه لإرسال سؤالك، وسيجري تخزينه لدراسة الإجابة المناسبة وإضافتها لاحقاً.</p>
+        </div>
+      </div>
+    </div>
+    <form class="faq-form" id="questionForm">
+      <label for="questionInput">هل لديك سؤال آخر؟ اكتبه هنا:</label>
+      <textarea id="questionInput" rows="4" required></textarea>
+      <button type="submit">إرسال السؤال</button>
+    </form>
+  </main>
+  <footer class="site-footer">
+    <div class="nav-container container">
+      <p>&copy; <span id="currentYear"></span> نور الحوزة. جميع الحقوق محفوظة بحفظ الرحمن.</p>
+      <a class="btn btn-chat-cta" href="https://chatgpt.com/g/g-67d5f5a8c32c8191ab7bb16ed6a48bfa-nwr-lhwz" target="_blank" rel="noopener noreferrer">
+        <i class="fas fa-comments"></i> ابدأ الحديث معي الآن
+      </a>
+    </div>
+  </footer>
+  <a href="#" class="back-to-top" aria-label="العودة إلى أعلى الصفحة"><i class="fas fa-arrow-up"></i></a>
+  <script>
+    window.addEventListener('load', function () {
+      const preloader = document.getElementById('preloader');
+      if (preloader) {
+        setTimeout(() => {
+          preloader.style.opacity = '0';
+          preloader.style.visibility = 'hidden';
+          setTimeout(() => { preloader.style.display = 'none'; }, 800);
+        }, 500);
+      }
+    });
+    document.querySelectorAll('.accordion .header').forEach(header => {
+      header.addEventListener('click', () => {
+        const item = header.parentElement;
+        const body = item.querySelector('.body');
+        const open = body.classList.contains('open');
+        document.querySelectorAll('.accordion .body').forEach(b => b.classList.remove('open'));
+        document.querySelectorAll('.accordion .header').forEach(h => h.classList.remove('active'));
+        if (!open) { body.classList.add('open'); header.classList.add('active'); }
+      });
+    });
+    const currentYearSpan = document.getElementById('currentYear');
+    if (currentYearSpan) currentYearSpan.textContent = new Date().getFullYear();
+    const backToTopButton = document.querySelector('.back-to-top');
+    if (backToTopButton) {
+      window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) backToTopButton.classList.add('visible');
+        else backToTopButton.classList.remove('visible');
+      });
+      backToTopButton.addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top:0, behavior:'smooth' }); });
+    }
+    const form = document.getElementById('questionForm');
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const question = document.getElementById('questionInput').value.trim();
+      if (!question) return;
+      try {
+        const res = await fetch('/api/questions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question })
+        });
+        if (res.ok) {
+          alert('تم إرسال سؤالك بنجاح. شكرًا لمساهمتك.');
+          form.reset();
+        } else {
+          alert('حدث خطأ أثناء الإرسال.');
+        }
+      } catch (err) { alert('تعذر الاتصال بالخادم.'); }
+    });
+    const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+    const mainNavigation = document.querySelector('.main-navigation');
+    const navIcon = mobileNavToggle ? mobileNavToggle.querySelector('i') : null;
+    if (mobileNavToggle && mainNavigation && navIcon) {
+      mobileNavToggle.addEventListener('click', () => {
+        const isNavOpen = mainNavigation.classList.toggle('active');
+        mobileNavToggle.setAttribute('aria-expanded', isNavOpen);
+        if (isNavOpen) { navIcon.classList.remove('fa-bars'); navIcon.classList.add('fa-times'); }
+        else { navIcon.classList.remove('fa-times'); navIcon.classList.add('fa-bars'); }
+      });
+    }
+  </script>
+</body>
+</html>
