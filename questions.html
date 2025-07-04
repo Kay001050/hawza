@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>أسئلة المستخدمين المجابة - نور الحوزة</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body{font-family:'Cairo',sans-serif;background:#f7f7f7;color:#333;padding:2rem;line-height:1.6;}
+    h1{text-align:center;margin-bottom:2rem;}
+    .question{background:#fff;padding:1rem 1.5rem;border-radius:8px;margin-bottom:1rem;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
+    .answer{margin-top:.5rem;color:#054a29;}
+  </style>
+</head>
+<body>
+  <h1>الأسئلة المجابة</h1>
+  <div id="list"></div>
+  <script>
+    async function load(){
+      const res = await fetch('/public/questions');
+      if(!res.ok)return;
+      const data = await res.json();
+      const container = document.getElementById('list');
+      container.innerHTML='';
+      data.forEach((q)=>{
+        const div=document.createElement('div');
+        div.className='question';
+        div.innerHTML=`<strong>${q.question}</strong><div class='answer'>${q.answer}</div>`;
+        container.appendChild(div);
+      });
+    }
+    load();
+  </script>
+</body>
+</html>
