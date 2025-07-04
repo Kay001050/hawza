@@ -15,13 +15,6 @@ app.use(session({
   saveUninitialized: false
 }));
 
-app.get('/admin.html', (req, res) => {
-  if (!req.session.authenticated) {
-    return res.status(404).sendFile(path.join(__dirname, 'custom-404.html'));
-  }
-  res.sendFile(path.join(__dirname, 'admin.html'));
-});
-
 app.use(express.static(__dirname));
 
 const DATA_FILE = path.join(__dirname, 'data', 'questions.json');
