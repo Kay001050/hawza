@@ -43,7 +43,27 @@ async function loadQuestions(){
   list.innerHTML='';
   data.forEach(q=>{
     const li=document.createElement('li');
-    li.textContent=`${q.date.slice(0,10)}: ${q.question}`;
+    const p=document.createElement('p');
+    p.textContent=`${q.date.slice(0,10)}: ${q.question}`;
+    li.appendChild(p);
+    if(q.answer){
+      const ans=document.createElement('p');
+      ans.textContent=`الجواب: ${q.answer}`;
+      li.appendChild(ans);
+    }else{
+      const textarea=document.createElement('textarea');
+      const btn=document.createElement('button');
+      btn.textContent='إرسال الجواب';
+      btn.addEventListener('click',async()=>{
+        const answer=textarea.value.trim();
+        if(!answer)return;
+        const r=await fetch('/admin/answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:q.id,answer})});
+        if(r.ok)loadQuestions();
+        else alert('فشل حفظ الجواب');
+      });
+      li.appendChild(textarea);
+      li.appendChild(btn);
+    }
     list.appendChild(li);
   });
 }
