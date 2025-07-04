@@ -154,7 +154,9 @@
 ```bash
 npm install
 node server.js
+npm test
 ```
+يقوم الأمر `npm test` بتشغيل اختبار بسيط للتأكد من أن واجهة الأسئلة تعمل بشكل صحيح.
 
 بإمكانك نسخ ملف `.env.example` إلى `.env` وتعديل القيم مثل `ADMIN_PASSWORD` و`SESSION_SECRET` قبل تشغيل الخادم.
 
