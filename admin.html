@@ -12,8 +12,9 @@
     input{padding:.5rem .8rem;width:100%;margin-bottom:1rem;border:1px solid #ccc;border-radius:4px;}
     button{padding:.5rem 1rem;background:#054a29;color:#fff;border:none;border-radius:4px;cursor:pointer;}
     button:hover{background:#0a6b3e;}
-    #questions{margin-top:2rem;text-align:right;}
-    #questions li{background:#fff;margin-bottom:.5rem;padding:.5rem;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
+    #questions{margin-top:2rem;text-align:right;max-width:700px;margin-inline:auto;}
+    #questions .q-item{background:#fff;margin-bottom:1rem;padding:1rem;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
+    #questions textarea{width:100%;margin-top:.5rem;margin-bottom:.5rem;padding:.5rem;border:1px solid #ccc;border-radius:4px;}
   </style>
 </head>
 <body>
@@ -22,17 +23,17 @@
     <input type="password" id="password" required>
     <button type="submit">دخول</button>
   </form>
-  <ul id="questions" hidden></ul>
+  <div id="questions" hidden></div>
 <script>
 const form=document.getElementById('loginForm');
-const list=document.getElementById('questions');
+const container=document.getElementById('questions');
 form.addEventListener('submit',async e=>{
   e.preventDefault();
   const password=document.getElementById('password').value;
   const res=await fetch('/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password})});
   if(res.ok){
     form.style.display='none';
-    list.hidden=false;
+    container.hidden=false;
     loadQuestions();
   }else{alert('كلمة المرور غير صحيحة');}
 });
@@ -40,11 +41,27 @@ async function loadQuestions(){
   const res=await fetch('/admin/questions');
   if(!res.ok)return alert('فشل جلب الأسئلة');
   const data=await res.json();
-  list.innerHTML='';
-  data.forEach(q=>{
-    const li=document.createElement('li');
-    li.textContent=`${q.date.slice(0,10)}: ${q.question}`;
-    list.appendChild(li);
+  container.innerHTML='';
+  data.forEach((q,idx)=>{
+    const wrapper=document.createElement('div');
+    wrapper.className='q-item';
+    const qText=document.createElement('p');
+    qText.textContent=`${q.date.slice(0,10)}: ${q.question}`;
+    wrapper.appendChild(qText);
+    const textarea=document.createElement('textarea');
+    textarea.rows=3;
+    textarea.value=q.answer||'';
+    wrapper.appendChild(textarea);
+    const btn=document.createElement('button');
+    btn.textContent='حفظ الإجابة';
+    btn.addEventListener('click',async()=>{
+      const answer=textarea.value.trim();
+      const save=await fetch('/admin/answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({index:idx,answer})});
+      if(save.ok){alert('تم الحفظ');loadQuestions();}
+      else alert('فشل الحفظ');
+    });
+    wrapper.appendChild(btn);
+    container.appendChild(wrapper);
   });
 }
 </script>
