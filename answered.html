@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الأسئلة المجابة | نور الحوزة</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="icon" href="Icon.png" type="image/png">
+  <style>
+    body{font-family:'Cairo',sans-serif;background:#f7f7f7;color:#333;line-height:1.8;margin:0;padding:0;}
+    .container{width:90%;max-width:1000px;margin:0 auto;padding:1rem;}
+    header{background:#054a29;color:#fff;padding:1rem 0;box-shadow:0 4px 12px rgba(0,0,0,0.1);position:sticky;top:0;}
+    nav ul{list-style:none;display:flex;gap:1rem;margin:0;padding:0;}
+    nav a{color:#f9e9b6;text-decoration:none;font-weight:500;}
+    nav a:hover,nav a.active{color:#fff;}
+    h1{text-align:center;margin:2rem 0;}
+    ul.answers{list-style:none;padding:0;}
+    ul.answers li{background:#fff;margin-bottom:1rem;padding:1rem;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.05);line-height:1.6;}
+    ul.answers li strong{color:#b35f2f;}
+    .answer{margin-top:0.5rem;color:#054a29;font-weight:600;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav-container">
+      <nav class="main-navigation" aria-label="القائمة الرئيسية">
+        <ul>
+          <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+          <li><a href="about.html" class="nav-link"><i class="fas fa-users"></i> مَنْ نحن</a></li>
+          <li><a href="masadir.html" class="nav-link"><i class="fas fa-book-open"></i> مصادرنا</a></li>
+          <li><a href="faq.html" class="nav-link"><i class="fas fa-circle-question"></i> الأسئلة الشائعة</a></li>
+          <li><a href="answered.html" class="nav-link active"><i class="fas fa-comments"></i> الأسئلة المجابة</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <h1><i class="fas fa-comments"></i> الأسئلة المجابة</h1>
+    <ul class="answers" id="answerList"></ul>
+  </main>
+  <script>
+    async function loadAnswered(){
+      const res = await fetch('/api/answered');
+      if(!res.ok)return;
+      const data = await res.json();
+      const list = document.getElementById('answerList');
+      list.innerHTML='';
+      data.forEach(q=>{
+        const li=document.createElement('li');
+        li.innerHTML=`<strong>${q.date.slice(0,10)}:</strong> ${q.question}<p class='answer'>الجواب: ${q.answer}</p>`;
+        list.appendChild(li);
+      });
+    }
+    loadAnswered();
+  </script>
+</body>
+</html>
