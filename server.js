@@ -1,9 +1,17 @@
+require('dotenv').config();
 const express = require('express');
+const session = require('express-session');
 const fs = require('fs');
 const path = require('path');
 
 const app = express();
 app.use(express.json());
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'secret',
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(express.static(__dirname));
 
 const DATA_FILE = path.join(__dirname, 'data', 'questions.json');
 
@@ -35,6 +43,22 @@ app.post('/api/questions', (req, res) => {
 app.get('/api/questions', (_req, res) => {
   const questions = loadQuestions();
   res.json(questions);
+});
+
+app.post('/admin/login', (req, res) => {
+  const { password } = req.body;
+  if (password === process.env.ADMIN_PASSWORD) {
+    req.session.authenticated = true;
+    return res.json({ message: 'Logged in' });
+  }
+  res.status(401).json({ error: 'Invalid password' });
+});
+
+app.get('/admin/questions', (req, res) => {
+  if (!req.session.authenticated) {
+    return res.status(401).json({ error: 'Not authenticated' });
+  }
+  res.json(loadQuestions());
 });
 
 const PORT = process.env.PORT || 3000;
