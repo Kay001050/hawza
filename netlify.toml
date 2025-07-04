@@ -1,0 +1,8 @@
+[build]
+  publish = "./"
+
+[[plugins]]
+  package = "@algolia/netlify-plugin-crawler"
+  # تأكد من ضبط المفتاح في إعدادات Netlify
+  [plugins.inputs]
+    apiKey = "${ALGOLIA_API_KEY}"
