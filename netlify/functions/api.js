@@ -17,7 +17,8 @@ const express = require('express');          // الإطار الأساسي لب
 const session = require('express-session');  // لإدارة جلسات المستخدمين (لتسجيل دخول المسؤول)
 const cors = require('cors');              // للسماح بالطلبات من نطاقات مختلفة (من واجهة الموقع)
 const path = require('path');              // للتعامل مع مسارات الملفات والمجلدات
-const fs = require('fs');                  // للتعامل مع نظام الملفات (قراءة وكتابة ملف JSON)
+// --- استيراد Netlify Blobs بدلاً من fs ---
+const { getBlob, setBlob } = require('@netlify/blobs');
 const serverless = require('serverless-http'); // لتحويل تطبيق Express إلى وظيفة سحابية متوافقة مع Netlify
 
 // --- حزم أمان إضافية (تم التأكد من وجودها في package.json) ---
@@ -27,11 +28,6 @@ const rateLimit = require('express-rate-limit'); // للحماية من هجما
 // --- القسم الثاني: الإعدادات والثوابت (Configuration & Constants) ---
 const app = express();         // إنشاء نسخة من تطبيق Express
 const router = express.Router(); // استخدام موجّه (Router) لتنظيم المسارات بشكل أفضل
-
-// إعدادات مسار البيانات
-const DATA_DIR = path.resolve(process.cwd(), 'data');
-const DATA_FILE = path.join(DATA_DIR, 'questions.json');
-const LOCK_FILE = path.join(DATA_DIR, 'questions.lock'); // ملف القفل لضمان سلامة البيانات
 
 // كلمة المرور للمسؤول (يجب ضبطها في متغيرات البيئة في Netlify)
 const ADMIN_PASSWORD = (process.env.ADMIN_PASSWORD || 'change-this-default-password').trim();
@@ -76,82 +72,38 @@ const loginLimiter = rateLimit({
   legacyHeaders: false, // يعطل رؤوس `X-RateLimit-*` القديمة
 });
 
-// --- القسم الرابع: دوال مساعدة لإدارة البيانات مع آلية القفل (Data Helper Functions with Locking) ---
+// --- القسم الرابع: دوال مساعدة لإدارة البيانات باستخدام Netlify Blobs ---
+
+const BLOB_KEY = 'questions.json';
 
 /**
- * @description يضمن وجود مجلد البيانات وملف الأسئلة.
+ * @description يقرأ الأسئلة من Netlify Blobs.
+ * @returns {Promise<Array>} - مصفوفة الأسئلة.
  */
-function ensureDataFileExists() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-  if (!fs.existsSync(DATA_FILE)) {
-    fs.writeFileSync(DATA_FILE, '[]', 'utf8');
-  }
-}
-
-/**
- * @description محاولة الحصول على قفل للكتابة في الملف.
- * @returns {boolean} - true إذا تم الحصول على القفل، false إذا كان الملف مقفلاً.
- */
-function acquireLock() {
-  if (fs.existsSync(LOCK_FILE)) {
-    // إذا كان القفل موجودًا لأكثر من 5 ثوانٍ، فمن المحتمل أنه عالق. نزيله.
-    const lockStat = fs.statSync(LOCK_FILE);
-    const lockAge = (new Date().getTime() - lockStat.mtime.getTime()) / 1000;
-    if (lockAge > 5) {
-      releaseLock();
-    } else {
-      return false; // فشل الحصول على القفل
-    }
-  }
-  fs.writeFileSync(LOCK_FILE, process.pid.toString());
-  return true; // تم الحصول على القفل بنجاح
-}
-
-/**
- * @description تحرير القفل بعد الانتهاء من الكتابة.
- */
-function releaseLock() {
-  if (fs.existsSync(LOCK_FILE)) {
-    fs.unlinkSync(LOCK_FILE);
-  }
-}
-
-/**
- * @description يقرأ الأسئلة من ملف JSON.
- * @returns {Array} - مصفوفة الأسئلة.
- */
-function loadQuestions() {
-  ensureDataFileExists();
+async function loadQuestions() {
   try {
-    const data = fs.readFileSync(DATA_FILE, 'utf8');
-    return JSON.parse(data);
+    const blob = await getBlob({ name: BLOB_KEY });
+    if (!blob || !blob.body) return [];
+    const text = await blob.text();
+    return JSON.parse(text || '[]');
   } catch (error) {
-    console.error("خطأ حرج عند قراءة ملف البيانات:", error);
-    return []; // إرجاع مصفوفة فارغة في حالة الفشل لمنع انهيار النظام
+    console.error("خطأ عند قراءة Blob:", error);
+    return [];
   }
 }
 
 /**
- * @description يحفظ مصفوفة الأسئلة في ملف JSON باستخدام آلية القفل.
+ * @description يحفظ مصفوفة الأسئلة في Netlify Blobs.
  * @param {Array} questions - مصفوفة الأسئلة المراد حفظها.
- * @returns {boolean} - true عند النجاح، false عند الفشل.
+ * @returns {Promise<boolean>} - true عند النجاح، false عند الفشل.
  */
-function saveQuestions(questions) {
-  if (!acquireLock()) {
-    console.error("فشل في الحصول على قفل للكتابة. العملية متوقفة لتجنب تلف البيانات.");
-    return false;
-  }
+async function saveQuestions(questions) {
   try {
-    ensureDataFileExists();
-    fs.writeFileSync(DATA_FILE, JSON.stringify(questions, null, 2), 'utf8');
+    await setBlob({ name: BLOB_KEY, body: JSON.stringify(questions, null, 2), contentType: 'application/json' });
     return true;
   } catch (error) {
-    console.error("خطأ حرج عند كتابة ملف البيانات:", error);
+    console.error("خطأ عند كتابة Blob:", error);
     return false;
-  } finally {
-    releaseLock(); // تحرير القفل دائماً، سواء نجحت العملية أم فشلت
   }
 }
 
@@ -171,13 +123,13 @@ const requireAuth = (req, res, next) => {
 
 // **الجزء الأول: المسارات العامة (Public Routes)**
 
-router.post('/questions', (req, res) => {
+router.post('/questions', async (req, res) => {
   const { question } = req.body;
   if (!question || typeof question !== 'string' || question.trim().length < 10) {
     return res.status(400).json({ success: false, error: 'نص السؤال مطلوب ويجب أن يكون ذا معنى.' });
   }
 
-  const questions = loadQuestions();
+  const questions = await loadQuestions();
   const newEntry = {
     id: Date.now(),
     question: question.trim(),
@@ -187,16 +139,16 @@ router.post('/questions', (req, res) => {
     lastModified: null
   };
   questions.unshift(newEntry);
-  
-  if (saveQuestions(questions)) {
+
+  if (await saveQuestions(questions)) {
     res.status(201).json({ success: true, message: 'تم استلام السؤال بنجاح. شكراً لكم.' });
   } else {
     res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حفظ السؤال.' });
   }
 });
 
-router.get('/answered', (_req, res) => {
-  const questions = loadQuestions()
+router.get('/answered', async (_req, res) => {
+  const questions = (await loadQuestions())
     .filter(q => q.answer)
     .sort((a, b) => new Date(b.answeredDate || b.date) - new Date(a.answeredDate || a.date));
   res.status(200).json(questions);
@@ -227,61 +179,61 @@ router.get('/admin/status', requireAuth, (req, res) => {
   res.status(200).json({ success: true, authenticated: true });
 });
 
-router.get('/admin/questions', requireAuth, (req, res) => {
-  res.status(200).json(loadQuestions());
+router.get('/admin/questions', requireAuth, async (req, res) => {
+  res.status(200).json(await loadQuestions());
 });
 
-router.post('/admin/answer', requireAuth, (req, res) => {
+router.post('/admin/answer', requireAuth, async (req, res) => {
   const { id, answer } = req.body;
   if (!id || !answer || typeof answer !== 'string' || answer.trim() === '') {
     return res.status(400).json({ success: false, error: 'معرف السؤال ونص الإجابة مطلوبان.' });
   }
-  const questions = loadQuestions();
+  const questions = await loadQuestions();
   const questionIndex = questions.findIndex(q => q.id === Number(id));
   if (questionIndex === -1) {
     return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب.' });
   }
   questions[questionIndex].answer = answer.trim();
   questions[questionIndex].answeredDate = new Date().toISOString();
-  
-  if (saveQuestions(questions)) {
+
+  if (await saveQuestions(questions)) {
     res.status(200).json({ success: true, message: 'تم حفظ الجواب بنجاح.' });
   } else {
     res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حفظ الجواب.' });
   }
 });
 
-router.put('/admin/question/:id', requireAuth, (req, res) => {
+router.put('/admin/question/:id', requireAuth, async (req, res) => {
   const { id } = req.params;
   const { answer } = req.body;
   if (!answer || typeof answer !== 'string' || answer.trim() === '') {
     return res.status(400).json({ success: false, error: 'نص الإجابة المحدث مطلوب.' });
   }
-  const questions = loadQuestions();
+  const questions = await loadQuestions();
   const questionIndex = questions.findIndex(q => q.id === Number(id));
   if (questionIndex === -1) {
     return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب.' });
   }
   questions[questionIndex].answer = answer.trim();
   questions[questionIndex].lastModified = new Date().toISOString();
-  
-  if (saveQuestions(questions)) {
+
+  if (await saveQuestions(questions)) {
     res.status(200).json({ success: true, message: 'تم تحديث الجواب بنجاح.' });
   } else {
     res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء تحديث الجواب.' });
   }
 });
 
-router.delete('/admin/question/:id', requireAuth, (req, res) => {
+router.delete('/admin/question/:id', requireAuth, async (req, res) => {
   const { id } = req.params;
-  let questions = loadQuestions();
+  let questions = await loadQuestions();
   const initialLength = questions.length;
   questions = questions.filter(q => q.id !== Number(id));
   if (initialLength === questions.length) {
     return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب لحذفه.' });
   }
-  
-  if (saveQuestions(questions)) {
+
+  if (await saveQuestions(questions)) {
     res.status(200).json({ success: true, message: 'تم حذف السؤال بنجاح.' });
   } else {
     res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حذف السؤال.' });
@@ -289,7 +241,7 @@ router.delete('/admin/question/:id', requireAuth, (req, res) => {
 });
 
 // --- القسم السابع: ربط الموجه بالتطبيق الرئيسي وتصدير الوظيفة ---
-app.use('/', router); 
+app.use('/', router);
 
 // تصدير التطبيق كدالة متوافقة مع Netlify Functions
 module.exports.handler = serverless(app);

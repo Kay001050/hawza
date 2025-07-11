@@ -428,63 +428,71 @@
     const submitButton = document.getElementById('submit-btn');
     const formFeedback = document.getElementById('form-feedback');
 
-    // التأكد من وجود النموذج قبل إضافة المستمعات لتجنب الأخطاء
     if (questionForm && questionTextarea && submitButton && formFeedback) {
       questionForm.addEventListener('submit', async function(event) {
-        event.preventDefault(); // منع الإرسال التقليدي للنموذج
+        event.preventDefault();
 
-        const question = questionTextarea.value.trim(); // أخذ النص وتنظيفه من المسافات
+        const question = questionTextarea.value.trim();
 
-        // التحقق من أن السؤال ليس فارغاً
         if (question === '') {
           showFeedback('يرجى التكرم بكتابة نص السؤال قبل الإرسال.', 'error');
           questionTextarea.focus();
           return;
         }
 
-        // تعطيل زر الإرسال لمنع النقرات المتكررة
         submitButton.disabled = true;
         submitButton.querySelector('span').textContent = 'جارٍ الإرسال...';
-        formFeedback.style.display = 'none'; // إخفاء الرسائل السابقة
+        formFeedback.style.display = 'none';
 
         try {
-          // إرسال السؤال إلى الخادم عبر طلب POST
+          // إضافة timeout للطلب حتى لا ينتظر المستخدم طويلاً في حال تعطل الخادم
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 15000);
+
           const response = await fetch('/api/questions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ question: question })
+            body: JSON.stringify({ question: question }),
+            signal: controller.signal
           });
+          clearTimeout(timeoutId);
 
-          // إذا لم تكن الاستجابة ناجحة، يتم إظهار رسالة خطأ
           if (!response.ok) {
-            throw new Error('حدث خطأ أثناء محاولة الاتصال بالخادم. يرجى المحاولة مرة أخرى.');
+            let msg = 'حدث خطأ أثناء محاولة الاتصال بالخادم. يرجى المحاولة مرة أخرى.';
+            try {
+              const errJson = await response.json();
+              if (errJson && errJson.error) msg = errJson.error;
+            } catch {}
+            throw new Error(msg);
           }
 
-          // في حال نجاح الإرسال
-          await response.json();
+          // التأكد من أن الرد JSON
+          let data;
+          try {
+            data = await response.json();
+          } catch {
+            throw new Error('الخادم لم يرجع استجابة صحيحة. يرجى المحاولة لاحقاً أو التواصل مع الدعم.');
+          }
+
           showFeedback('تم إرسال سؤالكم بنجاح. سيتم عرضه على أهل الاختصاص للجواب في أقرب فرصة. شكراً لثقتكم.', 'success');
-          questionTextarea.value = ''; // تفريغ حقل النص
+          questionTextarea.value = '';
 
         } catch (error) {
-          // في حال حدوث أي خطأ في الشبكة أو الخادم
-          console.error('Error submitting question:', error);
-          showFeedback(error.message || 'حدث خطأ غير متوقع. يرجى التحقق من اتصالك بالإنترنت والمحاولة مجدداً.', 'error');
+          if (error.name === 'AbortError') {
+            showFeedback('انتهت مهلة الاتصال بالخادم. يرجى التحقق من اتصالك بالإنترنت والمحاولة مجدداً.', 'error');
+          } else {
+            showFeedback(error.message || 'حدث خطأ غير متوقع. يرجى التحقق من اتصالك بالإنترنت والمحاولة مجدداً.', 'error');
+          }
         } finally {
-          // إعادة تفعيل زر الإرسال في كل الحالات (نجاح أو فشل)
           submitButton.disabled = false;
           submitButton.querySelector('span').textContent = 'إرسال السؤال';
         }
       });
     }
 
-    /**
-     * دالة مساعدة لإظهار رسائل التنبيه للمستخدم
-     * @param {string} message - نص الرسالة المراد عرضها
-     * @param {'success'|'error'} type - نوع الرسالة لتحديد التنسيق (أخضر للنجاح، أحمر للخطأ)
-     */
     function showFeedback(message, type) {
       formFeedback.textContent = message;
-      formFeedback.className = type; // 'success' or 'error'
+      formFeedback.className = type;
       formFeedback.style.display = 'block';
     }
     // --- نهاية الكود الجديد الخاص بنموذج إرسال الأسئلة ---
