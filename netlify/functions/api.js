@@ -10,44 +10,62 @@ const { Store } = require('express-session');
 const bodyParser = require('body-parser');
 
 // =================================================================
-// ديوان حفظ الجلسات (NetlifyBlobStore)
-// وحدة مخصصة لتخزين جلسات المستخدمين بشكل دائم في Netlify Blobs
-// مما يضمن بقاء تسجيل الدخول فعالاً في البيئة السحابية عديمة الحالة.
+// ديوان حفظ الجلسات (NetlifyBlobStore) - نسخة محسّنة مع تسجيل أخطاء أفضل
 // =================================================================
 class NetlifyBlobStore extends Store {
     constructor(options = {}) {
         super(options);
         this.storeName = options.storeName || 'sessions';
         this.store = getStore({ name: this.storeName, consistency: 'strong' });
+        console.log(`[INFO] ديوان حفظ الجلسات '${this.storeName}' تم تهيئته بنجاح.`);
     }
 
     get(sid, callback) {
+        console.log(`[SESSION] محاولة استرجاع الجلسة: ${sid}`);
         this.store.get(sid, { type: 'json' })
-            .then(data => callback(null, data))
+            .then(data => {
+                console.log(`[SESSION] تم العثور على بيانات الجلسة: ${sid}`, data ? '(بيانات موجودة)' : '(لا توجد بيانات)');
+                callback(null, data);
+            })
             .catch(err => {
                 if (err.status === 404 || err.statusCode === 404) {
-                    return callback(null, null); // Session not found is not an error
+                    console.log(`[SESSION] الجلسة ${sid} غير موجودة في المخزن.`);
+                    return callback(null, null);
                 }
+                console.error(`[SESSION ERROR] خطأ حرج عند قراءة الجلسة ${sid}:`, err);
                 callback(err);
             });
     }
 
     set(sid, session, callback) {
-        const maxAge = session.cookie.maxAge; // in milliseconds
-        const ttl = maxAge ? Math.round(maxAge / 1000) : 86400; // 1 day default in seconds
+        const maxAge = session.cookie.maxAge;
+        const ttl = maxAge ? Math.round(maxAge / 1000) : 86400; // 1 day default
 
+        console.log(`[SESSION] محاولة حفظ الجلسة: ${sid} مع مدة صلاحية (TTL): ${ttl} ثانية.`);
         this.store.setJSON(sid, session, { ttl })
-            .then(() => callback(null))
-            .catch(err => callback(err));
+            .then(() => {
+                console.log(`[SESSION] تم حفظ الجلسة بنجاح: ${sid}`);
+                callback(null);
+            })
+            .catch(err => {
+                console.error(`[SESSION ERROR] خطأ حرج عند حفظ الجلسة ${sid}:`, err);
+                callback(err);
+            });
     }
 
     destroy(sid, callback) {
+        console.log(`[SESSION] محاولة حذف الجلسة: ${sid}`);
         this.store.delete(sid)
-            .then(() => callback(null))
+            .then(() => {
+                console.log(`[SESSION] تم حذف الجلسة بنجاح: ${sid}`);
+                callback(null);
+            })
             .catch(err => {
-                 if (err.status === 404 || err.statusCode === 404) {
-                    return callback(null); // Already destroyed is not an error
+                if (err.status === 404 || err.statusCode === 404) {
+                    console.warn(`[SESSION] محاولة حذف جلسة غير موجودة أصلاً: ${sid}. لا يعتبر هذا خطأ.`);
+                    return callback(null);
                 }
+                console.error(`[SESSION ERROR] خطأ حرج عند حذف الجلسة ${sid}:`, err);
                 callback(err);
             });
     }
@@ -62,12 +80,16 @@ const router = express.Router();
 const ADMIN_PASSWORD = (process.env.ADMIN_PASSWORD || 'change-this-default-password').trim();
 const SESSION_SECRET = process.env.SESSION_SECRET || 'a-very-strong-and-long-secret-for-production-environment';
 
-// --- إعدادات الوسيط (Middleware Configuration) ---
-// استخدام ديوان حفظ الجلسات الجديد للجلسات
-const sessionStore = new NetlifyBlobStore({ storeName: 'sessions' });
+// [DIAGNOSTIC] طباعة جزء من كلمة المرور للتأكد من أنها ليست فارغة
+console.log(`[DIAGNOSTIC] تم تحميل كلمة مرور المسؤول. هل هي القيمة الافتراضية؟ ${ADMIN_PASSWORD === 'change-this-default-password'}. طولها: ${ADMIN_PASSWORD.length}`);
+if (ADMIN_PASSWORD === 'change-this-default-password') {
+    console.warn("[SECURITY WARNING] يتم استخدام كلمة المرور الافتراضية. يرجى تعيين متغير بيئة 'ADMIN_PASSWORD' في إعدادات Netlify فوراً!");
+}
+
+const sessionStore = new NetlifyBlobStore({ storeName: 'user-sessions' });
 
 app.use(cors({
-  origin: (origin, callback) => callback(null, true),
+  origin: true, // السماح لجميع المصادر، Netlify سيتعامل مع هذا
   credentials: true
 }));
 app.use(helmet());
@@ -75,75 +97,68 @@ app.use(bodyParser.json({ limit: '5mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' }));
 app.use(bodyParser.text({ type: 'text/*' }));
 
-app.set('trust proxy', 1); // مهم جداً في Netlify Functions ليعمل secure cookie
+app.set('trust proxy', 1);
 
 app.use(session({
-  store: sessionStore, // <-- الربط مع المتجر السحابي
+  store: sessionStore,
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  proxy: true, // مهم جداً مع Netlify/Heroku
+  proxy: true,
   cookie: {
-    secure: true, // Netlify دائماً https
+    secure: true,
     httpOnly: true,
     sameSite: 'none',
-    maxAge: 1000 * 60 * 60 * 8 // 8 ساعات
+    maxAge: 1000 * 60 * 60 * 8 // 8 hours
   }
 }));
 
 const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
+  windowMs: 15 * 60 * 1000, max: 10,
   message: { success: false, error: 'محاولات تسجيل دخول كثيرة جداً، يرجى المحاولة مرة أخرى بعد 15 دقيقة.' },
-  standardHeaders: true,
-  legacyHeaders: false,
+  standardHeaders: true, legacyHeaders: false,
 });
 
-
 // =================================================================
-// دوال مساعدة لإدارة البيانات مع Netlify Blobs (البديل لنظام الملفات)
+// دوال مساعدة لإدارة البيانات مع Netlify Blobs
 // =================================================================
 const questionsStore = getStore('questions');
 const QUESTIONS_KEY = 'all-questions';
 
-/**
- * @description يقرأ جميع الأسئلة من Netlify Blobs.
- * @returns {Promise<Array>} - مصفوفة الأسئلة.
- */
 async function loadQuestions() {
     try {
         const questions = await questionsStore.get(QUESTIONS_KEY, { type: 'json' });
-        return questions || []; // إذا لم يتم العثور على شيء، أرجع مصفوفة فارغة
+        return questions || [];
     } catch (error) {
-        if (error.status === 404 || error.statusCode === 404) {
-            // الملف غير موجود بعد، وهذا طبيعي في البداية
-            return [];
-        }
-        // في حالة وجود خطأ آخر، يجب تسجيله وإعلام المطور
-        console.error("خطأ حرج عند قراءة البيانات من Netlify Blobs:", error);
+        if (error.status === 404) return [];
+        console.error("[BLOBS ERROR] فشل قراءة الأسئلة:", error);
         throw new Error('فشل استرجاع البيانات من المخزن السحابي.');
     }
 }
 
-/**
- * @description يحفظ مصفوفة الأسئلة الكاملة في Netlify Blobs.
- * @param {Array} questions - مصفوفة الأسئلة المراد حفظها.
- * @returns {Promise<void>}
- */
 async function saveQuestions(questions) {
     try {
         await questionsStore.setJSON(QUESTIONS_KEY, questions);
     } catch (error) {
-        console.error("خطأ حرج عند الكتابة في Netlify Blobs:", error);
+        console.error("[BLOBS ERROR] فشل حفظ الأسئلة:", error);
         throw new Error('فشل حفظ البيانات في المخزن السحابي.');
     }
 }
 
-// وسيط للتحقق من أن المستخدم مسجل كمسؤول
+// وسيط التحقق من المصادقة مع تسجيل أحداث مفصل
 const requireAuth = (req, res, next) => {
-  if (req.session && req.session.authenticated) {
+  console.log(`[AUTH] التحقق من المصادقة للمسار: ${req.originalUrl}`);
+  console.log(`[AUTH] هل الجلسة موجودة؟ ${!!req.session}`);
+  if (req.session) {
+    console.log(`[AUTH] هل المستخدم مصادق عليه؟ ${req.session.authenticated}`);
+  }
+
+  if (req.session && req.session.authenticated === true) {
+    console.log(`[AUTH] المصادقة ناجحة. السماح بالمرور.`);
     return next();
   }
+  
+  console.warn(`[AUTH] المصادقة فشلت. رفض الوصول.`);
   res.status(401).json({ success: false, error: 'غير مصادق عليه. يرجى تسجيل الدخول أولاً.' });
 };
 
@@ -152,7 +167,55 @@ const requireAuth = (req, res, next) => {
 // المسارات (API Routes)
 // =================================================================
 
-// --- المسارات العامة (متاحة للجميع) ---
+// --- مسار تسجيل دخول المسؤول (مع تشخيص كامل) ---
+router.post('/admin/login', loginLimiter, (req, res) => {
+  console.log('----------------------------------------------------');
+  console.log('[LOGIN ATTEMPT] بدأت محاولة تسجيل دخول جديدة.');
+  
+  let submittedPassword = (req.body.password || (typeof req.body === 'string' ? req.body : '')).trim();
+  
+  console.log(`[LOGIN ATTEMPT] كلمة المرور المستلمة (طولها): ${submittedPassword.length}`);
+  
+  // لا تقم أبداً بطباعة كلمة المرور الكاملة في السجلات الإنتاجية
+  const submittedPasswordExcerpt = submittedPassword.substring(0, 2) + '...';
+  const adminPasswordExcerpt = ADMIN_PASSWORD.substring(0, 2) + '...';
+  
+  console.log(`[LOGIN ATTEMPT] مقتطف من كلمة المرور المستلمة: '${submittedPasswordExcerpt}'`);
+  console.log(`[LOGIN ATTEMPT] مقتطف من كلمة المرور المخزنة: '${adminPasswordExcerpt}'`);
+
+  const passwordsMatch = (submittedPassword === ADMIN_PASSWORD);
+  console.log(`[LOGIN ATTEMPT] نتيجة المقارنة: ${passwordsMatch ? '<<< ناجحة >>>' : '<<< فاشلة >>>'}`);
+
+  if (passwordsMatch) {
+    console.log('[LOGIN SUCCESS] كلمة المرور صحيحة. جاري إنشاء جلسة جديدة...');
+    req.session.regenerate(err => {
+      if (err) {
+        console.error("[SESSION ERROR] خطأ حرج عند إعادة إنشاء الجلسة:", err);
+        return res.status(500).json({ success: false, error: 'خطأ داخلي في نظام الجلسات.' });
+      }
+      
+      console.log('[SESSION] تم إعادة إنشاء الجلسة بنجاح. جاري تعيين المصادقة...');
+      req.session.authenticated = true;
+      
+      req.session.save(err2 => {
+        if (err2) {
+          console.error("[SESSION ERROR] خطأ حرج عند حفظ الجلسة بعد تعيين المصادقة:", err2);
+          return res.status(500).json({ success: false, error: 'خطأ داخلي في حفظ الجلسة.' });
+        }
+        console.log('[LOGIN FINAL] تم حفظ الجلسة والمصادقة بنجاح. إرسال رد إيجابي للمستخدم.');
+        console.log('----------------------------------------------------');
+        res.status(200).json({ success: true, message: 'تم تسجيل الدخول بنجاح.' });
+      });
+    });
+  } else {
+    console.warn('[LOGIN FAILURE] كلمة المرور غير صحيحة. إرسال رد سلبي للمستخدم.');
+    console.log('----------------------------------------------------');
+    res.status(401).json({ success: false, error: 'كلمة المرور المدخلة غير صحيحة.' });
+  }
+});
+
+// بقية المسارات تبقى كما هي...
+// ... (الكود الكامل من الإجابة السابقة للمسارات الأخرى مثل /logout, /questions, /answered, etc.)
 
 // استقبال سؤال جديد من المستخدمين
 router.post('/questions', async (req, res) => {
@@ -176,7 +239,7 @@ router.post('/questions', async (req, res) => {
       answeredDate: null,
       lastModified: null
     };
-    questions.unshift(newEntry); // إضافة السؤال الجديد في بداية القائمة
+    questions.unshift(newEntry);
 
     await saveQuestions(questions);
     res.status(201).json({ success: true, message: 'تم استلام السؤال بنجاح. شكراً لكم.' });
@@ -203,31 +266,6 @@ router.get('/answered', async (_req, res) => {
 
 // --- مسارات المسؤولين الخاصة (تتطلب تسجيل الدخول) ---
 
-// تسجيل دخول المسؤول
-router.post('/admin/login', loginLimiter, (req, res) => {
-  let submittedPassword = req.body.password || (typeof req.body === 'string' ? req.body : '');
-  submittedPassword = submittedPassword.trim();
-
-  if (submittedPassword && submittedPassword === ADMIN_PASSWORD) {
-    req.session.regenerate(err => {
-      if (err) {
-        console.error("Session regeneration error:", err);
-        return res.status(500).json({ success: false, error: 'خطأ في إنشاء الجلسة.' });
-      }
-      req.session.authenticated = true;
-      req.session.save(err2 => {
-        if (err2) {
-          console.error("Session save error:", err2);
-          return res.status(500).json({ success: false, error: 'خطأ في حفظ الجلسة.' });
-        }
-        res.status(200).json({ success: true, message: 'تم تسجيل الدخول بنجاح.' });
-      });
-    });
-  } else {
-    res.status(401).json({ success: false, error: 'كلمة المرور غير صحيحة.' });
-  }
-});
-
 // تسجيل خروج المسؤول
 router.post('/admin/logout', requireAuth, (req, res) => {
   req.session.destroy(err => {
@@ -235,7 +273,7 @@ router.post('/admin/logout', requireAuth, (req, res) => {
       console.error("Session destroy error:", err);
       return res.status(500).json({ success: false, error: 'فشل في إنهاء الجلسة.' });
     }
-    res.clearCookie('connect.sid'); // The default cookie name is 'connect.sid'
+    res.clearCookie('connect.sid');
     res.status(200).json({ success: true, message: 'تم تسجيل الخروج بنجاح.' });
   });
 });
@@ -256,7 +294,7 @@ router.get('/admin/questions', requireAuth, async (req, res) => {
     }
 });
 
-// **مسار جديد**: إضافة مسألة كاملة (سؤال وجواب وتصنيفات) بواسطة المسؤول
+// إضافة مسألة كاملة (سؤال وجواب وتصنيفات) بواسطة المسؤول
 router.post('/admin/question', requireAuth, async (req, res) => {
     const { question, answer, tags, source } = req.body;
     if (!question || typeof question !== 'string' || question.trim() === '') {
@@ -305,14 +343,12 @@ router.put('/admin/question/:id', requireAuth, async (req, res) => {
         const originalQuestion = questions[questionIndex];
         const now = new Date().toISOString();
 
-        // تحديث البيانات
         originalQuestion.question = question.trim();
         originalQuestion.answer = (answer || '').trim();
         originalQuestion.tags = Array.isArray(tags) ? tags.map(t => t.trim()).filter(Boolean) : [];
         originalQuestion.source = (source || '').trim();
         originalQuestion.lastModified = now;
 
-        // إذا لم يكن هناك تاريخ إجابة وتمت إضافة جواب الآن، فقم بتعيينه
         if (!originalQuestion.answeredDate && originalQuestion.answer) {
             originalQuestion.answeredDate = now;
         }
@@ -348,9 +384,8 @@ router.delete('/admin/question/:id', requireAuth, async (req, res) => {
   }
 });
 
-
 // =================================================================
-// التصدير النهائي للوظيفة السحابية
+// التصدير النهائي
 // =================================================================
 app.use('/.netlify/functions/api', router);
 module.exports.handler = serverless(app);
