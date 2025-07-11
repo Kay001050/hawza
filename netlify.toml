@@ -1,3 +1,24 @@
-[build]
-  publish = "./"
+# ملف إعدادات Netlify
 
+# إعدادات البناء الأساسية
+[build]
+  # المجلد الذي يحتوي على ملفات الموقع النهائية (HTML, CSS, JS)
+  publish = "/"
+  # المجلد الذي يحتوي على الوظائف السحابية
+  functions = "netlify/functions"
+
+# إعادة توجيه الطلبات إلى الوظيفة السحابية
+[[redirects]]
+  # كل الطلبات التي تبدأ بـ /api/
+  from = "/api/*"
+  # أو كل الطلبات التي تبدأ بـ /admin/
+  to = "/.netlify/functions/api/:splat"
+  # يتم معالجتها كـ 200 OK (نجاح)
+  status = 200
+  force = true # ضروري ليعمل مع الطلبات من نوع POST
+
+[[redirects]]
+  from = "/admin/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
