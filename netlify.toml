@@ -7,18 +7,16 @@
   # المجلد الذي يحتوي على الوظائف السحابية
   functions = "netlify/functions"
 
-# إعادة توجيه الطلبات إلى الوظيفة السحابية
+# إعادة توجيه الطلبات التي تبدأ بـ /api/ أو /admin/ إلى الوظيفة السحابية
+# هذه القواعد ضرورية لإنشاء واجهة برمجية (API) نظيفة.
 [[redirects]]
-  # كل الطلبات التي تبدأ بـ /api/
   from = "/api/*"
-  # أو كل الطلبات التي تبدأ بـ /admin/
   to = "/.netlify/functions/api/:splat"
-  # يتم معالجتها كـ 200 OK (نجاح)
   status = 200
-  force = true # ضروري ليعمل مع الطلبات من نوع POST
+  force = true # ضروري لطلبات POST, PUT, DELETE
 
 [[redirects]]
   from = "/admin/*"
-  to = "/.netlify/functions/api/:splat"
+  to = "/.netlify/functions/api/admin/:splat" # توجيه أدق لمسارات المسؤول
   status = 200
   force = true
