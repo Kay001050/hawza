@@ -172,22 +172,90 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       createQuestionCard(q) {
         const card = document.createElement('div');
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const AdminApp = {
+    state: { isLoggedIn: false, questions: [] },
+    elements: {
+      loginModal: document.getElementById('login-modal'), loginForm: document.getElementById('login-form'), passwordInput: document.getElementById('password'),
+      dashboard: document.getElementById('dashboard'), logoutBtn: document.getElementById('logout-btn'),
+      stats: { total: document.getElementById('total-questions'), answered: document.getElementById('answered-questions-stat'), unanswered: document.getElementById('unanswered-questions-stat') },
+      lists: { unanswered: document.getElementById('unanswered-questions-list'), answered: document.getElementById('answered-questions-list') },
+      loader: document.getElementById('loader'), toastContainer: document.getElementById('toast-container'),
+    },
+    // ✅ API object updated to use consistent and correct paths
+    api: {
+      async request(endpoint, options = {}) {
+        options.credentials = 'include';
+        if (options.body) {
+          options.headers = { ...options.headers, 'Content-Type': 'application/json' };
+          options.body = JSON.stringify(options.body);
+        }
+        // All admin requests go through the /admin/ path prefix
+        const response = await fetch(endpoint, options);
+        const responseData = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(responseData.error || `خطأ في الشبكة: ${response.statusText}`);
+        }
+        return responseData;
+      },
+      checkStatus() { return this.request('/admin/status'); },
+      login(password) { return this.request('/admin/login', { method: 'POST', body: { password } }); },
+      logout() { return this.request('/admin/logout', { method: 'POST' }); },
+      getQuestions() { return this.request('/admin/questions'); },
+      postAnswer(id, answer) { return this.request('/admin/answer', { method: 'POST', body: { id, answer } }); }
+    },
+    ui: {
+      showLoader() { AdminApp.elements.loader.classList.remove('hidden'); },
+      hideLoader() { AdminApp.elements.loader.classList.add('hidden'); },
+      showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        AdminApp.elements.toastContainer.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+      },
+      render() {
+        AdminApp.elements.lists.unanswered.innerHTML = '';
+        AdminApp.elements.lists.answered.innerHTML = '';
+        const unanswered = AdminApp.state.questions.filter(q => !q.answer);
+        const answered = AdminApp.state.questions.filter(q => q.answer);
+        AdminApp.elements.stats.total.textContent = AdminApp.state.questions.length;
+        AdminApp.elements.stats.answered.textContent = answered.length;
+        AdminApp.elements.stats.unanswered.textContent = unanswered.length;
+        
+        if (unanswered.length === 0) {
+            AdminApp.elements.lists.unanswered.innerHTML = '<p style="padding: 1rem; text-align: center;">لا توجد أسئلة بانتظار الإجابة حاليًا. عمل رائع!</p>';
+        } else {
+            unanswered.forEach(q => AdminApp.elements.lists.unanswered.appendChild(this.createQuestionCard(q)));
+        }
+
+        if (answered.length === 0) {
+            AdminApp.elements.lists.answered.innerHTML = '<p style="padding: 1rem; text-align: center;">لم تتم الإجابة على أي سؤال بعد.</p>';
+        } else {
+            answered.sort((a, b) => new Date(b.answeredDate || b.date) - new Date(a.answeredDate || a.date))
+                     .forEach(q => AdminApp.elements.lists.answered.appendChild(this.createQuestionCard(q)));
+        }
+      },
+      createQuestionCard(q) {
+        const card = document.createElement('div');
         card.className = `question-card ${q.answer ? 'answered' : 'unanswered'}`;
         card.dataset.id = q.id;
         const date = new Date(q.date).toLocaleDateString('ar-EG-u-nu-latn', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' });
-        const questionHTML = q.question.replace(/</g, "&lt;").replace(/>/g, "&gt;"); // أمان أساسي ضد XSS
+        const questionHTML = q.question.replace(/</g, "&lt;").replace(/>/g, "&gt;");
         const answerHTML = q.answer ? q.answer.replace(/</g, "&lt;").replace(/>/g, "&gt;") : "";
         let content;
         if (q.answer) {
-          content = `<div class="question-header"><span>السؤال:</span><span class="date">${date}</span></div><p class="question-body">${questionHTML}</p><strong>الجواب:</strong><div class="answer-display">${answerHTML}</div>`;
+          const answeredDateStr = q.answeredDate ? ` (تمت الإجابة في: ${new Date(q.answeredDate).toLocaleDateString('ar-EG-u-nu-latn', {day: 'numeric', month: 'long'})})` : '';
+          content = `<div class="question-header"><span>السؤال:</span><span class="date">${date}</span></div><p class="question-body">${questionHTML}</p><strong>الجواب:${answeredDateStr}</strong><div class="answer-display">${answerHTML}</div>`;
         } else {
-          content = `<div class="question-header"><span>السؤال:</span><span class="date">${date}</span></div><p class="question-body">${questionHTML}</p><div class="answer-form"><label for="answer-${q.id}">أضف إجابتك هنا:</label><textarea id="answer-${q.id}" placeholder="اكتب الجواب المفصل..."></textarea><button class="btn btn-secondary btn-submit-answer"><i class="fas fa-paper-plane"></i> إرسال الجواب</button></div>`;
+          content = `<div class="question-header"><span>السؤال:</span><span class="date">${date}</span></div><p class="question-body">${questionHTML}</p><form class="answer-form"><label for="answer-${q.id}">أضف إجابتك هنا:</label><textarea id="answer-${q.id}" placeholder="اكتب الجواب المفصل..."></textarea><button type="submit" class="btn btn-secondary btn-submit-answer"><i class="fas fa-paper-plane"></i> إرسال الجواب</button></form>`;
         }
         card.innerHTML = content;
         return card;
       }
     },
-    // --- HANDLERS (مُحدّث بالكامل) ---
+    // ✅ Event handlers updated for better error handling and flow
     async handleLogin(e) {
       e.preventDefault();
       const submitBtn = e.target.querySelector('button[type="submit"]');
@@ -195,12 +263,12 @@ document.addEventListener('DOMContentLoaded', () => {
       AdminApp.ui.showLoader();
       try {
         const password = AdminApp.elements.passwordInput.value;
-        await AdminApp.api.login(password);
+        const data = await AdminApp.api.login(password);
         AdminApp.state.isLoggedIn = true;
         AdminApp.elements.loginModal.classList.add('hidden');
         AdminApp.elements.dashboard.classList.remove('hidden');
         await AdminApp.loadData();
-        AdminApp.ui.showToast('تم تسجيل الدخول بنجاح', 'success');
+        AdminApp.ui.showToast(data.message || 'تم تسجيل الدخول بنجاح', 'success');
       } catch (err) {
         AdminApp.ui.showToast(err.message, 'error');
         AdminApp.elements.passwordInput.value = '';
@@ -212,13 +280,13 @@ document.addEventListener('DOMContentLoaded', () => {
     async handleLogout() {
       AdminApp.ui.showLoader();
       try {
-        await AdminApp.api.logout();
+        const data = await AdminApp.api.logout();
         AdminApp.state.isLoggedIn = false;
         AdminApp.state.questions = [];
         AdminApp.elements.passwordInput.value = '';
         AdminApp.elements.dashboard.classList.add('hidden');
         AdminApp.elements.loginModal.classList.remove('hidden');
-        AdminApp.ui.showToast('تم تسجيل الخروج بنجاح');
+        AdminApp.ui.showToast(data.message || 'تم تسجيل الخروج بنجاح');
       } catch (err) {
         AdminApp.ui.showToast(err.message, 'error');
       } finally {
@@ -226,8 +294,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     },
     async handleAnswerSubmit(e) {
-      if (!e.target.classList.contains('btn-submit-answer')) return;
-      const card = e.target.closest('.question-card');
+      e.preventDefault(); // Prevent form submission
+      const submitBtn = e.target.closest('.btn-submit-answer');
+      if (!submitBtn) return;
+      const card = submitBtn.closest('.question-card');
       const id = card.dataset.id;
       const textarea = card.querySelector('textarea');
       const answer = textarea.value.trim();
@@ -235,53 +305,55 @@ document.addEventListener('DOMContentLoaded', () => {
         AdminApp.ui.showToast('لا يمكن إرسال جواب فارغ', 'error');
         return;
       }
-      e.target.disabled = true;
+      submitBtn.disabled = true;
       AdminApp.ui.showLoader();
       try {
-        await AdminApp.api.postAnswer(id, answer);
-        AdminApp.ui.showToast('تم حفظ الجواب بنجاح', 'success');
-        await AdminApp.loadData();
+        const data = await AdminApp.api.postAnswer(id, answer);
+        AdminApp.ui.showToast(data.message || 'تم حفظ الجواب بنجاح', 'success');
+        await AdminApp.loadData(); // Reload all data to reflect changes
       } catch (err) {
         AdminApp.ui.showToast(err.message, 'error');
-        e.target.disabled = false;
+        submitBtn.disabled = false;
       } finally {
         AdminApp.ui.hideLoader();
       }
     },
-    // --- LOGIC (مُحدّث بالكامل) ---
     async loadData() {
-      AdminApp.ui.showLoader();
+      this.ui.showLoader();
       try {
-        const questions = await AdminApp.api.getQuestions();
-        AdminApp.state.questions = questions.sort((a, b) => new Date(b.date) - new Date(a.date));
-        AdminApp.ui.render();
+        const questions = await this.api.getQuestions();
+        this.state.questions = questions.sort((a, b) => new Date(b.date) - new Date(a.date));
+        this.ui.render();
       } catch (err) {
-        AdminApp.ui.showToast(err.message, 'error');
-        this.handleLogout(); // إذا فشل جلب البيانات، فالأغلب أن الجلسة انتهت
+        this.ui.showToast(err.message, 'error');
+        // If loading data fails, it's likely an authentication issue (session expired)
+        this.handleLogout();
       } finally {
-        AdminApp.ui.hideLoader();
+        this.ui.hideLoader();
       }
     },
     async checkLoginStatus() {
-      AdminApp.ui.showLoader();
+      this.ui.showLoader();
       try {
-        await AdminApp.api.checkStatus(); // التحقق من خلال المسار المخصص
-        AdminApp.state.isLoggedIn = true;
-        AdminApp.elements.loginModal.classList.add('hidden');
-        AdminApp.elements.dashboard.classList.remove('hidden');
+        // Now this call will succeed because we added the backend route
+        await this.api.checkStatus();
+        this.state.isLoggedIn = true;
+        this.elements.loginModal.classList.add('hidden');
+        this.elements.dashboard.classList.remove('hidden');
         this.loadData();
       } catch (e) {
-        AdminApp.state.isLoggedIn = false;
-        AdminApp.elements.loginModal.classList.remove('hidden');
-        AdminApp.elements.dashboard.classList.add('hidden');
+        this.state.isLoggedIn = false;
+        this.elements.loginModal.classList.remove('hidden');
+        this.elements.dashboard.classList.add('hidden');
       } finally {
-        AdminApp.ui.hideLoader();
+        this.ui.hideLoader();
       }
     },
     init() {
       this.elements.loginForm.addEventListener('submit', this.handleLogin.bind(this));
       this.elements.logoutBtn.addEventListener('click', this.handleLogout.bind(this));
-      this.elements.dashboard.addEventListener('click', this.handleAnswerSubmit.bind(this));
+      // Use event delegation on the dashboard for answer submissions
+      this.elements.dashboard.addEventListener('submit', this.handleAnswerSubmit.bind(this));
       this.checkLoginStatus();
     }
   };
