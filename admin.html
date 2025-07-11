@@ -3,70 +3,615 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة الإدارة - نور الحوزة</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600&display=swap" rel="stylesheet">
+  <title>لوحة إدارة نور الحوزة</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="icon" href="Icon.png" type="image/png">
+
   <style>
-    body{font-family:'Cairo',sans-serif;background:#f7f7f7;color:#333;padding:2rem;text-align:center;}
-    form{background:#fff;padding:2rem;border-radius:8px;display:inline-block;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
-    label{display:block;margin-bottom:.5rem;font-weight:600;}
-    input{padding:.5rem .8rem;width:100%;margin-bottom:1rem;border:1px solid #ccc;border-radius:4px;}
-    button{padding:.5rem 1rem;background:#054a29;color:#fff;border:none;border-radius:4px;cursor:pointer;}
-    button:hover{background:#0a6b3e;}
-    #questions{margin-top:2rem;text-align:right;}
-    #questions li{background:#fff;margin-bottom:.5rem;padding:.5rem;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
+    /* ---------------------------------- */
+    /* Global Variables          */
+    /* ---------------------------------- */
+    :root {
+      --primary-color: #054a29;
+      --primary-hover: #0a6b3e;
+      --secondary-color: #b35f2f;
+      --background-color: #f8f9fa;
+      --surface-color: #ffffff;
+      --text-color: #343a40;
+      --border-color: #dee2e6;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+      --border-radius: 8px;
+    }
+
+    /* ---------------------------------- */
+    /* Base & Layout            */
+    /* ---------------------------------- */
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    .hidden { display: none !important; }
+
+    /* ---------------------------------- */
+    /* Login Modal             */
+    /* ---------------------------------- */
+    #login-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    #login-form {
+      background: var(--surface-color);
+      padding: 3rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+    #login-form h1 {
+      margin-top: 0;
+      color: var(--primary-color);
+    }
+    #login-form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      text-align: right;
+    }
+    #login-form input {
+      padding: 0.75rem 1rem;
+      width: 100%;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 1rem;
+    }
+
+    /* ---------------------------------- */
+    /* Dashboard Layout        */
+    /* ---------------------------------- */
+    #dashboard {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background: var(--primary-color);
+      color: #f9e9b6;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    main {
+      padding: 2rem;
+      flex: 1;
+    }
+    
+    /* ---------------------------------- */
+    /* Buttons & Controls         */
+    /* ---------------------------------- */
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    .btn-primary:hover { background-color: var(--primary-hover); }
+    .btn-secondary {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+    .btn-secondary:hover { background-color: #9e4f20; }
+    .btn-logout {
+      background: transparent;
+      color: #f9e9b6;
+      border: 1px solid #f9e9b6;
+    }
+    .btn-logout:hover { background: #f9e9b6; color: var(--primary-color); }
+    .btn:disabled { background-color: #ccc; cursor: not-allowed; }
+
+    /* ---------------------------------- */
+    /* Stats Cards             */
+    /* ---------------------------------- */
+    #stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .stat-card {
+      background: var(--surface-color);
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-right: 5px solid var(--primary-color);
+    }
+    .stat-card .icon {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+    }
+    .stat-card .info h3 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1.1rem;
+      color: var(--secondary-color);
+    }
+    .stat-card .info p {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    /* ---------------------------------- */
+    /* Question Cards            */
+    /* ---------------------------------- */
+    .questions-section h2 {
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary-color);
+    }
+    .question-card {
+      background: var(--surface-color);
+      margin-bottom: 1rem;
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      border-right: 4px solid var(--border-color);
+    }
+    .question-card.unanswered { border-right-color: var(--secondary-color); }
+    .question-card.answered { border-right-color: var(--primary-hover); }
+    
+    .question-header {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    .question-header .date {
+      font-weight: 400;
+      color: #6c757d;
+      font-size: 0.9rem;
+      margin-left: 1rem;
+    }
+    .question-body {
+      color: #495057;
+      margin-bottom: 1rem;
+    }
+    .answer-display {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 4px;
+      border: 1px solid #e9ecef;
+      white-space: pre-wrap;
+    }
+    .answer-form textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+      font-family: 'Cairo', sans-serif;
+      font-size: 1rem;
+      resize: vertical;
+    }
+    
+    /* ---------------------------------- */
+    /* Loader & Toasts            */
+    /* ---------------------------------- */
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 3000;
+    }
+    .spinner {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid var(--primary-color);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    #toast-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .toast {
+      padding: 1rem 1.5rem;
+      border-radius: var(--border-radius);
+      color: white;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      opacity: 0;
+      transform: translateY(-20px);
+      animation: toast-in 0.5s forwards;
+    }
+    .toast.success { background-color: #28a745; }
+    .toast.error { background-color: #dc3545; }
+    @keyframes toast-in { to { opacity: 1; transform: translateY(0); } }
+
   </style>
 </head>
 <body>
-  <form id="loginForm">
-    <label for="password">كلمة المرور:</label>
-    <input type="password" id="password" required>
-    <button type="submit">دخول</button>
-  </form>
-  <ul id="questions" hidden></ul>
+
+  <div id="login-modal">
+    <form id="login-form">
+      <h1><i class="fas fa-mosque"></i> نور الحوزة</h1>
+      <p>لوحة تحكم المسؤولين</p>
+      <label for="password">كلمة المرور:</label>
+      <input type="password" id="password" required>
+      <button type="submit" class="btn btn-primary" style="width: 100%;">
+        <i class="fas fa-sign-in-alt"></i> دخول
+      </button>
+    </form>
+  </div>
+
+  <div id="dashboard" class="hidden">
+    <header>
+      <h1><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h1>
+      <button id="logout-btn" class="btn btn-logout">
+        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+      </button>
+    </header>
+    
+    <main>
+      <section id="stats-container">
+        <div class="stat-card">
+          <div class="icon"><i class="fas fa-question-circle"></i></div>
+          <div class="info">
+            <h3>الأسئلة المستلمة</h3>
+            <p id="total-questions">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="icon"><i class="fas fa-check-circle" style="color: var(--primary-hover);"></i></div>
+          <div class="info">
+            <h3>الأسئلة المجابة</h3>
+            <p id="answered-questions-stat">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="icon"><i class="fas fa-hourglass-half" style="color: var(--secondary-color);"></i></div>
+          <div class="info">
+            <h3>بانتظار الإجابة</h3>
+            <p id="unanswered-questions-stat">0</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="questions-section">
+        <h2><i class="fas fa-edit"></i> أسئلة بانتظار الإجابة</h2>
+        <div id="unanswered-questions-list"></div>
+      </section>
+      
+      <section class="questions-section" style="margin-top: 2.5rem;">
+        <h2><i class="fas fa-archive"></i> الأرشيف (الأسئلة المجابة)</h2>
+        <div id="answered-questions-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="loader" class="hidden"><div class="spinner"></div></div>
+
+  <div id="toast-container"></div>
+
 <script>
-const form=document.getElementById('loginForm');
-const list=document.getElementById('questions');
-form.addEventListener('submit',async e=>{
-  e.preventDefault();
-  const password=document.getElementById('password').value;
-const res=await fetch('/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password}),credentials:'include'});
-  if(res.ok){
-    form.style.display='none';
-    list.hidden=false;
-    loadQuestions();
-  }else{alert('كلمة المرور غير صحيحة');}
-});
-async function loadQuestions(){
-  const res=await fetch('/admin/questions',{credentials:'include'});
-  if(!res.ok)return alert('فشل جلب الأسئلة');
-  const data=await res.json();
-  list.innerHTML='';
-  data.forEach(q=>{
-    const li=document.createElement('li');
-    const p=document.createElement('p');
-    p.textContent=`${q.date.slice(0,10)}: ${q.question}`;
-    li.appendChild(p);
-    if(q.answer){
-      const ans=document.createElement('p');
-      ans.textContent=`الجواب: ${q.answer}`;
-      li.appendChild(ans);
-    }else{
-      const textarea=document.createElement('textarea');
-      const btn=document.createElement('button');
-      btn.textContent='إرسال الجواب';
-      btn.addEventListener('click',async()=>{
-        const answer=textarea.value.trim();
-        if(!answer)return;
-        const r=await fetch('/admin/answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:q.id,answer}),credentials:'include'});
-        if(r.ok)loadQuestions();
-        else alert('فشل حفظ الجواب');
-      });
-      li.appendChild(textarea);
-      li.appendChild(btn);
+document.addEventListener('DOMContentLoaded', () => {
+
+  /**
+   * AdminApp
+   * The main object that encapsulates the entire application logic.
+   */
+  const AdminApp = {
+    // --- STATE ---
+    // Holds the dynamic data of the application.
+    state: {
+      isLoggedIn: false,
+      questions: [],
+    },
+
+    // --- ELEMENTS ---
+    // Caches references to DOM elements for performance and convenience.
+    elements: {
+      loginModal: document.getElementById('login-modal'),
+      loginForm: document.getElementById('login-form'),
+      passwordInput: document.getElementById('password'),
+      dashboard: document.getElementById('dashboard'),
+      logoutBtn: document.getElementById('logout-btn'),
+      stats: {
+        total: document.getElementById('total-questions'),
+        answered: document.getElementById('answered-questions-stat'),
+        unanswered: document.getElementById('unanswered-questions-stat'),
+      },
+      lists: {
+        unanswered: document.getElementById('unanswered-questions-list'),
+        answered: document.getElementById('answered-questions-list'),
+      },
+      loader: document.getElementById('loader'),
+      toastContainer: document.getElementById('toast-container'),
+    },
+
+    // --- API ---
+    // Handles all communication with the server.
+    api: {
+      async login(password) {
+        const res = await fetch('/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+          credentials: 'include'
+        });
+        return res.ok;
+      },
+      async getQuestions() {
+        const res = await fetch('/admin/questions', { credentials: 'include' });
+        if (!res.ok) throw new Error('Failed to fetch questions');
+        return await res.json();
+      },
+      async postAnswer(id, answer) {
+        const res = await fetch('/admin/answer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, answer }),
+          credentials: 'include'
+        });
+        if (!res.ok) throw new Error('Failed to save answer');
+      }
+    },
+
+    // --- UI ---
+    // Methods for manipulating the user interface.
+    ui: {
+      showLoader() { AdminApp.elements.loader.classList.remove('hidden'); },
+      hideLoader() { AdminApp.elements.loader.classList.add('hidden'); },
+      
+      showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        AdminApp.elements.toastContainer.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+      },
+
+      render() {
+        // Clear current lists
+        AdminApp.elements.lists.unanswered.innerHTML = '';
+        AdminApp.elements.lists.answered.innerHTML = '';
+        
+        // Separate questions
+        const unanswered = AdminApp.state.questions.filter(q => !q.answer);
+        const answered = AdminApp.state.questions.filter(q => q.answer);
+        
+        // Update stats
+        AdminApp.elements.stats.total.textContent = AdminApp.state.questions.length;
+        AdminApp.elements.stats.answered.textContent = answered.length;
+        AdminApp.elements.stats.unanswered.textContent = unanswered.length;
+
+        // Populate lists
+        if (unanswered.length === 0) {
+            AdminApp.elements.lists.unanswered.innerHTML = '<p>لا توجد أسئلة بانتظار الإجابة حاليًا. عمل رائع!</p>';
+        } else {
+            unanswered.forEach(q => AdminApp.elements.lists.unanswered.appendChild(this.createQuestionCard(q)));
+        }
+
+        if (answered.length === 0) {
+            AdminApp.elements.lists.answered.innerHTML = '<p>لم تتم الإجابة على أي سؤال بعد.</p>';
+        } else {
+            answered.forEach(q => AdminApp.elements.lists.answered.appendChild(this.createQuestionCard(q)));
+        }
+      },
+
+      createQuestionCard(q) {
+        const card = document.createElement('div');
+        card.className = `question-card ${q.answer ? 'answered' : 'unanswered'}`;
+        card.dataset.id = q.id;
+
+        const date = new Date(q.date).toLocaleDateString('ar-EG-u-nu-latn', {
+            year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit'
+        });
+
+        let content;
+        if (q.answer) {
+          // Display answered question
+          content = `
+            <div class="question-header">
+              <span>السؤال:</span>
+              <span class="date">${date}</span>
+            </div>
+            <p class="question-body">${q.question}</p>
+            <strong>الجواب:</strong>
+            <div class="answer-display">${q.answer}</div>
+            `;
+        } else {
+          // Display form for unanswered question
+          content = `
+            <div class="question-header">
+              <span>السؤال:</span>
+              <span class="date">${date}</span>
+            </div>
+            <p class="question-body">${q.question}</p>
+            <div class="answer-form">
+              <label for="answer-${q.id}">أضف إجابتك هنا:</label>
+              <textarea id="answer-${q.id}" placeholder="اكتب الجواب المفصل..."></textarea>
+              <button class="btn btn-secondary btn-submit-answer">
+                <i class="fas fa-paper-plane"></i> إرسال الجواب
+              </button>
+            </div>
+          `;
+        }
+        card.innerHTML = content;
+        return card;
+      }
+    },
+
+    // --- HANDLERS ---
+    // Event handler methods.
+    async handleLogin(e) {
+      e.preventDefault();
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      AdminApp.ui.showLoader();
+
+      try {
+        const password = AdminApp.elements.passwordInput.value;
+        const success = await AdminApp.api.login(password);
+        if (success) {
+          AdminApp.state.isLoggedIn = true;
+          AdminApp.elements.loginModal.classList.add('hidden');
+          AdminApp.elements.dashboard.classList.remove('hidden');
+          await AdminApp.loadData();
+          AdminApp.ui.showToast('تم تسجيل الدخول بنجاح', 'success');
+        } else {
+          AdminApp.ui.showToast('كلمة المرور غير صحيحة', 'error');
+        }
+      } catch (err) {
+        AdminApp.ui.showToast('حدث خطأ في الاتصال بالخادم', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        AdminApp.ui.hideLoader();
+      }
+    },
+    
+    handleLogout() {
+      // In a real app, this would also call a '/logout' endpoint
+      AdminApp.state.isLoggedIn = false;
+      AdminApp.state.questions = [];
+      AdminApp.elements.passwordInput.value = '';
+      AdminApp.elements.dashboard.classList.add('hidden');
+      AdminApp.elements.loginModal.classList.remove('hidden');
+      AdminApp.ui.showToast('تم تسجيل الخروج');
+    },
+
+    async handleAnswerSubmit(e) {
+      if (!e.target.classList.contains('btn-submit-answer')) return;
+
+      const card = e.target.closest('.question-card');
+      const id = card.dataset.id;
+      const textarea = card.querySelector('textarea');
+      const answer = textarea.value.trim();
+
+      if (!answer) {
+        AdminApp.ui.showToast('لا يمكن إرسال جواب فارغ', 'error');
+        return;
+      }
+      
+      e.target.disabled = true;
+      AdminApp.ui.showLoader();
+
+      try {
+        await AdminApp.api.postAnswer(id, answer);
+        AdminApp.ui.showToast('تم حفظ الجواب بنجاح', 'success');
+        await AdminApp.loadData(); // Reload data to reflect the change
+      } catch (err) {
+        AdminApp.ui.showToast(err.message || 'فشل حفظ الجواب', 'error');
+        e.target.disabled = false;
+      } finally {
+        AdminApp.ui.hideLoader();
+      }
+    },
+
+    // --- LOGIC ---
+    // Core application logic.
+    async loadData() {
+      AdminApp.ui.showLoader();
+      try {
+        AdminApp.state.questions = await AdminApp.api.getQuestions();
+        AdminApp.ui.render();
+      } catch (err) {
+        AdminApp.ui.showToast(err.message, 'error');
+        // If fetching fails, maybe the session expired, so log out.
+        this.handleLogout();
+      } finally {
+        AdminApp.ui.hideLoader();
+      }
+    },
+
+    async checkLoginStatus() {
+      AdminApp.ui.showLoader();
+      try {
+        // Try to fetch questions. If it succeeds, user is already logged in.
+        AdminApp.state.questions = await AdminApp.api.getQuestions();
+        AdminApp.state.isLoggedIn = true;
+        AdminApp.elements.loginModal.classList.add('hidden');
+        AdminApp.elements.dashboard.classList.remove('hidden');
+        AdminApp.ui.render();
+      } catch (e) {
+        // If it fails (e.g. 401 Unauthorized), show the login modal.
+        AdminApp.state.isLoggedIn = false;
+        AdminApp.elements.loginModal.classList.remove('hidden');
+      } finally {
+        AdminApp.ui.hideLoader();
+      }
+    },
+    
+    // --- INITIALIZATION ---
+    init() {
+      // Bind all event listeners
+      this.elements.loginForm.addEventListener('submit', this.handleLogin);
+      this.elements.logoutBtn.addEventListener('click', this.handleLogout);
+      
+      // Use event delegation for answer buttons
+      this.elements.dashboard.addEventListener('click', this.handleAnswerSubmit);
+      
+      // Check if user is already logged in on page load
+      this.checkLoginStatus();
     }
-    list.appendChild(li);
-  });
-}
+  };
+
+  // Start the application
+  AdminApp.init();
+
+});
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js");}</script>
 </body>
