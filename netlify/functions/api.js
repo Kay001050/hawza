@@ -1,7 +1,7 @@
 /*
  * بسم الله الرحمن الرحيم
  * =================================================================
- * ملف الواجهة البرمجية (API) لمشروع "نور الحوزة" - نسخة مُحترفة
+ * ملف الواجهة البرمجية (API) لمشروع "نور الحوزة" - نسخة مُحترفة ومُحصّنة
  * =================================================================
  * هذا الملف هو العقل المدبر للنظام، مسؤول عن:
  * - استلام الأسئلة من المستخدمين وحفظها.
@@ -20,7 +20,7 @@ const path = require('path');              // للتعامل مع مسارات �
 const fs = require('fs');                  // للتعامل مع نظام الملفات (قراءة وكتابة ملف JSON)
 const serverless = require('serverless-http'); // لتحويل تطبيق Express إلى وظيفة سحابية متوافقة مع Netlify
 
-// --- حزم أمان إضافية ---
+// --- حزم أمان إضافية (تم التأكد من وجودها في package.json) ---
 const helmet = require('helmet'); // يضيف طبقة من الحماية عن طريق ضبط رؤوس HTTP المختلفة
 const rateLimit = require('express-rate-limit'); // للحماية من هجمات القوة الغاشمة (Brute-force)
 
@@ -47,7 +47,7 @@ app.use(cors({
   credentials: true // يسمح بإرسال الكعكات (cookies) مع الطلبات، وهو ضروري للجلسات
 }));
 
-// 2. استخدام Helmet لضبط رؤوس HTTP الأمنية
+// 2. استخدام Helmet لضبط رؤوس HTTP الأمنية (الآن يعمل)
 app.use(helmet());
 
 // 3. تفعيل محلل JSON و URL-encoded للتعامل مع الطلبات القادمة
@@ -67,7 +67,7 @@ app.use(session({
   }
 }));
 
-// 5. إعداد محدد المعدل (Rate Limiter) لمنع تخمين كلمة المرور
+// 5. إعداد محدد المعدل (Rate Limiter) لمنع تخمين كلمة المرور (الآن يعمل)
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // نافذة زمنية: 15 دقيقة
   max: 10, // الحد الأقصى: 10 محاولات تسجيل دخول لكل IP خلال النافذة الزمنية
@@ -170,9 +170,7 @@ const requireAuth = (req, res, next) => {
 // --- القسم السادس: تعريف المسارات (API Routes) ---
 
 // **الجزء الأول: المسارات العامة (Public Routes)**
-// هذه المسارات متاحة لأي زائر للموقع.
 
-// مسار لإرسال سؤال جديد من قبل المستخدمين
 router.post('/questions', (req, res) => {
   const { question } = req.body;
   if (!question || typeof question !== 'string' || question.trim().length < 10) {
@@ -197,7 +195,6 @@ router.post('/questions', (req, res) => {
   }
 });
 
-// مسار لجلب الأسئلة المجابة فقط
 router.get('/answered', (_req, res) => {
   const questions = loadQuestions()
     .filter(q => q.answer)
@@ -205,42 +202,35 @@ router.get('/answered', (_req, res) => {
   res.status(200).json(questions);
 });
 
-
 // **الجزء الثاني: المسارات الخاصة بالمسؤول (Admin Routes)**
-// هذه المسارات محمية وتتطلب تسجيل الدخول.
 
-// مسار تسجيل دخول المسؤول (محمي بواسطة Rate Limiter)
 router.post('/admin/login', loginLimiter, (req, res) => {
   const submittedPassword = (req.body.password || '').trim();
   if (submittedPassword && submittedPassword === ADMIN_PASSWORD) {
-    req.session.authenticated = true; // تعيين علامة المصادقة في الجلسة
+    req.session.authenticated = true;
     return res.status(200).json({ success: true, message: 'تم تسجيل الدخول بنجاح.' });
   }
   res.status(401).json({ success: false, error: 'كلمة المرور غير صحيحة.' });
 });
 
-// مسار تسجيل الخروج
 router.post('/admin/logout', requireAuth, (req, res) => {
   req.session.destroy(err => {
     if (err) {
       return res.status(500).json({ success: false, error: 'فشل في إنهاء الجلسة.' });
     }
-    res.clearCookie('connect.sid'); // اسم الكعكة الافتراضي لـ express-session
+    res.clearCookie('connect.sid');
     res.status(200).json({ success: true, message: 'تم تسجيل الخروج بنجاح.' });
   });
 });
 
-// مسار للتحقق من حالة الجلسة (مفيد لواجهة المسؤول عند تحميل الصفحة)
 router.get('/admin/status', requireAuth, (req, res) => {
   res.status(200).json({ success: true, authenticated: true });
 });
 
-// مسار لجلب جميع الأسئلة (المجابة وغير المجابة)
 router.get('/admin/questions', requireAuth, (req, res) => {
   res.status(200).json(loadQuestions());
 });
 
-// مسار لإضافة إجابة لسؤال
 router.post('/admin/answer', requireAuth, (req, res) => {
   const { id, answer } = req.body;
   if (!id || !answer || typeof answer !== 'string' || answer.trim() === '') {
@@ -261,7 +251,6 @@ router.post('/admin/answer', requireAuth, (req, res) => {
   }
 });
 
-// ✅ مسار جديد لتحديث إجابة موجودة
 router.put('/admin/question/:id', requireAuth, (req, res) => {
   const { id } = req.params;
   const { answer } = req.body;
@@ -283,7 +272,6 @@ router.put('/admin/question/:id', requireAuth, (req, res) => {
   }
 });
 
-// ✅ مسار جديد لحذف سؤال بالكامل
 router.delete('/admin/question/:id', requireAuth, (req, res) => {
   const { id } = req.params;
   let questions = loadQuestions();
@@ -301,9 +289,6 @@ router.delete('/admin/question/:id', requireAuth, (req, res) => {
 });
 
 // --- القسم السابع: ربط الموجه بالتطبيق الرئيسي وتصدير الوظيفة ---
-
-// يتم استخدام البادئة `/` لأن Netlify سيتعامل مع توجيه المسارات
-// من `/api/*` و `/admin/*` إلى هذه الوظيفة بناءً على ملف `netlify.toml`.
 app.use('/', router); 
 
 // تصدير التطبيق كدالة متوافقة مع Netlify Functions
