@@ -184,6 +184,39 @@ router.get('/admin/questions', requireAuth, async (req, res) => {
     }
 });
 
+// ✅ مسار جديد لإنشاء سؤال من قبل المسؤول (تمت إضافته هنا)
+router.post('/admin/question', requireAuth, async (req, res) => {
+  const { question, source } = req.body;
+  
+  // التحقق من صحة المدخلات
+  if (!question || typeof question !== 'string' || question.trim().length < 5) {
+    return res.status(400).json({ success: false, error: 'نص السؤال مطلوب ويجب أن يكون ذا معنى.' });
+  }
+
+  try {
+    const questions = await loadQuestions(); // استخدام الدالة المحسّنة التي تتصل بـ Netlify Blobs
+    const newEntry = {
+      id: Date.now(),
+      question: question.trim(),
+      source: source ? source.trim() : null, // إضافة المصدر إن وجد
+      answer: '', // السؤال الجديد يكون غير مجاب
+      date: new Date().toISOString(),
+      answeredDate: null,
+      lastModified: null,
+      addedBy: 'admin' // علامة لتمييز أن السؤال أضافه المسؤول
+    };
+    
+    questions.unshift(newEntry); // إضافة السؤال الجديد في بداية القائمة
+    
+    await saveQuestions(questions); // الحفظ في المخزن السحابي
+    
+    res.status(201).json({ success: true, message: 'تم إنشاء السؤال بنجاح.', question: newEntry });
+  } catch (error) {
+    console.error('خطأ في إنشاء سؤال جديد:', error);
+    res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء إنشاء السؤال.' });
+  }
+});
+
 // مسار إضافة إجابة (الآن async)
 router.post('/admin/answer', requireAuth, async (req, res) => {
   const { id, answer } = req.body;
