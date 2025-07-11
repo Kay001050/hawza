@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ديوان المراجعات والمسائل | لوحة تحكم نور الحوزة</title>
   
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
   
@@ -13,909 +15,776 @@
   <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
   <style>
-    /*
-     * ==========================================================
-     * ورقة الأنماط (CSS) الخاصة بديوان المراجعات والمسائل
-     * تم تصميمها بعناية لتعكس الهوية الحوزوية الأصيلة
-     * ==========================================================
-    */
-
     :root {
-      /* لوحة الألوان المستوحاة من التراث */
-      --hawza-green-deep: #054a29;
-      --hawza-green-hover: #0a6b3e;
-      --hawza-gold-accent: #b38f5f;
-      --hawza-gold-light: #f9e9b6;
-      --parchment-bg: #f7f6f1; /* لون ورق المخطوطات */
-      --manuscript-surface: #ffffff;
-      --ink-text: #212529; /* لون الحبر الداكن */
-      --ink-text-muted: #6c757d;
-      --border-color: #e0e0e0;
-      --danger-color: #c0392b;
-      --danger-hover: #a93226;
-      --success-color: #28a745;
-      --info-color: #17a2b8;
-
-      /* قياسات وتأثيرات */
-      --shadow-light: 0 2px 8px rgba(0,0,0,0.06);
-      --shadow-medium: 0 5px 20px rgba(0,0,0,0.1);
+      --font-title: 'Scheherazade New', serif;
+      --font-body: 'Cairo', sans-serif;
+      --color-bg-parchment: #fdfaf3;
+      --color-surface: #ffffff;
+      --color-ink-primary: #3a2d21;
+      --color-ink-secondary: #7a6a5d;
+      --color-hawza-green: #054a29;
+      --color-hawza-green-light: #e6f4ea;
+      --color-gold-accent: #c5a47e;
+      --color-gold-hover: #b38f5f;
+      --color-danger: #c0392b;
+      --color-border: #e9e4dc;
+      --shadow-soft: 0 4px 12px rgba(58, 45, 33, 0.07);
+      --shadow-medium: 0 8px 25px rgba(58, 45, 33, 0.1);
       --border-radius: 8px;
-      --transition-speed: 0.3s;
+      --transition-main: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
-    /* أنماط المظهر الداكن */
-    body.dark-mode {
-      --hawza-green-deep: #0a6b3e;
-      --hawza-green-hover: #0d8f55;
-      --hawza-gold-accent: #c9a97e;
-      --hawza-gold-light: #2c2a23;
-      --parchment-bg: #1a1a1a;
-      --manuscript-surface: #252525;
-      --ink-text: #e8e6e3;
-      --ink-text-muted: #a0a0a0;
-      --border-color: #404040;
-    }
-
-    /* === الإعدادات الأساسية === */
-    * { box-sizing: border-box; }
+    /* === Resets and Base Styles === */
+    *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: 'Cairo', sans-serif;
-      background-color: var(--parchment-bg);
-      color: var(--ink-text);
+      font-family: var(--font-body);
+      background-color: var(--color-bg-parchment);
+      color: var(--color-ink-primary);
       margin: 0;
       line-height: 1.8;
-      transition: background-color var(--transition-speed), color var(--transition-speed);
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
     .hidden { display: none !important; }
 
-    /* === نافذة الدخول === */
-    #login-modal {
+    /* === Loader & Toasts === */
+    #master-loader {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(253, 250, 243, 0.85);
       display: flex; justify-content: center; align-items: center;
-      z-index: 2000; backdrop-filter: blur(5px);
+      z-index: 9999; backdrop-filter: blur(3px); transition: opacity 0.3s;
+    }
+    #master-loader .spinner {
+      border: 5px solid var(--color-gold-accent);
+      border-top-color: var(--color-hawza-green);
+      border-radius: 50%; width: 50px; height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    #toast-container {
+      position: fixed; bottom: 20px; left: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px;
+    }
+    .toast {
+      padding: 15px 20px; background: var(--color-ink-primary); color: white; border-radius: 5px; box-shadow: var(--shadow-medium);
+      animation: slideInUp 0.5s ease;
+    }
+    .toast.success { background: var(--color-hawza-green); }
+    .toast.error { background: var(--color-danger); }
+
+    /* === Login Modal === */
+    #login-container {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--color-bg-parchment) url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23e9e4dc" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      transition: opacity var(--transition-main);
     }
     #login-form {
-      background: var(--manuscript-surface); padding: 2.5rem 3rem;
+      background: var(--color-surface); padding: 3rem; text-align: center;
       border-radius: var(--border-radius); box-shadow: var(--shadow-medium);
-      width: 90%; max-width: 420px; text-align: center;
-      border-top: 5px solid var(--hawza-green-deep);
-      animation: fadeIn 0.5s ease-out;
+      width: 90%; max-width: 450px; border: 1px solid var(--color-border);
+      animation: fadeInScale 0.6s ease-out;
     }
     #login-form h1 {
-      font-family: 'Scheherazade New', serif; font-size: 2.5rem;
-      color: var(--hawza-green-deep); margin: 0;
+      font-family: var(--font-title); font-size: 3rem; color: var(--color-hawza-green);
+      margin: 0;
     }
-    #login-form .subtitle { color: var(--ink-text-muted); margin-bottom: 2rem; }
-    #login-form label { display: block; margin-bottom: 0.5rem; font-weight: 600; text-align: right; }
-
-    /* === لوحة التحكم الرئيسية === */
-    #dashboard { display: flex; min-height: 100vh; }
-    
-    /* القائمة الجانبية (Sidebar) */
-    .sidebar {
-        width: 280px;
-        background-color: var(--manuscript-surface);
-        border-left: 1px solid var(--border-color);
-        padding: 1.5rem;
-        display: flex;
-        flex-direction: column;
-        transition: background-color var(--transition-speed), border-color var(--transition-speed);
-        position: fixed; top: 0; right: 0; height: 100vh;
+    #login-form .subtitle { font-family: var(--font-body); color: var(--color-ink-secondary); margin-bottom: 2rem; }
+    #login-form input {
+      width: 100%; padding: 12px 15px; margin-bottom: 1rem; border: 1px solid var(--color-border);
+      border-radius: 4px; font-family: var(--font-body); font-size: 1rem; text-align: center;
     }
-    .sidebar-header { text-align: center; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1.5rem; }
-    .sidebar-header h1 { font-family: 'Scheherazade New', serif; color: var(--hawza-green-deep); margin: 0.5rem 0; font-size: 2rem;}
-    .sidebar-header .date-display { font-size: 0.9rem; color: var(--ink-text-muted); }
-
-    .main-content {
-        flex: 1;
-        padding: 2rem;
-        margin-right: 280px; /* نفس عرض القائمة الجانبية */
-    }
-
-    /* كروت الإحصائيات */
-    #stats-container { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
-    .stat-card {
-      background: var(--parchment-bg); padding: 1rem; border-radius: var(--border-radius);
-      display: flex; align-items: center; gap: 1rem;
-      border-right: 4px solid var(--hawza-gold-accent);
-    }
-    .stat-card .icon { font-size: 2rem; color: var(--hawza-gold-accent); width: 40px; text-align: center; }
-    .stat-card .info h3 { margin: 0 0 0.25rem 0; font-size: 0.95rem; color: var(--ink-text-muted); font-weight: 400; }
-    .stat-card .info p { margin: 0; font-size: 1.8rem; font-weight: 700; color: var(--ink-text); }
-    
-    /* قسم إضافة سؤال جديد */
-    #add-question-section { padding-top: 1.5rem; border-top: 1px solid var(--border-color); margin-top: auto; }
-    #add-question-section h2 { font-size: 1.2rem; color: var(--hawza-green-deep); margin-bottom: 1rem; }
-
-    /* === عناصر الواجهة العامة === */
     .btn {
-      padding: 0.6rem 1.2rem; border: none; border-radius: 4px; cursor: pointer;
-      font-family: 'Cairo', sans-serif; font-weight: 600; font-size: 0.95rem;
-      transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;
+      padding: 10px 20px; font-family: var(--font-body); font-weight: 600; font-size: 1rem;
+      border: none; border-radius: 4px; cursor: pointer; transition: var(--transition-main);
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
     }
-    .btn-primary { background-color: var(--hawza-green-deep); color: white; }
-    .btn-primary:hover { background-color: var(--hawza-green-hover); }
-    .btn-gold { background-color: var(--hawza-gold-accent); color: white; }
-    .btn-gold:hover { background-color: #9e7a4f; }
-    .btn-danger { background-color: var(--danger-color); color: white; }
-    .btn:disabled { background-color: #ccc; cursor: not-allowed; }
+    .btn-primary { background-color: var(--color-hawza-green); color: white; }
+    .btn-primary:hover { background-color: #033a20; transform: translateY(-2px); }
+    .btn-primary:disabled { background-color: #cccccc; cursor: not-allowed; transform: none; }
+    #login-error { color: var(--color-danger); margin-top: 1rem; font-weight: 600; min-height: 24px; }
 
-    textarea, input[type="text"], input[type="password"] {
-      padding: 0.8rem 1rem; width: 100%; margin-bottom: 1rem;
-      border: 1px solid var(--border-color); border-radius: 4px;
-      font-family: 'Cairo', sans-serif; font-size: 1rem;
-      background-color: var(--parchment-bg); color: var(--ink-text);
-      transition: all var(--transition-speed);
+    /* === Main Dashboard Layout === */
+    #dashboard-container { display: flex; min-height: 100vh; background: var(--color-surface); }
+    .sidebar {
+        width: 300px; background-color: var(--color-bg-parchment);
+        border-left: 1px solid var(--color-border); padding: 1.5rem;
+        display: flex; flex-direction: column; position: fixed; top: 0; right: 0; height: 100vh;
     }
-    textarea:focus, input:focus { border-color: var(--hawza-gold-accent); box-shadow: 0 0 0 3px rgba(179, 143, 95, 0.2); }
+    .main-content { margin-right: 300px; flex-grow: 1; padding: 2rem 3rem; }
+
+    /* Sidebar Styles */
+    .sidebar-header { text-align: center; padding-bottom: 1.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+    .sidebar-header h2 { font-family: var(--font-title); font-size: 2.5rem; color: var(--color-hawza-green); margin: 0; }
     
-    /* === قسم عرض الأسئلة === */
-    .content-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
+    .stats-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 2rem; }
+    .stat-card {
+      background: var(--color-surface); padding: 1rem; border-radius: var(--border-radius);
+      border-right: 4px solid var(--color-gold-accent); text-align: right;
     }
-    .content-header h1 { margin: 0; font-size: 2rem; color: var(--hawza-green-deep); }
-    
-    /* شريط الفلترة والبحث */
-    .filter-bar {
-        display: flex;
-        gap: 1rem;
-        align-items: center;
-        background-color: var(--manuscript-surface);
-        padding: 1rem;
-        border-radius: var(--border-radius);
-        margin-bottom: 2rem;
-        box-shadow: var(--shadow-light);
+    .stat-card h3 { margin: 0 0 0.5rem; font-size: 0.9rem; color: var(--color-ink-secondary); }
+    .stat-card p { margin: 0; font-size: 2rem; font-weight: 700; color: var(--color-ink-primary); }
+
+    .sidebar-section h3 { font-family: var(--font-title); font-size: 1.5rem; color: var(--color-hawza-green); margin-bottom: 1rem; border-bottom: 1px solid var(--color-border); padding-bottom: 0.5rem; }
+    #tags-filter-list { list-style: none; padding: 0; }
+    #tags-filter-list li {
+      padding: 8px 12px; margin-bottom: 5px; border-radius: 4px; cursor: pointer;
+      transition: var(--transition-main);
     }
-    .filter-group { display: flex; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; }
-    .filter-btn { background: transparent; border: none; padding: 0.6rem 1rem; cursor: pointer; color: var(--ink-text-muted); font-size: 0.9rem; border-left: 1px solid var(--border-color); }
-    .filter-btn:last-child { border-left: none; }
-    .filter-btn.active { background-color: var(--hawza-gold-light); color: var(--hawza-green-deep); font-weight: 700; }
+    #tags-filter-list li:hover { background-color: var(--color-hawza-green-light); }
+    #tags-filter-list li.active { background-color: var(--color-gold-accent); color: white; font-weight: 700; }
     
+    .sidebar-footer { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+
+    /* Main Content Styles */
+    .main-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .main-header h1 { font-family: var(--font-title); font-size: 2.8rem; color: var(--color-hawza-green); margin: 0; }
+    
+    .filter-controls {
+      display: flex; gap: 1rem; align-items: center; background-color: var(--color-bg-parchment);
+      padding: 1rem; border-radius: var(--border-radius); margin-bottom: 2rem;
+    }
     .search-bar { position: relative; flex-grow: 1; }
-    .search-bar input { width: 100%; margin-bottom: 0; padding-right: 2.5rem; }
-    .search-bar .fa-search { position: absolute; top: 50%; right: 1rem; transform: translateY(-50%); color: var(--ink-text-muted); }
+    .search-bar input { width: 100%; padding: 10px 40px 10px 15px; border: 1px solid var(--color-border); border-radius: 4px; }
+    .search-bar .fa-search { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); color: var(--color-ink-secondary); }
 
-    /* بطاقة السؤال */
+    /* Question Card Styles */
     .question-card {
-      margin-bottom: 1.5rem; padding: 1.5rem;
-      border-radius: var(--border-radius); border: 1px solid var(--border-color);
-      background-color: var(--manuscript-surface);
-      border-right-width: 5px; transition: box-shadow 0.3s, transform 0.3s;
+      background: var(--color-surface); border: 1px solid var(--color-border);
+      margin-bottom: 1.5rem; padding: 1.5rem 2rem; border-radius: var(--border-radius);
+      box-shadow: var(--shadow-soft); transition: var(--transition-main);
+      border-right: 5px solid var(--color-gold-accent); /* Unanswered */
     }
-    .question-card:hover { box-shadow: var(--shadow-medium); transform: translateY(-3px); }
-    .question-card.unanswered { border-right-color: var(--hawza-gold-accent); }
-    .question-card.answered { border-right-color: var(--hawza-green-hover); }
+    .question-card.answered { border-right-color: var(--color-hawza-green); }
+    .question-card:hover { box-shadow: var(--shadow-medium); transform: translateY(-5px); }
     
-    .question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
-    .question-header .date { font-weight: 400; color: var(--ink-text-muted); font-size: 0.9rem; }
-    .question-source { font-size: 0.9em; color: var(--info-color); margin-bottom: 1rem; font-style: italic; background-color: rgba(23, 162, 184, 0.1); padding: 0.5rem; border-radius: 4px; }
-    .question-body { color: var(--ink-text); margin-bottom: 1.2rem; font-size: 1.1rem; line-height: 1.9; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .card-meta span { color: var(--color-ink-secondary); font-size: 0.9rem; }
+    .card-actions .btn { padding: 5px 10px; font-size: 0.9rem; }
     
-    /* تصميم الجواب ومحرر النصوص */
-    .answer-display {
-        background: var(--parchment-bg);
-        padding: 1rem;
-        border-radius: 4px;
-        border: 1px solid var(--border-color);
-        white-space: normal;
-        word-wrap: break-word;
-    }
-    .answer-display h1, .answer-display h2, .answer-display p { margin-top: 0; }
-    
-    .answer-form .quill-editor {
-        background-color: var(--manuscript-surface);
-        color: var(--ink-text);
-        border-radius: var(--border-radius);
-        border: 1px solid var(--border-color);
-    }
-    .answer-form .ql-toolbar { border-bottom: 1px solid var(--border-color); border-top-left-radius: var(--border-radius); border-top-right-radius: var(--border-radius); }
-    .answer-form .ql-container { min-height: 200px; border-bottom-left-radius: var(--border-radius); border-bottom-right-radius: var(--border-radius); }
-    .answer-form .ql-editor { font-family: 'Cairo', sans-serif; font-size: 1rem; }
-    
-    .card-actions { margin-top: 1rem; display: flex; gap: 0.5rem; justify-content: flex-end; }
-    .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.85rem; }
+    .question-body { font-size: 1.15rem; margin-bottom: 1rem; line-height: 1.9; }
+    .question-body .search-highlight { background-color: #fff2b2; }
 
-    /* === نوافذ التأكيد والتعديل (Modals) === */
+    .card-tags { display: flex; gap: 8px; margin-top: 1rem; flex-wrap: wrap; }
+    .tag { background-color: var(--color-hawza-green-light); color: var(--color-hawza-green); padding: 4px 10px; border-radius: 15px; font-size: 0.85rem; }
+
+    .answer-display { margin-top: 1rem; padding: 1rem; background: var(--color-bg-parchment); border-radius: 4px; }
+    .answer-display strong { color: var(--color-hawza-green); }
+
+    /* Modal Styles */
     .modal-backdrop {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      display: flex; justify-content: center; align-items: center;
-      z-index: 5000; backdrop-filter: blur(5px);
+      background: rgba(58, 45, 33, 0.6); backdrop-filter: blur(5px);
+      display: flex; justify-content: center; align-items: center; z-index: 5000;
       animation: fadeIn 0.3s;
     }
     .modal-content {
-      background: var(--manuscript-surface); padding: 2rem;
-      border-radius: var(--border-radius); width: 90%; max-width: 600px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-      border-top: 4px solid var(--hawza-gold-accent);
+      background: var(--color-surface); padding: 2rem; border-radius: var(--border-radius);
+      width: 90%; max-width: 800px; box-shadow: var(--shadow-medium);
+      border-top: 5px solid var(--color-gold-accent);
     }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.5rem; }
-    .modal-header h3 { margin: 0; color: var(--hawza-green-deep); }
-    .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--ink-text-muted); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+    .modal-header h3 { font-family: var(--font-title); font-size: 2rem; color: var(--color-hawza-green); margin: 0; }
+    .modal-body label { font-weight: 700; margin-bottom: 0.5rem; display: block; }
+    .modal-body input, .modal-body textarea {
+      width: 100%; padding: 10px; margin-bottom: 1rem; border-radius: 4px; border: 1px solid var(--color-border);
+      font-family: var(--font-body);
+    }
     .modal-actions { margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem; }
     
-    /* === عناصر متنوعة === */
-    #pagination-container { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 2rem; }
-    .page-link { /* ... same as original ... */ }
-    #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(247, 246, 241, 0.85); display: flex; justify-content: center; align-items: center; z-index: 3000; backdrop-filter: blur(2px); }
-    .spinner { border: 5px solid #f3f3f3; border-top: 5px solid var(--hawza-green-deep); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
-    #toast-container { /* ... same as original ... */ }
-    .toast { /* ... same as original ... */ }
-    .theme-switcher { display: flex; align-items: center; gap: 0.5rem; color: var(--ink-text-muted); cursor: pointer; font-size: 0.9rem; }
-    .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-    input:checked + .slider { background-color: var(--hawza-gold-accent); }
-    input:checked + .slider:before { transform: translateX(20px); }
+    /* Quill Editor Customization */
+    .quill-editor-container .ql-toolbar { border-color: var(--color-border); border-top-left-radius: var(--border-radius); border-top-right-radius: var(--border-radius); }
+    .quill-editor-container .ql-container { border-color: var(--color-border); border-bottom-left-radius: var(--border-radius); border-bottom-right-radius: var(--border-radius); }
+    .quill-editor-container .ql-editor { min-height: 250px; font-family: var(--font-body); font-size: 1rem; }
 
-    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    
-    /* استجابة للشاشات الصغيرة */
-    @media (max-width: 768px) {
-        .sidebar { position: static; width: 100%; height: auto; border-left: none; border-bottom: 1px solid var(--border-color); }
-        .main-content { margin-right: 0; padding: 1.5rem; }
-        .content-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-        .filter-bar { flex-direction: column; align-items: stretch; }
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .sidebar { position: static; width: 100%; height: auto; border-left: none; border-bottom: 2px solid var(--color-border); }
+      .main-content { margin-right: 0; padding: 1.5rem; }
+      .main-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
     }
+
+    /* Animations */
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeInScale { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    @keyframes slideInUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   </style>
 </head>
 <body>
 
-  <div id="login-modal">
+  <div id="master-loader">
+    <div class="spinner"></div>
+  </div>
+
+  <div id="toast-container"></div>
+  
+  <div id="login-container">
     <form id="login-form">
-      <h1><i class="fas fa-mosque" style="color: var(--hawza-gold-accent);"></i></h1>
+      <h1><i class="fas fa-mosque" style="color: var(--color-gold-accent);"></i></h1>
       <h1>ديوان المراجعات</h1>
       <p class="subtitle">لوحة التحكم الخاصة بمشروع نور الحوزة</p>
-      <label for="password">مفتاح الدخول (كلمة السر):</label>
-      <input type="password" id="password" required>
-      <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.8rem; font-size: 1.1rem;">
+      <input type="password" id="password-input" placeholder="مفتاح الدخول" required>
+      <div id="login-error"></div>
+      <button type="submit" id="login-button" class="btn btn-primary" style="width: 100%; padding: 12px;">
         <i class="fas fa-sign-in-alt"></i> بسم الله، دخول
       </button>
     </form>
   </div>
-  
-  <div id="confirmation-modal" class="modal-backdrop hidden">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3><i class="fas fa-exclamation-triangle" style="color: var(--danger-color);"></i> تأكيد الإجراء</h3>
-            <button class="close-btn" data-action="close-confirm">&times;</button>
-        </div>
-        <p id="confirmation-message">هل أنت متأكد من رغبتك في حذف هذا السؤال؟ لا يمكن التراجع عن هذا الإجراء.</p>
-        <div class="modal-actions">
-            <button id="confirm-action-btn" class="btn btn-danger">نعم، قم بالحذف</button>
-            <button id="cancel-action-btn" class="btn" style="background-color: #ccc;">إلغاء</button>
-        </div>
-    </div>
-  </div>
 
-  <div id="edit-modal" class="modal-backdrop hidden">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3><i class="fas fa-feather-alt" style="color: var(--hawza-gold-accent);"></i> تحرير السؤال والجواب</h3>
-            <button class="close-btn" data-action="close-edit">&times;</button>
-        </div>
-        <form id="edit-question-form">
-            <input type="hidden" id="edit-question-id">
-            <div>
-              <label for="edit-question-text">نص السؤال:</label>
-              <textarea id="edit-question-text" rows="4" required></textarea>
-            </div>
-            <div>
-              <label for="edit-question-source">مصدر السؤال:</label>
-              <input type="text" id="edit-question-source">
-            </div>
-            <div>
-                <label for="edit-answer-editor">الجواب:</label>
-                <div id="edit-answer-editor" class="quill-editor"></div>
-            </div>
-            <div class="modal-actions">
-              <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ التعديلات</button>
-            </div>
-        </form>
-    </div>
-  </div>
-
-  <div id="loader" class="hidden"><div class="spinner"></div></div>
-  <div id="toast-container"></div>
-
-  <div id="dashboard" class="hidden">
+  <main id="dashboard-container" class="hidden">
     <aside class="sidebar">
-      <div class="sidebar-header">
-        <h1>نور الحوزة</h1>
-        <div class="date-display">
-            <span id="gregorian-date"></span><br>
-            <span id="hijri-date"></span>
+        <div class="sidebar-header">
+            <h2>نور الحوزة</h2>
         </div>
-      </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card"><h3>إجمالي المسائل</h3><p id="stat-total">0</p></div>
+            <div class="stat-card" style="border-right-color: var(--color-hawza-green)"><h3>المسائل المجابة</h3><p id="stat-answered">0</p></div>
+            <div class="stat-card" style="border-right-color: var(--color-danger)"><h3>قيد المراجعة</h3><p id="stat-unanswered">0</p></div>
+        </div>
 
-      <div id="stats-container">
-        <div class="stat-card">
-          <div class="icon"><i class="fas fa-inbox"></i></div>
-          <div class="info"><h3>إجمالي المسائل</h3><p id="total-questions-stat">0</p></div>
+        <div class="sidebar-section">
+            <h3><i class="fas fa-tags"></i> التصنيفات</h3>
+            <ul id="tags-filter-list">
+                <li data-tag="all" class="active">الكل</li>
+            </ul>
         </div>
-        <div class="stat-card">
-          <div class="icon"><i class="fas fa-check-circle" style="color: var(--hawza-green-hover);"></i></div>
-          <div class="info"><h3>المسائل المجابة</h3><p id="answered-questions-stat">0</p></div>
+        
+        <div class="sidebar-footer">
+            <button id="logout-btn" class="btn" style="background-color: var(--color-danger); color: white; width: 100%;">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </button>
         </div>
-        <div class="stat-card">
-          <div class="icon"><i class="fas fa-hourglass-half" style="color: var(--hawza-gold-accent);"></i></div>
-          <div class="info"><h3>قيد المراجعة</h3><p id="unanswered-questions-stat">0</p></div>
-        </div>
-      </div>
-
-      <section id="add-question-section">
-        <h2><i class="fas fa-plus-circle"></i> إضافة مسألة جديدة</h2>
-        <form id="add-question-form">
-          <div>
-            <label for="new-question-text">نص المسألة:</label>
-            <textarea id="new-question-text" rows="3" placeholder="اكتب هنا المسألة..." required></textarea>
-          </div>
-          <div>
-            <label for="new-question-source">مصدرها (اختياري):</label>
-            <input type="text" id="new-question-source" placeholder="كتاب، محاضرة، شبهة...">
-          </div>
-          <button type="submit" class="btn btn-primary" style="width: 100%;">
-            <i class="fas fa-paper-plane"></i> إضافة للمراجعة
-          </button>
-        </form>
-      </section>
-
-      <div class="sidebar-footer" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-        <button id="logout-btn" class="btn btn-danger btn-sm">
-          <i class="fas fa-sign-out-alt"></i> خروج
-        </button>
-        <div class="theme-switcher">
-            <i class="fas fa-sun"></i>
-            <label class="switch">
-              <input type="checkbox" id="theme-toggle">
-              <span class="slider"></span>
-            </label>
-            <i class="fas fa-moon"></i>
-        </div>
-      </div>
     </aside>
 
-    <main class="main-content">
-      <div class="content-header">
-        <h1><i class="fas fa-book-open"></i> ديوان المراجعات والمسائل</h1>
-      </div>
-      
-      <div class="filter-bar">
-          <div class="filter-group">
-              <button class="filter-btn active" data-filter="all">الكل</button>
-              <button class="filter-btn" data-filter="unanswered">قيد المراجعة</button>
-              <button class="filter-btn" data-filter="answered">الأرشيف المحفوظ</button>
-          </div>
-          <div class="search-bar">
-            <i class="fas fa-search"></i>
-            <input type="text" id="search-input" placeholder="ابحث في نص السؤال، الجواب، أو المصدر...">
-          </div>
-      </div>
-
-      <div id="questions-container">
+    <section class="main-content">
+        <div class="main-header">
+            <h1><i class="fas fa-scroll"></i> ديوان المسائل</h1>
+            <button id="add-new-question-btn" class="btn btn-primary"><i class="fas fa-plus"></i> إضافة مسألة جديدة</button>
         </div>
-      
-      <div id="pagination-container"></div>
-    </main>
+        
+        <div class="filter-controls">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="ابحث في نص المسألة، الجواب، المصدر أو التصنيف...">
+            </div>
+        </div>
+        
+        <div id="questions-list">
+            </div>
+    </section>
+  </main>
+
+  <div id="edit-modal-container" class="modal-backdrop hidden">
+    <div class="modal-content">
+        <form id="edit-form">
+            <input type="hidden" id="edit-id-input">
+            <div class="modal-header">
+                <h3 id="modal-title">تحرير المسألة</h3>
+                <button type="button" class="close-modal-btn" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label for="edit-question-input">نص المسألة</label>
+                    <textarea id="edit-question-input" rows="3" required></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <div style="flex:1;">
+                        <label for="edit-source-input">المصدر (اختياري)</label>
+                        <input type="text" id="edit-source-input" placeholder="مثال: بحار الأنوار، ج52">
+                    </div>
+                    <div style="flex:1;">
+                        <label for="edit-tags-input">التصنيفات (مفصولة بفاصلة)</label>
+                        <input type="text" id="edit-tags-input" placeholder="عقائد, فقه, شبهات">
+                    </div>
+                </div>
+                <div>
+                    <label>الجواب</label>
+                    <div id="quill-editor-container" class="quill-editor-container"></div>
+                    <small id="draft-status" style="color: var(--color-ink-secondary); margin-top: 5px; display: block;"></small>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="delete-btn" class="btn" style="background:var(--color-danger); color:white; margin-left: auto;">
+                    <i class="fas fa-trash-alt"></i> حذف المسألة
+                </button>
+                <button type="button" class="close-modal-btn btn" style="background:#eee; color: #333;">إلغاء</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ التغييرات</button>
+            </div>
+        </form>
+    </div>
   </div>
 
 <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 <script>
-/**
- * =================================================================================================
- * بسم الله الرحمن الرحيم
- *
- * المنطق البرمجي (JavaScript) الخاص بديوان المراجعات والمسائل لمشروع "نور الحوزة"
- * الإصدار: 2.0 (بنية قائمة على الأصناف مع ميزات متقدمة)
- *
- * هذا الملف يحتوي على بنية برمجية متطورة لإدارة لوحة التحكم بشكل كامل، ويشمل:
- * - التحقق من الجلسات والتعامل مع الواجهة البرمجية (API).
- * - إدارة الحالة الكاملة للتطبيق (State Management).
- * - عرض وتحديث واجهة المستخدم بشكل ديناميكي.
- * - دمج محرر نصوص متطور (WYSIWYG) للإجابات.
- * - التعامل مع كافة الإجراءات (إضافة، تعديل، حذف، إجابة، بحث، فلترة).
- * =================================================================================================
- */
 document.addEventListener('DOMContentLoaded', () => {
-
+    
     /**
-     * @class ApiService
-     * @description فئة متخصصة في التعامل مع جميع طلبات الشبكة (fetch) إلى الواجهة البرمجية الخلفية (API).
-     * توفر طريقة موحدة لإرسال الطلبات ومعالجة الأخطاء.
+     * ApiService
+     * وحدة متخصصة ومسؤولة حصراً عن كل أشكال التواصل مع الخادم (API).
+     * توفر منظومة موحدة لإرسال الطلبات ومعالجة الردود والأخطاء الشبكية.
      */
     class ApiService {
-        /**
-         * @param {string} baseURL - المسار الأساسي للواجهة البرمجية.
-         */
         constructor(baseURL = '/.netlify/functions/api') {
             this.baseURL = baseURL;
         }
 
-        /**
-         * الدالة الأساسية لإرسال الطلبات.
-         * @param {string} endpoint - نقطة النهاية (e.g., '/admin/questions').
-         * @param {object} options - إعدادات الطلب (method, body, headers).
-         * @returns {Promise<any>} - البيانات المستلمة من الخادم.
-         * @throws {Error} - في حالة فشل الطلب.
-         */
         async request(endpoint, options = {}) {
             const url = this.baseURL + endpoint;
-            
             const config = {
-                credentials: 'include', // لإرسال الكوكيز الخاصة بالجلسة مع كل طلب
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
                 ...options,
             };
 
-            if (config.body && typeof config.body === 'object') {
-                config.headers = { ...config.headers, 'Content-Type': 'application/json' };
+            if (config.body) {
                 config.body = JSON.stringify(config.body);
             }
 
             try {
                 const response = await fetch(url, config);
-                const responseText = await response.text();
-                const data = responseText ? JSON.parse(responseText) : {};
+                const data = await response.json().catch(() => ({}));
 
                 if (!response.ok) {
-                    throw new Error(data.error || `خطأ في الشبكة: ${response.status}`);
+                    const errorMsg = data.error || `خطأ في الخادم برمز الحالة ${response.status}`;
+                    throw new Error(errorMsg);
                 }
-                
                 return data;
             } catch (error) {
                 console.error(`API Error on ${endpoint}:`, error);
-                throw error; // إعادة رمي الخطأ ليتم التعامل معه في الطبقة الأعلى
+                throw new Error(error.message || "خطأ في الاتصال بالشبكة.");
             }
         }
         
-        // دوال جاهزة لنقاط النهاية المختلفة
         checkStatus() { return this.request('/admin/status'); }
         login(password) { return this.request('/admin/login', { method: 'POST', body: { password } }); }
         logout() { return this.request('/admin/logout', { method: 'POST' }); }
         getQuestions() { return this.request('/admin/questions'); }
-        addQuestion(question, source) { return this.request('/admin/question', { method: 'POST', body: { question, source } }); }
-        answerQuestion(id, answer) { return this.request('/admin/answer', { method: 'POST', body: { id, answer } }); }
-        updateQuestion(id, { question, source, answer }) { return this.request(`/admin/question/${id}`, { method: 'PUT', body: { question, source, answer } }); }
+        addQuestion(data) { return this.request('/admin/question', { method: 'POST', body: data }); }
+        updateQuestion(id, data) { return this.request(`/admin/question/${id}`, { method: 'PUT', body: data }); }
         deleteQuestion(id) { return this.request(`/admin/question/${id}`, { method: 'DELETE' }); }
     }
 
     /**
-     * @class HawzaDiwanApp
-     * @description الفئة الرئيسية التي تدير التطبيق بأكمله.
-     * هي العقل المدبر الذي يربط بين واجهة المستخدم، والبيانات، والمنطق البرمجي.
+     * StateService
+     * هو الذاكرة الحافظة ومستودع البيانات للتطبيق. يدير "حالة" التطبيق
+     * (من هو المستخدم، قائمة المسائل، الفلاتر الحالية) بشكل مركزي ومنظم.
      */
-    class HawzaDiwanApp {
+    class StateService {
         constructor() {
-            this.api = new ApiService();
-            this.state = this.getInitialState();
-            this.elements = this.queryElements();
-            this.editors = { answer: null, edit: null }; // لتخزين كائنات محرر النصوص
-            
-            this.init();
-        }
-
-        /**
-         * @description تهيئة الحالة الأولية للتطبيق.
-         * @returns {object} - كائن الحالة.
-         */
-        getInitialState() {
-            return {
+            this._state = {
                 isLoggedIn: false,
-                questions: [],       // القائمة الكاملة للأسئلة من الخادم
-                filteredQuestions: [], // القائمة بعد تطبيق البحث والفلترة
-                currentFilter: 'all', // 'all', 'answered', 'unanswered'
+                questions: [],
                 searchTerm: '',
-                currentPage: 1,
-                itemsPerPage: 5,
-                questionToDeleteId: null,
-                questionToEdit: null,
-                isLoading: false,
+                activeTag: 'all',
+                allTags: new Set(),
             };
         }
-
-        /**
-         * @description جلب جميع عناصر DOM اللازمة وتخزينها للوصول السريع.
-         */
-        queryElements() {
-            return {
-                loginModal: document.getElementById('login-modal'),
-                loginForm: document.getElementById('login-form'),
-                dashboard: document.getElementById('dashboard'),
-                sidebar: {
-                    logoutBtn: document.getElementById('logout-btn'),
-                    gregorianDate: document.getElementById('gregorian-date'),
-                    hijriDate: document.getElementById('hijri-date'),
-                    themeToggle: document.getElementById('theme-toggle'),
-                },
-                stats: {
-                    total: document.getElementById('total-questions-stat'),
-                    answered: document.getElementById('answered-questions-stat'),
-                    unanswered: document.getElementById('unanswered-questions-stat'),
-                },
-                addQuestionForm: document.getElementById('add-question-form'),
-                newQuestionText: document.getElementById('new-question-text'),
-                newQuestionSource: document.getElementById('new-question-source'),
-                filterBar: document.querySelector('.filter-bar'),
-                searchInput: document.getElementById('search-input'),
-                questionsContainer: document.getElementById('questions-container'),
-                paginationContainer: document.getElementById('pagination-container'),
-                loader: document.getElementById('loader'),
-                toastContainer: document.getElementById('toast-container'),
-                confirmationModal: document.getElementById('confirmation-modal'),
-                confirmBtn: document.getElementById('confirm-action-btn'),
-                cancelBtn: document.getElementById('cancel-action-btn'),
-                editModal: document.getElementById('edit-modal'),
-                editForm: document.getElementById('edit-question-form'),
-                editQuestionId: document.getElementById('edit-question-id'),
-                editQuestionText: document.getElementById('edit-question-text'),
-                editQuestionSource: document.getElementById('edit-question-source'),
-            };
-        }
-
-        /**
-         * @description تهيئة التطبيق: ربط الأحداث والتحقق من الجلسة.
-         */
-        init() {
-            // ربط الأحداث مع الدوال مع الحفاظ على سياق `this`
-            this.elements.loginForm.addEventListener('submit', this.handleLogin.bind(this));
-            this.elements.sidebar.logoutBtn.addEventListener('click', this.handleLogout.bind(this));
-            this.elements.sidebar.themeToggle.addEventListener('change', this.handleThemeToggle.bind(this));
-            this.elements.addQuestionForm.addEventListener('submit', this.handleAddQuestion.bind(this));
-            this.elements.searchInput.addEventListener('input', this.debounce(this.handleSearch.bind(this), 300));
-            this.elements.filterBar.addEventListener('click', this.handleFilter.bind(this));
-            
-            // استخدام تفويض الأحداث للمحتوى الديناميكي
-            this.elements.questionsContainer.addEventListener('click', this.handleCardActions.bind(this));
-            this.elements.paginationContainer.addEventListener('click', this.handlePagination.bind(this));
-
-            // نوافذ التأكيد والتعديل
-            this.elements.confirmationModal.addEventListener('click', this.handleConfirmationModalActions.bind(this));
-            this.elements.editModal.addEventListener('click', (e) => { if (e.target.classList.contains('modal-backdrop') || e.target.dataset.action === 'close-edit') this.closeEditModal(); });
-            this.elements.editForm.addEventListener('submit', this.handleEditSubmit.bind(this));
-
-            // تهيئة محرر النصوص لنافذة التعديل
-            this.editors.edit = this.initializeQuill('#edit-answer-editor');
-
-            this.checkSession();
-            this.setInitialTheme();
-            this.updateDate();
-        }
-
-        // ==========================================================
-        //  1. دوال إدارة واجهة المستخدم (UI Management)
-        // ==========================================================
-
-        toggleLoader(show) { this.elements.loader.classList.toggle('hidden', !show); }
-        showToast(message, type = 'success') { /* ... نفس الكود الأصلي ... */ }
         
-        /** @description تحديث الإحصائيات في القائمة الجانبية. */
-        updateStats() {
-            const total = this.state.questions.length;
-            const answeredCount = this.state.questions.filter(q => q.answer).length;
-            this.elements.stats.total.textContent = total;
-            this.elements.stats.answered.textContent = answeredCount;
-            this.elements.stats.unanswered.textContent = total - answeredCount;
-        }
-
-        /** @description تحديث التاريخين الميلادي والهجري. */
-        updateDate() {
-            const today = new Date();
-            this.elements.sidebar.gregorianDate.textContent = today.toLocaleDateString('ar-EG-u-nu-latn', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            this.elements.sidebar.hijriDate.textContent = today.toLocaleDateString('ar-SA-u-nu-latn', { calendar: 'islamic-umalqura', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-        }
+        get state() { return this._state; }
         
-        /** @description عرض جميع الأسئلة بناءً على الفلترة والبحث الحالي. */
-        render() {
-            let questionsToRender = this.state.questions;
-
-            // 1. تطبيق الفلترة
-            if (this.state.currentFilter === 'answered') {
-                questionsToRender = questionsToRender.filter(q => q.answer);
-            } else if (this.state.currentFilter === 'unanswered') {
-                questionsToRender = questionsToRender.filter(q => !q.answer);
-            }
-
-            // 2. تطبيق البحث
-            const term = this.state.searchTerm.toLowerCase();
-            if (term) {
-                questionsToRender = questionsToRender.filter(q => 
-                    q.question.toLowerCase().includes(term) ||
-                    (q.answer && q.answer.toLowerCase().includes(term)) ||
-                    (q.source && q.source.toLowerCase().includes(term))
-                );
-            }
-
-            this.state.filteredQuestions = questionsToRender;
-            this.renderQuestionCards();
-            this.renderPagination();
+        setQuestions(questions) {
+            this._state.questions = questions;
+            this.updateTags();
         }
-        
-        /** @description إنشاء وعرض بطاقات الأسئلة في الصفحة. */
-        renderQuestionCards() {
-            this.elements.questionsContainer.innerHTML = '';
-            const { filteredQuestions, currentPage, itemsPerPage } = this.state;
-            
-            if (filteredQuestions.length === 0) {
-                this.elements.questionsContainer.innerHTML = `<p style="padding: 2rem; text-align: center; color: var(--ink-text-muted);">لا توجد مسائل تطابق معايير البحث أو الفلترة الحالية.</p>`;
-                return;
-            }
 
-            const paginatedItems = filteredQuestions.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-            paginatedItems.forEach(q => {
-                const card = this.createQuestionCard(q);
-                this.elements.questionsContainer.appendChild(card);
+        updateQuestion(updatedQuestion) {
+            const index = this._state.questions.findIndex(q => q.id === updatedQuestion.id);
+            if (index !== -1) this._state.questions[index] = updatedQuestion;
+            else this._state.questions.unshift(updatedQuestion);
+            this.updateTags();
+        }
+
+        removeQuestion(id) {
+            this._state.questions = this._state.questions.filter(q => q.id !== id);
+            this.updateTags();
+        }
+
+        updateTags() {
+            this._state.allTags.clear();
+            this._state.questions.forEach(q => {
+                if (q.tags && Array.isArray(q.tags)) {
+                    q.tags.forEach(tag => this._state.allTags.add(tag));
+                }
             });
         }
         
-        /**
-         * @description إنشاء HTML لبطاقة سؤال واحدة.
-         * @param {object} q - كائن السؤال.
-         * @returns {HTMLElement} - عنصر البطاقة.
-         */
-        createQuestionCard(q) {
-            const card = document.createElement('article');
-            card.className = `question-card ${q.answer ? 'answered' : 'unanswered'}`;
-            card.dataset.id = q.id;
+        getFilteredQuestions() {
+            const { questions, activeTag, searchTerm } = this._state;
+            const term = searchTerm.toLowerCase().trim();
 
-            const date = new Date(q.date).toLocaleDateString('ar-EG-u-nu-latn', { year: 'numeric', month: 'long', day: 'numeric' });
-            // تعقيم المدخلات لمنع هجمات XSS
-            const sanitize = (str) => str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            
-            const sourceHTML = q.source ? `<p class="question-source"><i class="fas fa-link"></i><strong>المصدر:</strong> ${sanitize(q.source)}</p>` : "";
+            return questions
+                .filter(q => activeTag === 'all' || (q.tags && q.tags.includes(activeTag)))
+                .filter(q => {
+                    if (!term) return true;
+                    const answerText = q.answer ? new DOMParser().parseFromString(q.answer, "text/html").body.textContent.toLowerCase() : '';
+                    return (
+                        q.question.toLowerCase().includes(term) ||
+                        answerText.includes(term) ||
+                        (q.source && q.source.toLowerCase().includes(term)) ||
+                        (q.tags && q.tags.some(tag => tag.toLowerCase().includes(term)))
+                    );
+                });
+        }
+    }
 
-            const content = `
-              <div class="question-header">
-                <span class="date">بتاريخ: ${date}</span>
-                <div class="card-actions">
-                  <button class="btn btn-sm btn-gold" data-action="edit"><i class="fas fa-edit"></i> تحرير</button>
-                  <button class="btn btn-sm btn-danger" data-action="delete"><i class="fas fa-trash-alt"></i> حذف</button>
-                </div>
-              </div>
-              <p class="question-body">${sanitize(q.question)}</p>
-              ${sourceHTML}
-              <div class="answer-container">
-                ${q.answer 
-                    ? `<strong>الجواب:</strong><div class="answer-display">${q.answer}</div>` // الجواب يأتي منسقاً من المحرر
-                    : `<form class="answer-form" data-id="${q.id}">
-                         <div id="answer-editor-${q.id}" class="quill-editor"></div>
-                         <div class="card-actions">
-                           <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i> اعتماد الجواب</button>
-                         </div>
-                       </form>`
+    /**
+     * UIController
+     * فنان الواجهة الرسومية. مسؤول عن كل ما يراه المستخدم ويتفاعل معه.
+     * يأخذ البيانات من الـ State ويعرضها، ويستمع لنقرات المستخدم.
+     */
+    class UIController {
+        constructor() {
+            this.dom = {
+                loader: document.getElementById('master-loader'),
+                toastContainer: document.getElementById('toast-container'),
+                login: {
+                    container: document.getElementById('login-container'),
+                    form: document.getElementById('login-form'),
+                    passwordInput: document.getElementById('password-input'),
+                    errorMsg: document.getElementById('login-error'),
+                    button: document.getElementById('login-button'),
+                },
+                dashboard: {
+                    container: document.getElementById('dashboard-container'),
+                    logoutBtn: document.getElementById('logout-btn'),
+                    addNewBtn: document.getElementById('add-new-question-btn'),
+                    stats: {
+                        total: document.getElementById('stat-total'),
+                        answered: document.getElementById('stat-answered'),
+                        unanswered: document.getElementById('stat-unanswered'),
+                    },
+                    tagsFilterList: document.getElementById('tags-filter-list'),
+                    searchInput: document.getElementById('search-input'),
+                    questionsList: document.getElementById('questions-list'),
+                },
+                modal: {
+                    container: document.getElementById('edit-modal-container'),
+                    form: document.getElementById('edit-form'),
+                    title: document.getElementById('modal-title'),
+                    idInput: document.getElementById('edit-id-input'),
+                    questionInput: document.getElementById('edit-question-input'),
+                    sourceInput: document.getElementById('edit-source-input'),
+                    tagsInput: document.getElementById('edit-tags-input'),
+                    deleteBtn: document.getElementById('delete-btn'),
+                    draftStatus: document.getElementById('draft-status'),
+                    closeBtns: document.querySelectorAll('.close-modal-btn'),
                 }
-              </div>
-            `;
-            card.innerHTML = content;
-            
-            // تهيئة محرر Quill.js إذا كان السؤال غير مجاب
-            if (!q.answer) {
-                // نؤخر التهيئة قليلاً لضمان عرض العنصر في DOM
-                setTimeout(() => {
-                    this.initializeQuill(`#answer-editor-${q.id}`);
-                }, 0);
-            }
-            return card;
-        }
-
-        renderPagination() { /* ... نفس الكود الأصلي مع تعديل طفيف ... */ }
-
-        openConfirmationModal(questionId) {
-            this.state.questionToDeleteId = questionId;
-            this.elements.confirmationModal.classList.remove('hidden');
-        }
-        closeConfirmationModal() {
-            this.state.questionToDeleteId = null;
-            this.elements.confirmationModal.classList.add('hidden');
-        }
-        
-        /** @description فتح نافذة التعديل مع ملء البيانات. */
-        openEditModal(question) {
-            this.state.questionToEdit = question;
-            this.elements.editQuestionId.value = question.id;
-            this.elements.editQuestionText.value = question.question;
-            this.elements.editQuestionSource.value = question.source || '';
-            // تعيين محتوى محرر النصوص
-            this.editors.edit.root.innerHTML = question.answer || '';
-            this.elements.editModal.classList.remove('hidden');
-        }
-        closeEditModal() {
-            this.state.questionToEdit = null;
-            this.elements.editModal.classList.add('hidden');
-        }
-
-
-        // ==========================================================
-        //  2. دوال التعامل مع الأحداث (Event Handlers)
-        // ==========================================================
-        
-        async handleLogin(e) { e.preventDefault(); /* ... */ }
-        async handleLogout() { /* ... */ }
-
-        /** @description التعامل مع إضافة سؤال جديد من القائمة الجانبية. */
-        async handleAddQuestion(e) {
-            e.preventDefault();
-            const question = this.elements.newQuestionText.value.trim();
-            const source = this.elements.newQuestionSource.value.trim();
-            if (!question) { return this.showToast('نص المسألة مطلوب.', 'error'); }
-
-            this.toggleLoader(true);
-            try {
-                await this.api.addQuestion(question, source);
-                this.showToast('تمت إضافة المسألة بنجاح.', 'success');
-                this.elements.addQuestionForm.reset();
-                await this.fetchData(); // جلب البيانات المحدثة
-            } catch (err) { this.showToast(err.message, 'error'); }
-            finally { this.toggleLoader(false); }
-        }
-
-        /** @description التعامل مع أزرار البطاقات (تعديل، حذف، إرسال جواب). */
-        handleCardActions(e) {
-            const target = e.target;
-            const action = target.dataset.action || target.closest('[data-action]')?.dataset.action;
-            const card = target.closest('.question-card');
-            
-            if (!action || !card) return;
-            
-            const questionId = Number(card.dataset.id);
-            const question = this.state.questions.find(q => q.id === questionId);
-            
-            if (action === 'edit') this.openEditModal(question);
-            if (action === 'delete') this.openConfirmationModal(questionId);
-
-            if (target.closest('.answer-form')) {
-                e.preventDefault();
-                this.handleAnswerSubmit(e, questionId);
-            }
-        }
-
-        /** @description إرسال إجابة جديدة لسؤال غير مجاب. */
-        async handleAnswerSubmit(e, questionId) {
-            const editorInstance = Quill.find(document.querySelector(`#answer-editor-${questionId}`).parentElement);
-            const answerHTML = editorInstance.root.innerHTML;
-            if (editorInstance.getText().trim().length === 0) {
-                return this.showToast('لا يمكن اعتماد جواب فارغ.', 'error');
-            }
-
-            const button = e.target.querySelector('button[type="submit"]');
-            button.disabled = true; this.toggleLoader(true);
-            
-            try {
-                // نستخدم الواجهة البرمجية القديمة answer لأنها أبسط لهذه الحالة
-                await this.api.answerQuestion(questionId, answerHTML);
-                this.showToast('تم اعتماد الجواب بنجاح.', 'success');
-                await this.fetchData();
-            } catch (err) { this.showToast(err.message, 'error'); }
-            finally { button.disabled = false; this.toggleLoader(false); }
-        }
-
-        /** @description إرسال التعديلات من نافذة التعديل. */
-        async handleEditSubmit(e) {
-            e.preventDefault();
-            const id = Number(this.elements.editQuestionId.value);
-            const updatedData = {
-                question: this.elements.editQuestionText.value.trim(),
-                source: this.elements.editQuestionSource.value.trim(),
-                answer: this.editors.edit.root.innerHTML
             };
-
-            if (!updatedData.question) return this.showToast('نص السؤال لا يمكن أن يكون فارغاً.', 'error');
-            
-            this.toggleLoader(true);
-            try {
-                await this.api.updateQuestion(id, updatedData);
-                this.showToast('تم حفظ التعديلات بنجاح.', 'success');
-                this.closeEditModal();
-                await this.fetchData();
-            } catch (err) { this.showToast(err.message, 'error'); }
-            finally { this.toggleLoader(false); }
+            this.quill = this.initQuill();
+            this.draftSaveInterval = null;
         }
 
-        async handleDeleteConfirmed() {
-            if (!this.state.questionToDeleteId) return;
-            this.toggleLoader(true);
-            try {
-                await this.api.deleteQuestion(this.state.questionToDeleteId);
-                this.showToast('تم حذف السؤال بنجاح.', 'success');
-                this.closeConfirmationModal();
-                await this.fetchData();
-            } catch (err) { this.showToast(err.message, 'error'); }
-            finally { this.toggleLoader(false); }
-        }
-        
-        handleSearch(e) {
-            this.state.searchTerm = e.target.value;
-            this.state.currentPage = 1; // العودة للصفحة الأولى عند البحث
-            this.render();
-        }
-
-        handleFilter(e) {
-            const filter = e.target.dataset.filter;
-            if (!filter) return;
-            
-            this.elements.filterBar.querySelector('.active').classList.remove('active');
-            e.target.classList.add('active');
-            
-            this.state.currentFilter = filter;
-            this.state.currentPage = 1;
-            this.render();
-        }
-        
-        handlePagination(e) { /* ... */ }
-        handleConfirmationModalActions(e) { /* ... */ }
-
-        // ==========================================================
-        //  3. دوال مساعدة وأدوات (Helpers & Utilities)
-        // ==========================================================
-
-        /** @description جلب البيانات الأولية من الخادم. */
-        async fetchData() {
-            this.toggleLoader(true);
-            try {
-                const questions = await this.api.getQuestions();
-                this.state.questions = questions.sort((a, b) => new Date(b.date) - new Date(a.date));
-                this.updateStats();
-                this.render();
-            } catch (err) { this.showToast(err.message, 'error'); }
-            finally { this.toggleLoader(false); }
-        }
-        
-        /** @description التحقق من وجود جلسة نشطة. */
-        async checkSession() {
-            this.toggleLoader(true);
-            try {
-                await this.api.checkStatus();
-                this.state.isLoggedIn = true;
-                this.elements.loginModal.classList.add('hidden');
-                this.elements.dashboard.classList.remove('hidden');
-                await this.fetchData();
-            } catch (err) {
-                this.state.isLoggedIn = false;
-                this.elements.loginModal.classList.remove('hidden');
-                this.elements.dashboard.classList.add('hidden');
-            } finally {
-                this.toggleLoader(false);
-            }
-        }
-        
-        /** @description تهيئة محرر النصوص Quill.js. */
-        initializeQuill(selector) {
-            const quillOptions = {
+        initQuill() {
+            return new Quill('#quill-editor-container', {
                 theme: 'snow',
                 modules: {
                     toolbar: [
-                        [{ 'header': [1, 2, 3, false] }],
-                        ['bold', 'italic', 'underline'],
-                        [{'list': 'ordered'}, {'list': 'bullet'}],
-                        [{ 'align': [] }],
-                        ['link', 'blockquote'],
-                        ['clean']
+                        [{ 'header': [1, 2, 3, false] }], ['bold', 'italic', 'underline'],
+                        [{'list': 'ordered'}, {'list': 'bullet'}], [{'align': []}],
+                        ['link', 'blockquote', 'code-block'], ['clean']
                     ]
                 }
-            };
-            return new Quill(selector, quillOptions);
+            });
         }
 
-        /** @description تأخير تنفيذ دالة (مفيد للبحث). */
-        debounce(func, delay) {
-            let timeout;
-            return (...args) => {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(this, args), delay);
-            };
+        toggleLoader(show) { this.dom.loader.style.opacity = show ? '1' : '0'; this.dom.loader.style.pointerEvents = show ? 'all' : 'none'; }
+        
+        showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            this.dom.toastContainer.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        renderDashboard(state) {
+            this.renderStats(state.questions);
+            this.renderTags(state.allTags, state.activeTag);
+            this.renderQuestions(state.getFilteredQuestions(), state.searchTerm);
         }
         
-        setInitialTheme() { /* ... */ }
-        handleThemeToggle() { /* ... */ }
+        renderStats(questions) {
+            const total = questions.length;
+            const answered = questions.filter(q => q.answer && q.answer.length > 20).length;
+            this.dom.dashboard.stats.total.textContent = total;
+            this.dom.dashboard.stats.answered.textContent = answered;
+            this.dom.dashboard.stats.unanswered.textContent = total - answered;
+        }
+        
+        renderTags(tags, activeTag) {
+            const list = this.dom.dashboard.tagsFilterList;
+            list.innerHTML = `<li data-tag="all" class="${activeTag === 'all' ? 'active' : ''}">الكل</li>`;
+            tags.forEach(tag => {
+                const li = document.createElement('li');
+                li.dataset.tag = tag;
+                li.textContent = tag;
+                if (tag === activeTag) li.classList.add('active');
+                list.appendChild(li);
+            });
+        }
+
+        renderQuestions(questions, searchTerm) {
+            const list = this.dom.dashboard.questionsList;
+            list.innerHTML = '';
+            if (questions.length === 0) {
+                list.innerHTML = `<p style="text-align:center; padding: 3rem; color: var(--color-ink-secondary);">لا توجد مسائل تطابق البحث الحالي.</p>`;
+                return;
+            }
+            questions.forEach(q => list.appendChild(this.createQuestionCard(q, searchTerm)));
+        }
+
+        createQuestionCard(q, searchTerm) {
+            const card = document.createElement('div');
+            card.className = `question-card ${q.answer ? 'answered' : 'unanswered'}`;
+            card.dataset.id = q.id;
+
+            const highlight = (text) => {
+                if (!searchTerm || !text) return text;
+                const regex = new RegExp(`(${searchTerm})`, 'gi');
+                return text.replace(regex, `<span class="search-highlight">$1</span>`);
+            };
+
+            const tagsHTML = (q.tags || []).map(tag => `<span class="tag">${highlight(tag)}</span>`).join('');
+            const date = new Date(q.date).toLocaleDateString('ar', { day: 'numeric', month: 'long', year: 'numeric' });
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-meta"><span>بتاريخ: ${date}</span></div>
+                    <div class="card-actions"><button class="btn btn-primary btn-sm edit-btn"><i class="fas fa-edit"></i> تحرير</button></div>
+                </div>
+                <div class="question-body">${highlight(q.question)}</div>
+                ${q.source ? `<p class="card-meta"><strong>المصدر:</strong> ${highlight(q.source)}</p>` : ''}
+                ${tagsHTML ? `<div class="card-tags">${tagsHTML}</div>` : ''}
+                ${q.answer ? `<div class="answer-display"><strong>الجواب:</strong> ${q.answer.substring(0, 200)}...</div>` : ''}
+            `;
+            return card;
+        }
+        
+        showLogin() {
+            this.dom.login.container.classList.remove('hidden');
+            this.dom.dashboard.container.classList.add('hidden');
+            this.toggleLoader(false);
+        }
+        
+        showDashboard() {
+            this.dom.login.container.classList.add('hidden');
+            this.dom.dashboard.container.classList.remove('hidden');
+        }
+
+        openModal(question) {
+            const isNew = !question;
+            this.dom.modal.form.reset();
+            this.dom.modal.title.textContent = isNew ? 'إضافة مسألة جديدة' : 'تحرير المسألة';
+            this.dom.modal.idInput.value = isNew ? '' : question.id;
+            this.dom.modal.questionInput.value = isNew ? '' : question.question;
+            this.dom.modal.sourceInput.value = isNew ? '' : (question.source || '');
+            this.dom.modal.tagsInput.value = isNew ? '' : (question.tags || []).join(', ');
+            this.quill.root.innerHTML = isNew ? '' : (question.answer || '');
+            this.dom.modal.deleteBtn.style.display = isNew ? 'none' : 'inline-flex';
+            this.dom.modal.container.classList.remove('hidden');
+
+            this.handleDrafts(isNew ? `new_question` : question.id);
+        }
+
+        closeModal() {
+            this.dom.modal.container.classList.add('hidden');
+            clearInterval(this.draftSaveInterval);
+            this.dom.modal.draftStatus.textContent = '';
+        }
+
+        handleDrafts(draftId) {
+            const draftKey = `draft_${draftId}`;
+            const savedDraft = localStorage.getItem(draftKey);
+            if (savedDraft) {
+                const draftContent = JSON.parse(savedDraft);
+                if (confirm("يوجد مسودة محفوظة لهذه المسألة. هل تود استعادتها؟")) {
+                    this.quill.root.innerHTML = draftContent.answer;
+                    this.dom.modal.questionInput.value = draftContent.question;
+                    this.dom.modal.sourceInput.value = draftContent.source;
+                    this.dom.modal.tagsInput.value = draftContent.tags;
+                }
+            }
+
+            this.draftSaveInterval = setInterval(() => {
+                const currentContent = {
+                    answer: this.quill.root.innerHTML,
+                    question: this.dom.modal.questionInput.value,
+                    source: this.dom.modal.sourceInput.value,
+                    tags: this.dom.modal.tagsInput.value
+                };
+                localStorage.setItem(draftKey, JSON.stringify(currentContent));
+                this.dom.modal.draftStatus.textContent = `تم حفظ المسودة في ${new Date().toLocaleTimeString('ar')}`;
+            }, 10000); // Save every 10 seconds
+        }
+
+        clearDraft(draftId) {
+            localStorage.removeItem(`draft_${draftId}`);
+        }
+    }
+    
+    /**
+     * AppController
+     * العقل المدبر للتطبيق. ينسق العمل بين الخدمات المختلفة (API, State, UI)
+     * ويقوم بربط الأحداث بالوظائف المناسبة، ويقود دورة حياة التطبيق.
+     */
+    class AppController {
+        constructor() {
+            this.api = new ApiService();
+            this.state = new StateService();
+            this.ui = new UIController();
+            this.init();
+        }
+
+        init() {
+            this.ui.toggleLoader(true);
+            this.bindEvents();
+            this.checkSession();
+        }
+
+        bindEvents() {
+            this.ui.dom.login.form.addEventListener('submit', this.handleLogin.bind(this));
+            this.ui.dom.dashboard.logoutBtn.addEventListener('click', this.handleLogout.bind(this));
+            this.ui.dom.dashboard.addNewBtn.addEventListener('click', () => this.ui.openModal(null));
+            
+            this.ui.dom.modal.closeBtns.forEach(btn => btn.addEventListener('click', () => this.ui.closeModal()));
+            this.ui.dom.modal.form.addEventListener('submit', this.handleFormSubmit.bind(this));
+            this.ui.dom.modal.deleteBtn.addEventListener('click', this.handleDelete.bind(this));
+            
+            this.ui.dom.dashboard.questionsList.addEventListener('click', e => {
+                const editBtn = e.target.closest('.edit-btn');
+                if (editBtn) {
+                    const card = e.target.closest('.question-card');
+                    const question = this.state.state.questions.find(q => q.id === Number(card.dataset.id));
+                    this.ui.openModal(question);
+                }
+            });
+
+            this.ui.dom.dashboard.searchInput.addEventListener('input', e => {
+                this.state.state.searchTerm = e.target.value;
+                this.ui.renderQuestions(this.state.getFilteredQuestions(), this.state.state.searchTerm);
+            });
+
+            this.ui.dom.dashboard.tagsFilterList.addEventListener('click', e => {
+                if(e.target.tagName === 'LI') {
+                    this.state.state.activeTag = e.target.dataset.tag;
+                    this.ui.renderDashboard(this.state);
+                }
+            });
+        }
+
+        async checkSession() {
+            try {
+                await this.api.checkStatus();
+                this.state.state.isLoggedIn = true;
+                this.ui.showDashboard();
+                await this.fetchData();
+            } catch (error) {
+                this.state.state.isLoggedIn = false;
+                this.ui.showLogin();
+            }
+        }
+
+        async handleLogin(e) {
+            e.preventDefault();
+            this.ui.dom.login.button.disabled = true;
+            this.ui.dom.login.errorMsg.textContent = '';
+            const password = this.ui.dom.login.passwordInput.value;
+
+            try {
+                await this.api.login(password);
+                this.ui.toggleLoader(true);
+                await this.checkSession();
+            } catch (error) {
+                this.ui.dom.login.errorMsg.textContent = error.message;
+                this.ui.dom.login.button.disabled = false;
+            }
+        }
+
+        async handleLogout() {
+            this.ui.toggleLoader(true);
+            try {
+                await this.api.logout();
+                this.state.state.isLoggedIn = false;
+                this.state.state.questions = [];
+                this.ui.showLogin();
+            } catch (error) {
+                this.ui.showToast(error.message, 'error');
+                this.ui.toggleLoader(false);
+            }
+        }
+
+        async fetchData() {
+            this.ui.toggleLoader(true);
+            try {
+                const questions = await this.api.getQuestions();
+                this.state.setQuestions(questions);
+                this.ui.renderDashboard(this.state);
+            } catch(error) {
+                this.ui.showToast(error.message, 'error');
+            } finally {
+                this.ui.toggleLoader(false);
+            }
+        }
+        
+        async handleFormSubmit(e) {
+            e.preventDefault();
+            const id = this.ui.dom.modal.idInput.value;
+            const data = {
+                question: this.ui.dom.modal.questionInput.value,
+                source: this.ui.dom.modal.sourceInput.value,
+                tags: this.ui.dom.modal.tagsInput.value.split(',').map(t => t.trim()).filter(Boolean),
+                answer: this.ui.quill.root.innerHTML
+            };
+
+            if (!data.question) {
+                this.ui.showToast("نص المسألة لا يمكن أن يكون فارغًا.", "error");
+                return;
+            }
+            
+            this.ui.toggleLoader(true);
+            try {
+                let response;
+                if (id) {
+                    response = await this.api.updateQuestion(Number(id), data);
+                } else {
+                    response = await this.api.addQuestion(data);
+                }
+                this.state.updateQuestion(response.question);
+                this.ui.renderDashboard(this.state);
+                this.ui.closeModal();
+                this.ui.clearDraft(id || 'new_question');
+                this.ui.showToast("تم حفظ المسألة بنجاح.", "success");
+            } catch(error) {
+                this.ui.showToast(error.message, 'error');
+            } finally {
+                this.ui.toggleLoader(false);
+            }
+        }
+
+        async handleDelete() {
+            const id = Number(this.ui.dom.modal.idInput.value);
+            if (!id || !confirm("هل أنت متأكد من رغبتك في حذف هذه المسألة؟ لا يمكن التراجع عن هذا الإجراء.")) return;
+
+            this.ui.toggleLoader(true);
+            try {
+                await this.api.deleteQuestion(id);
+                this.state.removeQuestion(id);
+                this.ui.renderDashboard(this.state);
+                this.ui.closeModal();
+                this.ui.clearDraft(id);
+                this.ui.showToast("تم حذف المسألة بنجاح.", "success");
+            } catch (error) {
+                this.ui.showToast(error.message, "error");
+            } finally {
+                this.ui.toggleLoader(false);
+            }
+        }
     }
 
-    // بدء تشغيل التطبيق
-    new HawzaDiwanApp();
+    // Start the application
+    new AppController();
 });
 </script>
 </body>
