@@ -18,6 +18,7 @@ const cors = require('cors');              // للسماح بالطلبات من
 const path = require('path');              // للتعامل مع مسارات الملفات والمجلدات
 const fs = require('fs');                  // للتعامل مع نظام الملفات (قراءة وكتابة ملف JSON)
 const serverless = require('serverless-http'); // لتحويل تطبيق Express إلى وظيفة سحابية متوافقة مع Netlify
+const bodyParser = require('body-parser'); // إضافة body-parser لدعم جميع أنواع body
 
 // --- حزم أمان إضافية (تم التأكد من وجودها في package.json) ---
 const helmet = require('helmet'); // يضيف طبقة من الحماية عن طريق ضبط رؤوس HTTP المختلفة
@@ -42,16 +43,20 @@ const STORE_NAME = 'questions';
 // --- القسم الثالث: إعدادات الوسيط (Middleware Configuration) ---
 app.use(cors({ origin: true, credentials: true }));
 app.use(helmet());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+// دعم body من جميع الأنواع (json, urlencoded, text)
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.text({ type: 'text/*' }));
+
 app.use(session({
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === 'production' ? true : false,
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     maxAge: 1000 * 60 * 60 * 8
   }
 }));
@@ -148,33 +153,41 @@ const requireAuth = (req, res, next) => {
   if (req.session && req.session.authenticated) {
     return next();
   }
+  // إذا لم يكن مصادق عليه، أعد رسالة واضحة
   res.status(401).json({ success: false, error: 'غير مصادق عليه. يرجى تسجيل الدخول أولاً.' });
 };
 
-// --- القسم السادس: تعريف المسارات (API Routes) - تم تحويلها لدعم العمليات غير المتزامنة ---
+// --- القسم السادس: تعريف المسارات (API Routes) ---
 
-// **الجزء الأول: المسارات العامة (Public Routes)**
-
+// استقبال الأسئلة من المستخدمين
 router.post('/questions', (req, res) => {
-  const { question } = req.body;
+  let question = req.body.question;
+  // دعم body إذا أرسل كنص خام
+  if (!question && typeof req.body === 'string') {
+    question = req.body;
+  }
   if (!question || typeof question !== 'string' || question.trim().length < 10) {
     return res.status(400).json({ success: false, error: 'نص السؤال مطلوب ويجب أن يكون ذا معنى.' });
   }
 
-  const questions = loadQuestions();
-  const newEntry = {
-    id: Date.now(),
-    question: question.trim(),
-    answer: '',
-    date: new Date().toISOString(),
-    answeredDate: null,
-    lastModified: null
-  };
-  questions.unshift(newEntry);
-  
-  if (saveQuestions(questions)) {
-    res.status(201).json({ success: true, message: 'تم استلام السؤال بنجاح. شكراً لكم.' });
-  } else {
+  try {
+    const questions = loadQuestions();
+    const newEntry = {
+      id: Date.now(),
+      question: question.trim(),
+      answer: '',
+      date: new Date().toISOString(),
+      answeredDate: null,
+      lastModified: null
+    };
+    questions.unshift(newEntry);
+
+    if (saveQuestions(questions)) {
+      res.status(201).json({ success: true, message: 'تم استلام السؤال بنجاح. شكراً لكم.' });
+    } else {
+      res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حفظ السؤال.' });
+    }
+  } catch (err) {
     res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حفظ السؤال.' });
   }
 });
@@ -190,12 +203,21 @@ router.get('/answered', (_req, res) => {
 // **الجزء الثاني: المسارات الخاصة بالمسؤول (Admin Routes) - تم تحويلها لـ async**
 
 router.post('/admin/login', loginLimiter, (req, res) => {
-  const submittedPassword = (req.body.password || '').trim();
+  let submittedPassword = req.body.password;
+  // دعم body إذا أرسل كنص خام
+  if (!submittedPassword && typeof req.body === 'string') {
+    submittedPassword = req.body;
+  }
+  submittedPassword = (submittedPassword || '').trim();
   if (submittedPassword && submittedPassword === ADMIN_PASSWORD) {
     req.session.authenticated = true;
-    return res.status(200).json({ success: true, message: 'تم تسجيل الدخول بنجاح.' });
+    // حفظ الجلسة قبل الرد لضمان إرسال الكوكيز
+    req.session.save(() => {
+      res.status(200).json({ success: true, message: 'تم تسجيل الدخول بنجاح.' });
+    });
+  } else {
+    res.status(401).json({ success: false, error: 'كلمة المرور غير صحيحة.' });
   }
-  res.status(401).json({ success: false, error: 'كلمة المرور غير صحيحة.' });
 });
 
 router.post('/admin/logout', requireAuth, (req, res) => {
@@ -203,7 +225,12 @@ router.post('/admin/logout', requireAuth, (req, res) => {
     if (err) {
       return res.status(500).json({ success: false, error: 'فشل في إنهاء الجلسة.' });
     }
-    res.clearCookie('connect.sid');
+    res.clearCookie('connect.sid', {
+      path: '/',
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: process.env.NODE_ENV === 'production' ? true : false
+    });
     res.status(200).json({ success: true, message: 'تم تسجيل الخروج بنجاح.' });
   });
 });
