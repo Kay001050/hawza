@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="الأسئلة الشائعة المفصلة حول مشروع نور الحوزة المعرفي، أهدافه ومنهجيته ومصادره المعتبرة.">
+  <meta name="description" content="الأسئلة الشائعة المفصلة حول مشروع نور الحوزة المعرفي، وأهدافه ومنهجيته ومصادره المعتبرة، مع إمكانية إرسال أسئلة جديدة.">
   <title>الأسئلة الشائعة | نور الحوزة</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
@@ -52,6 +52,96 @@
     .accordion .body{ max-height:0; overflow:hidden; background:var(--clr-bg-card); transition:max-height 0.5s cubic-bezier(0.4,0,0.2,1),padding var(--transition-long) ease-in-out; padding:0 1.5rem; border-bottom-left-radius:var(--border-radius-medium); border-bottom-right-radius:var(--border-radius-medium); box-shadow:inset 0 3px 8px rgba(0,0,0,0.05); }
     .accordion .body.open{ padding:1.5rem 1.5rem; max-height:2000px; border-top:1px solid var(--clr-secondary); }
     .accordion .body p{ margin-bottom:1rem; color:var(--clr-text-secondary); }
+    
+    /* --- بداية تنسيقات قسم إرسال سؤال جديد --- */
+    #ask-question-section {
+      background-color: var(--clr-bg-card);
+      padding: 2.5rem 2rem;
+      border-radius: var(--border-radius-large);
+      box-shadow: var(--shadow-medium);
+      margin-bottom: 3rem;
+      border-top: 5px solid var(--clr-primary);
+    }
+    #ask-question-section h2 {
+      text-align: center;
+      font-family: var(--font-secondary);
+      color: var(--clr-primary);
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      font-size: 2rem;
+    }
+    #ask-question-section p {
+      text-align: center;
+      color: var(--clr-text-secondary);
+      max-width: 650px;
+      margin: 0 auto 2rem auto;
+    }
+    #question-form textarea {
+      width: 100%;
+      min-height: 150px;
+      padding: 1rem;
+      font-family: var(--font-primary);
+      font-size: 1rem;
+      color: var(--clr-text-primary);
+      background-color: var(--clr-bg-main);
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius-medium);
+      resize: vertical;
+      margin-bottom: 1.5rem;
+      transition: border-color var(--transition-medium), box-shadow var(--transition-medium);
+    }
+    #question-form textarea:focus {
+      outline: none;
+      border-color: var(--clr-accent);
+      box-shadow: 0 0 0 3px rgba(179, 95, 47, 0.2);
+    }
+    .form-actions {
+      text-align: center;
+    }
+    .btn-submit-question {
+      background: var(--clr-accent);
+      color: var(--clr-text-on-accent);
+      padding: 0.8rem 2.5rem;
+      border-radius: var(--border-radius-medium);
+      font-weight: 700;
+      font-size: 1.1rem;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition-medium);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .btn-submit-question:hover:not(:disabled) {
+      background: var(--clr-accent-hover);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-medium);
+    }
+    .btn-submit-question:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    #form-feedback {
+      text-align: center;
+      padding: 1rem;
+      margin-top: 1.5rem;
+      border-radius: var(--border-radius-medium);
+      font-weight: 500;
+      display: none; /* مخفي بشكل افتراضي */
+    }
+    #form-feedback.success {
+      background-color: #e6f9f0;
+      color: #054a29;
+      border: 1px solid #a3e9c4;
+    }
+    #form-feedback.error {
+      background-color: #fbe9e9;
+      color: #c0392b;
+      border: 1px solid #f5b7b1;
+    }
+    /* --- نهاية تنسيقات قسم إرسال سؤال جديد --- */
+    
     .site-footer{ background:var(--clr-bg-header-footer); color:var(--clr-text-light); padding:1.5rem 0; box-shadow:var(--shadow-medium); margin-top:3rem; }
     .back-to-top{ position:fixed; bottom:30px; left:30px; background:var(--clr-accent); color:var(--clr-text-on-accent); padding:0.6rem 0.9rem; border-radius:var(--border-radius-medium); font-size:1rem; display:none; align-items:center; }
     .back-to-top.visible{ display:flex; }
@@ -100,6 +190,21 @@
     <section class="page-hero-title">
       <h1><i class="fas fa-circle-question"></i> الأسئلة الشائعة</h1>
       <p class="subtitle">هنا نجيب عن أبرز التساؤلات التي قد تدور في خلد الزائر الكريم حول مشروعنا المتواضع.</p>
+    </section>
+
+    <section id="ask-question-section">
+      <h2>لديك استفسار لم تجد جوابه؟</h2>
+      <p>يتشرف خدام المشروع في خدمتكم. تفضلوا بكتابة سؤالكم الشرعي أو العقائدي أو الأخلاقي بوضوح وأدب، وسيصل مباشرة إلى الإخوة المسؤولين لدراسته والإجابة عليه في أقرب فرصة ممكنة إن شاء الله تعالى.</p>
+      <form id="question-form" novalidate>
+        <label for="question-text" class="sr-only">نص السؤال</label> <textarea id="question-text" name="question" rows="6" placeholder="اكتب سؤالك هنا..." required></textarea>
+        <div class="form-actions">
+          <button type="submit" id="submit-btn" class="btn-submit-question">
+            <i class="fas fa-paper-plane"></i>
+            <span>إرسال السؤال</span>
+          </button>
+        </div>
+      </form>
+      <div id="form-feedback"></div>
     </section>
     <div class="accordion">
       
@@ -282,6 +387,9 @@
   </footer>
   <a href="#" class="back-to-top" aria-label="العودة إلى أعلى الصفحة"><i class="fas fa-arrow-up"></i></a>
   <script>
+    // --- بداية الكود البرمجي (JavaScript) ---
+
+    // الكود الخاص بالـ Preloader (شاشة التحميل الأولية)
     window.addEventListener('load', function () {
       const preloader = document.getElementById('preloader');
       if (preloader) {
@@ -292,20 +400,20 @@
         }, 500);
       }
     });
+
+    // الكود الخاص بعمل الأكورديون (قائمة الأسئلة القابلة للفتح والإغلاق)
     document.querySelectorAll('.accordion .header').forEach(header => {
       header.addEventListener('click', () => {
         const item = header.parentElement;
         const body = item.querySelector('.body');
         const isActive = header.classList.contains('active');
         
-        // Close all items
         document.querySelectorAll('.accordion .body').forEach(b => {
           b.classList.remove('open');
           b.style.maxHeight = null;
         });
         document.querySelectorAll('.accordion .header').forEach(h => h.classList.remove('active'));
         
-        // Open the clicked item if it wasn't already active
         if (!isActive) {
           header.classList.add('active');
           body.classList.add('open');
@@ -313,8 +421,79 @@
         }
       });
     });
+
+    // --- بداية الكود الجديد الخاص بنموذج إرسال الأسئلة ---
+    const questionForm = document.getElementById('question-form');
+    const questionTextarea = document.getElementById('question-text');
+    const submitButton = document.getElementById('submit-btn');
+    const formFeedback = document.getElementById('form-feedback');
+
+    // التأكد من وجود النموذج قبل إضافة المستمعات لتجنب الأخطاء
+    if (questionForm && questionTextarea && submitButton && formFeedback) {
+      questionForm.addEventListener('submit', async function(event) {
+        event.preventDefault(); // منع الإرسال التقليدي للنموذج
+
+        const question = questionTextarea.value.trim(); // أخذ النص وتنظيفه من المسافات
+
+        // التحقق من أن السؤال ليس فارغاً
+        if (question === '') {
+          showFeedback('يرجى التكرم بكتابة نص السؤال قبل الإرسال.', 'error');
+          questionTextarea.focus();
+          return;
+        }
+
+        // تعطيل زر الإرسال لمنع النقرات المتكررة
+        submitButton.disabled = true;
+        submitButton.querySelector('span').textContent = 'جارٍ الإرسال...';
+        formFeedback.style.display = 'none'; // إخفاء الرسائل السابقة
+
+        try {
+          // إرسال السؤال إلى الخادم عبر طلب POST
+          const response = await fetch('/api/questions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ question: question })
+          });
+
+          // إذا لم تكن الاستجابة ناجحة، يتم إظهار رسالة خطأ
+          if (!response.ok) {
+            throw new Error('حدث خطأ أثناء محاولة الاتصال بالخادم. يرجى المحاولة مرة أخرى.');
+          }
+
+          // في حال نجاح الإرسال
+          await response.json();
+          showFeedback('تم إرسال سؤالكم بنجاح. سيتم عرضه على أهل الاختصاص للجواب في أقرب فرصة. شكراً لثقتكم.', 'success');
+          questionTextarea.value = ''; // تفريغ حقل النص
+
+        } catch (error) {
+          // في حال حدوث أي خطأ في الشبكة أو الخادم
+          console.error('Error submitting question:', error);
+          showFeedback(error.message || 'حدث خطأ غير متوقع. يرجى التحقق من اتصالك بالإنترنت والمحاولة مجدداً.', 'error');
+        } finally {
+          // إعادة تفعيل زر الإرسال في كل الحالات (نجاح أو فشل)
+          submitButton.disabled = false;
+          submitButton.querySelector('span').textContent = 'إرسال السؤال';
+        }
+      });
+    }
+
+    /**
+     * دالة مساعدة لإظهار رسائل التنبيه للمستخدم
+     * @param {string} message - نص الرسالة المراد عرضها
+     * @param {'success'|'error'} type - نوع الرسالة لتحديد التنسيق (أخضر للنجاح، أحمر للخطأ)
+     */
+    function showFeedback(message, type) {
+      formFeedback.textContent = message;
+      formFeedback.className = type; // 'success' or 'error'
+      formFeedback.style.display = 'block';
+    }
+    // --- نهاية الكود الجديد الخاص بنموذج إرسال الأسئلة ---
+
+    // الكود الخاص بتحديث سنة الحقوق في التذييل
     const currentYearSpan = document.getElementById('currentYear');
     if (currentYearSpan) currentYearSpan.textContent = new Date().getFullYear();
+    
+    // الكود الخاص بزر "العودة إلى الأعلى"
     const backToTopButton = document.querySelector('.back-to-top');
     if (backToTopButton) {
       window.addEventListener('scroll', () => {
@@ -323,6 +502,8 @@
       });
       backToTopButton.addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top:0, behavior:'smooth' }); });
     }
+
+    // الكود الخاص بقائمة التنقل في وضع الجوال
     const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
     const mainNavigation = document.querySelector('.main-navigation');
     const navIcon = mobileNavToggle ? mobileNavToggle.querySelector('i') : null;
@@ -334,6 +515,7 @@
         else { navIcon.classList.remove('fa-times'); navIcon.classList.add('fa-bars'); }
       });
     }
+    // --- نهاية الكود البرمجي (JavaScript) ---
   </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js");}</script>
 </body>
