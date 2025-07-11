@@ -1,13 +1,14 @@
 {
-  "name": "noor-alhawza-project-v2",
-  "version": "2.0.0",
+  "name": "noor-alhawza-project-v3",
+  "version": "3.0.0",
   "description": "A knowledge-based AI project with persistent cloud storage.",
   "main": "netlify/functions/api.js",
   "scripts": {
-    "start": "netlify dev"
+    "start": "netlify dev",
+    "build": "echo 'Build script not necessary for this project structure.'"
   },
   "dependencies": {
-    "@netlify/blobs": "^7.5.0",
+    "@netlify/blobs": "^8.1.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -17,6 +18,6 @@
     "helmet": "^7.1.0",
     "serverless-http": "^3.2.0"
   },
-  "author": "Servants of Ahlulbayt",
+  "author": "Servants of Ahlulbayt (Optimized by AI)",
   "license": "ISC"
 }
