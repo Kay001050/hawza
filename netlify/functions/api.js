@@ -1,49 +1,86 @@
-// بسم الله الرحمن الرحيم
-// تم تكييف هذا الملف ليعمل كوظيفة سحابية (Serverless Function) على منصة Netlify
-// مع إصلاحات وتحسينات شاملة لضمان الاستقرار والأمان.
+/*
+ * بسم الله الرحمن الرحيم
+ * =================================================================
+ * ملف الواجهة البرمجية (API) لمشروع "نور الحوزة" - نسخة مُحترفة
+ * =================================================================
+ * هذا الملف هو العقل المدبر للنظام، مسؤول عن:
+ * - استلام الأسئلة من المستخدمين وحفظها.
+ * - تقديم الأسئلة المجابة للزوار.
+ * - توفير واجهة آمنة للمسؤولين لإدارة الأسئلة والإجابات.
+ * - تمكين عمليات التعديل والحذف والبحث.
+ * * تم بناؤه مع التركيز على الأمان، الصلابة، وسلامة البيانات.
+ */
 
-require('dotenv').config();
-const express = require('express');
-const session = require('express-session');
-const cors = require('cors'); // ✅ تصحيح: تم استخدام require بشكل صحيح
-const fs = require('fs');
-const path = require('path'); // ✅ تصحيح: تم استخدام require بشكل صحيح
-const serverless = require('serverless-http');
+// --- القسم الأول: استيراد الوحدات والمكتبات الأساسية (Dependencies) ---
+require('dotenv').config(); // لتحميل متغيرات البيئة من ملف .env (مفيد للتطوير المحلي)
+const express = require('express');          // الإطار الأساسي لبناء الواجهة البرمجية
+const session = require('express-session');  // لإدارة جلسات المستخدمين (لتسجيل دخول المسؤول)
+const cors = require('cors');              // للسماح بالطلبات من نطاقات مختلفة (من واجهة الموقع)
+const path = require('path');              // للتعامل مع مسارات الملفات والمجلدات
+const fs = require('fs');                  // للتعامل مع نظام الملفات (قراءة وكتابة ملف JSON)
+const serverless = require('serverless-http'); // لتحويل تطبيق Express إلى وظيفة سحابية متوافقة مع Netlify
 
-const app = express();
-const router = express.Router(); // استخدام Router لتنظيم أفضل
+// --- حزم أمان إضافية ---
+const helmet = require('helmet'); // يضيف طبقة من الحماية عن طريق ضبط رؤوس HTTP المختلفة
+const rateLimit = require('express-rate-limit'); // للحماية من هجمات القوة الغاشمة (Brute-force)
 
-// --- إعدادات المسارات والملفات ---
-// في بيئة serverless، يجب تحديد المسار بشكل دقيق لضمان الوصول للملفات
+// --- القسم الثاني: الإعدادات والثوابت (Configuration & Constants) ---
+const app = express();         // إنشاء نسخة من تطبيق Express
+const router = express.Router(); // استخدام موجّه (Router) لتنظيم المسارات بشكل أفضل
+
+// إعدادات مسار البيانات
 const DATA_DIR = path.resolve(process.cwd(), 'data');
 const DATA_FILE = path.join(DATA_DIR, 'questions.json');
+const LOCK_FILE = path.join(DATA_DIR, 'questions.lock'); // ملف القفل لضمان سلامة البيانات
 
-// --- إعدادات الوسيط (Middleware) ---
+// كلمة المرور للمسؤول (يجب ضبطها في متغيرات البيئة في Netlify)
+const ADMIN_PASSWORD = (process.env.ADMIN_PASSWORD || 'change-this-default-password').trim();
+
+// سر الجلسة (يجب ضبطه كمتغير بيئة قوي وطويل جداً)
+const SESSION_SECRET = process.env.SESSION_SECRET || 'a-very-strong-and-long-secret-for-production-environment';
+
+// --- القسم الثالث: إعدادات الوسيط (Middleware Configuration) ---
+
+// 1. تفعيل CORS للسماح للواجهة الأمامية بالتواصل مع الواجهة البرمجية
+app.use(cors({
+  origin: true,     // يسمح بالطلبات من نفس المصدر الذي تم تحميل الصفحة منه
+  credentials: true // يسمح بإرسال الكعكات (cookies) مع الطلبات، وهو ضروري للجلسات
+}));
+
+// 2. استخدام Helmet لضبط رؤوس HTTP الأمنية
+app.use(helmet());
+
+// 3. تفعيل محلل JSON و URL-encoded للتعامل مع الطلبات القادمة
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// إعداد CORS للسماح بالطلبات من واجهة الموقع مع إرسال الكعكات (cookies) للمصادقة
-app.use(cors({ origin: true, credentials: true }));
 
-// إعداد الجلسات (Session)
-// ملاحظة هامة: الجلسات المعتمدة على الذاكرة مؤقتة في بيئة serverless.
-// لكل طلب قد يتم إنشاء نسخة جديدة من الوظيفة. للبيئات الإنتاجية ذات الحجم الكبير،
-// يُنصح بشدة باستخدام مخزن جلسات خارجي (مثل Redis أو FaunaDB).
-// الحل الحالي يعمل لكن الجلسات قد تنتهي أسرع من المتوقع.
+// 4. إعداد جلسات المستخدمين (express-session)
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'a-very-strong-and-long-secret-for-production-environment',
-  resave: false,
-  saveUninitialized: false,
+  secret: SESSION_SECRET,
+  resave: false, // لا تعيد حفظ الجلسة إذا لم تتغير
+  saveUninitialized: false, // لا تنشئ جلسة حتى يتم تخزين شيء ما
   cookie: {
     secure: process.env.NODE_ENV === 'production', // يجب أن يكون true في بيئة الإنتاج (HTTPS)
-    httpOnly: true, // يمنع الوصول للكعكة من خلال جافاسكريبت في المتصفح لزيادة الأمان
-    maxAge: 1000 * 60 * 60 * 24 // صلاحية الجلسة ليوم واحد
+    httpOnly: true,     // يمنع الوصول للكعكة من خلال جافاسكريبت في المتصفح (حماية من XSS)
+    sameSite: 'lax',    // يوفر حماية ضد هجمات CSRF
+    maxAge: 1000 * 60 * 60 * 8 // صلاحية الجلسة لـ 8 ساعات عمل
   }
 }));
 
-// كلمة المرور للمسؤول، يتم جلبها من متغيرات البيئة في لوحة تحكم Netlify
-const ADMIN_PASSWORD = (process.env.ADMIN_PASSWORD || 'Kjm#82@NwrA!2025').trim();
+// 5. إعداد محدد المعدل (Rate Limiter) لمنع تخمين كلمة المرور
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // نافذة زمنية: 15 دقيقة
+  max: 10, // الحد الأقصى: 10 محاولات تسجيل دخول لكل IP خلال النافذة الزمنية
+  message: { success: false, error: 'محاولات تسجيل دخول كثيرة جداً، يرجى المحاولة مرة أخرى بعد 15 دقيقة.' },
+  standardHeaders: true, // يرسل معلومات الحد في رؤوس `RateLimit-*`
+  legacyHeaders: false, // يعطل رؤوس `X-RateLimit-*` القديمة
+});
 
-// --- دوال مساعدة لقراءة وكتابة الملفات مع التأكد من وجودها ---
+// --- القسم الرابع: دوال مساعدة لإدارة البيانات مع آلية القفل (Data Helper Functions with Locking) ---
+
+/**
+ * @description يضمن وجود مجلد البيانات وملف الأسئلة.
+ */
 function ensureDataFileExists() {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -53,113 +90,221 @@ function ensureDataFileExists() {
   }
 }
 
+/**
+ * @description محاولة الحصول على قفل للكتابة في الملف.
+ * @returns {boolean} - true إذا تم الحصول على القفل، false إذا كان الملف مقفلاً.
+ */
+function acquireLock() {
+  if (fs.existsSync(LOCK_FILE)) {
+    // إذا كان القفل موجودًا لأكثر من 5 ثوانٍ، فمن المحتمل أنه عالق. نزيله.
+    const lockStat = fs.statSync(LOCK_FILE);
+    const lockAge = (new Date().getTime() - lockStat.mtime.getTime()) / 1000;
+    if (lockAge > 5) {
+      releaseLock();
+    } else {
+      return false; // فشل الحصول على القفل
+    }
+  }
+  fs.writeFileSync(LOCK_FILE, process.pid.toString());
+  return true; // تم الحصول على القفل بنجاح
+}
+
+/**
+ * @description تحرير القفل بعد الانتهاء من الكتابة.
+ */
+function releaseLock() {
+  if (fs.existsSync(LOCK_FILE)) {
+    fs.unlinkSync(LOCK_FILE);
+  }
+}
+
+/**
+ * @description يقرأ الأسئلة من ملف JSON.
+ * @returns {Array} - مصفوفة الأسئلة.
+ */
 function loadQuestions() {
   ensureDataFileExists();
   try {
     const data = fs.readFileSync(DATA_FILE, 'utf8');
     return JSON.parse(data);
-  } catch (err) {
-    console.error("خطأ حرج: فشل في تحميل الأسئلة من ملف البيانات.", err);
-    // في حالة الفشل، نرجع مصفوفة فارغة لمنع انهيار التطبيق
-    return [];
+  } catch (error) {
+    console.error("خطأ حرج عند قراءة ملف البيانات:", error);
+    return []; // إرجاع مصفوفة فارغة في حالة الفشل لمنع انهيار النظام
   }
 }
 
+/**
+ * @description يحفظ مصفوفة الأسئلة في ملف JSON باستخدام آلية القفل.
+ * @param {Array} questions - مصفوفة الأسئلة المراد حفظها.
+ * @returns {boolean} - true عند النجاح، false عند الفشل.
+ */
 function saveQuestions(questions) {
-  ensureDataFileExists();
+  if (!acquireLock()) {
+    console.error("فشل في الحصول على قفل للكتابة. العملية متوقفة لتجنب تلف البيانات.");
+    return false;
+  }
   try {
-    // الكتابة بشكل متزامن لضمان حفظ البيانات قبل انتهاء تنفيذ الوظيفة
+    ensureDataFileExists();
     fs.writeFileSync(DATA_FILE, JSON.stringify(questions, null, 2), 'utf8');
-  } catch (err) {
-    console.error("خطأ حرج: فشل في حفظ الأسئلة في ملف البيانات.", err);
+    return true;
+  } catch (error) {
+    console.error("خطأ حرج عند كتابة ملف البيانات:", error);
+    return false;
+  } finally {
+    releaseLock(); // تحرير القفل دائماً، سواء نجحت العملية أم فشلت
   }
 }
 
-// --- دالة وسيطة للتحقق من مصادقة المسؤول (Authentication Middleware) ---
+// --- القسم الخامس: دوال وسيطة مخصصة (Custom Middleware) ---
+
+/**
+ * @description دالة وسيطة للتحقق من أن المسؤول قد قام بتسجيل الدخول.
+ */
 const requireAuth = (req, res, next) => {
   if (req.session && req.session.authenticated) {
-    return next();
+    return next(); // إذا كانت الجلسة مصادق عليها، استمر للخطوة التالية
   }
-  res.status(401).json({ error: 'غير مصادق عليه. يرجى تسجيل الدخول.' });
+  res.status(401).json({ success: false, error: 'غير مصادق عليه. يرجى تسجيل الدخول أولاً.' });
 };
 
-// --- تعريف المسارات (API Routes) ---
+// --- القسم السادس: تعريف المسارات (API Routes) ---
 
-// **مسارات المستخدمين العامة (Public Routes)**
-router.get('/answered', (_req, res) => {
-  const questions = loadQuestions().filter(q => q.answer).sort((a, b) => new Date(b.date) - new Date(a.date));
-  res.json(questions);
-});
+// **الجزء الأول: المسارات العامة (Public Routes)**
+// هذه المسارات متاحة لأي زائر للموقع.
 
+// مسار لإرسال سؤال جديد من قبل المستخدمين
 router.post('/questions', (req, res) => {
   const { question } = req.body;
-  if (!question || typeof question !== 'string' || question.trim().length < 5) {
-    return res.status(400).json({ error: 'نص السؤال مطلوب ويجب ألا يكون فارغاً أو قصيراً جداً.' });
+  if (!question || typeof question !== 'string' || question.trim().length < 10) {
+    return res.status(400).json({ success: false, error: 'نص السؤال مطلوب ويجب أن يكون ذا معنى.' });
   }
+
   const questions = loadQuestions();
   const newEntry = {
     id: Date.now(),
     question: question.trim(),
     answer: '',
-    date: new Date().toISOString()
+    date: new Date().toISOString(),
+    answeredDate: null,
+    lastModified: null
   };
   questions.unshift(newEntry);
-  saveQuestions(questions);
-  res.status(201).json({ message: 'تم استلام السؤال بنجاح. شكراً لكم.', entry: newEntry });
+  
+  if (saveQuestions(questions)) {
+    res.status(201).json({ success: true, message: 'تم استلام السؤال بنجاح. شكراً لكم.' });
+  } else {
+    res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حفظ السؤال.' });
+  }
 });
 
-// **مسارات المسؤولين الخاصة (Admin Routes)**
-router.post('/admin/login', (req, res) => {
+// مسار لجلب الأسئلة المجابة فقط
+router.get('/answered', (_req, res) => {
+  const questions = loadQuestions()
+    .filter(q => q.answer)
+    .sort((a, b) => new Date(b.answeredDate || b.date) - new Date(a.answeredDate || a.date));
+  res.status(200).json(questions);
+});
+
+
+// **الجزء الثاني: المسارات الخاصة بالمسؤول (Admin Routes)**
+// هذه المسارات محمية وتتطلب تسجيل الدخول.
+
+// مسار تسجيل دخول المسؤول (محمي بواسطة Rate Limiter)
+router.post('/admin/login', loginLimiter, (req, res) => {
   const submittedPassword = (req.body.password || '').trim();
   if (submittedPassword && submittedPassword === ADMIN_PASSWORD) {
-    req.session.authenticated = true;
-    return res.status(200).json({ message: 'تم تسجيل الدخول بنجاح.' });
+    req.session.authenticated = true; // تعيين علامة المصادقة في الجلسة
+    return res.status(200).json({ success: true, message: 'تم تسجيل الدخول بنجاح.' });
   }
-  res.status(401).json({ error: 'كلمة المرور غير صحيحة.' });
+  res.status(401).json({ success: false, error: 'كلمة المرور غير صحيحة.' });
 });
 
-router.post('/admin/logout', (req, res) => {
+// مسار تسجيل الخروج
+router.post('/admin/logout', requireAuth, (req, res) => {
   req.session.destroy(err => {
     if (err) {
-      return res.status(500).json({ error: 'فشل في تسجيل الخروج.' });
+      return res.status(500).json({ success: false, error: 'فشل في إنهاء الجلسة.' });
     }
     res.clearCookie('connect.sid'); // اسم الكعكة الافتراضي لـ express-session
-    res.status(200).json({ message: 'تم تسجيل الخروج بنجاح.' });
+    res.status(200).json({ success: true, message: 'تم تسجيل الخروج بنجاح.' });
   });
 });
 
-// 💡 تحسين: إضافة مسار للتحقق من حالة المصادقة
+// مسار للتحقق من حالة الجلسة (مفيد لواجهة المسؤول عند تحميل الصفحة)
 router.get('/admin/status', requireAuth, (req, res) => {
-  // إذا وصل الطلب إلى هنا، فذاك يعني أن requireAuth قد نجح
-  res.status(200).json({ authenticated: true, message: 'الجلسة لا تزال نشطة.' });
+  res.status(200).json({ success: true, authenticated: true });
 });
 
+// مسار لجلب جميع الأسئلة (المجابة وغير المجابة)
 router.get('/admin/questions', requireAuth, (req, res) => {
   res.status(200).json(loadQuestions());
 });
 
+// مسار لإضافة إجابة لسؤال
 router.post('/admin/answer', requireAuth, (req, res) => {
   const { id, answer } = req.body;
-  // تدقيق أكثر صرامة للبيانات المدخلة
   if (!id || !answer || typeof answer !== 'string' || answer.trim() === '') {
-    return res.status(400).json({ error: 'بيانات غير صالحة: معرف السؤال ونص الإجابة مطلوبان.' });
+    return res.status(400).json({ success: false, error: 'معرف السؤال ونص الإجابة مطلوبان.' });
   }
   const questions = loadQuestions();
   const questionIndex = questions.findIndex(q => q.id === Number(id));
   if (questionIndex === -1) {
-    return res.status(404).json({ error: 'لم يتم العثور على السؤال المطلوب.' });
+    return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب.' });
   }
   questions[questionIndex].answer = answer.trim();
-  questions[questionIndex].answeredDate = new Date().toISOString(); // إضافة تاريخ الإجابة
-  saveQuestions(questions);
-  res.status(200).json({ message: 'تم حفظ الجواب بنجاح.' });
+  questions[questionIndex].answeredDate = new Date().toISOString();
+  
+  if (saveQuestions(questions)) {
+    res.status(200).json({ success: true, message: 'تم حفظ الجواب بنجاح.' });
+  } else {
+    res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حفظ الجواب.' });
+  }
 });
 
+// ✅ مسار جديد لتحديث إجابة موجودة
+router.put('/admin/question/:id', requireAuth, (req, res) => {
+  const { id } = req.params;
+  const { answer } = req.body;
+  if (!answer || typeof answer !== 'string' || answer.trim() === '') {
+    return res.status(400).json({ success: false, error: 'نص الإجابة المحدث مطلوب.' });
+  }
+  const questions = loadQuestions();
+  const questionIndex = questions.findIndex(q => q.id === Number(id));
+  if (questionIndex === -1) {
+    return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب.' });
+  }
+  questions[questionIndex].answer = answer.trim();
+  questions[questionIndex].lastModified = new Date().toISOString();
+  
+  if (saveQuestions(questions)) {
+    res.status(200).json({ success: true, message: 'تم تحديث الجواب بنجاح.' });
+  } else {
+    res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء تحديث الجواب.' });
+  }
+});
 
-// --- ربط الـ Router بالتطبيق الرئيسي ---
-// البادئة /.netlify/functions/api ستتم إدارتها بواسطة Netlify بناءً على ملف netlify.toml
-// لذا، التطبيق نفسه لا يحتاج إلى معرفة هذه البادئة.
+// ✅ مسار جديد لحذف سؤال بالكامل
+router.delete('/admin/question/:id', requireAuth, (req, res) => {
+  const { id } = req.params;
+  let questions = loadQuestions();
+  const initialLength = questions.length;
+  questions = questions.filter(q => q.id !== Number(id));
+  if (initialLength === questions.length) {
+    return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب لحذفه.' });
+  }
+  
+  if (saveQuestions(questions)) {
+    res.status(200).json({ success: true, message: 'تم حذف السؤال بنجاح.' });
+  } else {
+    res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حذف السؤال.' });
+  }
+});
+
+// --- القسم السابع: ربط الموجه بالتطبيق الرئيسي وتصدير الوظيفة ---
+
+// يتم استخدام البادئة `/` لأن Netlify سيتعامل مع توجيه المسارات
+// من `/api/*` و `/admin/*` إلى هذه الوظيفة بناءً على ملف `netlify.toml`.
 app.use('/', router); 
 
-// --- التصدير النهائي للوظيفة لتعمل مع Netlify ---
+// تصدير التطبيق كدالة متوافقة مع Netlify Functions
 module.exports.handler = serverless(app);
