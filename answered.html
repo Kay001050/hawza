@@ -122,6 +122,17 @@
         color: #b45309;
         font-size: 1.3rem;
     }
+    .error-message {
+        background-color: #fbe9e9;
+        color: #c0392b;
+        border: 1px solid #f5b7b1;
+        border-right-width: 5px;
+        border-right-color: #c0392b;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-radius: 8px;
+        text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -152,7 +163,6 @@
   <script>
     // --- بداية قسم الجافاسكريبت المحدّث ---
 
-    // تعريف النماذج الجديدة كبيانات ثابتة لإضافتها إلى القائمة
     const newNoorModels = [
       {
         isModel: true,
@@ -177,16 +187,9 @@
       }
     ];
 
-    /**
-     * دالة مسؤولة عن عرض سؤال أو نموذج جديد في القائمة
-     * @param {HTMLElement} listElement - عنصر الـ UL الذي ستتم إضافة المحتوى إليه
-     * @param {object} item - الكائن الذي يحتوي على بيانات السؤال أو النموذج
-     */
     function renderListItem(listElement, item) {
       const li = document.createElement('li');
-
       if (item.isModel) {
-        // إذا كان الكائن يمثل نموذجًا جديدًا، يتم عرضه بتصميم خاص
         li.innerHTML = `
           <p class="model-intro">${item.icon} ${item.title}:</p>
           <p class="model-description">${item.description}</p>
@@ -195,7 +198,6 @@
           </a>
         `;
       } else {
-        // إذا كان الكائن سؤالًا عاديًا، يتم عرضه بالتصميم الأصلي
         const date = document.createElement('strong');
         date.textContent = new Date(item.date).toLocaleDateString('ar-EG-u-nu-latn', { year: 'numeric', month: 'long', day: 'numeric' }) + ': ';
         li.appendChild(date);
@@ -206,48 +208,44 @@
         ans.innerHTML = `<span class="answer-title">الجواب:</span> ${item.answer}`;
         li.appendChild(ans);
       }
-      
       listElement.appendChild(li);
     }
+    
+    // ✅ التحسين المضاف
+    function renderError(listElement, message) {
+        const errorLi = document.createElement('li');
+        errorLi.className = 'error-message';
+        errorLi.innerHTML = `
+            <i class="fas fa-exclamation-circle"></i> <strong>خطأ في الاتصال</strong>
+            <p>${message}</p>
+        `;
+        listElement.prepend(errorLi); // استخدام prepend لوضع رسالة الخطأ في الأعلى
+    }
 
-    /**
-     * الدالة الرئيسية لتحميل وعرض جميع الأسئلة والنماذج
-     */
     async function loadAnsweredAndModels() {
       const list = document.getElementById('answerList');
       if (!list) return;
 
-      // أولاً، نقوم بمسح القائمة لضمان عدم تكرار المحتوى عند كل تحميل
       list.innerHTML = '';
-
-      // ثانيًا، نقوم بعرض النماذج الجديدة التي عرفناها سابقًا
       newNoorModels.forEach(model => renderListItem(list, model));
 
       try {
-        // ثالثًا، نحاول جلب الأسئلة المجابة من الخادم
         const res = await fetch('/api/answered');
-        
-        // إذا لم تكن الاستجابة ناجحة، نكتفي بعرض النماذج فقط
         if (!res.ok) {
-          console.error('فشل في جلب الأسئلة المجابة من الخادم.');
-          return;
+          // عرض رسالة خطأ أكثر وضوحاً للمستخدم
+          throw new Error(`فشل في جلب الأسئلة المجابة من الخادم (رمز الحالة: ${res.status}). يرجى المحاولة لاحقاً.`);
         }
-
         const fetchedQuestions = await res.json();
-        
-        // رابعًا، نقوم بعرض الأسئلة التي تم جلبها من الخادم
         fetchedQuestions.forEach(q => renderListItem(list, q));
-
       } catch (error) {
         console.error('حدث خطأ أثناء الاتصال بالخادم:', error);
-        // في حالة وجود خطأ في الشبكة، سيتم عرض النماذج الجديدة على الأقل
+        // ✅ عرض الخطأ للمستخدم بدلاً من الاكتفاء بالكونسول
+        renderError(list, 'عفواً، تعذر تحميل الأرشيف في الوقت الحالي بسبب مشكلة تقنية. نعمل على إصلاحها.');
       }
     }
 
-    // استدعاء الدالة الرئيسية عند تحميل الصفحة
     loadAnsweredAndModels();
 
-    // --- نهاية قسم الجافاسكريبت المحدّث ---
   </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js");}</script>
 </body>
