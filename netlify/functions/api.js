@@ -221,16 +221,20 @@ router.post('/admin/answer', requireAuth, (req, res) => {
   if (!id || !answer || typeof answer !== 'string' || answer.trim() === '') {
     return res.status(400).json({ success: false, error: 'معرف السؤال ونص الإجابة مطلوبان.' });
   }
-  const questions = loadQuestions();
-  const questionIndex = questions.findIndex(q => q.id === Number(id));
-  if (questionIndex === -1) {
-    return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب.' });
-  }
-  questions[questionIndex].answer = answer.trim();
-  questions[questionIndex].answeredDate = new Date().toISOString();
-  
-  if (saveQuestions(questions)) {
-    res.status(200).json({ success: true, message: 'تم حفظ الجواب بنجاح.' });
+  try {
+    const questions = loadQuestions();
+    const questionIndex = questions.findIndex(q => q.id === Number(id));
+    if (questionIndex === -1) {
+      return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب.' });
+    }
+    questions[questionIndex].answer = answer.trim();
+    questions[questionIndex].answeredDate = new Date().toISOString();
+    
+    if (saveQuestions(questions)) {
+      res.status(200).json({ success: true, message: 'تم حفظ الجواب بنجاح.' });
+    } else {
+      res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حفظ الجواب.' });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حفظ الجواب.' });
@@ -243,16 +247,20 @@ router.put('/admin/question/:id', requireAuth, (req, res) => {
   if (!answer || typeof answer !== 'string' || answer.trim() === '') {
     return res.status(400).json({ success: false, error: 'نص الإجابة المحدث مطلوب.' });
   }
-  const questions = loadQuestions();
-  const questionIndex = questions.findIndex(q => q.id === Number(id));
-  if (questionIndex === -1) {
-    return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب.' });
-  }
-  questions[questionIndex].answer = answer.trim();
-  questions[questionIndex].lastModified = new Date().toISOString();
-  
-  if (saveQuestions(questions)) {
-    res.status(200).json({ success: true, message: 'تم تحديث الجواب بنجاح.' });
+  try {
+    const questions = loadQuestions();
+    const questionIndex = questions.findIndex(q => q.id === Number(id));
+    if (questionIndex === -1) {
+      return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب.' });
+    }
+    questions[questionIndex].answer = answer.trim();
+    questions[questionIndex].lastModified = new Date().toISOString();
+    
+    if (saveQuestions(questions)) {
+      res.status(200).json({ success: true, message: 'تم تحديث الجواب بنجاح.' });
+    } else {
+      res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء تحديث الجواب.' });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء تحديث الجواب.' });
@@ -261,15 +269,19 @@ router.put('/admin/question/:id', requireAuth, (req, res) => {
 
 router.delete('/admin/question/:id', requireAuth, (req, res) => {
   const { id } = req.params;
-  let questions = loadQuestions();
-  const initialLength = questions.length;
-  questions = questions.filter(q => q.id !== Number(id));
-  if (initialLength === questions.length) {
-    return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب لحذفه.' });
-  }
-  
-  if (saveQuestions(questions)) {
-    res.status(200).json({ success: true, message: 'تم حذف السؤال بنجاح.' });
+  try {
+    let questions = loadQuestions();
+    const initialLength = questions.length;
+    questions = questions.filter(q => q.id !== Number(id));
+    if (initialLength === questions.length) {
+      return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب لحذفه.' });
+    }
+    
+    if (saveQuestions(questions)) {
+      res.status(200).json({ success: true, message: 'تم حذف السؤال بنجاح.' });
+    } else {
+      res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حذف السؤال.' });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حذف السؤال.' });
