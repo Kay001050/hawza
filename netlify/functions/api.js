@@ -1,208 +1,154 @@
 /*
  * بسم الله الرحمن الرحيم
  * =================================================================
- * ملف الواجهة البرمجية (API) لمشروع "نور الحوزة" - نسخة مُحترفة ومُحصّنة
+ * ملف الواجهة البرمجية (API) لمشروع "نور الحوزة" - نسخة مُرقّاة مع تخزين سحابي دائم
  * =================================================================
  * هذا الملف هو العقل المدبر للنظام، مسؤول عن:
- * - استلام الأسئلة من المستخدمين وحفظها.
+ * - استلام الأسئلة وحفظها بشكل دائم في مخزن سحابي (Netlify Blobs).
  * - تقديم الأسئلة المجابة للزوار.
  * - توفير واجهة آمنة للمسؤولين لإدارة الأسئلة والإجابات.
- * - تمكين عمليات التعديل والحذف والبحث.
- * * تم بناؤه مع التركيز على الأمان، الصلابة، وسلامة البيانات.
+ * * تم إعادة هندسته لضمان سلامة البيانات واستمراريتها.
  */
 
-// --- القسم الأول: استيراد الوحدات والمكتبات الأساسية (Dependencies) ---
-require('dotenv').config(); // لتحميل متغيرات البيئة من ملف .env (مفيد للتطوير المحلي)
-const express = require('express');          // الإطار الأساسي لبناء الواجهة البرمجية
-const session = require('express-session');  // لإدارة جلسات المستخدمين (لتسجيل دخول المسؤول)
-const cors = require('cors');              // للسماح بالطلبات من نطاقات مختلفة (من واجهة الموقع)
-const path = require('path');              // للتعامل مع مسارات الملفات والمجلدات
-const fs = require('fs');                  // للتعامل مع نظام الملفات (قراءة وكتابة ملف JSON)
-const serverless = require('serverless-http'); // لتحويل تطبيق Express إلى وظيفة سحابية متوافقة مع Netlify
+// --- القسم الأول: استيراد الوحدات والمكتبات الأساسية ---
+require('dotenv').config();
+const express = require('express');
+const session = require('express-session');
+const cors = require('cors');
+const serverless = require('serverless-http');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+// ✅ استيراد مكتبة التخزين السحابي من نيتليفاي
+const { getStore } = require('@netlify/blobs');
 
-// --- حزم أمان إضافية (تم التأكد من وجودها في package.json) ---
-const helmet = require('helmet'); // يضيف طبقة من الحماية عن طريق ضبط رؤوس HTTP المختلفة
-const rateLimit = require('express-rate-limit'); // للحماية من هجمات القوة الغاشمة (Brute-force)
+// --- القسم الثاني: الإعدادات والثوابت ---
+const app = express();
+const router = express.Router();
 
-// --- القسم الثاني: الإعدادات والثوابت (Configuration & Constants) ---
-const app = express();         // إنشاء نسخة من تطبيق Express
-const router = express.Router(); // استخدام موجّه (Router) لتنظيم المسارات بشكل أفضل
-
-// إعدادات مسار البيانات
-const DATA_DIR = path.resolve(process.cwd(), 'data');
-const DATA_FILE = path.join(DATA_DIR, 'questions.json');
-const LOCK_FILE = path.join(DATA_DIR, 'questions.lock'); // ملف القفل لضمان سلامة البيانات
-
-// كلمة المرور للمسؤول (يجب ضبطها في متغيرات البيئة في Netlify)
 const ADMIN_PASSWORD = (process.env.ADMIN_PASSWORD || 'change-this-default-password').trim();
-
-// سر الجلسة (يجب ضبطه كمتغير بيئة قوي وطويل جداً)
 const SESSION_SECRET = process.env.SESSION_SECRET || 'a-very-strong-and-long-secret-for-production-environment';
 
+// اسم مخزن البيانات (المكتبة)
+const STORE_NAME = 'questions';
+
 // --- القسم الثالث: إعدادات الوسيط (Middleware Configuration) ---
-
-// 1. تفعيل CORS للسماح للواجهة الأمامية بالتواصل مع الواجهة البرمجية
-app.use(cors({
-  origin: true,     // يسمح بالطلبات من نفس المصدر الذي تم تحميل الصفحة منه
-  credentials: true // يسمح بإرسال الكعكات (cookies) مع الطلبات، وهو ضروري للجلسات
-}));
-
-// 2. استخدام Helmet لضبط رؤوس HTTP الأمنية (الآن يعمل)
+app.use(cors({ origin: true, credentials: true }));
 app.use(helmet());
-
-// 3. تفعيل محلل JSON و URL-encoded للتعامل مع الطلبات القادمة
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// 4. إعداد جلسات المستخدمين (express-session)
 app.use(session({
   secret: SESSION_SECRET,
-  resave: false, // لا تعيد حفظ الجلسة إذا لم تتغير
-  saveUninitialized: false, // لا تنشئ جلسة حتى يتم تخزين شيء ما
+  resave: false,
+  saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // يجب أن يكون true في بيئة الإنتاج (HTTPS)
-    httpOnly: true,     // يمنع الوصول للكعكة من خلال جافاسكريبت في المتصفح (حماية من XSS)
-    sameSite: 'lax',    // يوفر حماية ضد هجمات CSRF
-    maxAge: 1000 * 60 * 60 * 8 // صلاحية الجلسة لـ 8 ساعات عمل
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    sameSite: 'lax',
+    maxAge: 1000 * 60 * 60 * 8
   }
 }));
 
-// 5. إعداد محدد المعدل (Rate Limiter) لمنع تخمين كلمة المرور (الآن يعمل)
 const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // نافذة زمنية: 15 دقيقة
-  max: 10, // الحد الأقصى: 10 محاولات تسجيل دخول لكل IP خلال النافذة الزمنية
+  windowMs: 15 * 60 * 1000,
+  max: 10,
   message: { success: false, error: 'محاولات تسجيل دخول كثيرة جداً، يرجى المحاولة مرة أخرى بعد 15 دقيقة.' },
-  standardHeaders: true, // يرسل معلومات الحد في رؤوس `RateLimit-*`
-  legacyHeaders: false, // يعطل رؤوس `X-RateLimit-*` القديمة
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
-// --- القسم الرابع: دوال مساعدة لإدارة البيانات مع آلية القفل (Data Helper Functions with Locking) ---
+// --- القسم الرابع: دوال مساعدة جديدة لإدارة البيانات من المخزن السحابي ---
 
 /**
- * @description يضمن وجود مجلد البيانات وملف الأسئلة.
+ * @description يقرأ جميع الأسئلة من مخزن Netlify Blobs.
+ * @returns {Promise<Array>} - مصفوفة الأسئلة.
  */
-function ensureDataFileExists() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-  if (!fs.existsSync(DATA_FILE)) {
-    fs.writeFileSync(DATA_FILE, '[]', 'utf8');
-  }
-}
-
-/**
- * @description محاولة الحصول على قفل للكتابة في الملف.
- * @returns {boolean} - true إذا تم الحصول على القفل، false إذا كان الملف مقفلاً.
- */
-function acquireLock() {
-  if (fs.existsSync(LOCK_FILE)) {
-    // إذا كان القفل موجودًا لأكثر من 5 ثوانٍ، فمن المحتمل أنه عالق. نزيله.
-    const lockStat = fs.statSync(LOCK_FILE);
-    const lockAge = (new Date().getTime() - lockStat.mtime.getTime()) / 1000;
-    if (lockAge > 5) {
-      releaseLock();
-    } else {
-      return false; // فشل الحصول على القفل
-    }
-  }
-  fs.writeFileSync(LOCK_FILE, process.pid.toString());
-  return true; // تم الحصول على القفل بنجاح
-}
-
-/**
- * @description تحرير القفل بعد الانتهاء من الكتابة.
- */
-function releaseLock() {
-  if (fs.existsSync(LOCK_FILE)) {
-    fs.unlinkSync(LOCK_FILE);
-  }
-}
-
-/**
- * @description يقرأ الأسئلة من ملف JSON.
- * @returns {Array} - مصفوفة الأسئلة.
- */
-function loadQuestions() {
-  ensureDataFileExists();
+async function loadQuestions() {
   try {
-    const data = fs.readFileSync(DATA_FILE, 'utf8');
-    return JSON.parse(data);
+    const store = getStore(STORE_NAME);
+    // جلب البيانات من المخزن، وفي حال كان فارغاً، نرجع مصفوفة فارغة
+    const data = await store.get('all_questions', { type: 'json' });
+    return data || [];
   } catch (error) {
-    console.error("خطأ حرج عند قراءة ملف البيانات:", error);
-    return []; // إرجاع مصفوفة فارغة في حالة الفشل لمنع انهيار النظام
+    // إذا كان الخطأ هو "Not Found"، فهذا يعني أن المخزن لم يُنشأ بعد، وهذا طبيعي في المرة الأولى
+    if (error.status === 404) {
+      return [];
+    }
+    console.error("خطأ حرج عند قراءة البيانات من المخزن السحابي:", error);
+    // في حالة أي خطأ آخر، نرجع مصفوفة فارغة لمنع انهيار النظام
+    return [];
   }
 }
 
 /**
- * @description يحفظ مصفوفة الأسئلة في ملف JSON باستخدام آلية القفل.
+ * @description يحفظ مصفوفة الأسئلة الكاملة في مخزن Netlify Blobs.
  * @param {Array} questions - مصفوفة الأسئلة المراد حفظها.
- * @returns {boolean} - true عند النجاح، false عند الفشل.
+ * @returns {Promise<boolean>} - true عند النجاح.
  */
-function saveQuestions(questions) {
-  if (!acquireLock()) {
-    console.error("فشل في الحصول على قفل للكتابة. العملية متوقفة لتجنب تلف البيانات.");
-    return false;
-  }
+async function saveQuestions(questions) {
   try {
-    ensureDataFileExists();
-    fs.writeFileSync(DATA_FILE, JSON.stringify(questions, null, 2), 'utf8');
+    const store = getStore(STORE_NAME);
+    // استخدام setJSON لحفظ المصفوفة بأكملها تحت مفتاح واحد
+    await store.setJSON('all_questions', questions);
     return true;
   } catch (error) {
-    console.error("خطأ حرج عند كتابة ملف البيانات:", error);
-    return false;
-  } finally {
-    releaseLock(); // تحرير القفل دائماً، سواء نجحت العملية أم فشلت
+    console.error("خطأ حرج عند كتابة البيانات في المخزن السحابي:", error);
+    throw new Error('فشل الخادم في حفظ البيانات في المخزن السحابي.');
   }
 }
 
-// --- القسم الخامس: دوال وسيطة مخصصة (Custom Middleware) ---
-
-/**
- * @description دالة وسيطة للتحقق من أن المسؤول قد قام بتسجيل الدخول.
- */
+// --- القسم الخامس: دوال وسيطة مخصصة (لا تغيير هنا) ---
 const requireAuth = (req, res, next) => {
   if (req.session && req.session.authenticated) {
-    return next(); // إذا كانت الجلسة مصادق عليها، استمر للخطوة التالية
+    return next();
   }
   res.status(401).json({ success: false, error: 'غير مصادق عليه. يرجى تسجيل الدخول أولاً.' });
 };
 
-// --- القسم السادس: تعريف المسارات (API Routes) ---
+// --- القسم السادس: تعريف المسارات (API Routes) - تم تحويلها لدعم العمليات غير المتزامنة ---
 
-// **الجزء الأول: المسارات العامة (Public Routes)**
-
-router.post('/questions', (req, res) => {
+// مسار لإرسال سؤال جديد (الآن async)
+router.post('/questions', async (req, res) => {
   const { question } = req.body;
   if (!question || typeof question !== 'string' || question.trim().length < 10) {
     return res.status(400).json({ success: false, error: 'نص السؤال مطلوب ويجب أن يكون ذا معنى.' });
   }
 
-  const questions = loadQuestions();
-  const newEntry = {
-    id: Date.now(),
-    question: question.trim(),
-    answer: '',
-    date: new Date().toISOString(),
-    answeredDate: null,
-    lastModified: null
-  };
-  questions.unshift(newEntry);
-  
-  if (saveQuestions(questions)) {
-    res.status(201).json({ success: true, message: 'تم استلام السؤال بنجاح. شكراً لكم.' });
-  } else {
-    res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حفظ السؤال.' });
+  try {
+    const questions = await loadQuestions();
+    const newEntry = {
+      id: Date.now(),
+      question: question.trim(),
+      answer: '',
+      date: new Date().toISOString(),
+      answeredDate: null,
+      lastModified: null
+    };
+    questions.unshift(newEntry);
+    
+    await saveQuestions(questions);
+    res.status(201).json({ success: true, message: 'تم استلام السؤال بنجاح وحفظه في السجل الدائم. شكراً لكم.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: error.message || 'حدث خطأ في الخادم أثناء حفظ السؤال.' });
   }
 });
 
-router.get('/answered', (_req, res) => {
-  const questions = loadQuestions()
-    .filter(q => q.answer)
-    .sort((a, b) => new Date(b.answeredDate || b.date) - new Date(a.answeredDate || a.date));
-  res.status(200).json(questions);
+// مسار لجلب الأسئلة المجابة فقط (الآن async)
+router.get('/answered', async (_req, res) => {
+  try {
+    const questions = await loadQuestions();
+    const answered = questions
+      .filter(q => q.answer)
+      .sort((a, b) => new Date(b.answeredDate || b.date) - new Date(a.answeredDate || a.date));
+    res.status(200).json(answered);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء جلب الأرشيف.' });
+  }
 });
 
-// **الجزء الثاني: المسارات الخاصة بالمسؤول (Admin Routes)**
+
+// **الجزء الثاني: المسارات الخاصة بالمسؤول (Admin Routes) - تم تحويلها لـ async**
 
 router.post('/admin/login', loginLimiter, (req, res) => {
   const submittedPassword = (req.body.password || '').trim();
@@ -227,63 +173,82 @@ router.get('/admin/status', requireAuth, (req, res) => {
   res.status(200).json({ success: true, authenticated: true });
 });
 
-router.get('/admin/questions', requireAuth, (req, res) => {
-  res.status(200).json(loadQuestions());
+// مسار جلب جميع الأسئلة (الآن async)
+router.get('/admin/questions', requireAuth, async (req, res) => {
+    try {
+        const questions = await loadQuestions();
+        res.status(200).json(questions);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء جلب جميع الأسئلة.' });
+    }
 });
 
-router.post('/admin/answer', requireAuth, (req, res) => {
+// مسار إضافة إجابة (الآن async)
+router.post('/admin/answer', requireAuth, async (req, res) => {
   const { id, answer } = req.body;
   if (!id || !answer || typeof answer !== 'string' || answer.trim() === '') {
     return res.status(400).json({ success: false, error: 'معرف السؤال ونص الإجابة مطلوبان.' });
   }
-  const questions = loadQuestions();
-  const questionIndex = questions.findIndex(q => q.id === Number(id));
-  if (questionIndex === -1) {
-    return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب.' });
-  }
-  questions[questionIndex].answer = answer.trim();
-  questions[questionIndex].answeredDate = new Date().toISOString();
   
-  if (saveQuestions(questions)) {
+  try {
+    const questions = await loadQuestions();
+    const questionIndex = questions.findIndex(q => q.id === Number(id));
+    if (questionIndex === -1) {
+      return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب.' });
+    }
+    questions[questionIndex].answer = answer.trim();
+    questions[questionIndex].answeredDate = new Date().toISOString();
+    
+    await saveQuestions(questions);
     res.status(200).json({ success: true, message: 'تم حفظ الجواب بنجاح.' });
-  } else {
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حفظ الجواب.' });
   }
 });
 
-router.put('/admin/question/:id', requireAuth, (req, res) => {
+// مسار تحديث إجابة (الآن async)
+router.put('/admin/question/:id', requireAuth, async (req, res) => {
   const { id } = req.params;
   const { answer } = req.body;
   if (!answer || typeof answer !== 'string' || answer.trim() === '') {
     return res.status(400).json({ success: false, error: 'نص الإجابة المحدث مطلوب.' });
   }
-  const questions = loadQuestions();
-  const questionIndex = questions.findIndex(q => q.id === Number(id));
-  if (questionIndex === -1) {
-    return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب.' });
-  }
-  questions[questionIndex].answer = answer.trim();
-  questions[questionIndex].lastModified = new Date().toISOString();
-  
-  if (saveQuestions(questions)) {
+
+  try {
+    const questions = await loadQuestions();
+    const questionIndex = questions.findIndex(q => q.id === Number(id));
+    if (questionIndex === -1) {
+      return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب.' });
+    }
+    questions[questionIndex].answer = answer.trim();
+    questions[questionIndex].lastModified = new Date().toISOString();
+    
+    await saveQuestions(questions);
     res.status(200).json({ success: true, message: 'تم تحديث الجواب بنجاح.' });
-  } else {
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء تحديث الجواب.' });
   }
 });
 
-router.delete('/admin/question/:id', requireAuth, (req, res) => {
+// مسار حذف سؤال (الآن async)
+router.delete('/admin/question/:id', requireAuth, async (req, res) => {
   const { id } = req.params;
-  let questions = loadQuestions();
-  const initialLength = questions.length;
-  questions = questions.filter(q => q.id !== Number(id));
-  if (initialLength === questions.length) {
-    return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب لحذفه.' });
-  }
-  
-  if (saveQuestions(questions)) {
+
+  try {
+    let questions = await loadQuestions();
+    const initialLength = questions.length;
+    questions = questions.filter(q => q.id !== Number(id));
+    if (initialLength === questions.length) {
+      return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب لحذفه.' });
+    }
+    
+    await saveQuestions(questions);
     res.status(200).json({ success: true, message: 'تم حذف السؤال بنجاح.' });
-  } else {
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حذف السؤال.' });
   }
 });
@@ -291,5 +256,4 @@ router.delete('/admin/question/:id', requireAuth, (req, res) => {
 // --- القسم السابع: ربط الموجه بالتطبيق الرئيسي وتصدير الوظيفة ---
 app.use('/', router); 
 
-// تصدير التطبيق كدالة متوافقة مع Netlify Functions
 module.exports.handler = serverless(app);
