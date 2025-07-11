@@ -67,6 +67,7 @@ const SESSION_SECRET = process.env.SESSION_SECRET || 'a-very-strong-and-long-sec
 // استخدام ديوان حفظ الجلسات الجديد
 const sessionStore = new NetlifyBlobStore({ storeName: 'sessions' });
 
+// --- القسم الثالث: إعدادات الوسيط (Middleware Configuration) ---
 app.use(cors({ origin: true, credentials: true }));
 app.use(helmet());
 app.use(express.json());
@@ -78,10 +79,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === 'production' ? true : false,
     httpOnly: true,
-    sameSite: 'lax',
-    maxAge: 1000 * 60 * 60 * 24 * 7 // 7 أيام
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: 1000 * 60 * 60 * 8
   }
 }));
 
@@ -93,25 +94,82 @@ const loginLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-async function loadQuestions() {
-  const store = getStore('questions');
-  try {
-    const data = await store.get('all_questions', { type: 'json' });
-    return data || [];
-  } catch (error) {
-    if (error.status === 404) return [];
-    console.error("خطأ حرج عند قراءة الأسئلة:", error);
-    return [];
+// --- القسم الرابع: دوال مساعدة لإدارة البيانات مع آلية القفل (Data Helper Functions with Locking) ---
+
+/**
+ * @description يضمن وجود مجلد البيانات وملف الأسئلة.
+ */
+function ensureDataFileExists() {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+  if (!fs.existsSync(DATA_FILE)) {
+    fs.writeFileSync(DATA_FILE, '[]', 'utf8');
   }
 }
 
-async function saveQuestions(questions) {
-  const store = getStore('questions');
+/**
+ * @description محاولة الحصول على قفل للكتابة في الملف.
+ * @returns {boolean} - true إذا تم الحصول على القفل، false إذا كان الملف مقفلاً.
+ */
+function acquireLock() {
+  if (fs.existsSync(LOCK_FILE)) {
+    // إذا كان القفل موجودًا لأكثر من 5 ثوانٍ، فمن المحتمل أنه عالق. نزيله.
+    const lockStat = fs.statSync(LOCK_FILE);
+    const lockAge = (new Date().getTime() - lockStat.mtime.getTime()) / 1000;
+    if (lockAge > 5) {
+      releaseLock();
+    } else {
+      return false; // فشل الحصول على القفل
+    }
+  }
+  fs.writeFileSync(LOCK_FILE, process.pid.toString());
+  return true; // تم الحصول على القفل بنجاح
+}
+
+/**
+ * @description تحرير القفل بعد الانتهاء من الكتابة.
+ */
+function releaseLock() {
+  if (fs.existsSync(LOCK_FILE)) {
+    fs.unlinkSync(LOCK_FILE);
+  }
+}
+
+/**
+ * @description يقرأ الأسئلة من ملف JSON.
+ * @returns {Array} - مصفوفة الأسئلة.
+ */
+function loadQuestions() {
+  ensureDataFileExists();
   try {
-    await store.setJSON('all_questions', questions);
+    const data = fs.readFileSync(DATA_FILE, 'utf8');
+    return JSON.parse(data);
   } catch (error) {
-    console.error("خطأ حرج عند حفظ الأسئلة:", error);
-    throw new Error('فشل الخادم في حفظ البيانات.');
+    console.error("خطأ حرج عند قراءة ملف البيانات:", error);
+    return []; // إرجاع مصفوفة فارغة في حالة الفشل لمنع انهيار النظام
+  }
+}
+
+/**
+ * @description يحفظ مصفوفة الأسئلة في ملف JSON باستخدام آلية القفل.
+ * @param {Array} questions - مصفوفة الأسئلة المراد حفظها.
+ * @returns {boolean} - true عند النجاح، false عند الفشل.
+ */
+function saveQuestions(questions) {
+  if (!acquireLock()) {
+    console.error("فشل في الحصول على قفل للكتابة. العملية متوقفة لتجنب تلف البيانات.");
+    return false;
+  }
+  try {
+    ensureDataFileExists();
+    fs.writeFileSync(DATA_FILE, JSON.stringify(questions, null, 2), 'utf8');
+    return true;
+  } catch (error) {
+    console.error("خطأ حرج عند كتابة ملف البيانات:", error);
+    return false;
+  } finally {
+    releaseLock(); // تحرير القفل دائماً، سواء نجحت العملية أم فشلت
   }
 }
 
@@ -127,72 +185,65 @@ const requireAuth = (req, res, next) => {
 // المسارات (API Routes)
 // =================================================================
 
-// --- المسارات العامة ---
+// استقبال الأسئلة من المستخدمين
+router.post('/questions', (req, res) => {
+  let question = req.body.question;
+  // دعم body إذا أرسل كنص خام
+  if (!question && typeof req.body === 'string') {
+    question = req.body;
+  }
+  if (!question || typeof question !== 'string' || question.trim().length < 10) {
+    return res.status(400).json({ success: false, error: 'نص السؤال مطلوب ويجب أن يكون ذا معنى.' });
+  }
 
-router.post('/questions', async (req, res) => {
-    // ... (This route remains unchanged)
-    const { question } = req.body;
-    if (!question || typeof question !== 'string' || question.trim().length < 10) {
-        return res.status(400).json({ success: false, error: 'نص السؤال مطلوب ويجب أن يكون ذا معنى.' });
+  try {
+    const questions = loadQuestions();
+    const newEntry = {
+      id: Date.now(),
+      question: question.trim(),
+      answer: '',
+      date: new Date().toISOString(),
+      answeredDate: null,
+      lastModified: null
+    };
+    questions.unshift(newEntry);
+
+    if (saveQuestions(questions)) {
+      res.status(201).json({ success: true, message: 'تم استلام السؤال بنجاح. شكراً لكم.' });
+    } else {
+      res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حفظ السؤال.' });
     }
-    try {
-        const questions = await loadQuestions();
-        const newEntry = {
-            id: Date.now(),
-            question: question.trim(),
-            answer: '',
-            source: 'مستخدم عام',
-            tags: [],
-            date: new Date().toISOString(),
-            answeredDate: null,
-            lastModified: null
-        };
-        questions.unshift(newEntry);
-        await saveQuestions(questions);
-        res.status(201).json({ success: true, message: 'تم استلام السؤال بنجاح.' });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
+  } catch (err) {
+    res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حفظ السؤال.' });
+  }
 });
 
-router.get('/answered', async (req, res) => {
-    // ... (This route remains unchanged)
-    try {
-        const questions = await loadQuestions();
-        const answered = questions
-        .filter(q => q.answer)
-        .sort((a, b) => new Date(b.answeredDate || b.date) - new Date(a.answeredDate || a.date));
-        res.status(200).json(answered);
-    } catch (error) {
-        res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء جلب الأرشيف.' });
-    }
+router.get('/answered', (_req, res) => {
+  const questions = loadQuestions()
+    .filter(q => q.answer)
+    .sort((a, b) => new Date(b.answeredDate || b.date) - new Date(a.answeredDate || a.date));
+  res.status(200).json(questions);
 });
 
 
 // --- مسارات المسؤولين الخاصة ---
 
 router.post('/admin/login', loginLimiter, (req, res) => {
-    const submittedPassword = (req.body.password || '').trim();
-    if (!submittedPassword) {
-        return res.status(401).json({ success: false, error: 'كلمة المرور غير صحيحة.' });
-    }
-
-    try {
-        const adminPassBuffer = Buffer.from(ADMIN_PASSWORD, 'utf8');
-        const submittedPassBuffer = Buffer.from(submittedPassword, 'utf8');
-
-        if (adminPassBuffer.length !== submittedPassBuffer.length || !crypto.timingSafeEqual(adminPassBuffer, submittedPassBuffer)) {
-            return res.status(401).json({ success: false, error: 'كلمة المرور غير صحيحة.' });
-        }
-
-        req.session.authenticated = true;
-        // The session middleware will automatically save the session to the Blob Store
-        res.status(200).json({ success: true, message: 'تم تسجيل الدخول بنجاح.' });
-
-    } catch (error) {
-        console.error("خطأ أثناء التحقق من كلمة المرور:", error);
-        res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء عملية المصادقة.' });
-    }
+  let submittedPassword = req.body.password;
+  // دعم body إذا أرسل كنص خام
+  if (!submittedPassword && typeof req.body === 'string') {
+    submittedPassword = req.body;
+  }
+  submittedPassword = (submittedPassword || '').trim();
+  if (submittedPassword && submittedPassword === ADMIN_PASSWORD) {
+    req.session.authenticated = true;
+    // حفظ الجلسة قبل الرد لضمان إرسال الكوكيز
+    req.session.save(() => {
+      res.status(200).json({ success: true, message: 'تم تسجيل الدخول بنجاح.' });
+    });
+  } else {
+    res.status(401).json({ success: false, error: 'كلمة المرور غير صحيحة.' });
+  }
 });
 
 router.post('/admin/logout', requireAuth, (req, res) => {
@@ -218,75 +269,76 @@ router.get('/admin/questions', requireAuth, async (req, res) => {
     }
 });
 
-router.post('/admin/question', requireAuth, async (req, res) => {
-    const { question, source, tags } = req.body;
-    if (!question || typeof question !== 'string' || question.trim().length === 0) {
-        return res.status(400).json({ success: false, error: 'نص السؤال مطلوب.' });
+router.post('/admin/answer', requireAuth, (req, res) => {
+  const { id, answer } = req.body;
+  if (!id || !answer || typeof answer !== 'string' || answer.trim() === '') {
+    return res.status(400).json({ success: false, error: 'معرف السؤال ونص الإجابة مطلوبان.' });
+  }
+  try {
+    const questions = loadQuestions();
+    const questionIndex = questions.findIndex(q => q.id === Number(id));
+    if (questionIndex === -1) {
+      return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب.' });
     }
-    try {
-        const questions = await loadQuestions();
-        const newEntry = {
-            id: Date.now(),
-            question: question.trim(),
-            answer: '',
-            source: source ? source.trim() : 'إدخال إداري',
-            tags: Array.isArray(tags) ? tags : [],
-            date: new Date().toISOString(),
-            answeredDate: null,
-            lastModified: null
-        };
-        questions.unshift(newEntry);
-        await saveQuestions(questions);
-        res.status(201).json({ success: true, message: 'تمت إضافة المسألة بنجاح.', question: newEntry });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+    questions[questionIndex].answer = answer.trim();
+    questions[questionIndex].answeredDate = new Date().toISOString();
+    
+    if (saveQuestions(questions)) {
+      res.status(200).json({ success: true, message: 'تم حفظ الجواب بنجاح.' });
+    } else {
+      res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حفظ الجواب.' });
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حفظ الجواب.' });
+  }
 });
 
-router.put('/admin/question/:id', requireAuth, async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { question, answer, source, tags } = req.body;
-
-        if (!question) return res.status(400).json({ success: false, error: 'نص السؤال مطلوب.' });
-        
-        const questions = await loadQuestions();
-        const questionIndex = questions.findIndex(q => q.id === Number(id));
-        if (questionIndex === -1) return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال.' });
-
-        const targetQuestion = questions[questionIndex];
-        targetQuestion.question = question.trim();
-        targetQuestion.source = source ? source.trim() : targetQuestion.source;
-        targetQuestion.tags = Array.isArray(tags) ? tags : targetQuestion.tags;
-        targetQuestion.lastModified = new Date().toISOString();
-        if (answer !== undefined) {
-            targetQuestion.answer = answer;
-            if (answer && !targetQuestion.answeredDate) {
-                targetQuestion.answeredDate = new Date().toISOString();
-            }
-        }
-        
-        await saveQuestions(questions);
-        res.status(200).json({ success: true, message: 'تم تحديث المسألة بنجاح.', question: targetQuestion });
-    } catch(error) {
-        res.status(500).json({ success: false, error: error.message });
+router.put('/admin/question/:id', requireAuth, (req, res) => {
+  const { id } = req.params;
+  const { answer } = req.body;
+  if (!answer || typeof answer !== 'string' || answer.trim() === '') {
+    return res.status(400).json({ success: false, error: 'نص الإجابة المحدث مطلوب.' });
+  }
+  try {
+    const questions = loadQuestions();
+    const questionIndex = questions.findIndex(q => q.id === Number(id));
+    if (questionIndex === -1) {
+      return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب.' });
     }
+    questions[questionIndex].answer = answer.trim();
+    questions[questionIndex].lastModified = new Date().toISOString();
+    
+    if (saveQuestions(questions)) {
+      res.status(200).json({ success: true, message: 'تم تحديث الجواب بنجاح.' });
+    } else {
+      res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء تحديث الجواب.' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء تحديث الجواب.' });
+  }
 });
 
-router.delete('/admin/question/:id', requireAuth, async (req, res) => {
-    try {
-        const { id } = req.params;
-        let questions = await loadQuestions();
-        const initialLength = questions.length;
-        questions = questions.filter(q => q.id !== Number(id));
-        if (initialLength === questions.length) {
-            return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال لحذفه.' });
-        }
-        await saveQuestions(questions);
-        res.status(200).json({ success: true, message: 'تم حذف السؤال بنجاح.' });
-    } catch(error) {
-        res.status(500).json({ success: false, error: error.message });
+router.delete('/admin/question/:id', requireAuth, (req, res) => {
+  const { id } = req.params;
+  try {
+    let questions = loadQuestions();
+    const initialLength = questions.length;
+    questions = questions.filter(q => q.id !== Number(id));
+    if (initialLength === questions.length) {
+      return res.status(404).json({ success: false, error: 'لم يتم العثور على السؤال المطلوب لحذفه.' });
     }
+    
+    if (saveQuestions(questions)) {
+      res.status(200).json({ success: true, message: 'تم حذف السؤال بنجاح.' });
+    } else {
+      res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حذف السؤال.' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: 'حدث خطأ في الخادم أثناء حذف السؤال.' });
+  }
 });
 
 
