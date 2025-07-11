@@ -33,8 +33,6 @@
       --border-radius: 8px;
       --transition-main: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
-
-    /* === Resets and Base Styles === */
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
@@ -48,8 +46,6 @@
       -moz-osx-font-smoothing: grayscale;
     }
     .hidden { display: none !important; }
-
-    /* === Loader & Toasts === */
     #master-loader {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(253, 250, 243, 0.85);
@@ -63,16 +59,16 @@
       animation: spin 1s linear infinite;
     }
     #toast-container {
-      position: fixed; bottom: 20px; left: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px;
+      position: fixed; bottom: 20px; left: 20px; z-index: 10000;
+      display: flex; flex-direction: column; gap: 10px;
     }
     .toast {
-      padding: 15px 20px; background: var(--color-ink-primary); color: white; border-radius: 5px; box-shadow: var(--shadow-medium);
+      padding: 15px 20px;
+      background: var(--color-ink-primary); color: white; border-radius: 5px; box-shadow: var(--shadow-medium);
       animation: slideInUp 0.5s ease;
     }
     .toast.success { background: var(--color-hawza-green); }
     .toast.error { background: var(--color-danger); }
-
-    /* === Login Modal === */
     #login-container {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: var(--color-bg-parchment) url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23e9e4dc" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
@@ -81,7 +77,8 @@
     }
     #login-form {
       background: var(--color-surface); padding: 3rem; text-align: center;
-      border-radius: var(--border-radius); box-shadow: var(--shadow-medium);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-medium);
       width: 90%; max-width: 450px; border: 1px solid var(--color-border);
       animation: fadeInScale 0.6s ease-out;
     }
@@ -91,7 +88,8 @@
     }
     #login-form .subtitle { font-family: var(--font-body); color: var(--color-ink-secondary); margin-bottom: 2rem; }
     #login-form input {
-      width: 100%; padding: 12px 15px; margin-bottom: 1rem; border: 1px solid var(--color-border);
+      width: 100%; padding: 12px 15px; margin-bottom: 1rem;
+      border: 1px solid var(--color-border);
       border-radius: 4px; font-family: var(--font-body); font-size: 1rem; text-align: center;
     }
     .btn {
@@ -103,20 +101,17 @@
     .btn-primary:hover { background-color: #033a20; transform: translateY(-2px); }
     .btn-primary:disabled { background-color: #cccccc; cursor: not-allowed; transform: none; }
     #login-error { color: var(--color-danger); margin-top: 1rem; font-weight: 600; min-height: 24px; }
-
-    /* === Main Dashboard Layout === */
     #dashboard-container { display: flex; min-height: 100vh; background: var(--color-surface); }
     .sidebar {
-        width: 300px; background-color: var(--color-bg-parchment);
+        width: 300px;
+        background-color: var(--color-bg-parchment);
         border-left: 1px solid var(--color-border); padding: 1.5rem;
         display: flex; flex-direction: column; position: fixed; top: 0; right: 0; height: 100vh;
+        overflow-y: auto;
     }
     .main-content { margin-right: 300px; flex-grow: 1; padding: 2rem 3rem; }
-
-    /* Sidebar Styles */
     .sidebar-header { text-align: center; padding-bottom: 1.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
     .sidebar-header h2 { font-family: var(--font-title); font-size: 2.5rem; color: var(--color-hawza-green); margin: 0; }
-    
     .stats-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 2rem; }
     .stat-card {
       background: var(--color-surface); padding: 1rem; border-radius: var(--border-radius);
@@ -124,87 +119,77 @@
     }
     .stat-card h3 { margin: 0 0 0.5rem; font-size: 0.9rem; color: var(--color-ink-secondary); }
     .stat-card p { margin: 0; font-size: 2rem; font-weight: 700; color: var(--color-ink-primary); }
-
     .sidebar-section h3 { font-family: var(--font-title); font-size: 1.5rem; color: var(--color-hawza-green); margin-bottom: 1rem; border-bottom: 1px solid var(--color-border); padding-bottom: 0.5rem; }
     #tags-filter-list { list-style: none; padding: 0; }
     #tags-filter-list li {
-      padding: 8px 12px; margin-bottom: 5px; border-radius: 4px; cursor: pointer;
+      padding: 8px 12px; margin-bottom: 5px; border-radius: 4px;
+      cursor: pointer;
       transition: var(--transition-main);
     }
     #tags-filter-list li:hover { background-color: var(--color-hawza-green-light); }
     #tags-filter-list li.active { background-color: var(--color-gold-accent); color: white; font-weight: 700; }
-    
     .sidebar-footer { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--color-border); }
-
-    /* Main Content Styles */
     .main-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
     .main-header h1 { font-family: var(--font-title); font-size: 2.8rem; color: var(--color-hawza-green); margin: 0; }
-    
     .filter-controls {
-      display: flex; gap: 1rem; align-items: center; background-color: var(--color-bg-parchment);
+      display: flex; gap: 1rem;
+      align-items: center; background-color: var(--color-bg-parchment);
       padding: 1rem; border-radius: var(--border-radius); margin-bottom: 2rem;
     }
     .search-bar { position: relative; flex-grow: 1; }
     .search-bar input { width: 100%; padding: 10px 40px 10px 15px; border: 1px solid var(--color-border); border-radius: 4px; }
     .search-bar .fa-search { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); color: var(--color-ink-secondary); }
-
-    /* Question Card Styles */
     .question-card {
-      background: var(--color-surface); border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
       margin-bottom: 1.5rem; padding: 1.5rem 2rem; border-radius: var(--border-radius);
       box-shadow: var(--shadow-soft); transition: var(--transition-main);
       border-right: 5px solid var(--color-gold-accent); /* Unanswered */
     }
     .question-card.answered { border-right-color: var(--color-hawza-green); }
     .question-card:hover { box-shadow: var(--shadow-medium); transform: translateY(-5px); }
-    
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 10px;}
     .card-meta span { color: var(--color-ink-secondary); font-size: 0.9rem; }
     .card-actions .btn { padding: 5px 10px; font-size: 0.9rem; }
-    
-    .question-body { font-size: 1.15rem; margin-bottom: 1rem; line-height: 1.9; }
+    .question-body { font-size: 1.15rem; margin-bottom: 1rem; line-height: 1.9; white-space: pre-wrap; word-wrap: break-word; }
     .question-body .search-highlight { background-color: #fff2b2; }
-
     .card-tags { display: flex; gap: 8px; margin-top: 1rem; flex-wrap: wrap; }
     .tag { background-color: var(--color-hawza-green-light); color: var(--color-hawza-green); padding: 4px 10px; border-radius: 15px; font-size: 0.85rem; }
-
     .answer-display { margin-top: 1rem; padding: 1rem; background: var(--color-bg-parchment); border-radius: 4px; }
     .answer-display strong { color: var(--color-hawza-green); }
-
-    /* Modal Styles */
     .modal-backdrop {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(58, 45, 33, 0.6); backdrop-filter: blur(5px);
-      display: flex; justify-content: center; align-items: center; z-index: 5000;
+      display: flex; justify-content: center;
+      align-items: center; z-index: 5000;
       animation: fadeIn 0.3s;
+      overflow-y: auto;
     }
     .modal-content {
-      background: var(--color-surface); padding: 2rem; border-radius: var(--border-radius);
+      background: var(--color-surface);
+      padding: 2rem; border-radius: var(--border-radius);
       width: 90%; max-width: 800px; box-shadow: var(--shadow-medium);
       border-top: 5px solid var(--color-gold-accent);
+      margin: 2rem 0;
     }
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: 1rem; margin-bottom: 1.5rem; }
     .modal-header h3 { font-family: var(--font-title); font-size: 2rem; color: var(--color-hawza-green); margin: 0; }
     .modal-body label { font-weight: 700; margin-bottom: 0.5rem; display: block; }
     .modal-body input, .modal-body textarea {
-      width: 100%; padding: 10px; margin-bottom: 1rem; border-radius: 4px; border: 1px solid var(--color-border);
+      width: 100%; padding: 10px; margin-bottom: 1rem;
+      border-radius: 4px; border: 1px solid var(--color-border);
       font-family: var(--font-body);
     }
     .modal-actions { margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem; }
-    
-    /* Quill Editor Customization */
     .quill-editor-container .ql-toolbar { border-color: var(--color-border); border-top-left-radius: var(--border-radius); border-top-right-radius: var(--border-radius); }
     .quill-editor-container .ql-container { border-color: var(--color-border); border-bottom-left-radius: var(--border-radius); border-bottom-right-radius: var(--border-radius); }
     .quill-editor-container .ql-editor { min-height: 250px; font-family: var(--font-body); font-size: 1rem; }
-
-    /* Responsive Design */
     @media (max-width: 992px) {
       .sidebar { position: static; width: 100%; height: auto; border-left: none; border-bottom: 2px solid var(--color-border); }
       .main-content { margin-right: 0; padding: 1.5rem; }
       .main-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      #dashboard-container { flex-direction: column; }
     }
-
-    /* Animations */
     @keyframes spin { 100% { transform: rotate(360deg); } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes fadeInScale { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
@@ -278,7 +263,7 @@
 
   <div id="edit-modal-container" class="modal-backdrop hidden">
     <div class="modal-content">
-        <form id="edit-form">
+        <form id="edit-form" novalidate>
             <input type="hidden" id="edit-id-input">
             <div class="modal-header">
                 <h3 id="modal-title">تحرير المسألة</h3>
@@ -289,12 +274,12 @@
                     <label for="edit-question-input">نص المسألة</label>
                     <textarea id="edit-question-input" rows="3" required></textarea>
                 </div>
-                <div style="display: flex; gap: 1rem;">
-                    <div style="flex:1;">
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <div style="flex:1; min-width: 250px;">
                         <label for="edit-source-input">المصدر (اختياري)</label>
-                        <input type="text" id="edit-source-input" placeholder="مثال: بحار الأنوار، ج52">
+                        <input type="text" id="edit-source-input" placeholder="مثال: بحار الأنوار، ج52، ص123">
                     </div>
-                    <div style="flex:1;">
+                    <div style="flex:1; min-width: 250px;">
                         <label for="edit-tags-input">التصنيفات (مفصولة بفاصلة)</label>
                         <input type="text" id="edit-tags-input" placeholder="عقائد, فقه, شبهات">
                     </div>
@@ -302,7 +287,7 @@
                 <div>
                     <label>الجواب</label>
                     <div id="quill-editor-container" class="quill-editor-container"></div>
-                    <small id="draft-status" style="color: var(--color-ink-secondary); margin-top: 5px; display: block;"></small>
+                    <small id="draft-status" style="color: var(--color-ink-secondary); margin-top: 5px; display: block; min-height: 1em;"></small>
                 </div>
             </div>
             <div class="modal-actions">
@@ -320,11 +305,6 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     
-    /**
-     * ApiService
-     * وحدة متخصصة ومسؤولة حصراً عن كل أشكال التواصل مع الخادم (API).
-     * توفر منظومة موحدة لإرسال الطلبات ومعالجة الردود والأخطاء الشبكية.
-     */
     class ApiService {
         constructor(baseURL = '/.netlify/functions/api') {
             this.baseURL = baseURL;
@@ -366,11 +346,6 @@ document.addEventListener('DOMContentLoaded', () => {
         deleteQuestion(id) { return this.request(`/admin/question/${id}`, { method: 'DELETE' }); }
     }
 
-    /**
-     * StateService
-     * هو الذاكرة الحافظة ومستودع البيانات للتطبيق. يدير "حالة" التطبيق
-     * (من هو المستخدم، قائمة المسائل، الفلاتر الحالية) بشكل مركزي ومنظم.
-     */
     class StateService {
         constructor() {
             this._state = {
@@ -391,8 +366,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateQuestion(updatedQuestion) {
             const index = this._state.questions.findIndex(q => q.id === updatedQuestion.id);
-            if (index !== -1) this._state.questions[index] = updatedQuestion;
-            else this._state.questions.unshift(updatedQuestion);
+            if (index !== -1) {
+                this._state.questions[index] = updatedQuestion;
+            } else {
+                this._state.questions.unshift(updatedQuestion);
+            }
+            this._state.questions.sort((a, b) => new Date(b.date) - new Date(a.date));
             this.updateTags();
         }
 
@@ -415,7 +394,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const term = searchTerm.toLowerCase().trim();
 
             return questions
-                .filter(q => activeTag === 'all' || (q.tags && q.tags.includes(activeTag)))
+                .filter(q => {
+                    if (activeTag === 'all') return true;
+                    if (activeTag === '__unanswered') return !q.answer || q.answer.trim() === '';
+                    return (q.tags && q.tags.includes(activeTag));
+                })
                 .filter(q => {
                     if (!term) return true;
                     const answerText = q.answer ? new DOMParser().parseFromString(q.answer, "text/html").body.textContent.toLowerCase() : '';
@@ -429,11 +412,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /**
-     * UIController
-     * فنان الواجهة الرسومية. مسؤول عن كل ما يراه المستخدم ويتفاعل معه.
-     * يأخذ البيانات من الـ State ويعرضها، ويستمع لنقرات المستخدم.
-     */
     class UIController {
         constructor() {
             this.dom = {
@@ -507,7 +485,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         renderStats(questions) {
             const total = questions.length;
-            const answered = questions.filter(q => q.answer && q.answer.length > 20).length;
+            const answered = questions.filter(q => q.answer && q.answer.trim() !== '').length;
             this.dom.dashboard.stats.total.textContent = total;
             this.dom.dashboard.stats.answered.textContent = answered;
             this.dom.dashboard.stats.unanswered.textContent = total - answered;
@@ -515,8 +493,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         renderTags(tags, activeTag) {
             const list = this.dom.dashboard.tagsFilterList;
-            list.innerHTML = `<li data-tag="all" class="${activeTag === 'all' ? 'active' : ''}">الكل</li>`;
-            tags.forEach(tag => {
+            const unansweredCount = this.dom.dashboard.stats.unanswered.textContent;
+
+            list.innerHTML = `<li data-tag="all" class="${activeTag === 'all' ? 'active' : ''}">الكل</li>
+                              <li data-tag="__unanswered" class="${activeTag === '__unanswered' ? 'active' : ''}">قيد المراجعة (${unansweredCount})</li>`;
+            
+            const sortedTags = Array.from(tags).sort();
+            sortedTags.forEach(tag => {
                 const li = document.createElement('li');
                 li.dataset.tag = tag;
                 li.textContent = tag;
@@ -537,18 +520,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         createQuestionCard(q, searchTerm) {
             const card = document.createElement('div');
-            card.className = `question-card ${q.answer ? 'answered' : 'unanswered'}`;
+            card.className = `question-card ${q.answer && q.answer.trim() !== '' ? 'answered' : 'unanswered'}`;
             card.dataset.id = q.id;
 
+            const escapeHtml = (unsafe) => unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            
             const highlight = (text) => {
-                if (!searchTerm || !text) return text;
-                const regex = new RegExp(`(${searchTerm})`, 'gi');
-                return text.replace(regex, `<span class="search-highlight">$1</span>`);
+                if (!searchTerm || !text) return escapeHtml(text || '');
+                const escapedTerm = escapeHtml(searchTerm);
+                const regex = new RegExp(`(${escapedTerm})`, 'gi');
+                return escapeHtml(text).replace(regex, `<span class="search-highlight">$1</span>`);
             };
 
             const tagsHTML = (q.tags || []).map(tag => `<span class="tag">${highlight(tag)}</span>`).join('');
-            const date = new Date(q.date).toLocaleDateString('ar', { day: 'numeric', month: 'long', year: 'numeric' });
+            const date = new Date(q.date).toLocaleDateString('ar-EG-u-nu-latn', { day: 'numeric', month: 'long', year: 'numeric' });
             
+            const answerExcerpt = q.answer ? new DOMParser().parseFromString(q.answer, "text/html").body.textContent || '' : '';
+
             card.innerHTML = `
                 <div class="card-header">
                     <div class="card-meta"><span>بتاريخ: ${date}</span></div>
@@ -557,7 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="question-body">${highlight(q.question)}</div>
                 ${q.source ? `<p class="card-meta"><strong>المصدر:</strong> ${highlight(q.source)}</p>` : ''}
                 ${tagsHTML ? `<div class="card-tags">${tagsHTML}</div>` : ''}
-                ${q.answer ? `<div class="answer-display"><strong>الجواب:</strong> ${q.answer.substring(0, 200)}...</div>` : ''}
+                ${answerExcerpt ? `<div class="answer-display"><strong>الجواب:</strong> ${escapeHtml(answerExcerpt.substring(0, 200))}...</div>` : ''}
             `;
             return card;
         }
@@ -591,20 +579,25 @@ document.addEventListener('DOMContentLoaded', () => {
         closeModal() {
             this.dom.modal.container.classList.add('hidden');
             clearInterval(this.draftSaveInterval);
+            this.draftSaveInterval = null;
             this.dom.modal.draftStatus.textContent = '';
         }
 
         handleDrafts(draftId) {
+            if (this.draftSaveInterval) clearInterval(this.draftSaveInterval);
+
             const draftKey = `draft_${draftId}`;
             const savedDraft = localStorage.getItem(draftKey);
             if (savedDraft) {
-                const draftContent = JSON.parse(savedDraft);
-                if (confirm("يوجد مسودة محفوظة لهذه المسألة. هل تود استعادتها؟")) {
-                    this.quill.root.innerHTML = draftContent.answer;
-                    this.dom.modal.questionInput.value = draftContent.question;
-                    this.dom.modal.sourceInput.value = draftContent.source;
-                    this.dom.modal.tagsInput.value = draftContent.tags;
-                }
+                try {
+                    const draftContent = JSON.parse(savedDraft);
+                    if (confirm("يوجد مسودة محفوظة لهذه المسألة. هل تود استعادتها؟")) {
+                        this.quill.root.innerHTML = draftContent.answer || '';
+                        this.dom.modal.questionInput.value = draftContent.question || '';
+                        this.dom.modal.sourceInput.value = draftContent.source || '';
+                        this.dom.modal.tagsInput.value = draftContent.tags || '';
+                    }
+                } catch(e) { console.error("Failed to parse draft", e); localStorage.removeItem(draftKey); }
             }
 
             this.draftSaveInterval = setInterval(() => {
@@ -616,19 +609,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 localStorage.setItem(draftKey, JSON.stringify(currentContent));
                 this.dom.modal.draftStatus.textContent = `تم حفظ المسودة في ${new Date().toLocaleTimeString('ar')}`;
-            }, 10000); // Save every 10 seconds
+            }, 10000);
         }
 
         clearDraft(draftId) {
+            if (!draftId) return;
             localStorage.removeItem(`draft_${draftId}`);
         }
     }
     
-    /**
-     * AppController
-     * العقل المدبر للتطبيق. ينسق العمل بين الخدمات المختلفة (API, State, UI)
-     * ويقوم بربط الأحداث بالوظائف المناسبة، ويقود دورة حياة التطبيق.
-     */
     class AppController {
         constructor() {
             this.api = new ApiService();
@@ -644,20 +633,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         bindEvents() {
-            this.ui.dom.login.form.addEventListener('submit', this.handleLogin.bind(this));
-            this.ui.dom.dashboard.logoutBtn.addEventListener('click', this.handleLogout.bind(this));
+            this.ui.dom.login.form.addEventListener('submit', (e) => this.handleLogin(e));
+            this.ui.dom.dashboard.logoutBtn.addEventListener('click', () => this.handleLogout());
             this.ui.dom.dashboard.addNewBtn.addEventListener('click', () => this.ui.openModal(null));
             
             this.ui.dom.modal.closeBtns.forEach(btn => btn.addEventListener('click', () => this.ui.closeModal()));
-            this.ui.dom.modal.form.addEventListener('submit', this.handleFormSubmit.bind(this));
-            this.ui.dom.modal.deleteBtn.addEventListener('click', this.handleDelete.bind(this));
+            this.ui.dom.modal.form.addEventListener('submit', (e) => this.handleFormSubmit(e));
+            this.ui.dom.modal.deleteBtn.addEventListener('click', () => this.handleDelete());
             
             this.ui.dom.dashboard.questionsList.addEventListener('click', e => {
                 const editBtn = e.target.closest('.edit-btn');
                 if (editBtn) {
                     const card = e.target.closest('.question-card');
                     const question = this.state.state.questions.find(q => q.id === Number(card.dataset.id));
-                    this.ui.openModal(question);
+                    if(question) this.ui.openModal(question);
                 }
             });
 
@@ -691,13 +680,13 @@ document.addEventListener('DOMContentLoaded', () => {
             this.ui.dom.login.button.disabled = true;
             this.ui.dom.login.errorMsg.textContent = '';
             const password = this.ui.dom.login.passwordInput.value;
-
             try {
                 await this.api.login(password);
                 this.ui.toggleLoader(true);
                 await this.checkSession();
             } catch (error) {
                 this.ui.dom.login.errorMsg.textContent = error.message;
+            } finally {
                 this.ui.dom.login.button.disabled = false;
             }
         }
@@ -707,7 +696,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 await this.api.logout();
                 this.state.state.isLoggedIn = false;
-                this.state.state.questions = [];
+                this.state.setQuestions([]);
                 this.ui.showLogin();
             } catch (error) {
                 this.ui.showToast(error.message, 'error');
@@ -737,7 +726,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 tags: this.ui.dom.modal.tagsInput.value.split(',').map(t => t.trim()).filter(Boolean),
                 answer: this.ui.quill.root.innerHTML
             };
-
             if (!data.question) {
                 this.ui.showToast("نص المسألة لا يمكن أن يكون فارغًا.", "error");
                 return;
@@ -745,12 +733,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             this.ui.toggleLoader(true);
             try {
-                let response;
-                if (id) {
-                    response = await this.api.updateQuestion(Number(id), data);
-                } else {
-                    response = await this.api.addQuestion(data);
-                }
+                const response = id ? await this.api.updateQuestion(Number(id), data) : await this.api.addQuestion(data);
                 this.state.updateQuestion(response.question);
                 this.ui.renderDashboard(this.state);
                 this.ui.closeModal();
@@ -783,7 +766,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Start the application
     new AppController();
 });
 </script>
