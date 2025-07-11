@@ -678,14 +678,11 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 await this.api.checkStatus();
                 this.state.state.isLoggedIn = true;
-                this.ui.dom.login.button.disabled = false; // إعادة تفعيل زر الدخول عند نجاح الجلسة
-                this.ui.dom.login.errorMsg.textContent = '';
                 this.ui.showDashboard();
                 await this.fetchData();
             } catch (error) {
                 this.state.state.isLoggedIn = false;
                 this.ui.showLogin();
-                this.ui.dom.login.button.disabled = false; // إعادة تفعيل زر الدخول عند فشل الجلسة
             }
         }
 
@@ -697,7 +694,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 await this.api.login(password);
-                this.ui.dom.login.errorMsg.textContent = '';
                 this.ui.toggleLoader(true);
                 await this.checkSession();
             } catch (error) {
@@ -713,7 +709,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.state.state.isLoggedIn = false;
                 this.state.state.questions = [];
                 this.ui.showLogin();
-                this.ui.dom.login.button.disabled = false; // إعادة تفعيل زر الدخول بعد تسجيل الخروج
             } catch (error) {
                 this.ui.showToast(error.message, 'error');
                 this.ui.toggleLoader(false);

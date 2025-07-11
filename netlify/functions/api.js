@@ -8,6 +8,7 @@ const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
 const { getStore } = require('@netlify/blobs');
 const { Store } = require('express-session');
+const bodyParser = require('body-parser');
 
 // =================================================================
 // ديوان حفظ الجلسات (NetlifyBlobStore)
@@ -68,20 +69,26 @@ const SESSION_SECRET = process.env.SESSION_SECRET || 'a-very-strong-and-long-sec
 const sessionStore = new NetlifyBlobStore({ storeName: 'sessions' });
 
 // --- القسم الثالث: إعدادات الوسيط (Middleware Configuration) ---
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors({
+  origin: (origin, callback) => callback(null, true), // السماح بكل origins (للاختبار)
+  credentials: true
+}));
 app.use(helmet());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.text({ type: 'text/*' }));
+
+app.set('trust proxy', 1); // مهم جداً في Netlify Functions ليعمل secure cookie
 
 app.use(session({
-  store: sessionStore, // <-- هنا يكمن الحل!
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  proxy: true, // مهم جداً مع Netlify/Heroku
   cookie: {
-    secure: process.env.NODE_ENV === 'production' ? true : false,
+    secure: true, // Netlify دائماً https
     httpOnly: true,
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    sameSite: 'none', // Netlify تتطلب sameSite=none مع secure=true
     maxAge: 1000 * 60 * 60 * 8
   }
 }));
@@ -230,16 +237,22 @@ router.get('/answered', (_req, res) => {
 
 router.post('/admin/login', loginLimiter, (req, res) => {
   let submittedPassword = req.body.password;
-  // دعم body إذا أرسل كنص خام
   if (!submittedPassword && typeof req.body === 'string') {
     submittedPassword = req.body;
   }
   submittedPassword = (submittedPassword || '').trim();
   if (submittedPassword && submittedPassword === ADMIN_PASSWORD) {
-    req.session.authenticated = true;
-    // حفظ الجلسة قبل الرد لضمان إرسال الكوكيز
-    req.session.save(() => {
-      res.status(200).json({ success: true, message: 'تم تسجيل الدخول بنجاح.' });
+    req.session.regenerate(err => {
+      if (err) {
+        return res.status(500).json({ success: false, error: 'خطأ في إنشاء الجلسة.' });
+      }
+      req.session.authenticated = true;
+      req.session.save(err2 => {
+        if (err2) {
+          return res.status(500).json({ success: false, error: 'خطأ في حفظ الجلسة.' });
+        }
+        res.status(200).json({ success: true, message: 'تم تسجيل الدخول بنجاح.' });
+      });
     });
   } else {
     res.status(401).json({ success: false, error: 'كلمة المرور غير صحيحة.' });
