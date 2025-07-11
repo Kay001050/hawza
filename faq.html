@@ -386,8 +386,8 @@
     </div>
   </footer>
   <a href="#" class="back-to-top" aria-label="العودة إلى أعلى الصفحة"><i class="fas fa-arrow-up"></i></a>
-  <script>
-    // --- بداية الكود البرمجي (JavaScript) ---
+<script>
+    // --- بداية الكود البرمجي (JavaScript) المحسّن بالكامل ---
 
     // الكود الخاص بالـ Preloader (شاشة التحميل الأولية)
     window.addEventListener('load', function () {
@@ -396,6 +396,7 @@
         setTimeout(() => {
           preloader.style.opacity = '0';
           preloader.style.visibility = 'hidden';
+          // التأكد من إزالة العنصر من التدفق بعد انتهاء الانتقال
           setTimeout(() => { preloader.style.display = 'none'; }, 800);
         }, 500);
       }
@@ -408,94 +409,100 @@
         const body = item.querySelector('.body');
         const isActive = header.classList.contains('active');
         
+        // إغلاق جميع العناصر المفتوحة أولاً
         document.querySelectorAll('.accordion .body').forEach(b => {
           b.classList.remove('open');
           b.style.maxHeight = null;
         });
         document.querySelectorAll('.accordion .header').forEach(h => h.classList.remove('active'));
         
+        // فتح العنصر المطلوب فقط إذا لم يكن نشطاً بالفعل
         if (!isActive) {
           header.classList.add('active');
           body.classList.add('open');
+          // حساب الارتفاع اللازم بدقة
           body.style.maxHeight = body.scrollHeight + "px";
         }
       });
     });
 
-    // --- بداية الكود الجديد الخاص بنموذج إرسال الأسئلة ---
+    // --- بداية الكود المحسّن الخاص بنموذج إرسال الأسئلة ---
     const questionForm = document.getElementById('question-form');
     const questionTextarea = document.getElementById('question-text');
     const submitButton = document.getElementById('submit-btn');
     const formFeedback = document.getElementById('form-feedback');
 
+    // التأكد من وجود جميع العناصر قبل إضافة المستمعين لتجنب الأخطاء
     if (questionForm && questionTextarea && submitButton && formFeedback) {
+      
       questionForm.addEventListener('submit', async function(event) {
-        event.preventDefault();
+        event.preventDefault(); // منع الإرسال التقليدي للنموذج
 
         const question = questionTextarea.value.trim();
 
-        if (question === '') {
-          showFeedback('يرجى التكرم بكتابة نص السؤال قبل الإرسال.', 'error');
+        // التحقق من صحة المدخلات من جهة العميل
+        if (question.length < 10) {
+          showFeedback('يرجى التكرم بكتابة نص سؤال واضح لا يقل عن 10 أحرف.', 'error');
           questionTextarea.focus();
           return;
         }
 
+        // تعطيل الزر وتغيير النص لإعطاء تغذية راجعة للمستخدم
         submitButton.disabled = true;
         submitButton.querySelector('span').textContent = 'جارٍ الإرسال...';
-        formFeedback.style.display = 'none';
+        formFeedback.style.display = 'none'; // إخفاء أي رسائل سابقة
 
         try {
-          // إضافة timeout للطلب حتى لا ينتظر المستخدم طويلاً في حال تعطل الخادم
+          // استخدام AbortController لتحديد مهلة زمنية للطلب (15 ثانية)
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 15000);
 
+          // ✅ إصلاح: استخدام المسار الصحيح `/api/questions` الذي تم توجيهه في netlify.toml
           const response = await fetch('/api/questions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ question: question }),
-            signal: controller.signal
+            signal: controller.signal // ربط الـ AbortController بالطلب
           });
-          clearTimeout(timeoutId);
 
-          if (!response.ok) {
-            let msg = 'حدث خطأ أثناء محاولة الاتصال بالخادم. يرجى المحاولة مرة أخرى.';
-            try {
-              const errJson = await response.json();
-              if (errJson && errJson.error) msg = errJson.error;
-            } catch {}
-            throw new Error(msg);
+          clearTimeout(timeoutId); // إلغاء المهلة الزمنية عند وصول الرد
+
+          // محاولة قراءة الرد كـ JSON بغض النظر عن نجاح الطلب
+          const data = await response.json().catch(() => ({}));
+
+          // ✅ تحسين: التحقق من نجاح العملية من خلال استجابة الخادم الفعلية
+          if (!response.ok || !data.success) {
+            // استخدام رسالة الخطأ من الخادم إن وجدت، أو رسالة افتراضية
+            const errorMessage = data.error || `فشل الاتصال بالخادم (رمز الحالة: ${response.status}). يرجى المحاولة مرة أخرى.`;
+            throw new Error(errorMessage);
           }
-
-          // التأكد من أن الرد JSON
-          let data;
-          try {
-            data = await response.json();
-          } catch {
-            throw new Error('الخادم لم يرجع استجابة صحيحة. يرجى المحاولة لاحقاً أو التواصل مع الدعم.');
-          }
-
-          showFeedback('تم إرسال سؤالكم بنجاح. سيتم عرضه على أهل الاختصاص للجواب في أقرب فرصة. شكراً لثقتكم.', 'success');
-          questionTextarea.value = '';
+          
+          showFeedback(data.message || 'تم إرسال سؤالكم بنجاح. سيتم عرضه على أهل الاختصاص للجواب في أقرب فرصة. شكراً لثقتكم.', 'success');
+          questionTextarea.value = ''; // إفراغ حقل النص بعد النجاح
 
         } catch (error) {
+          // معالجة الأخطاء المختلفة وعرض رسائل مناسبة
           if (error.name === 'AbortError') {
             showFeedback('انتهت مهلة الاتصال بالخادم. يرجى التحقق من اتصالك بالإنترنت والمحاولة مجدداً.', 'error');
           } else {
+            // عرض رسالة الخطأ التي تم رميها من كتلة try
             showFeedback(error.message || 'حدث خطأ غير متوقع. يرجى التحقق من اتصالك بالإنترنت والمحاولة مجدداً.', 'error');
           }
         } finally {
+          // إعادة تفعيل الزر وإرجاع نصه الأصلي في كل الحالات (نجاح أو فشل)
           submitButton.disabled = false;
           submitButton.querySelector('span').textContent = 'إرسال السؤال';
         }
       });
     }
 
+    // دالة مساعدة لعرض الرسائل للمستخدم
     function showFeedback(message, type) {
       formFeedback.textContent = message;
-      formFeedback.className = type;
+      formFeedback.className = type; // 'success' أو 'error'
       formFeedback.style.display = 'block';
     }
-    // --- نهاية الكود الجديد الخاص بنموذج إرسال الأسئلة ---
+    // --- نهاية الكود المحسّن الخاص بنموذج إرسال الأسئلة ---
 
     // الكود الخاص بتحديث سنة الحقوق في التذييل
     const currentYearSpan = document.getElementById('currentYear');
@@ -505,22 +512,35 @@
     const backToTopButton = document.querySelector('.back-to-top');
     if (backToTopButton) {
       window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 300) backToTopButton.classList.add('visible');
-        else backToTopButton.classList.remove('visible');
+        if (window.pageYOffset > 300) {
+          backToTopButton.classList.add('visible');
+        } else {
+          backToTopButton.classList.remove('visible');
+        }
       });
-      backToTopButton.addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top:0, behavior:'smooth' }); });
+      backToTopButton.addEventListener('click', e => { 
+        e.preventDefault(); 
+        window.scrollTo({ top: 0, behavior: 'smooth' }); 
+      });
     }
 
     // الكود الخاص بقائمة التنقل في وضع الجوال
     const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
     const mainNavigation = document.querySelector('.main-navigation');
     const navIcon = mobileNavToggle ? mobileNavToggle.querySelector('i') : null;
+
     if (mobileNavToggle && mainNavigation && navIcon) {
       mobileNavToggle.addEventListener('click', () => {
         const isNavOpen = mainNavigation.classList.toggle('active');
         mobileNavToggle.setAttribute('aria-expanded', isNavOpen);
-        if (isNavOpen) { navIcon.classList.remove('fa-bars'); navIcon.classList.add('fa-times'); }
-        else { navIcon.classList.remove('fa-times'); navIcon.classList.add('fa-bars'); }
+        // تغيير أيقونة القائمة (burger/close)
+        if (isNavOpen) { 
+          navIcon.classList.remove('fa-bars'); 
+          navIcon.classList.add('fa-times'); 
+        } else { 
+          navIcon.classList.remove('fa-times'); 
+          navIcon.classList.add('fa-bars'); 
+        }
       });
     }
     // --- نهاية الكود البرمجي (JavaScript) ---
