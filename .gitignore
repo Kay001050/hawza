@@ -3,3 +3,6 @@ npm-debug.log*
 
 
 .env
+
+# Local Netlify folder
+.netlify
