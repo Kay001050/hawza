@@ -1,22 +1,30 @@
-# ملف إعدادات Netlify
+# ملف إعدادات Netlify (نسخة مُصحّحة)
 
-# إعدادات البناء الأساسية
 [build]
-  # المجلد الذي يحتوي على ملفات الموقع النهائية (HTML, CSS, JS)
   publish = "/"
-  # المجلد الذي يحتوي على الوظائف السحابية
   functions = "netlify/functions"
 
-# إعادة توجيه الطلبات التي تبدأ بـ /api/ أو /admin/ إلى الوظيفة السحابية
-# هذه القواعد ضرورية لإنشاء واجهة برمجية (API) نظيفة.
+# ===================================================================
+# الترتيب هنا في غاية الأهمية. Netlify يقرأ القواعد من الأعلى للأسفل.
+# ===================================================================
+
+# ✅ القاعدة الجديدة: لجعل رابط /admin يعرض صفحة admin.html
+# يجب أن تأتي هذه القاعدة "قبل" قاعدة /admin/* العامة
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
+  status = 200
+
+# قاعدة توجيه طلبات API الخاصة بالمسؤولين إلى الوظيفة السحابية
+[[redirects]]
+  from = "/admin/*"
+  to = "/.netlify/functions/api/admin/:splat"
+  status = 200
+  force = true
+
+# قاعدة توجيه طلبات API العامة إلى الوظيفة السحابية
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api/:splat"
-  status = 200
-  force = true # ضروري لطلبات POST, PUT, DELETE
-
-[[redirects]]
-  from = "/admin/*"
-  to = "/.netlify/functions/api/admin/:splat" # توجيه أدق لمسارات المسؤول
   status = 200
   force = true
