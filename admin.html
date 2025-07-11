@@ -3,87 +3,252 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة إدارة نور الحوزة</title>
+  <title>ديوان الأسئلة | لوحة تحكم نور الحوزة</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
   <link rel="icon" href="Icon.png" type="image/png">
   <style>
-    /* ... نفس أكواد CSS السابقة دون تغيير ... */
+    /* --- CSS: Theming and Layout --- */
     :root {
-      --primary-color: #054a29; --primary-hover: #0a6b3e; --secondary-color: #b35f2f;
-      --background-color: #f8f9fa; --surface-color: #ffffff; --text-color: #343a40;
-      --border-color: #dee2e6; --shadow: 0 4px 12px rgba(0,0,0,0.08);
+      --primary-color: #054a29;
+      --primary-hover: #0a6b3e;
+      --secondary-color: #b35f2f;
+      --secondary-hover: #9e4f20;
+      --background-color: #f4f4f0;
+      --surface-color: #ffffff;
+      --text-color: #333;
+      --text-muted: #6c757d;
+      --border-color: #dee2e6;
+      --accent-color: #f9e9b6;
+      --danger-color: #c0392b;
+      --danger-hover: #a93226;
+      --shadow: 0 4px 15px rgba(0,0,0,0.07);
       --border-radius: 8px;
     }
+
     * { box-sizing: border-box; }
-    body { font-family: 'Cairo', sans-serif; background-color: var(--background-color); color: var(--text-color); margin: 0; line-height: 1.7; }
+    
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      line-height: 1.8;
+    }
+
     .hidden { display: none !important; }
-    #login-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 2000; }
-    #login-form { background: var(--surface-color); padding: 3rem; border-radius: var(--border-radius); box-shadow: 0 10px 30px rgba(0,0,0,0.2); width: 90%; max-width: 400px; text-align: center; }
-    #login-form h1 { margin-top: 0; color: var(--primary-color); }
+
+    /* --- Login Modal --- */
+    #login-modal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex; justify-content: center; align-items: center; z-index: 2000;
+      backdrop-filter: blur(5px);
+    }
+    #login-form {
+      background: var(--surface-color); padding: 2.5rem 3rem; border-radius: var(--border-radius);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2); width: 90%; max-width: 420px; text-align: center;
+      border-top: 5px solid var(--primary-color);
+    }
+    #login-form h1 { margin: 0; color: var(--primary-color); font-size: 2rem; }
+    #login-form .subtitle { color: var(--text-muted); margin-bottom: 2rem; }
     #login-form label { display: block; margin-bottom: 0.5rem; font-weight: 600; text-align: right; }
-    #login-form input { padding: 0.75rem 1rem; width: 100%; margin-bottom: 1.5rem; border: 1px solid var(--border-color); border-radius: 4px; font-family: 'Cairo', sans-serif; font-size: 1rem; }
+    #login-form input {
+      padding: 0.8rem 1rem; width: 100%; margin-bottom: 1.5rem; border: 1px solid var(--border-color);
+      border-radius: 4px; font-family: 'Cairo', sans-serif; font-size: 1.1rem; text-align: right;
+    }
+
+    /* --- Dashboard Layout --- */
     #dashboard { display: flex; flex-direction: column; min-height: 100vh; }
-    header { background: var(--primary-color); color: #f9e9b6; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); }
-    header h1 { margin: 0; font-size: 1.5rem; }
-    main { padding: 2rem; flex: 1; }
-    .btn { padding: 0.6rem 1.2rem; border: none; border-radius: 4px; cursor: pointer; font-family: 'Cairo', sans-serif; font-weight: 600; font-size: 0.95rem; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 0.5rem; }
+    
+    header.main-header {
+      background: var(--primary-color); color: var(--accent-color); padding: 1rem 2rem;
+      display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow);
+    }
+    header.main-header h1 { margin: 0; font-size: 1.5rem; }
+    
+    main { padding: 2rem; flex: 1; max-width: 1200px; margin: 0 auto; width: 100%; }
+
+    /* --- General Components --- */
+    .btn {
+      padding: 0.6rem 1.2rem; border: none; border-radius: 4px; cursor: pointer;
+      font-family: 'Cairo', sans-serif; font-weight: 600; font-size: 0.95rem;
+      transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 0.5rem;
+      text-decoration: none;
+    }
     .btn-primary { background-color: var(--primary-color); color: white; }
     .btn-primary:hover { background-color: var(--primary-hover); }
     .btn-secondary { background-color: var(--secondary-color); color: white; }
-    .btn-secondary:hover { background-color: #9e4f20; }
-    .btn-logout { background: transparent; color: #f9e9b6; border: 1px solid #f9e9b6; }
-    .btn-logout:hover { background: #f9e9b6; color: var(--primary-color); }
+    .btn-secondary:hover { background-color: var(--secondary-hover); }
+    .btn-danger { background-color: var(--danger-color); color: white; }
+    .btn-danger:hover { background-color: var(--danger-hover); }
+    .btn-logout { background: transparent; color: var(--accent-color); border: 1px solid var(--accent-color); }
+    .btn-logout:hover { background: var(--accent-color); color: var(--primary-color); }
     .btn:disabled { background-color: #ccc; cursor: not-allowed; }
-    #stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
-    .stat-card { background: var(--surface-color); padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--shadow); display: flex; align-items: center; gap: 1rem; border-right: 5px solid var(--primary-color); }
-    .stat-card .icon { font-size: 2.5rem; color: var(--primary-color); }
+
+    /* --- Stats Section --- */
+    #stats-container {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem; margin-bottom: 2.5rem;
+    }
+    .stat-card {
+      background: var(--surface-color); padding: 1.5rem; border-radius: var(--border-radius);
+      box-shadow: var(--shadow); display: flex; align-items: center; gap: 1.5rem;
+      border-right: 5px solid var(--primary-color);
+    }
+    .stat-card .icon { font-size: 2.8rem; color: var(--primary-color); width: 50px; text-align: center; }
     .stat-card .info h3 { margin: 0 0 0.25rem 0; font-size: 1.1rem; color: var(--secondary-color); }
-    .stat-card .info p { margin: 0; font-size: 2rem; font-weight: 700; }
-    .questions-section h2 { border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1.5rem; color: var(--primary-color); }
-    .question-card { background: var(--surface-color); margin-bottom: 1rem; padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--shadow); border-right: 4px solid var(--border-color); }
+    .stat-card .info p { margin: 0; font-size: 2.2rem; font-weight: 700; color: var(--text-color); }
+    
+    /* --- Section Styling --- */
+    .questions-section {
+      background-color: var(--surface-color);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 2.5rem;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-header h2 { margin: 0; color: var(--primary-color); font-size: 1.6rem; }
+
+    /* --- Search Input --- */
+    .search-bar { position: relative; }
+    .search-bar input {
+        width: 100%;
+        max-width: 300px;
+        padding: 0.6rem 1rem 0.6rem 2.5rem;
+        border-radius: 20px;
+        border: 1px solid var(--border-color);
+        font-family: 'Cairo', sans-serif;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+    .search-bar input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(5, 74, 41, 0.1); }
+    .search-bar .fa-search { position: absolute; top: 50%; right: 1rem; transform: translateY(-50%); color: var(--text-muted); }
+
+    /* --- Question Card Styling --- */
+    .question-card {
+      margin-bottom: 1.5rem; padding: 1.5rem; border-radius: var(--border-radius);
+      border: 1px solid var(--border-color);
+      border-right-width: 5px;
+      transition: box-shadow 0.3s;
+    }
+    .question-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
     .question-card.unanswered { border-right-color: var(--secondary-color); }
     .question-card.answered { border-right-color: var(--primary-hover); }
-    .question-header { font-weight: 600; margin-bottom: 0.75rem; }
-    .question-header .date { font-weight: 400; color: #6c757d; font-size: 0.9rem; margin-left: 1rem; }
-    .question-body { color: #495057; margin-bottom: 1rem; }
+
+    .question-header { display: flex; justify-content: space-between; align-items: center; font-weight: 600; margin-bottom: 0.75rem; }
+    .question-header .date { font-weight: 400; color: var(--text-muted); font-size: 0.9rem; }
+    .question-body { color: #495057; margin-bottom: 1.2rem; font-size: 1.1rem; line-height: 1.9; }
+    
     .answer-display { background: #f8f9fa; padding: 1rem; border-radius: 4px; border: 1px solid #e9ecef; white-space: pre-wrap; word-wrap: break-word; }
-    .answer-form textarea { width: 100%; min-height: 120px; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; margin-bottom: 0.75rem; font-family: 'Cairo', sans-serif; font-size: 1rem; resize: vertical; }
-    #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); display: flex; justify-content: center; align-items: center; z-index: 3000; }
-    .spinner { border: 5px solid #f3f3f3; border-top: 5px solid var(--primary-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
+    .answer-form textarea, .edit-answer-form textarea {
+      width: 100%; min-height: 120px; padding: 0.75rem; border: 1px solid var(--border-color);
+      border-radius: 4px; margin-bottom: 0.75rem; font-family: 'Cairo', sans-serif;
+      font-size: 1rem; resize: vertical;
+    }
+    .card-actions { margin-top: 1rem; display: flex; gap: 0.5rem; justify-content: flex-end; }
+
+    /* --- Pagination --- */
+    #pagination-container { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 2rem; }
+    .page-link {
+        padding: 0.5rem 1rem; border: 1px solid var(--border-color); color: var(--primary-color);
+        background-color: var(--surface-color); text-decoration: none; border-radius: 4px;
+        transition: all 0.2s; cursor: pointer;
+    }
+    .page-link:hover { background-color: #e9ecef; }
+    .page-link.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+    .page-link.disabled { color: var(--text-muted); cursor: not-allowed; background-color: #f8f9fa; }
+
+    /* --- Loader and Toast --- */
+    #loader {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255, 255, 255, 0.85); display: flex; justify-content: center;
+      align-items: center; z-index: 3000; backdrop-filter: blur(2px);
+    }
+    .spinner {
+      border: 5px solid #f3f3f3; border-top: 5px solid var(--primary-color);
+      border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;
+    }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 4000; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
-    .toast { padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.2); opacity: 0; transform: translateY(-20px); animation: toast-in 0.5s forwards; }
+
+    #toast-container {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      z-index: 4000; display: flex; flex-direction: column-reverse; align-items: center; gap: 0.75rem;
+    }
+    .toast {
+      padding: 1rem 1.5rem; border-radius: var(--border-radius); color: white;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.25); opacity: 0; transform: translateY(20px);
+      animation: toast-in 0.5s forwards; min-width: 250px; text-align: center;
+    }
     .toast.success { background-color: #28a745; }
-    .toast.error { background-color: #dc3545; }
+    .toast.error { background-color: var(--danger-color); }
     @keyframes toast-in { to { opacity: 1; transform: translateY(0); } }
+
+    /* --- Confirmation Modal --- */
+    #confirmation-modal {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6);
+        display: flex; justify-content: center; align-items: center; z-index: 5000;
+        backdrop-filter: blur(5px);
+    }
+    .modal-content {
+        background: var(--surface-color); padding: 2rem; border-radius: var(--border-radius);
+        width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .modal-content h3 { margin-top: 0; color: var(--secondary-color); }
+    .modal-actions { margin-top: 1.5rem; display: flex; justify-content: center; gap: 1rem; }
+
   </style>
 </head>
 <body>
+
   <div id="login-modal">
     <form id="login-form">
-      <h1><i class="fas fa-mosque"></i> نور الحوزة</h1>
-      <p>لوحة تحكم المسؤولين</p>
-      <label for="password">كلمة المرور:</label>
+      <h1><i class="fas fa-mosque"></i></h1>
+      <p class="subtitle">ديوان الأسئلة - نور الحوزة</p>
+      <label for="password">مفتاح الدخول (كلمة المرور):</label>
       <input type="password" id="password" required>
-      <button type="submit" class="btn btn-primary" style="width: 100%;">
+      <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.8rem; font-size: 1.1rem;">
         <i class="fas fa-sign-in-alt"></i> دخول
       </button>
     </form>
   </div>
+  
+  <div id="confirmation-modal" class="hidden">
+    <div class="modal-content">
+        <h3><i class="fas fa-exclamation-triangle"></i> تأكيد الإجراء</h3>
+        <p id="confirmation-message">هل أنت متأكد من رغبتك في حذف هذا السؤال؟ لا يمكن التراجع عن هذا الإجراء.</p>
+        <div class="modal-actions">
+            <button id="confirm-action-btn" class="btn btn-danger">نعم، قم بالحذف</button>
+            <button id="cancel-action-btn" class="btn" style="background-color: #ccc;">إلغاء</button>
+        </div>
+    </div>
+  </div>
+
+  <div id="loader" class="hidden"><div class="spinner"></div></div>
+  <div id="toast-container"></div>
+
   <div id="dashboard" class="hidden">
-    <header>
-      <h1><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h1>
+    <header class="main-header">
+      <h1><i class="fas fa-tachometer-alt"></i> ديوان الأسئلة</h1>
       <button id="logout-btn" class="btn btn-logout">
         <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
       </button>
     </header>
+
     <main>
       <section id="stats-container">
         <div class="stat-card">
-          <div class="icon"><i class="fas fa-question-circle"></i></div>
-          <div class="info"><h3>الأسئلة المستلمة</h3><p id="total-questions">0</p></div>
+          <div class="icon"><i class="fas fa-inbox"></i></div>
+          <div class="info"><h3>إجمالي الأسئلة</h3><p id="total-questions-stat">0</p></div>
         </div>
         <div class="stat-card">
           <div class="icon"><i class="fas fa-check-circle" style="color: var(--primary-hover);"></i></div>
@@ -94,270 +259,468 @@
           <div class="info"><h3>بانتظار الإجابة</h3><p id="unanswered-questions-stat">0</p></div>
         </div>
       </section>
+
       <section class="questions-section">
-        <h2><i class="fas fa-edit"></i> أسئلة بانتظار الإجابة</h2>
+        <div class="section-header">
+            <h2><i class="fas fa-edit"></i> أسئلة قيد المراجعة (بانتظار الإجابة)</h2>
+        </div>
         <div id="unanswered-questions-list"></div>
       </section>
-      <section class="questions-section" style="margin-top: 2.5rem;">
-        <h2><i class="fas fa-archive"></i> الأرشيف (الأسئلة المجابة)</h2>
+
+      <section class="questions-section">
+        <div class="section-header">
+            <h2><i class="fas fa-archive"></i> الأرشيف المحفوظ (الأسئلة المجابة)</h2>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="ابحث في الأرشيف...">
+            </div>
+        </div>
         <div id="answered-questions-list"></div>
+        <div id="pagination-container"></div>
       </section>
+
     </main>
   </div>
-  <div id="loader" class="hidden"><div class="spinner"></div></div>
-  <div id="toast-container"></div>
+
 <script>
+// --- JavaScript: The Application Logic ---
 document.addEventListener('DOMContentLoaded', () => {
-  const AdminApp = {
-    // --- STATE & ELEMENTS (نفس السابق) ---
-    state: { isLoggedIn: false, questions: [] },
+
+  /**
+   * @class NoorAdminDashboard
+   * @description Manages the entire admin panel application state, UI, and interactions.
+   */
+  const NoorAdminDashboard = {
+    // --- State Management ---
+    state: {
+      isLoggedIn: false,
+      questions: [],
+      filteredQuestions: [],
+      currentPage: 1,
+      itemsPerPage: 5,
+      searchTerm: '',
+      questionToDelete: null,
+    },
+
+    // --- Element Cache ---
     elements: {
-      loginModal: document.getElementById('login-modal'), loginForm: document.getElementById('login-form'), passwordInput: document.getElementById('password'),
-      dashboard: document.getElementById('dashboard'), logoutBtn: document.getElementById('logout-btn'),
-      stats: { total: document.getElementById('total-questions'), answered: document.getElementById('answered-questions-stat'), unanswered: document.getElementById('unanswered-questions-stat') },
-      lists: { unanswered: document.getElementById('unanswered-questions-list'), answered: document.getElementById('answered-questions-list') },
-      loader: document.getElementById('loader'), toastContainer: document.getElementById('toast-container'),
-    },
-    // --- API (مُحدّث بالكامل) ---
-    api: {
-      // دالة موحدة للتعامل مع طلبات fetch وإدارة الأخطاء
-      async request(endpoint, options = {}) {
-        options.credentials = 'include'; // إرسال الكعكات مع كل طلب مصادقة
-        if (options.body) {
-          options.headers = { ...options.headers, 'Content-Type': 'application/json' };
-          options.body = JSON.stringify(options.body);
-        }
-        const response = await fetch(endpoint, options);
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ error: 'فشل في تحليل استجابة الخطأ من الخادم' }));
-          throw new Error(errorData.error || `خطأ في الشبكة: ${response.statusText}`);
-        }
-        return response.json().catch(() => ({})); // إرجاع كائن فارغ إذا لم يكن هناك محتوى JSON
+      loginModal: document.getElementById('login-modal'),
+      loginForm: document.getElementById('login-form'),
+      passwordInput: document.getElementById('password'),
+      dashboard: document.getElementById('dashboard'),
+      logoutBtn: document.getElementById('logout-btn'),
+      stats: {
+        total: document.getElementById('total-questions-stat'),
+        answered: document.getElementById('answered-questions-stat'),
+        unanswered: document.getElementById('unanswered-questions-stat'),
       },
-      checkStatus() { return this.request('/admin/status'); },
-      login(password) { return this.request('/admin/login', { method: 'POST', body: { password } }); },
-      logout() { return this.request('/admin/logout', { method: 'POST' }); },
-      getQuestions() { return this.request('/admin/questions'); },
-      postAnswer(id, answer) { return this.request('/admin/answer', { method: 'POST', body: { id, answer } }); }
-    },
-    // --- UI (نفس السابق مع تعديل طفيف على createQuestionCard) ---
-    ui: {
-      showLoader() { AdminApp.elements.loader.classList.remove('hidden'); },
-      hideLoader() { AdminApp.elements.loader.classList.add('hidden'); },
-      showToast(message, type = 'success') {
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.textContent = message;
-        AdminApp.elements.toastContainer.appendChild(toast);
-        setTimeout(() => toast.remove(), 4000);
+      lists: {
+        unanswered: document.getElementById('unanswered-questions-list'),
+        answered: document.getElementById('answered-questions-list'),
       },
-      render() {
-        AdminApp.elements.lists.unanswered.innerHTML = '';
-        AdminApp.elements.lists.answered.innerHTML = '';
-        const unanswered = AdminApp.state.questions.filter(q => !q.answer);
-        const answered = AdminApp.state.questions.filter(q => q.answer);
-        AdminApp.elements.stats.total.textContent = AdminApp.state.questions.length;
-        AdminApp.elements.stats.answered.textContent = answered.length;
-        AdminApp.elements.stats.unanswered.textContent = unanswered.length;
-        if (unanswered.length === 0) {
-            AdminApp.elements.lists.unanswered.innerHTML = '<p>لا توجد أسئلة بانتظار الإجابة حاليًا. عمل رائع!</p>';
-        } else {
-            unanswered.forEach(q => AdminApp.elements.lists.unanswered.appendChild(this.createQuestionCard(q)));
-        }
-        if (answered.length === 0) {
-            AdminApp.elements.lists.answered.innerHTML = '<p>لم تتم الإجابة على أي سؤال بعد.</p>';
-        } else {
-            answered.forEach(q => AdminApp.elements.lists.answered.appendChild(this.createQuestionCard(q)));
-        }
-      },
-      createQuestionCard(q) {
-        const card = document.createElement('div');
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const AdminApp = {
-    state: { isLoggedIn: false, questions: [] },
-    elements: {
-      loginModal: document.getElementById('login-modal'), loginForm: document.getElementById('login-form'), passwordInput: document.getElementById('password'),
-      dashboard: document.getElementById('dashboard'), logoutBtn: document.getElementById('logout-btn'),
-      stats: { total: document.getElementById('total-questions'), answered: document.getElementById('answered-questions-stat'), unanswered: document.getElementById('unanswered-questions-stat') },
-      lists: { unanswered: document.getElementById('unanswered-questions-list'), answered: document.getElementById('answered-questions-list') },
-      loader: document.getElementById('loader'), toastContainer: document.getElementById('toast-container'),
+      searchInput: document.getElementById('search-input'),
+      paginationContainer: document.getElementById('pagination-container'),
+      loader: document.getElementById('loader'),
+      toastContainer: document.getElementById('toast-container'),
+      confirmationModal: document.getElementById('confirmation-modal'),
+      confirmBtn: document.getElementById('confirm-action-btn'),
+      cancelBtn: document.getElementById('cancel-action-btn'),
     },
-    // ✅ API object updated to use consistent and correct paths
+
+    // --- API Service Layer ---
     api: {
       async request(endpoint, options = {}) {
         options.credentials = 'include';
-        if (options.body) {
+        if (options.body && typeof options.body === 'object') {
           options.headers = { ...options.headers, 'Content-Type': 'application/json' };
           options.body = JSON.stringify(options.body);
         }
-        // All admin requests go through the /admin/ path prefix
         const response = await fetch(endpoint, options);
-        const responseData = await response.json().catch(() => ({}));
+        const data = await response.json().catch(() => ({}));
         if (!response.ok) {
-          throw new Error(responseData.error || `خطأ في الشبكة: ${response.statusText}`);
+          throw new Error(data.error || `خطأ في الشبكة: ${response.status} ${response.statusText}`);
         }
-        return responseData;
+        return data;
       },
       checkStatus() { return this.request('/admin/status'); },
       login(password) { return this.request('/admin/login', { method: 'POST', body: { password } }); },
       logout() { return this.request('/admin/logout', { method: 'POST' }); },
       getQuestions() { return this.request('/admin/questions'); },
-      postAnswer(id, answer) { return this.request('/admin/answer', { method: 'POST', body: { id, answer } }); }
+      postAnswer(id, answer) { return this.request('/admin/answer', { method: 'POST', body: { id, answer } }); },
+      updateAnswer(id, answer) { return this.request(`/admin/question/${id}`, { method: 'PUT', body: { answer } }); },
+      deleteQuestion(id) { return this.request(`/admin/question/${id}`, { method: 'DELETE' }); },
     },
+
+    // --- UI Rendering ---
     ui: {
-      showLoader() { AdminApp.elements.loader.classList.remove('hidden'); },
-      hideLoader() { AdminApp.elements.loader.classList.add('hidden'); },
+      toggleLoader(show) { NoorAdminDashboard.elements.loader.classList.toggle('hidden', !show); },
+      
       showToast(message, type = 'success') {
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
         toast.textContent = message;
-        AdminApp.elements.toastContainer.appendChild(toast);
-        setTimeout(() => toast.remove(), 4000);
+        NoorAdminDashboard.elements.toastContainer.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.addEventListener('transitionend', () => toast.remove());
+        }, 4000);
       },
+
+      showConfirmation(questionId) {
+        NoorAdminDashboard.state.questionToDelete = questionId;
+        NoorAdminDashboard.elements.confirmationModal.classList.remove('hidden');
+      },
+
+      hideConfirmation() {
+        NoorAdminDashboard.state.questionToDelete = null;
+        NoorAdminDashboard.elements.confirmationModal.classList.add('hidden');
+      },
+
       render() {
-        AdminApp.elements.lists.unanswered.innerHTML = '';
-        AdminApp.elements.lists.answered.innerHTML = '';
-        const unanswered = AdminApp.state.questions.filter(q => !q.answer);
-        const answered = AdminApp.state.questions.filter(q => q.answer);
-        AdminApp.elements.stats.total.textContent = AdminApp.state.questions.length;
-        AdminApp.elements.stats.answered.textContent = answered.length;
-        AdminApp.elements.stats.unanswered.textContent = unanswered.length;
+        this.toggleLoader(true);
+        const { lists } = NoorAdminDashboard.elements;
+        const { questions } = NoorAdminDashboard.state;
+
+        // Separate questions
+        const unanswered = questions.filter(q => !q.answer);
+        const answered = questions.filter(q => q.answer);
         
-        if (unanswered.length === 0) {
-            AdminApp.elements.lists.unanswered.innerHTML = '<p style="padding: 1rem; text-align: center;">لا توجد أسئلة بانتظار الإجابة حاليًا. عمل رائع!</p>';
+        // Filter answered questions based on search term
+        const searchTerm = NoorAdminDashboard.state.searchTerm.toLowerCase();
+        const filteredAnswered = answered.filter(q => 
+            q.question.toLowerCase().includes(searchTerm) || 
+            q.answer.toLowerCase().includes(searchTerm)
+        );
+        NoorAdminDashboard.state.filteredQuestions = filteredAnswered;
+
+        // Update stats
+        this.updateStats(questions.length, answered.length, unanswered.length);
+
+        // Render lists
+        this.renderUnanswered(unanswered);
+        this.renderAnswered(); // This will use state for pagination and filtering
+        this.toggleLoader(false);
+      },
+
+      updateStats(total, answeredCount, unansweredCount) {
+        const { stats } = NoorAdminDashboard.elements;
+        stats.total.textContent = total;
+        stats.answered.textContent = answeredCount;
+        stats.unanswered.textContent = unansweredCount;
+      },
+
+      renderUnanswered(unansweredList) {
+        const listEl = NoorAdminDashboard.elements.lists.unanswered;
+        listEl.innerHTML = '';
+        if (unansweredList.length === 0) {
+          listEl.innerHTML = '<p style="padding: 1rem; text-align: center;">لا توجد أسئلة قيد المراجعة حاليًا. عمل مبارك!</p>';
         } else {
-            unanswered.forEach(q => AdminApp.elements.lists.unanswered.appendChild(this.createQuestionCard(q)));
+          unansweredList.forEach(q => listEl.appendChild(this.createCard(q)));
+        }
+      },
+
+      renderAnswered() {
+        const listEl = NoorAdminDashboard.elements.lists.answered;
+        listEl.innerHTML = '';
+        const { filteredQuestions, currentPage, itemsPerPage } = NoorAdminDashboard.state;
+
+        if (filteredQuestions.length === 0) {
+            listEl.innerHTML = `<p style="padding: 1rem; text-align: center;">${NoorAdminDashboard.state.searchTerm ? 'لم يتم العثور على نتائج' : 'لا توجد أسئلة في الأرشيف.'}</p>`;
+            this.renderPagination(0, 0); // Clear pagination
+            return;
         }
 
-        if (answered.length === 0) {
-            AdminApp.elements.lists.answered.innerHTML = '<p style="padding: 1rem; text-align: center;">لم تتم الإجابة على أي سؤال بعد.</p>';
-        } else {
-            answered.sort((a, b) => new Date(b.answeredDate || b.date) - new Date(a.answeredDate || a.date))
-                     .forEach(q => AdminApp.elements.lists.answered.appendChild(this.createQuestionCard(q)));
-        }
+        const paginatedItems = filteredQuestions.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+        paginatedItems.forEach(q => listEl.appendChild(this.createCard(q)));
+        this.renderPagination(filteredQuestions.length, itemsPerPage);
       },
-      createQuestionCard(q) {
-        const card = document.createElement('div');
+
+      renderPagination(totalItems, itemsPerPage) {
+          const container = NoorAdminDashboard.elements.paginationContainer;
+          container.innerHTML = '';
+          if (totalItems <= itemsPerPage) return;
+
+          const pageCount = Math.ceil(totalItems / itemsPerPage);
+          const currentPage = NoorAdminDashboard.state.currentPage;
+
+          // Previous button
+          const prev = document.createElement('a');
+          prev.href = '#';
+          prev.innerHTML = '&laquo; السابق';
+          prev.className = 'page-link';
+          if (currentPage === 1) prev.classList.add('disabled');
+          prev.dataset.page = currentPage - 1;
+          container.appendChild(prev);
+
+          // Page numbers
+          for (let i = 1; i <= pageCount; i++) {
+              const pageLink = document.createElement('a');
+              pageLink.href = '#';
+              pageLink.textContent = i;
+              pageLink.className = 'page-link';
+              pageLink.dataset.page = i;
+              if (i === currentPage) pageLink.classList.add('active');
+              container.appendChild(pageLink);
+          }
+
+          // Next button
+          const next = document.createElement('a');
+          next.href = '#';
+          next.innerHTML = 'التالي &raquo;';
+          next.className = 'page-link';
+          if (currentPage === pageCount) next.classList.add('disabled');
+          next.dataset.page = currentPage + 1;
+          container.appendChild(next);
+      },
+
+      createCard(q) {
+        const card = document.createElement('article');
         card.className = `question-card ${q.answer ? 'answered' : 'unanswered'}`;
         card.dataset.id = q.id;
+
         const date = new Date(q.date).toLocaleDateString('ar-EG-u-nu-latn', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' });
         const questionHTML = q.question.replace(/</g, "&lt;").replace(/>/g, "&gt;");
         const answerHTML = q.answer ? q.answer.replace(/</g, "&lt;").replace(/>/g, "&gt;") : "";
-        let content;
+
+        let content = `
+          <div class="question-header">
+            <span>السؤال (بتاريخ: ${date})</span>
+            ${q.answer ? `
+            <div class="card-actions">
+              <button class="btn btn-sm btn-edit" style="background: #f0ad4e;"><i class="fas fa-pencil-alt"></i> تعديل</button>
+              <button class="btn btn-sm btn-delete btn-danger"><i class="fas fa-trash-alt"></i> حذف</button>
+            </div>` : ''}
+          </div>
+          <p class="question-body">${questionHTML}</p>
+          <div class="answer-container">`;
+
         if (q.answer) {
-          const answeredDateStr = q.answeredDate ? ` (تمت الإجابة في: ${new Date(q.answeredDate).toLocaleDateString('ar-EG-u-nu-latn', {day: 'numeric', month: 'long'})})` : '';
-          content = `<div class="question-header"><span>السؤال:</span><span class="date">${date}</span></div><p class="question-body">${questionHTML}</p><strong>الجواب:${answeredDateStr}</strong><div class="answer-display">${answerHTML}</div>`;
+          content += `<strong>الجواب:</strong><div class="answer-display">${answerHTML}</div>`;
         } else {
-          content = `<div class="question-header"><span>السؤال:</span><span class="date">${date}</span></div><p class="question-body">${questionHTML}</p><form class="answer-form"><label for="answer-${q.id}">أضف إجابتك هنا:</label><textarea id="answer-${q.id}" placeholder="اكتب الجواب المفصل..."></textarea><button type="submit" class="btn btn-secondary btn-submit-answer"><i class="fas fa-paper-plane"></i> إرسال الجواب</button></form>`;
+          content += `
+            <form class="answer-form">
+              <label for="answer-${q.id}">أضف إجابتك هنا:</label>
+              <textarea id="answer-${q.id}" placeholder="اكتب الجواب المفصل..."></textarea>
+              <button type="submit" class="btn btn-secondary btn-submit-answer">
+                <i class="fas fa-paper-plane"></i> إرسال الجواب
+              </button>
+            </form>`;
         }
+        content += `</div>`;
         card.innerHTML = content;
         return card;
+      },
+
+      toggleEditMode(card, isEditing) {
+        const answerContainer = card.querySelector('.answer-container');
+        const questionId = card.dataset.id;
+        
+        if (isEditing) {
+          const currentAnswer = NoorAdminDashboard.state.questions.find(q => q.id == questionId).answer;
+          answerContainer.innerHTML = `
+            <form class="edit-answer-form">
+              <label for="edit-answer-${questionId}">تعديل الجواب:</label>
+              <textarea id="edit-answer-${questionId}">${currentAnswer}</textarea>
+              <div class="card-actions">
+                <button type="submit" class="btn btn-sm btn-save btn-primary"><i class="fas fa-save"></i> حفظ التعديل</button>
+                <button type="button" class="btn btn-sm btn-cancel-edit" style="background-color: #ccc;"><i class="fas fa-times"></i> إلغاء</button>
+              </div>
+            </form>`;
+        } else {
+          // Re-render the original answer display
+          const question = NoorAdminDashboard.state.questions.find(q => q.id == questionId);
+          const answerHTML = question.answer.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+          answerContainer.innerHTML = `<strong>الجواب:</strong><div class="answer-display">${answerHTML}</div>`;
+        }
       }
     },
-    // ✅ Event handlers updated for better error handling and flow
-    async handleLogin(e) {
-      e.preventDefault();
-      const submitBtn = e.target.querySelector('button[type="submit"]');
-      submitBtn.disabled = true;
-      AdminApp.ui.showLoader();
-      try {
-        const password = AdminApp.elements.passwordInput.value;
-        const data = await AdminApp.api.login(password);
-        AdminApp.state.isLoggedIn = true;
-        AdminApp.elements.loginModal.classList.add('hidden');
-        AdminApp.elements.dashboard.classList.remove('hidden');
-        await AdminApp.loadData();
-        AdminApp.ui.showToast(data.message || 'تم تسجيل الدخول بنجاح', 'success');
-      } catch (err) {
-        AdminApp.ui.showToast(err.message, 'error');
-        AdminApp.elements.passwordInput.value = '';
-      } finally {
-        submitBtn.disabled = false;
-        AdminApp.ui.hideLoader();
+
+    // --- Event Handlers ---
+    handlers: {
+      async handleLogin(e) {
+        e.preventDefault();
+        NoorAdminDashboard.ui.toggleLoader(true);
+        try {
+          const password = NoorAdminDashboard.elements.passwordInput.value;
+          const data = await NoorAdminDashboard.api.login(password);
+          NoorAdminDashboard.state.isLoggedIn = true;
+          NoorAdminDashboard.elements.loginModal.classList.add('hidden');
+          NoorAdminDashboard.elements.dashboard.classList.remove('hidden');
+          await NoorAdminDashboard.initData();
+          NoorAdminDashboard.ui.showToast(data.message || 'تم تسجيل الدخول بنجاح', 'success');
+        } catch (err) {
+          NoorAdminDashboard.ui.showToast(err.message, 'error');
+        } finally {
+          NoorAdminDashboard.elements.passwordInput.value = '';
+          NoorAdminDashboard.ui.toggleLoader(false);
+        }
+      },
+
+      async handleLogout() {
+        NoorAdminDashboard.ui.toggleLoader(true);
+        try {
+          await NoorAdminDashboard.api.logout();
+        } catch (err) {
+            console.error('Logout failed on server, but proceeding on client.', err);
+        } finally {
+            NoorAdminDashboard.state.isLoggedIn = false;
+            NoorAdminDashboard.state.questions = [];
+            NoorAdminDashboard.elements.dashboard.classList.add('hidden');
+            NoorAdminDashboard.elements.loginModal.classList.remove('hidden');
+            NoorAdminDashboard.ui.toggleLoader(false);
+            NoorAdminDashboard.ui.showToast('تم تسجيل الخروج بنجاح');
+        }
+      },
+      
+      handleDashboardClick(e) {
+          const target = e.target;
+          const card = target.closest('.question-card');
+          if (!card) return;
+          const questionId = card.dataset.id;
+
+          if (target.closest('.btn-edit')) {
+              NoorAdminDashboard.ui.toggleEditMode(card, true);
+          } else if (target.closest('.btn-cancel-edit')) {
+              NoorAdminDashboard.ui.toggleEditMode(card, false);
+          } else if (target.closest('.btn-delete')) {
+              NoorAdminDashboard.ui.showConfirmation(questionId);
+          }
+      },
+
+      handleDashboardSubmit(e) {
+          e.preventDefault();
+          const target = e.target;
+          const card = target.closest('.question-card');
+          if (!card) return;
+          const questionId = card.dataset.id;
+
+          if (target.classList.contains('answer-form')) {
+              const textarea = card.querySelector('textarea');
+              const answer = textarea.value.trim();
+              if (answer) NoorAdminDashboard.methods.submitAnswer(questionId, answer, target.querySelector('button'));
+          } else if (target.classList.contains('edit-answer-form')) {
+              const textarea = card.querySelector('textarea');
+              const answer = textarea.value.trim();
+              if (answer) NoorAdminDashboard.methods.updateAnswer(questionId, answer, target.querySelector('button'));
+          }
+      },
+
+      handleSearch() {
+          NoorAdminDashboard.state.searchTerm = NoorAdminDashboard.elements.searchInput.value;
+          NoorAdminDashboard.state.currentPage = 1;
+          NoorAdminDashboard.ui.renderAnswered();
+      },
+
+      handlePagination(e) {
+        e.preventDefault();
+        const target = e.target.closest('.page-link');
+        if (!target || target.classList.contains('disabled') || target.classList.contains('active')) return;
+        NoorAdminDashboard.state.currentPage = Number(target.dataset.page);
+        NoorAdminDashboard.ui.renderAnswered();
       }
     },
-    async handleLogout() {
-      AdminApp.ui.showLoader();
-      try {
-        const data = await AdminApp.api.logout();
-        AdminApp.state.isLoggedIn = false;
-        AdminApp.state.questions = [];
-        AdminApp.elements.passwordInput.value = '';
-        AdminApp.elements.dashboard.classList.add('hidden');
-        AdminApp.elements.loginModal.classList.remove('hidden');
-        AdminApp.ui.showToast(data.message || 'تم تسجيل الخروج بنجاح');
-      } catch (err) {
-        AdminApp.ui.showToast(err.message, 'error');
-      } finally {
-        AdminApp.ui.hideLoader();
+
+    // --- Core Logic Methods ---
+    methods: {
+      async submitAnswer(id, answer, button) {
+        button.disabled = true;
+        NoorAdminDashboard.ui.toggleLoader(true);
+        try {
+          await NoorAdminDashboard.api.postAnswer(id, answer);
+          NoorAdminDashboard.ui.showToast('تم إرسال الجواب بنجاح', 'success');
+          await NoorAdminDashboard.initData(); // Refresh all data
+        } catch(err) {
+          NoorAdminDashboard.ui.showToast(err.message, 'error');
+          button.disabled = false;
+        } finally {
+          NoorAdminDashboard.ui.toggleLoader(false);
+        }
+      },
+
+      async updateAnswer(id, answer, button) {
+        button.disabled = true;
+        NoorAdminDashboard.ui.toggleLoader(true);
+        try {
+          await NoorAdminDashboard.api.updateAnswer(id, answer);
+          NoorAdminDashboard.ui.showToast('تم حفظ التعديل بنجاح', 'success');
+          await NoorAdminDashboard.initData();
+        } catch(err) {
+          NoorAdminDashboard.ui.showToast(err.message, 'error');
+          button.disabled = false;
+        } finally {
+          NoorAdminDashboard.ui.toggleLoader(false);
+        }
+      },
+
+      async deleteQuestion() {
+        const id = NoorAdminDashboard.state.questionToDelete;
+        if (!id) return;
+        NoorAdminDashboard.ui.toggleLoader(true);
+        NoorAdminDashboard.ui.hideConfirmation();
+        try {
+          await NoorAdminDashboard.api.deleteQuestion(id);
+          NoorAdminDashboard.ui.showToast('تم حذف السؤال بنجاح', 'success');
+          await NoorAdminDashboard.initData();
+        } catch(err) {
+          NoorAdminDashboard.ui.showToast(err.message, 'error');
+        } finally {
+          NoorAdminDashboard.ui.toggleLoader(false);
+        }
       }
     },
-    async handleAnswerSubmit(e) {
-      e.preventDefault(); // Prevent form submission
-      const submitBtn = e.target.closest('.btn-submit-answer');
-      if (!submitBtn) return;
-      const card = submitBtn.closest('.question-card');
-      const id = card.dataset.id;
-      const textarea = card.querySelector('textarea');
-      const answer = textarea.value.trim();
-      if (!answer) {
-        AdminApp.ui.showToast('لا يمكن إرسال جواب فارغ', 'error');
-        return;
-      }
-      submitBtn.disabled = true;
-      AdminApp.ui.showLoader();
-      try {
-        const data = await AdminApp.api.postAnswer(id, answer);
-        AdminApp.ui.showToast(data.message || 'تم حفظ الجواب بنجاح', 'success');
-        await AdminApp.loadData(); // Reload all data to reflect changes
-      } catch (err) {
-        AdminApp.ui.showToast(err.message, 'error');
-        submitBtn.disabled = false;
-      } finally {
-        AdminApp.ui.hideLoader();
-      }
-    },
-    async loadData() {
-      this.ui.showLoader();
+
+    // --- Initialization ---
+    async initData() {
+      this.ui.toggleLoader(true);
       try {
         const questions = await this.api.getQuestions();
         this.state.questions = questions.sort((a, b) => new Date(b.date) - new Date(a.date));
         this.ui.render();
       } catch (err) {
         this.ui.showToast(err.message, 'error');
-        // If loading data fails, it's likely an authentication issue (session expired)
-        this.handleLogout();
+        this.handlers.handleLogout(); // Force logout on data fetch failure
       } finally {
-        this.ui.hideLoader();
+        this.ui.toggleLoader(false);
       }
     },
-    async checkLoginStatus() {
-      this.ui.showLoader();
+
+    async checkSession() {
+      this.ui.toggleLoader(true);
       try {
-        // Now this call will succeed because we added the backend route
         await this.api.checkStatus();
         this.state.isLoggedIn = true;
         this.elements.loginModal.classList.add('hidden');
         this.elements.dashboard.classList.remove('hidden');
-        this.loadData();
+        await this.initData();
       } catch (e) {
         this.state.isLoggedIn = false;
-        this.elements.loginModal.classList.remove('hidden');
-        this.elements.dashboard.classList.add('hidden');
       } finally {
-        this.ui.hideLoader();
+        this.ui.toggleLoader(false);
       }
     },
+
     init() {
-      this.elements.loginForm.addEventListener('submit', this.handleLogin.bind(this));
-      this.elements.logoutBtn.addEventListener('click', this.handleLogout.bind(this));
-      // Use event delegation on the dashboard for answer submissions
-      this.elements.dashboard.addEventListener('submit', this.handleAnswerSubmit.bind(this));
-      this.checkLoginStatus();
+      // Event Listeners
+      this.elements.loginForm.addEventListener('submit', this.handlers.handleLogin);
+      this.elements.logoutBtn.addEventListener('click', this.handlers.handleLogout);
+      
+      // Event Delegation for dynamic content
+      this.elements.dashboard.addEventListener('click', this.handlers.handleDashboardClick);
+      this.elements.dashboard.addEventListener('submit', this.handlers.handleDashboardSubmit);
+      
+      this.elements.searchInput.addEventListener('input', this.handlers.handleSearch);
+      this.elements.paginationContainer.addEventListener('click', this.handlers.handlePagination);
+
+      // Confirmation Modal Listeners
+      this.elements.confirmBtn.addEventListener('click', () => this.methods.deleteQuestion());
+      this.elements.cancelBtn.addEventListener('click', () => this.ui.hideConfirmation());
+      
+      // Check user session on load
+      this.checkSession();
     }
   };
-  AdminApp.init();
+
+  NoorAdminDashboard.init();
 });
 </script>
 </body>
