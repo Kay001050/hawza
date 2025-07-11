@@ -2,9 +2,9 @@
   "name": "noor-alhawza-project",
   "version": "1.2.0",
   "description": "منظومة علمية قائمة على الذكاء الاصطناعي مع تخزين سحابي دائم.",
-  "main": "netlify/functions/api.js", // تم تحديثه ليشير للملف الصحيح، ولكنه غير أساسي للتشغيل على Netlify
+  "main": "netlify/functions/api.js"
   "scripts": {
-    // للتطوير المحلي، يُنصح بتثبيت netlify-cli وتشغيل الأمر: netlify dev
+
     "start": "echo 'Use: netlify dev' for local development",
     "build": "echo 'No build step required'"
   },
