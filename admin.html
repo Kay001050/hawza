@@ -305,13 +305,14 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     
-    class ApiService {
-        constructor(baseURL = '/.netlify/functions/api') {
+        class ApiService {
+        // ✅ الإصلاح: تم تغيير المسار الأساسي. الآن نطلب المسارات العامة مباشرة.
+        constructor(baseURL = '/') {
             this.baseURL = baseURL;
         }
 
         async request(endpoint, options = {}) {
-            const url = this.baseURL + endpoint;
+            const url = this.baseURL + endpoint; // سيصبح مثلاً: /admin/login
             const config = {
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -337,14 +338,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         
-        checkStatus() { return this.request('/admin/status'); }
-        login(password) { return this.request('/admin/login', { method: 'POST', body: { password } }); }
-        logout() { return this.request('/admin/logout', { method: 'POST' }); }
-        getQuestions() { return this.request('/admin/questions'); }
-        addQuestion(data) { return this.request('/admin/question', { method: 'POST', body: data }); }
-        updateQuestion(id, data) { return this.request(`/admin/question/${id}`, { method: 'PUT', body: data }); }
-        deleteQuestion(id) { return this.request(`/admin/question/${id}`, { method: 'DELETE' }); }
+        // ✅ المسارات الآن تعكس ما هو موجود في netlify.toml
+        checkStatus() { return this.request('admin/status'); }
+        login(password) { return this.request('admin/login', { method: 'POST', body: { password } }); }
+        logout() { return this.request('admin/logout', { method: 'POST' }); }
+        getQuestions() { return this.request('admin/questions'); }
+        addQuestion(data) { return this.request('admin/question', { method: 'POST', body: data }); }
+        updateQuestion(id, data) { return this.request(`admin/question/${id}`, { method: 'PUT', body: data }); }
+        deleteQuestion(id) { return this.request(`admin/question/${id}`, { method: 'DELETE' }); }
     }
+
 
     class StateService {
         constructor() {
