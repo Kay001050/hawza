@@ -217,8 +217,7 @@
         [span_0](start_span)<p>يرجى العلم بأن النماذج الثلاثة الجديدة (*نور الخطابة، نور القرآن، ونور المهدي*) لا تزال في المرحلة التجريبية، وتحتاج إلى المزيد من التطوير والصقل[span_0](end_span). [span_1](start_span)قد لا تكون دقتها حاليًا بنفس مستوى النموذج الأم "نور الحوزة"[span_1](end_span). [span_2](start_span)استخدامكم وملاحظاتكم ستكون خير معين لنا في تطويرها، فلكم منا جزيل الشكر[span_2](end_span).</p>
     </div>
   </main>
-  
-  <script>
+<script>
     const newNoorModels = [
       {
         isModel: true, icon: '🎤', title: 'نور الخطابة',
@@ -240,7 +239,7 @@
     function renderListItem(item) {
       const li = document.createElement('li');
       li.className = `card-item ${item.isModel ? 'model-card' : ''}`;
-      
+
       if (item.isModel) {
         li.innerHTML = `
           <p class="model-intro">${item.icon} ${item.title}:</p>
@@ -250,7 +249,10 @@
           </a>
         `;
       } else {
-        const dateString = new Date(item.answeredDate || item.date).toLocaleDateString('ar-EG-u-nu-latn', { year: 'numeric', month: 'long', day: 'numeric' });
+        // استخدام تاريخ الإجابة إن وجد، وإلا فتاريخ إنشاء السؤال
+        const dateToDisplay = item.answeredDate || item.date;
+        const dateString = new Date(dateToDisplay).toLocaleDateString('ar-EG-u-nu-latn', { year: 'numeric', month: 'long', day: 'numeric' });
+        
         li.innerHTML = `
             <p class="question-text"><strong>السؤال:</strong> ${item.question}</p>
             <div class="answer-content">
@@ -263,7 +265,7 @@
     }
     
     function renderFeedbackMessage(listElement, message, isError = false) {
-        listElement.innerHTML = '';
+        listElement.innerHTML = ''; // إفراغ القائمة من أي محتوى سابق
         const feedbackLi = document.createElement('li');
         feedbackLi.className = `feedback-message ${isError ? 'error-message' : ''}`;
         const iconClass = isError ? 'fa-exclamation-circle' : 'fa-info-circle';
@@ -276,7 +278,7 @@
       if (!listElement) return;
 
       try {
-        // ✅ **الإصلاح**: تم تغيير المسار ليكون متسقًا مع بقية التطبيق ويعتمد على netlify.toml
+        // ✅ هذا الطلب سيعمل الآن بنجاح بعد إصلاح الواجهة الخلفية
         const response = await fetch('/api/answered');
         
         if (!response.ok) {
@@ -285,14 +287,29 @@
         }
         
         const fetchedQuestions = await response.json();
+        listElement.innerHTML = ''; // إفراغ القائمة من رسالة "جاري التحميل"
         
-        listElement.innerHTML = ''; // إفراغ القائمة من رسالة التحميل
+        // دمج وفرز جميع العناصر (نماذج + أسئلة) حسب التاريخ (الأسئلة الأحدث أولاً)
+        const allItems = [
+            ...newNoorModels,
+            ...fetchedQuestions
+        ];
+
+        // الفرز: النماذج تأتي دائماً في الأعلى، ثم الأسئلة مرتبة حسب تاريخ الإجابة الأحدث
+        allItems.sort((a, b) => {
+            if (a.isModel && !b.isModel) return -1;
+            if (!a.isModel && b.isModel) return 1;
+            if (!a.isModel && !b.isModel) {
+                 return new Date(b.answeredDate || b.date) - new Date(a.answeredDate || a.date);
+            }
+            return 0;
+        });
         
-        newNoorModels.forEach(model => listElement.appendChild(renderListItem(model)));
-        
-        if (fetchedQuestions.length > 0) {
-            fetchedQuestions.forEach(q => listElement.appendChild(renderListItem(q)));
+        if (allItems.length > newNoorModels.length) {
+            allItems.forEach(item => listElement.appendChild(renderListItem(item)));
         } else {
+            // في حال عدم وجود أسئلة مجابة، نعرض النماذج ورسالة توضيحية
+            newNoorModels.forEach(model => listElement.appendChild(renderListItem(model)));
             renderFeedbackMessage(listElement, 'لا توجد أسئلة مجابة في الأرشيف حاليًا.');
         }
 
