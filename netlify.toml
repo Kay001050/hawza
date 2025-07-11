@@ -1,4 +1,4 @@
-# ملف إعدادات Netlify (نسخة مُصحّحة)
+# ملف إعدادات Netlify (النسخة الحالية صحيحة ولا تحتاج لتغيير)
 
 [build]
   publish = "/"
@@ -8,7 +8,7 @@
 # الترتيب هنا في غاية الأهمية. Netlify يقرأ القواعد من الأعلى للأسفل.
 # ===================================================================
 
-# ✅ القاعدة الجديدة: لجعل رابط /admin يعرض صفحة admin.html
+# القاعدة لجعل رابط /admin يعرض صفحة admin.html
 # يجب أن تأتي هذه القاعدة "قبل" قاعدة /admin/* العامة
 [[redirects]]
   from = "/admin"
@@ -16,6 +16,7 @@
   status = 200
 
 # قاعدة توجيه طلبات API الخاصة بالمسؤولين إلى الوظيفة السحابية
+# هذه القاعدة تغطي /admin/login, /admin/questions, وغيرها
 [[redirects]]
   from = "/admin/*"
   to = "/.netlify/functions/api/admin/:splat"
@@ -23,6 +24,7 @@
   force = true
 
 # قاعدة توجيه طلبات API العامة إلى الوظيفة السحابية
+# هذه القاعدة تغطي /api/questions و /api/answered
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api/:splat"
