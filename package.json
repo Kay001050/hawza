@@ -1,15 +1,15 @@
 {
   "name": "noor-alhawza-project",
   "version": "1.2.0",
-  "description": "منظومة علمية قائمة على الذكاء الاصطناعي مع تخزين سحابي دائم.",
-  "main": "netlify/functions/api.js"
+  "description": "A knowledge-based AI project with persistent cloud storage.",
+  "main": "netlify/functions/api.js",
   "scripts": {
-
-    "start": "echo 'Use: netlify dev' for local development",
-    "build": "echo 'No build step required'"
+    "dev": "netlify dev",
+    "build": "echo 'No build step required for static files'"
   },
   "dependencies": {
-    "@netlify/blobs": "^7.3.0",
+    "@netlify/blobs": "^1.6.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-rate-limit": "^7.3.1",
@@ -17,6 +17,6 @@
     "helmet": "^7.1.0",
     "serverless-http": "^3.2.0"
   },
-  "author": "خُدّام أهل البيت (عليهم السلام)",
+  "author": "Servants of Ahlulbayt",
   "license": "ISC"
 }
