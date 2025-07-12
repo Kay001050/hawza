@@ -142,9 +142,10 @@
     .question-card {
       background: var(--color-surface);
       border: 1px solid var(--color-border);
-      margin-bottom: 1.5rem; padding: 1.5rem 2rem; border-radius: var(--border-radius);
+      margin-bottom: 1.5rem;
+      padding: 1.5rem 2rem; border-radius: var(--border-radius);
       box-shadow: var(--shadow-soft); transition: var(--transition-main);
-      border-right: 5px solid var(--color-gold-accent); /* Unanswered */
+      border-right: 5px solid var(--color-gold-accent);
     }
     .question-card.answered { border-right-color: var(--color-hawza-green); }
     .question-card:hover { box-shadow: var(--shadow-medium); transform: translateY(-5px); }
@@ -257,7 +258,7 @@
         </div>
         
         <div id="questions-list">
-            </div>
+        </div>
     </section>
   </main>
 
@@ -305,14 +306,16 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     
-        class ApiService {
-        // ✅ الإصلاح: تم تغيير المسار الأساسي. الآن نطلب المسارات العامة مباشرة.
+    class ApiService {
+        // ✅ **الإصلاح**: تم تغيير المسار الأساسي. الآن نطلب المسارات العامة مباشرة
+        // بناءً على قواعد netlify.toml، وهذا هو الأسلوب الصحيح.
         constructor(baseURL = '/') {
             this.baseURL = baseURL;
         }
 
         async request(endpoint, options = {}) {
-            const url = this.baseURL + endpoint; // سيصبح مثلاً: /admin/login
+            // المسار النهائي سيكون مثلاً: /admin/login أو /api/questions
+            const url = this.baseURL + endpoint;
             const config = {
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -326,7 +329,6 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const response = await fetch(url, config);
                 const data = await response.json().catch(() => ({}));
-
                 if (!response.ok) {
                     const errorMsg = data.error || `خطأ في الخادم برمز الحالة ${response.status}`;
                     throw new Error(errorMsg);
@@ -338,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         
-        // ✅ المسارات الآن تعكس ما هو موجود في netlify.toml
+        // ✅ **الإصلاح**: المسارات الآن تعكس ما هو موجود في netlify.toml
         checkStatus() { return this.request('admin/status'); }
         login(password) { return this.request('admin/login', { method: 'POST', body: { password } }); }
         logout() { return this.request('admin/logout', { method: 'POST' }); }
@@ -347,7 +349,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateQuestion(id, data) { return this.request(`admin/question/${id}`, { method: 'PUT', body: data }); }
         deleteQuestion(id) { return this.request(`admin/question/${id}`, { method: 'DELETE' }); }
     }
-
 
     class StateService {
         constructor() {
@@ -363,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         get state() { return this._state; }
         
         setQuestions(questions) {
-            this._state.questions = questions;
+            this._state.questions = questions.sort((a, b) => new Date(b.date) - new Date(a.date));
             this.updateTags();
         }
 
@@ -500,7 +501,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             list.innerHTML = `<li data-tag="all" class="${activeTag === 'all' ? 'active' : ''}">الكل</li>
                               <li data-tag="__unanswered" class="${activeTag === '__unanswered' ? 'active' : ''}">قيد المراجعة (${unansweredCount})</li>`;
-            
             const sortedTags = Array.from(tags).sort();
             sortedTags.forEach(tag => {
                 const li = document.createElement('li');
@@ -525,7 +525,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.createElement('div');
             card.className = `question-card ${q.answer && q.answer.trim() !== '' ? 'answered' : 'unanswered'}`;
             card.dataset.id = q.id;
-
             const escapeHtml = (unsafe) => unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
             
             const highlight = (text) => {
@@ -575,7 +574,6 @@ document.addEventListener('DOMContentLoaded', () => {
             this.quill.root.innerHTML = isNew ? '' : (question.answer || '');
             this.dom.modal.deleteBtn.style.display = isNew ? 'none' : 'inline-flex';
             this.dom.modal.container.classList.remove('hidden');
-
             this.handleDrafts(isNew ? `new_question` : question.id);
         }
 
@@ -588,7 +586,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         handleDrafts(draftId) {
             if (this.draftSaveInterval) clearInterval(this.draftSaveInterval);
-
             const draftKey = `draft_${draftId}`;
             const savedDraft = localStorage.getItem(draftKey);
             if (savedDraft) {
@@ -616,8 +613,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         clearDraft(draftId) {
-            if (!draftId) return;
-            localStorage.removeItem(`draft_${draftId}`);
+            const finalDraftId = draftId === 'new_question' ? 'new_question' : `draft_${draftId}`;
+            localStorage.removeItem(finalDraftId);
         }
     }
     
@@ -648,16 +645,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const editBtn = e.target.closest('.edit-btn');
                 if (editBtn) {
                     const card = e.target.closest('.question-card');
-                    const question = this.state.state.questions.find(q => q.id === Number(card.dataset.id));
+                    const question = this.state.state.questions.find(q => q.id === card.dataset.id);
                     if(question) this.ui.openModal(question);
                 }
             });
-
             this.ui.dom.dashboard.searchInput.addEventListener('input', e => {
                 this.state.state.searchTerm = e.target.value;
                 this.ui.renderQuestions(this.state.getFilteredQuestions(), this.state.state.searchTerm);
             });
-
             this.ui.dom.dashboard.tagsFilterList.addEventListener('click', e => {
                 if(e.target.tagName === 'LI') {
                     this.state.state.activeTag = e.target.dataset.tag;
@@ -710,8 +705,8 @@ document.addEventListener('DOMContentLoaded', () => {
         async fetchData() {
             this.ui.toggleLoader(true);
             try {
-                const questions = await this.api.getQuestions();
-                this.state.setQuestions(questions);
+                const { data: questions } = await this.api.getQuestions();
+                this.state.setQuestions(questions || []);
                 this.ui.renderDashboard(this.state);
             } catch(error) {
                 this.ui.showToast(error.message, 'error');
@@ -736,8 +731,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             this.ui.toggleLoader(true);
             try {
-                const response = id ? await this.api.updateQuestion(Number(id), data) : await this.api.addQuestion(data);
-                this.state.updateQuestion(response.question);
+                const { data: savedQuestion } = id ? await this.api.updateQuestion(id, data) : await this.api.addQuestion(data);
+                this.state.updateQuestion(savedQuestion);
                 this.ui.renderDashboard(this.state);
                 this.ui.closeModal();
                 this.ui.clearDraft(id || 'new_question');
@@ -750,7 +745,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         async handleDelete() {
-            const id = Number(this.ui.dom.modal.idInput.value);
+            const id = this.ui.dom.modal.idInput.value;
             if (!id || !confirm("هل أنت متأكد من رغبتك في حذف هذه المسألة؟ لا يمكن التراجع عن هذا الإجراء.")) return;
 
             this.ui.toggleLoader(true);
