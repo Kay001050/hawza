@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ديوان المسائل والمراجعات | لوحة تحكم نور الحوزة</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  
+  <link rel="icon" href="Icon.png" type="image/png">
+  
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+  <style>
+    /* --- المتغيرات الأساسية للتصميم الحوزوي --- */
+    :root {
+      --font-title: 'Scheherazade New', serif;
+      --font-body: 'Cairo', sans-serif;
+      --color-bg-parchment: #fdfaf3; /* لون الرق أو ورق البردي */
+      --color-surface: #ffffff;
+      --color-ink-primary: #3a2d21; /* لون الحبر الداكن */
+      --color-ink-secondary: #7a6a5d; /* لون الحبر الباهت */
+      --color-hawza-green: #054a29; /* أخضر حوزوي عميق */
+      --color-hawza-green-light: #e6f4ea;
+      --color-gold-accent: #c5a47e; /* ذهبي مطفي للتزيين */
+      --color-gold-hover: #b38f5f;
+      --color-danger: #c0392b; /* أحمر للخطر والحذف */
+      --color-danger-light: #fbebec;
+      --color-border: #e9e4dc; /* لون الحدود الفاصلة */
+      --shadow-soft: 0 4px 12px rgba(58, 45, 33, 0.07);
+      --shadow-medium: 0 8px 25px rgba(58, 45, 33, 0.1);
+      --border-radius: 8px;
+      --transition-main: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-bg-parchment);
+      color: var(--color-ink-primary);
+      margin: 0;
+      line-height: 1.8;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* --- الأدوات المساعدة --- */
+    .hidden { display: none !important; }
+    
+    /* --- شاشة التحميل الرئيسية --- */
+    #master-loader {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(253, 250, 243, 0.9);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 9999; backdrop-filter: blur(4px); transition: opacity 0.4s;
+    }
+    .spinner {
+      border: 5px solid var(--color-gold-accent);
+      border-top-color: var(--color-hawza-green);
+      border-radius: 50%; width: 50px; height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    /* --- نظام التنبيهات (Toast) --- */
+    #toast-container {
+      position: fixed; bottom: 20px; left: 20px; z-index: 10000;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .toast {
+      padding: 15px 20px; border-radius: var(--border-radius);
+      box-shadow: var(--shadow-medium); animation: slideInUp 0.5s ease;
+      font-weight: 600; display: flex; align-items: center; gap: 10px;
+    }
+    .toast.success { background: var(--color-hawza-green); color: white; }
+    .toast.error { background: var(--color-danger); color: white; }
+
+    /* --- شاشة تسجيل الدخول --- */
+    #login-container {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-color: var(--color-bg-parchment);
+      background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Cg fill-rule="evenodd"%3E%3Cg fill="%23e9e4dc" fill-opacity="0.4"%3E%3Cpath opacity=".5" d="M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+      display: flex; justify-content: center; align-items: center;
+      transition: opacity var(--transition-main);
+    }
+    #login-form {
+      background: var(--color-surface); padding: 3rem; text-align: center;
+      border-radius: var(--border-radius); box-shadow: var(--shadow-medium);
+      width: 90%; max-width: 450px; border-top: 5px solid var(--color-hawza-green);
+      animation: fadeInScale 0.6s ease-out;
+    }
+    #login-form .icon-container {
+        font-size: 3rem; color: var(--color-gold-accent); margin-bottom: 0.5rem;
+    }
+    #login-form h1 {
+      font-family: var(--font-title); font-size: 3rem; color: var(--color-hawza-green);
+      margin: 0 0 0.5rem 0;
+    }
+    #login-form .subtitle { font-family: var(--font-body); color: var(--color-ink-secondary); margin-bottom: 2.5rem; }
+    .input-group { position: relative; margin-bottom: 1.25rem; }
+    .input-group i { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); color: var(--color-border); }
+    .input-group input {
+      width: 100%; padding: 12px 45px 12px 15px;
+      border: 1px solid var(--color-border); border-radius: var(--border-radius);
+      font-family: var(--font-body); font-size: 1rem; text-align: right;
+      transition: border-color var(--transition-main), box-shadow var(--transition-main);
+    }
+    .input-group input:focus {
+        border-color: var(--color-gold-accent);
+        box-shadow: 0 0 0 3px rgba(197, 164, 126, 0.2);
+        outline: none;
+    }
+    #login-error { color: var(--color-danger); margin-top: 1rem; font-weight: 600; min-height: 24px; }
+    
+    /* --- الأزرار --- */
+    .btn {
+      padding: 10px 20px; font-family: var(--font-body); font-weight: 700; font-size: 1.1rem;
+      border: none; border-radius: var(--border-radius); cursor: pointer; transition: var(--transition-main);
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none;
+    }
+    .btn-primary { background-color: var(--color-hawza-green); color: white; box-shadow: 0 2px 5px rgba(5, 74, 41, 0.2); }
+    .btn-primary:hover { background-color: #033a20; transform: translateY(-2px); box-shadow: var(--shadow-soft); }
+    .btn-primary:disabled { background-color: #cccccc; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-danger { background-color: var(--color-danger); color: white; }
+    .btn-danger:hover { background-color: #962d22; }
+    .btn-secondary { background-color: var(--color-surface); color: var(--color-ink-primary); border: 1px solid var(--color-border); }
+    .btn-secondary:hover { background-color: var(--color-bg-parchment); }
+
+    /* --- لوحة التحكم --- */
+    #dashboard-container { display: flex; min-height: 100vh; }
+    .sidebar {
+        width: 320px; background-color: var(--color-bg-parchment);
+        border-left: 1px solid var(--color-border); padding: 2rem;
+        display: flex; flex-direction: column; position: fixed; top: 0; right: 0; height: 100vh;
+        overflow-y: auto;
+    }
+    .main-content { margin-right: 320px; flex-grow: 1; padding: 2rem 3rem; background-color: var(--color-surface); }
+    .sidebar-header { text-align: center; padding-bottom: 1.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+    .sidebar-header h2 { font-family: var(--font-title); font-size: 2.8rem; color: var(--color-hawza-green); margin: 0; }
+    .sidebar-header p { font-size: 0.9rem; color: var(--color-ink-secondary); margin: 0; }
+    
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+    .stat-card {
+      background: var(--color-surface); padding: 1.25rem; border-radius: var(--border-radius);
+      border-right: 4px solid var(--color-gold-accent); text-align: right;
+    }
+    .stat-card h3 { margin: 0 0 0.5rem; font-size: 0.9rem; color: var(--color-ink-secondary); font-weight: 600; }
+    .stat-card p { margin: 0; font-size: 2.2rem; font-weight: 700; color: var(--color-ink-primary); line-height: 1.2; }
+    #stat-total-card { grid-column: 1 / -1; } /* الكرت الكبير يمتد على عمودين */
+    
+    .sidebar-section h3 {
+        font-family: var(--font-title); font-size: 1.6rem; color: var(--color-hawza-green);
+        margin-bottom: 1rem; border-bottom: 1px solid var(--color-border);
+        padding-bottom: 0.5rem; display: flex; align-items: center; gap: 10px;
+    }
+    #tags-filter-list { list-style: none; padding: 0; }
+    #tags-filter-list li {
+      padding: 10px 15px; margin-bottom: 5px; border-radius: var(--border-radius);
+      cursor: pointer; transition: var(--transition-main);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    #tags-filter-list li:hover { background-color: var(--color-hawza-green-light); }
+    #tags-filter-list li.active { background-color: var(--color-gold-accent); color: white; font-weight: 700; }
+    #tags-filter-list li .count { font-size: 0.9rem; opacity: 0.7; }
+    
+    .sidebar-footer { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--color-border); }
+
+    .main-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .main-header h1 { font-family: var(--font-title); font-size: 3.5rem; color: var(--color-hawza-green); margin: 0; }
+    
+    .filter-controls {
+      display: flex; gap: 1rem; align-items: center; background-color: var(--color-bg-parchment);
+      padding: 1rem; border-radius: var(--border-radius); margin-bottom: 2rem; border: 1px solid var(--color-border);
+    }
+    .search-bar { position: relative; flex-grow: 1; }
+    .search-bar input {
+        width: 100%; padding: 12px 45px 12px 15px; border: 1px solid var(--color-border);
+        border-radius: var(--border-radius); font-size: 1rem;
+    }
+    .search-bar .fa-search { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); color: var(--color-ink-secondary); }
+
+    /* --- بطاقة المسألة --- */
+    .question-card {
+      border: 1px solid var(--color-border); margin-bottom: 1.5rem;
+      border-radius: var(--border-radius); box-shadow: var(--shadow-soft);
+      transition: all var(--transition-main); position: relative;
+      overflow: hidden; background: white;
+    }
+    .question-card:hover { box-shadow: var(--shadow-medium); transform: translateY(-5px); }
+    .card-content { padding: 1.5rem 2rem; }
+    .card-status-bar {
+      width: 6px; position: absolute; top: 0; right: 0; bottom: 0;
+      transition: background-color var(--transition-main);
+    }
+    .question-card.unanswered .card-status-bar { background-color: var(--color-danger); }
+    .question-card.answered .card-status-bar { background-color: var(--color-hawza-green); }
+    
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 10px;}
+    .card-meta { color: var(--color-ink-secondary); font-size: 0.9rem; display: flex; align-items: center; gap: 15px; }
+    .card-meta span { display: flex; align-items: center; gap: 5px; }
+    .status-badge {
+      padding: 3px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;
+    }
+    .status-badge.answered { background-color: var(--color-hawza-green-light); color: var(--color-hawza-green); }
+    .status-badge.unanswered { background-color: var(--color-danger-light); color: var(--color-danger); }
+
+    .card-actions .btn { padding: 6px 12px; font-size: 0.9rem; font-weight: 600; }
+    .question-body { font-size: 1.25rem; margin-bottom: 1rem; line-height: 1.9; white-space: pre-wrap; word-wrap: break-word; }
+    .search-highlight { background-color: #fff2b2; color: black; }
+    .card-tags { display: flex; gap: 8px; margin-top: 1.5rem; flex-wrap: wrap; }
+    .tag { background-color: #f1f1f1; color: var(--color-ink-secondary); padding: 4px 12px; border-radius: 15px; font-size: 0.85rem; font-weight: 600; }
+    .answer-display { margin-top: 1rem; padding: 1.5rem; background: var(--color-bg-parchment); border-radius: var(--border-radius); border-right: 3px solid var(--color-hawza-green); }
+    .answer-display strong { color: var(--color-hawza-green); font-family: var(--font-title); font-size: 1.2rem; }
+    .answer-display-content {
+        max-height: 100px; overflow: hidden; position: relative;
+        color: var(--color-ink-secondary);
+    }
+    .answer-display-content::after {
+        content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40px;
+        background: linear-gradient(to top, var(--color-bg-parchment), transparent);
+    }
+
+    /* --- النافذة المنبثقة (Modal) --- */
+    .modal-backdrop {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(58, 45, 33, 0.6); backdrop-filter: blur(5px);
+      display: flex; justify-content: center; align-items: flex-start; /* للسماح بالتمرير */
+      z-index: 5000; animation: fadeIn 0.3s; overflow-y: auto; padding: 2rem 0;
+    }
+    .modal-content {
+      background: var(--color-surface); padding: 0; border-radius: var(--border-radius);
+      width: 90%; max-width: 800px; box-shadow: var(--shadow-medium);
+      border-top: 5px solid var(--color-gold-accent); animation: fadeInScale 0.4s ease-out;
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding: 1.5rem 2rem; }
+    .modal-header h3 { font-family: var(--font-title); font-size: 2.2rem; color: var(--color-hawza-green); margin: 0; }
+    .close-modal-btn { background:none; border:none; font-size: 2rem; cursor:pointer; color: var(--color-ink-secondary); transition: color var(--transition-main); }
+    .close-modal-btn:hover { color: var(--color-ink-primary); }
+    .modal-body { padding: 2rem; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.75rem; display: block; color: var(--color-ink-primary); }
+    .form-group input, .form-group textarea {
+      width: 100%; padding: 12px; border-radius: var(--border-radius); border: 1px solid var(--color-border);
+      font-family: var(--font-body); font-size: 1rem; transition: border-color var(--transition-main), box-shadow var(--transition-main);
+    }
+    .form-group input:focus, .form-group textarea:focus {
+        border-color: var(--color-gold-accent); box-shadow: 0 0 0 3px rgba(197, 164, 126, 0.2); outline: none;
+    }
+    .modal-actions {
+        padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center;
+        gap: 1rem; background-color: var(--color-bg-parchment);
+        border-top: 1px solid var(--color-border); border-bottom-left-radius: var(--border-radius); border-bottom-right-radius: var(--border-radius);
+    }
+    .quill-editor-container .ql-editor { min-height: 250px; font-family: var(--font-body); font-size: 1rem; line-height: 1.8; }
+
+    /* --- تصميم متجاوب --- */
+    @media (max-width: 992px) {
+      .sidebar { position: static; width: 100%; height: auto; border-left: none; border-bottom: 2px solid var(--color-border); }
+      .main-content { margin-right: 0; padding: 1.5rem; }
+      .main-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      #dashboard-container { flex-direction: column; }
+    }
+    
+    /* --- حركات الأنيميشن --- */
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeInScale { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    @keyframes slideInUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  </style>
+</head>
+<body>
+
+  <div id="master-loader">
+    <div class="spinner"></div>
+  </div>
+
+  <div id="toast-container"></div>
+  
+  <div id="login-container">
+    <form id="login-form">
+      <div class="icon-container"><i class="fas fa-mosque"></i></div>
+      <h1>ديوان المراجعات</h1>
+      <p class="subtitle">لوحة التحكم الخاصة بمشروع نور الحوزة</p>
+      
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <input type="text" id="username-input" placeholder="اسم المستخدم" required autocomplete="username">
+      </div>
+      
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="password-input" placeholder="مفتاح الدخول" required autocomplete="current-password">
+      </div>
+      
+      <div id="login-error"></div>
+      
+      <button type="submit" id="login-button" class="btn btn-primary" style="width: 100%; padding: 14px;">
+        <i class="fas fa-sign-in-alt"></i> بسم الله، دخول
+      </button>
+    </form>
+  </div>
+
+  <main id="dashboard-container" class="hidden">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>نور الحوزة</h2>
+            <p>ديوان المسائل والمراجعات</p>
+        </div>
+        
+        <div class="sidebar-section">
+            <h3><i class="fas fa-chart-pie"></i> إحصائيات الديوان</h3>
+            <div class="stats-grid">
+                <div class="stat-card" id="stat-total-card"><h3>إجمالي المسائل</h3><p id="stat-total">0</p></div>
+                <div class="stat-card" style="border-right-color: var(--color-hawza-green)"><h3>تمت الإجابة</h3><p id="stat-answered">0</p></div>
+                <div class="stat-card" style="border-right-color: var(--color-danger)"><h3>قيد المراجعة</h3><p id="stat-unanswered">0</p></div>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <h3><i class="fas fa-tags"></i> التصنيفات</h3>
+            <ul id="tags-filter-list">
+                </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <button id="logout-btn" class="btn btn-danger" style="width: 100%;">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </button>
+        </div>
+    </aside>
+
+    <section class="main-content">
+        <div class="main-header">
+            <h1><i class="fas fa-scroll" style="opacity: 0.5;"></i> ديوان المسائل</h1>
+            <button id="add-new-question-btn" class="btn btn-primary"><i class="fas fa-plus"></i> إضافة مسألة جديدة</button>
+        </div>
+        
+        <div class="filter-controls">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="ابحث في نص المسألة، الجواب، المصدر أو التصنيف...">
+            </div>
+        </div>
+        
+        <div id="questions-list">
+            </div>
+    </section>
+  </main>
+
+  <div id="edit-modal-container" class="modal-backdrop hidden">
+    <div class="modal-content">
+        <form id="edit-form" novalidate>
+            <input type="hidden" id="edit-id-input">
+            <div class="modal-header">
+                <h3 id="modal-title">تحرير المسألة</h3>
+                <button type="button" class="close-modal-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="edit-question-input">نص المسألة (مطلوب)</label>
+                    <textarea id="edit-question-input" rows="4" required></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                    <div style="flex:1; min-width: 250px;" class="form-group">
+                        <label for="edit-source-input">المصدر (اختياري)</label>
+                        <input type="text" id="edit-source-input" placeholder="مثال: بحار الأنوار، ج52، ص123">
+                    </div>
+                    <div style="flex:1; min-width: 250px;" class="form-group">
+                        <label for="edit-tags-input">التصنيفات (مفصولة بفاصلة)</label>
+                        <input type="text" id="edit-tags-input" placeholder="عقائد, فقه, شبهات">
+                    </div>
+                </div>
+       
+                <div class="form-group">
+                    <label for="quill-editor-container">الجواب</label>
+                    <div id="quill-editor-container" class="quill-editor-container"></div>
+                    <small id="draft-status" style="color: var(--color-ink-secondary); margin-top: 8px; display: block; min-height: 1em;"></small>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="delete-btn" class="btn btn-danger">
+                    <i class="fas fa-trash-alt"></i> حذف
+                </button>
+                <div>
+                    <button type="button" class="close-modal-btn btn btn-secondary">إلغاء</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ التغييرات</button>
+                </div>
+            </div>
+        </form>
+    </div>
+  </div>
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<script>
+// ✨ كود JavaScript مُحدّث بالكامل مع إصلاح الخلل وإضافة الميزات الجديدة
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // ----- الطبقة الأولى: خدمة الاتصال بالخادم (ApiService) -----
+    class ApiService {
+        constructor(baseURL = '/') { this.baseURL = baseURL; }
+
+        async request(endpoint, options = {}) {
+            const url = this.baseURL + endpoint;
+            const config = {
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                ...options,
+            };
+            if (config.body) config.body = JSON.stringify(config.body);
+            try {
+                const response = await fetch(url, config);
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || `خطأ في الخادم برمز الحالة ${response.status}`);
+                return data;
+            } catch (error) {
+                console.error(`API Error on ${endpoint}:`, error);
+                throw new Error(error.message || "خطأ في الاتصال بالشبكة.");
+            }
+        }
+        
+        checkStatus() { return this.request('admin/status'); }
+        // ✨ تحديث: إرسال اسم المستخدم وكلمة المرور
+        login(username, password) { return this.request('admin/login', { method: 'POST', body: { username, password } }); }
+        logout() { return this.request('admin/logout', { method: 'POST' }); }
+        getQuestions() { return this.request('admin/questions'); }
+        addQuestion(data) { return this.request('admin/question', { method: 'POST', body: data }); }
+        updateQuestion(id, data) { return this.request(`admin/question/${id}`, { method: 'PUT', body: data }); }
+        deleteQuestion(id) { return this.request(`admin/question/${id}`, { method: 'DELETE' }); }
+    }
+
+    // ----- الطبقة الثانية: خدمة إدارة الحالة (StateService) -----
+    class StateService {
+        constructor() {
+            this._state = {
+                questions: [],
+                searchTerm: '',
+                activeTag: 'all',
+                allTags: new Set(),
+            };
+        }
+        
+        get state() { return this._state; }
+        
+        setQuestions(questions) {
+            this._state.questions = questions.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+            this.updateTags();
+        }
+
+        updateQuestion(updatedQuestion) {
+            const index = this._state.questions.findIndex(q => q.id === updatedQuestion.id);
+            if (index !== -1) {
+                this._state.questions[index] = updatedQuestion;
+            } else {
+                this._state.questions.unshift(updatedQuestion);
+            }
+            this._state.questions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            this.updateTags();
+        }
+
+        removeQuestion(id) {
+            // ✅ الإصلاح: المقارنة الآن كنص (string) وهي صحيحة
+            this._state.questions = this._state.questions.filter(q => q.id !== id);
+            this.updateTags();
+        }
+
+        updateTags() {
+            this._state.allTags.clear();
+            this._state.questions.forEach(q => {
+                if (q.tags && Array.isArray(q.tags)) {
+                    q.tags.forEach(tag => this._state.allTags.add(tag));
+                }
+            });
+        }
+        
+        getFilteredQuestions() {
+            const { questions, activeTag, searchTerm } = this._state;
+            const term = searchTerm.toLowerCase().trim();
+
+            return questions
+                .filter(q => {
+                    if (activeTag === 'all') return true;
+                    if (activeTag === '__unanswered') return !q.answer || q.answer.trim() === '';
+                    return (q.tags && q.tags.includes(activeTag));
+                })
+                .filter(q => {
+                    if (!term) return true;
+                    const answerText = q.answer ? new DOMParser().parseFromString(q.answer, "text/html").body.textContent.toLowerCase() : '';
+                    return (
+                        q.question.toLowerCase().includes(term) ||
+                        answerText.includes(term) ||
+                        (q.source && q.source.toLowerCase().includes(term)) ||
+                        (q.tags && q.tags.some(tag => tag.toLowerCase().includes(term)))
+                    );
+                });
+        }
+    }
+
+    // ----- الطبقة الثالثة: متحكم واجهة المستخدم (UIController) -----
+    class UIController {
+        constructor() {
+            this.dom = {
+                loader: document.getElementById('master-loader'),
+                toastContainer: document.getElementById('toast-container'),
+                login: {
+                    container: document.getElementById('login-container'),
+                    form: document.getElementById('login-form'),
+                    usernameInput: document.getElementById('username-input'), // ✨ جديد
+                    passwordInput: document.getElementById('password-input'),
+                    errorMsg: document.getElementById('login-error'),
+                    button: document.getElementById('login-button'),
+                },
+                dashboard: {
+                    container: document.getElementById('dashboard-container'),
+                    logoutBtn: document.getElementById('logout-btn'),
+                    addNewBtn: document.getElementById('add-new-question-btn'),
+                    stats: {
+                        total: document.getElementById('stat-total'),
+                        answered: document.getElementById('stat-answered'),
+                        unanswered: document.getElementById('stat-unanswered'),
+                    },
+                    tagsFilterList: document.getElementById('tags-filter-list'),
+                    searchInput: document.getElementById('search-input'),
+                    questionsList: document.getElementById('questions-list'),
+                },
+                modal: {
+                    container: document.getElementById('edit-modal-container'),
+                    form: document.getElementById('edit-form'),
+                    title: document.getElementById('modal-title'),
+                    idInput: document.getElementById('edit-id-input'),
+                    questionInput: document.getElementById('edit-question-input'),
+                    sourceInput: document.getElementById('edit-source-input'),
+                    tagsInput: document.getElementById('edit-tags-input'),
+                    deleteBtn: document.getElementById('delete-btn'),
+                    draftStatus: document.getElementById('draft-status'),
+                    closeBtns: document.querySelectorAll('.close-modal-btn'),
+                }
+            };
+            this.quill = this.initQuill();
+            this.draftSaveInterval = null;
+        }
+
+        initQuill() {
+            return new Quill('#quill-editor-container', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, false] }], ['bold', 'italic', 'underline'],
+                        [{'list': 'ordered'}, {'list': 'bullet'}], [{'align': []}],
+                        ['link', 'blockquote', 'code-block'], ['clean']
+                    ]
+                }
+            });
+        }
+
+        toggleLoader(show) { this.dom.loader.style.opacity = show ? '1' : '0'; this.dom.loader.style.pointerEvents = show ? 'all' : 'none'; }
+        
+        showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${message}`;
+            this.dom.toastContainer.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        renderDashboard(state) {
+            this.renderStats(state.questions);
+            this.renderTags(state.allTags, state.activeTag, state.questions);
+            this.renderQuestions(state.getFilteredQuestions(), state.searchTerm);
+        }
+        
+        renderStats(questions) {
+            const total = questions.length;
+            const answered = questions.filter(q => q.answer && q.answer.trim() !== '').length;
+            this.dom.dashboard.stats.total.textContent = total;
+            this.dom.dashboard.stats.answered.textContent = answered;
+            this.dom.dashboard.stats.unanswered.textContent = total - answered;
+        }
+        
+        renderTags(tags, activeTag, questions) {
+            const list = this.dom.dashboard.tagsFilterList;
+            const unansweredCount = questions.filter(q => !q.answer || q.answer.trim() === '').length;
+
+            list.innerHTML = `
+                <li data-tag="all" class="${activeTag === 'all' ? 'active' : ''}">
+                    <span><i class="fas fa-layer-group"></i> الكل</span> <span class="count">${questions.length}</span>
+                </li>
+                <li data-tag="__unanswered" class="${activeTag === '__unanswered' ? 'active' : ''}">
+                    <span><i class="fas fa-hourglass-half"></i> قيد المراجعة</span> <span class="count">${unansweredCount}</span>
+                </li>`;
+            
+            const sortedTags = Array.from(tags).sort();
+            sortedTags.forEach(tag => {
+                const tagCount = questions.filter(q => q.tags && q.tags.includes(tag)).length;
+                const li = document.createElement('li');
+                li.dataset.tag = tag;
+                li.innerHTML = `<span><i class="fas fa-tag fa-xs"></i> ${tag}</span> <span class="count">${tagCount}</span>`;
+                if (tag === activeTag) li.classList.add('active');
+                list.appendChild(li);
+            });
+        }
+
+        renderQuestions(questions, searchTerm) {
+            const list = this.dom.dashboard.questionsList;
+            list.innerHTML = '';
+            if (questions.length === 0) {
+                list.innerHTML = `<p style="text-align:center; padding: 4rem; color: var(--color-ink-secondary);"><i class="fas fa-box-open fa-2x" style="display:block; margin-bottom:1rem;"></i>لا توجد مسائل تطابق معايير البحث الحالية.</p>`;
+                return;
+            }
+            questions.forEach(q => list.appendChild(this.createQuestionCard(q, searchTerm)));
+        }
+
+        createQuestionCard(q, searchTerm) {
+            const card = document.createElement('div');
+            const isAnswered = q.answer && q.answer.trim() !== '';
+            card.className = `question-card ${isAnswered ? 'answered' : 'unanswered'}`;
+            // ✅ الإصلاح: استخدام `q.id` مباشرة كنص (string)
+            card.dataset.id = q.id;
+
+            const escapeHtml = (unsafe) => unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            
+            const highlight = (text) => {
+                if (!searchTerm || !text) return escapeHtml(text || '');
+                const escapedTerm = escapeHtml(searchTerm).replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+                const regex = new RegExp(`(${escapedTerm})`, 'gi');
+                return escapeHtml(text).replace(regex, `<span class="search-highlight">$1</span>`);
+            };
+
+            const tagsHTML = (q.tags || []).map(tag => `<span class="tag">${highlight(tag)}</span>`).join('');
+            const date = new Date(q.date).toLocaleDateString('ar-EG-u-nu-latn', { day: 'numeric', month: 'long', year: 'numeric' });
+            const answerExcerpt = isAnswered ? new DOMParser().parseFromString(q.answer, "text/html").body.textContent || '' : '';
+
+            card.innerHTML = `
+                <div class="card-status-bar"></div>
+                <div class="card-content">
+                    <div class="card-header">
+                        <div class="card-meta">
+                            <span><i class="fas fa-calendar-alt"></i> ${date}</span>
+                            <span class="status-badge ${isAnswered ? 'answered' : 'unanswered'}">
+                                <i class="fas ${isAnswered ? 'fa-check-circle' : 'fa-pen-nib'}"></i>
+                                ${isAnswered ? 'تمت الإجابة' : 'قيد المراجعة'}
+                            </span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary btn-sm edit-btn"><i class="fas fa-edit"></i> تحرير</button>
+                        </div>
+                    </div>
+                    <div class="question-body">${highlight(q.question)}</div>
+                    ${q.source ? `<p class="card-meta" style="font-size: 1rem;"><i class="fas fa-book-open"></i>&nbsp;<strong>المصدر:</strong> ${highlight(q.source)}</p>` : ''}
+                    ${tagsHTML ? `<div class="card-tags">${tagsHTML}</div>` : ''}
+                    ${isAnswered ? `<div class="answer-display">
+                        <strong><i class="fas fa-feather-alt"></i> خلاصة الجواب:</strong> 
+                        <div class="answer-display-content">${escapeHtml(answerExcerpt)}</div>
+                    </div>` : ''}
+                </div>`;
+            return card;
+        }
+        
+        showLogin() { this.dom.login.container.classList.remove('hidden'); this.dom.dashboard.container.classList.add('hidden'); this.toggleLoader(false); }
+        showDashboard() { this.dom.login.container.classList.add('hidden'); this.dom.dashboard.container.classList.remove('hidden'); }
+
+        openModal(question) {
+            const isNew = !question;
+            this.dom.modal.form.reset();
+            this.dom.modal.title.textContent = isNew ? 'إضافة مسألة جديدة' : 'تحرير المسألة';
+            // ✅ الإصلاح: التعامل مع الـ ID كنص (string)
+            this.dom.modal.idInput.value = isNew ? '' : question.id;
+            this.dom.modal.questionInput.value = isNew ? '' : question.question;
+            this.dom.modal.sourceInput.value = isNew ? '' : (question.source || '');
+            this.dom.modal.tagsInput.value = isNew ? '' : (question.tags || []).join(', ');
+            this.quill.root.innerHTML = isNew ? '' : (question.answer || '');
+            this.dom.modal.deleteBtn.style.display = isNew ? 'none' : 'inline-flex';
+            this.dom.modal.container.classList.remove('hidden');
+            this.handleDrafts(isNew ? `new_question` : question.id);
+        }
+
+        closeModal() {
+            this.dom.modal.container.classList.add('hidden');
+            clearInterval(this.draftSaveInterval);
+            this.draftSaveInterval = null;
+            this.dom.modal.draftStatus.textContent = '';
+        }
+
+        handleDrafts(draftId) {
+            if (this.draftSaveInterval) clearInterval(this.draftSaveInterval);
+            const draftKey = `draft_${draftId}`;
+            const savedDraft = localStorage.getItem(draftKey);
+            if (savedDraft) {
+                try {
+                    const draftContent = JSON.parse(savedDraft);
+                    if (confirm("يوجد مسودة محفوظة لهذه المسألة. هل تود استعادتها؟")) {
+                        this.quill.root.innerHTML = draftContent.answer || '';
+                        this.dom.modal.questionInput.value = draftContent.question || '';
+                        this.dom.modal.sourceInput.value = draftContent.source || '';
+                        this.dom.modal.tagsInput.value = draftContent.tags || '';
+                    }
+                } catch(e) { console.error("Failed to parse draft", e); localStorage.removeItem(draftKey); }
+            }
+            this.draftSaveInterval = setInterval(() => {
+                const currentContent = {
+                    answer: this.quill.root.innerHTML,
+                    question: this.dom.modal.questionInput.value,
+                    source: this.dom.modal.sourceInput.value,
+                    tags: this.dom.modal.tagsInput.value
+                };
+                localStorage.setItem(draftKey, JSON.stringify(currentContent));
+                this.dom.modal.draftStatus.textContent = `تم حفظ المسودة في ${new Date().toLocaleTimeString('ar')}`;
+            }, 10000);
+        }
+
+        clearDraft(draftId) { if (draftId) localStorage.removeItem(`draft_${draftId}`); }
+    }
+    
+    // ----- الطبقة الرابعة: متحكم التطبيق الرئيسي (AppController) -----
+    class AppController {
+        constructor() {
+            this.api = new ApiService();
+            this.state = new StateService();
+            this.ui = new UIController();
+            this.init();
+        }
+
+        init() {
+            this.ui.toggleLoader(true);
+            this.bindEvents();
+            this.checkSession();
+        }
+
+        bindEvents() {
+            this.ui.dom.login.form.addEventListener('submit', (e) => this.handleLogin(e));
+            this.ui.dom.dashboard.logoutBtn.addEventListener('click', () => this.handleLogout());
+            this.ui.dom.dashboard.addNewBtn.addEventListener('click', () => this.ui.openModal(null));
+            this.ui.dom.modal.closeBtns.forEach(btn => btn.addEventListener('click', () => this.ui.closeModal()));
+            this.ui.dom.modal.form.addEventListener('submit', (e) => this.handleFormSubmit(e));
+            this.ui.dom.modal.deleteBtn.addEventListener('click', () => this.handleDelete());
+            
+            this.ui.dom.dashboard.questionsList.addEventListener('click', e => {
+                const editBtn = e.target.closest('.edit-btn');
+                if (editBtn) {
+                    const card = e.target.closest('.question-card');
+                    // ✅ الإصلاح: البحث يتم الآن باستخدام النص مباشرة، بدون تحويل
+                    const question = this.state.state.questions.find(q => q.id === card.dataset.id);
+                    if(question) this.ui.openModal(question);
+                }
+            });
+
+            this.ui.dom.dashboard.searchInput.addEventListener('input', e => {
+                this.state.state.searchTerm = e.target.value;
+                this.ui.renderQuestions(this.state.getFilteredQuestions(), this.state.state.searchTerm);
+            });
+
+            this.ui.dom.dashboard.tagsFilterList.addEventListener('click', e => {
+                const tagElement = e.target.closest('li');
+                if(tagElement) {
+                    this.state.state.activeTag = tagElement.dataset.tag;
+                    this.ui.renderDashboard(this.state);
+                }
+            });
+        }
+
+        async checkSession() {
+            try {
+                await this.api.checkStatus();
+                this.ui.showDashboard();
+                await this.fetchData();
+            } catch (error) {
+                this.ui.showLogin();
+            }
+        }
+
+        async handleLogin(e) {
+            e.preventDefault();
+            this.ui.dom.login.button.disabled = true;
+            this.ui.dom.login.errorMsg.textContent = '';
+            // ✨ تحديث: الحصول على اسم المستخدم وكلمة المرور
+            const username = this.ui.dom.login.usernameInput.value;
+            const password = this.ui.dom.login.passwordInput.value;
+            try {
+                // ✨ تحديث: إرسال اسم المستخدم وكلمة المرور
+                await this.api.login(username, password);
+                this.ui.toggleLoader(true);
+                await this.checkSession();
+            } catch (error) {
+                this.ui.dom.login.errorMsg.textContent = error.message;
+            } finally {
+                this.ui.dom.login.button.disabled = false;
+            }
+        }
+
+        async handleLogout() {
+            this.ui.toggleLoader(true);
+            try {
+                await this.api.logout();
+                this.state.setQuestions({data: []});
+                this.ui.showLogin();
+            } catch (error) {
+                this.ui.showToast(error.message, 'error');
+                this.ui.toggleLoader(false);
+            }
+        }
+
+        async fetchData() {
+            this.ui.toggleLoader(true);
+            try {
+                const questionsData = await this.api.getQuestions();
+                this.state.setQuestions(questionsData);
+                this.ui.renderDashboard(this.state);
+            } catch(error) {
+                this.ui.showToast(error.message, 'error');
+            } finally {
+                this.ui.toggleLoader(false);
+            }
+        }
+        
+        async handleFormSubmit(e) {
+            e.preventDefault();
+            // ✅ الإصلاح: `id` الآن هو نص (string)
+            const id = this.ui.dom.modal.idInput.value;
+            const data = {
+                question: this.ui.dom.modal.questionInput.value,
+                source: this.ui.dom.modal.sourceInput.value,
+                tags: this.ui.dom.modal.tagsInput.value.split(',').map(t => t.trim()).filter(Boolean),
+                answer: this.ui.quill.root.innerHTML === '<p><br></p>' ? '' : this.ui.quill.root.innerHTML
+            };
+
+            if (!data.question) {
+                this.ui.showToast("نص المسألة لا يمكن أن يكون فارغًا.", "error"); return;
+            }
+            
+            this.ui.toggleLoader(true);
+            try {
+                // ✅ الإصلاح: إرسال الـ`id` كنص (string)
+                const response = id ? await this.api.updateQuestion(id, data) : await this.api.addQuestion(data);
+                this.state.updateQuestion(response.data);
+                this.ui.renderDashboard(this.state);
+                this.ui.closeModal();
+                this.ui.clearDraft(id || 'new_question');
+                this.ui.showToast("تم حفظ المسألة بنجاح.", "success");
+            } catch(error) {
+                this.ui.showToast(error.message, 'error');
+            } finally {
+                this.ui.toggleLoader(false);
+            }
+        }
+
+        async handleDelete() {
+            // ✅ الإصلاح: `id` الآن هو نص (string)
+            const id = this.ui.dom.modal.idInput.value;
+            if (!id || !confirm("هل أنت متأكد من رغبتك في حذف هذه المسألة؟ لا يمكن التراجع عن هذا الإجراء.")) return;
+
+            this.ui.toggleLoader(true);
+            try {
+                // ✅ الإصلاح: إرسال الـ`id` كنص (string)
+                await this.api.deleteQuestion(id);
+                this.state.removeQuestion(id);
+                this.ui.renderDashboard(this.state);
+                this.ui.closeModal();
+                this.ui.clearDraft(id);
+                this.ui.showToast("تم حذف المسألة بنجاح.", "success");
+            } catch (error) {
+                this.ui.showToast(error.message, "error");
+            } finally {
+                this.ui.toggleLoader(false);
+            }
+        }
+    }
+
+    // بدء تشغيل التطبيق
+    new AppController();
+});
+</script>
+</body>
+</html>
