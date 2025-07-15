@@ -9,21 +9,17 @@
   <meta name="google-site-verification" content="IzJ7mDEiFfZxIkt5Akqq6fa7VvqQCVgV7JG1O3NvQr4">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>نور الحوزة - صوت العالم بين يديك</title>
-  <meta name="google-site-verification" content="IzJ7mDEiFfZxIkt5Akqq6fa7VvqQCVgV7JG1O3NvQr4">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&amp;family=Amiri:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-<!-- صورة الأيقونة الصغيرة (favicon) -->
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   
-<!-- صورة تظهر عند مشاركة الرابط على فيسبوك وتويتر وما إلى ذلك -->
 <meta property="og:image" content="https://hawza.netlify.app/Icon.png">
 <meta property="og:title" content="نور الحوزة - صوت العالم بين يديك">
 <meta property="og:description" content="منبر رقمي ينقل نفحات الحوزة العلمية الإمامية، يقدم المعارف الشرعية بلغة معاصرة وأسلوب حوزوي رصين، خادمٌ للتراث، وجسرٌ إلى وعيٍ متجدد.">
 <meta property="og:url" content="https://hawza.netlify.app">
 <meta name="twitter:card" content="summary_large_image">
-<!-- الوصف والصورة العامة للموقع (لجميع المنصات) -->
 <meta property="og:title" content="نور الحوزة - صوت العالم بين يديك">
 <meta property="og:description" content="نموذج ذكاء اصطناعي حواري حوزوي، يجيبك بأمانة عن الفقه والعقائد والتفسير، من نور تراث أهل البيت عليهم السلام.">
 <meta property="og:image" content="https://hawza.netlify.app/Icon.png">
@@ -34,7 +30,6 @@
 
 <meta name="google-site-verification" content="fx2NZONc9QQ5Aix1Pi9Yf4Xs6dEIymRuKJXnAp1NAFE" />
   
-<!-- دعم Twitter (ويدعمه تيليجرام والإنستغرام جزئياً) -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="نور الحوزة - نموذج ذكاء اصطناعي حوزوي">
 <meta name="twitter:description" content="يجيبك في الفقه والعقائد وتفسير القرآن من كتب العلماء المعتبرة.">
@@ -42,7 +37,6 @@
 <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://hawza.netlify.app/">
 
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-VRQCEF4DZF"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -58,8 +52,8 @@
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "ro0e5w8yvs");
-  </script>
-  
+</script>
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -80,8 +74,9 @@
   "description": "نموذج حواري حوزوي إمامي يعتمد على الذكاء الاصطناعي لتقديم أجوبة دقيقة في الفقه والعقيدة والتفسير.",
   "url": "https://hawza.netlify.app"
 }
-  <link rel="icon" href="Icon.png" type="image/png">
 </script>
+
+<link rel="icon" href="Icon.png" type="image/png">
   
   <style>
     /*
@@ -378,6 +373,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap; /* للسماح بالالتفاف في الشاشات الصغيرة */
+      gap: 1rem;
     }
 
     header h1 {
@@ -393,13 +390,22 @@
       font-size: 0.95rem;
       /* حقوق محفوظة، لكن العلم مشاع لمن طلبه. */
     }
+    
+    footer .footer-buttons {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
 
     .btn { /* فئة عامة للأزرار */
       padding: 0.8rem 1.6rem;
       border-radius: var(--border-radius-medium);
       font-weight: 600; /* زيادة سماكة الخط */
       transition: transform var(--transition-medium), background-color var(--transition-medium), color var(--transition-medium), box-shadow var(--transition-medium);
-      display: inline-block; /* للسماح بالهوامش والتحويلات */
+      display: inline-flex; /* للسماح بالهوامش والتحويلات ومحاذاة الأيقونة */
+      align-items: center;
+      gap: 0.6rem;
       border: none;
       cursor: pointer;
       text-align: center;
@@ -418,6 +424,18 @@
       transform: translateY(-3px) scale(1.03); /* حركة طفيفة للأعلى مع تكبير */
       box-shadow: var(--shadow-medium);
     }
+    
+    .btn-telegram {
+        background-color: #0088cc; /* لون تيليجرام */
+        color: white;
+        box-shadow: var(--shadow-soft);
+    }
+    .btn-telegram:hover, .btn-telegram:focus {
+        background-color: #0077b5;
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: var(--shadow-medium);
+    }
+
 
     /* مقدمة الموقع: لمسة من الأناقة والترحيب */
     .intro {
@@ -790,6 +808,69 @@
       box-shadow: 0 6px 15px rgba(0,0,0,0.3);
     }
 
+    /* =========== قسم تيليجرام الجديد =========== */
+    .telegram-section {
+      background: linear-gradient(to top right, var(--clr-bg-card), #eef2f3);
+      padding: 3.5rem 1rem;
+      border-radius: var(--border-radius-large);
+      text-align: center;
+      box-shadow: var(--shadow-medium);
+      border: 1px solid #e0e0e0;
+    }
+
+    .telegram-section .telegram-content {
+      max-width: 750px;
+      margin: 0 auto;
+    }
+
+    .telegram-section .telegram-icon {
+      font-size: 4rem;
+      color: #0088cc; /* لون تيليجرام */
+      margin-bottom: 1rem;
+      display: block;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    /* إعادة تعيين أنماط H2 الخاصة بالأقسام الأخرى */
+    .telegram-section h2 {
+      color: var(--clr-primary-darker);
+    }
+    .telegram-section h2::before,
+    .telegram-section h2::after {
+      display: none;
+    }
+
+    .telegram-section p {
+      font-size: 1.15rem;
+      color: var(--clr-text-secondary);
+      line-height: 1.9;
+      margin-bottom: 2rem;
+    }
+
+    .btn-telegram-section {
+      background-color: #0088cc;
+      color: #fff;
+      padding: 0.9rem 2.2rem;
+      border-radius: var(--border-radius-medium);
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: transform var(--transition-medium), background-color var(--transition-medium), box-shadow var(--transition-medium);
+      box-shadow: 0 4px 10px rgba(0, 136, 204, 0.3);
+    }
+
+    .btn-telegram-section:hover {
+      background-color: #0077b5;
+      transform: translateY(-4px);
+      box-shadow: 0 6px 15px rgba(0, 136, 204, 0.4);
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    /* =========== نهاية قسم تيليجرام =========== */
+
     /* الخاتمة: مسك الختام */
     .conclusion {
       background: var(--clr-bg-card);
@@ -867,11 +948,11 @@
       header h1 {
         margin-bottom: 1rem; /* مسافة إذا كان العنوان والزر تحت بعض */
       }
-      header .nav, footer .nav {
+      footer .nav {
         flex-direction: column;
-        gap: 1rem; /* مسافة بين العناصر عند التكدس */
+        justify-content: center;
       }
-      .intro, .card, .accordion .header, .accordion .body.open, .example, .survey, .conclusion {
+      .intro, .card, .accordion .header, .accordion .body.open, .example, .survey, .conclusion, .telegram-section {
           padding: 1.8rem; /* تقليل الحشوة قليلاً على الشاشات الأصغر */
       }
       section h2 {
@@ -897,11 +978,19 @@
         .container {
             width: 95%;
         }
-        .intro, .card, .accordion .header, .accordion .body.open, .example, .survey, .conclusion {
+        .intro, .card, .accordion .header, .accordion .body.open, .example, .survey, .conclusion, .telegram-section {
             padding: 1.5rem;
         }
         header h1 {
             font-size: clamp(1.8rem, 6vw, 2.4rem);
+        }
+        footer .footer-buttons {
+          flex-direction: column;
+          width: 100%;
+        }
+        footer .footer-buttons .btn {
+          width: 100%;
+          justify-content: center;
         }
     }
 
@@ -921,8 +1010,7 @@
 </head>
 <body>
 
-  <!-- شاشة ترحيب علمائية -->
-<div id="preloader" class="preloader">
+  <div id="preloader" class="preloader">
   <div class="preloader-content">
     <h1 class="basmala">بِسْمِ ٱللّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</h1>
     <p class="welcome-text">
@@ -1018,7 +1106,8 @@
         <li><a href="about.html" class="nav-link "><i class="fas fa-users"></i> مَنْ نحن</a></li>
         <li><a href="masadir.html" class="nav-link "><i class="fas fa-book-open"></i> مصادرنا</a></li>
         <li><a href="faq.html" class="nav-link"><i class="fas fa-circle-question"></i> الأسئلة الشائعة</a></li>
-        <li><a href="questions.html" class="nav-link"><i class="fas fa-question"></i> الأسئلة المجابة</a></li>
+        <li><a href="answered.html" class="nav-link"><i class="fas fa-comments"></i> الأسئلة المجابة</a></li>
+        <li><a href="https://t.me/nwr_lhwz" class="nav-link" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram"></i> قناتنا</a></li>
       </ul>
     </nav>
     <div class="header-action">
@@ -1130,14 +1219,24 @@
         </div>
     </section>
 
+    <section id="telegram-channel" class="telegram-section">
+      <div class="telegram-content">
+         <i class="fab fa-telegram telegram-icon"></i>
+         <h2>انضم إلى رحابنا على تيليجرام</h2>
+         <p>كن جزءًا من مجتمعنا المتنامي، وتابع آخر التحديثات، والمقالات الحصرية، والنقاشات العلمية الهادفة مباشرةً على قناتنا في تيليجرام. ننتظرك هناك لتكتمل دائرة النور.</p>
+         <a href="https://t.me/nwr_lhwz" class="btn btn-telegram-section" target="_blank" rel="noopener noreferrer">
+           <i class="fas fa-paper-plane"></i> انضم الآن إلى قناة نور الحوزة
+         </a>
+      </div>
+    </section>
 
     <section id="ask-nwr-alhawza" class="survey">
   <h3><i class="fas fa-question-circle"></i> هل لديك سؤالٌ يطرق أبوابَ الفؤاد؟</h3>
   <p>
     يا أيها الباحث عن زادِ اليقين، ويا من أرهقته الأسئلةُ في مهبِّ الزمان، إليكَ هذا الركنُ الرقمي المبارك، حيثُ تسألُ، ويجيبُك <strong>نور الحوزة</strong>، لا برأيٍ عابر، ولا بقولٍ مُرسَل، بل بنقلٍ أمين عن العلماءِ الأعلام، ورجالِ الدين العظام.
   </p>  <div style="background: var(--clr-bg-card); padding: 2rem; border-radius: var(--border-radius-large); box-shadow: var(--shadow-medium);">
-    <label for="questionType" style="display: block; font-weight: bold; margin-bottom: 0.5rem;">اختر نوع سؤالك:</label>
-    <select id="questionType" onchange="updateExample()" style="width: 100%; padding: 0.8rem; border-radius: 0.5rem; font-size: 1rem;">
+    <label for="questionType" style="display: block; font-weight: bold; margin-bottom: 0.5rem; color: var(--clr-text-primary);">اختر نوع سؤالك:</label>
+    <select id="questionType" onchange="updateExample()" style="width: 100%; padding: 0.8rem; border-radius: 0.5rem; font-size: 1rem; border: 1px solid #ccc; color: var(--clr-text-primary); background: #fff;">
       <option value="">-- اختر نوع السؤال --</option>
       <option value="fiqh">سؤال فقهي محل ابتلاء</option>
       <option value="aqeedah">سؤال عقائدي يراود الفكر</option>
@@ -1147,8 +1246,7 @@
       <option value="tarikh">سؤال في سيرة المعصومين</option>
       <option value="muqaran">سؤال فقهي مقارن بين المراجع</option>
     </select><div id="exampleBox" style="margin-top: 1.5rem; font-size: 1.1rem; color: var(--clr-text-secondary); background: var(--clr-bg-main); padding: 1rem 1.2rem; border-right: 4px solid var(--clr-accent); border-radius: 0.5rem; display: none;">
-  <!-- سيتم ملؤه تلقائيًا -->
-</div>
+  </div>
 
 <div style="text-align: center; margin-top: 2rem;">
   <a class="btn btn-chat" href="https://chatgpt.com/g/g-67d5f5a8c32c8191ab7bb16ed6a48bfa-nwr-lhwz" target="_blank" rel="noopener noreferrer">
@@ -1230,9 +1328,14 @@
   <footer>
     <div class="container nav">
       <p>&copy; <span id="currentYear"></span> نور الحوزة. جميع الحقوق محفوظة بعناية الرحمن.</p>
-      <a class="btn btn-chat" href="https://chatgpt.com/g/g-67d5f5a8c32c8191ab7bb16ed6a48bfa-nwr-lhwz" target="_blank" rel="noopener noreferrer">
-          <i class="fas fa-comments"></i> ابدأ الحديث معي
-      </a>
+      <div class="footer-buttons">
+          <a class="btn btn-telegram" href="https://t.me/nwr_lhwz" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-telegram"></i> انضم إلينا على تيليجرام
+          </a>
+          <a class="btn btn-chat" href="https://chatgpt.com/g/g-67d5f5a8c32c8191ab7bb16ed6a48bfa-nwr-lhwz" target="_blank" rel="noopener noreferrer">
+              <i class="fas fa-comments"></i> ابدأ الحديث معي
+          </a>
+      </div>
     </div>
   </footer>
 
@@ -1332,6 +1435,7 @@
   // --- نهاية سكربت قائمة تصفح الجوال ---
 </script>
 
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js");}</script>
   
 </body>
 </html>
