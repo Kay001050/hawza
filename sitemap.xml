@@ -2,32 +2,54 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>https://hawza.netlify.app/</loc>
-        <lastmod>2025-06-07</lastmod>
-        <changefreq>weekly</changefreq>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>daily</changefreq>
         <priority>1.00</priority>
     </url>
+
     <url>
-        <loc>https://hawza.netlify.app/about.html</loc>
-        <lastmod>2025-06-07</lastmod>
-        <changefreq>monthly</changefreq>
+        <loc>https://hawza.netlify.app/2025.html</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>weekly</changefreq>
         <priority>0.90</priority>
     </url>
+
     <url>
-        <loc>https://hawza.netlify.app/masadir.html</loc>
-        <lastmod>2025-06-07</lastmod>
-        <changefreq>monthly</changefreq>
+        <loc>https://hawza.netlify.app/questions.html</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>weekly</changefreq>
         <priority>0.80</priority>
     </url>
     <url>
-        <loc>https://hawza.netlify.app/offline.html</loc>
-        <lastmod>2025-06-07</lastmod>
-        <changefreq>yearly</changefreq>
-        <priority>0.40</priority>
+        <loc>https://hawza.netlify.app/answered.html</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.80</priority>
     </url>
     <url>
-        <loc>https://hawza.netlify.app/custom-404.html</loc>
-        <lastmod>2025-06-07</lastmod>
+        <loc>https://hawza.netlify.app/faq.html</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.80</priority>
+    </url>
+
+    <url>
+        <loc>https://hawza.netlify.app/masadir.html</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.70</priority>
+    </url>
+    <url>
+        <loc>https://hawza.netlify.app/about.html</loc>
+        <lastmod>2026-01-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.60</priority>
+    </url>
+
+    <url>
+        <loc>https://hawza.netlify.app/offline.html</loc>
+        <lastmod>2026-01-06</lastmod>
         <changefreq>yearly</changefreq>
-        <priority>0.30</priority>
+        <priority>0.40</priority>
     </url>
 </urlset>
