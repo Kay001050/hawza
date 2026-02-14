@@ -2560,9 +2560,89 @@
         scroll-behavior: auto;
       }
     }
+    
+    /* ═══════════════════════════════════════════════════════════════
+   مشغل الموسيقى الخلفية
+   ═══════════════════════════════════════════════════════════════ */
+.audio-player {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.audio-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.audio-btn {
+  border-radius: 50%;
+  border: 2px solid var(--color-gold);
+  color: var(--color-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.audio-btn:hover {
+  transform: scale(1.1);
+}
+
+.audio-btn.play-btn {
+  width: 55px;
+  height: 55px;
+  font-size: 22px;
+}
+
+.audio-btn.play-btn.playing {
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-dark) 100%);
+  color: var(--color-primary-dark);
+}
+
+.audio-btn.small-btn {
+  width: 45px;
+  height: 45px;
+}
+
+.audio-label {
+  color: var(--color-secondary);
+  font-size: 11px;
+  font-family: var(--font-primary);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  padding: 4px 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+    
   </style>
 </head>
 <body>
+  
+    <!-- ═══════════════════════════════════════════════════════════════
+       ملف الصوت الخلفي - موسيقى سيد شهداء المقاومة
+       ═══════════════════════════════════════════════════════════════ -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="amin_m.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- مشغل الموسيقى -->
+  <div class="audio-player">
+    <div class="audio-controls">
+      <button class="audio-btn small-btn" id="muteBtn" title="كتم/إعادة الصوت">🔊</button>
+      <button class="audio-btn play-btn" id="playBtn" title="تشغيل/إيقاف">▶</button>
+    </div>
+    <span class="audio-label">موسيقى سيد الشهداء</span>
+  </div>
+  
   <!-- ═══════════════════════════════════════════════════════════════════════════
        Preloader - شاشة التحميل
        ═══════════════════════════════════════════════════════════════════════════ -->
@@ -3505,6 +3585,59 @@
         }
       });
     });
+    
+        // ═══════════════════════════════════════════════════════════════
+    // مشغل الموسيقى الخلفية
+    // ═══════════════════════════════════════════════════════════════
+    const bgMusic = document.getElementById('bgMusic');
+    const playBtn = document.getElementById('playBtn');
+    const muteBtn = document.getElementById('muteBtn');
+
+    let isPlaying = false;
+    let isMuted = false;
+
+    // تعيين مستوى الصوت الافتراضي (30% - صوت خفيف)
+    bgMusic.volume = 0.3;
+
+    // تشغيل تلقائي بعد تحميل الصفحة
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        bgMusic.play().then(function() {
+          isPlaying = true;
+          playBtn.innerHTML = '⏸';
+          playBtn.classList.add('playing');
+        }).catch(function(error) {
+          console.log('اضغط على زر التشغيل لبدء الموسيقى');
+        });
+      }, 2000);
+    });
+
+    // زر التشغيل/الإيقاف
+    playBtn.addEventListener('click', function() {
+      if (isPlaying) {
+        bgMusic.pause();
+        playBtn.innerHTML = '▶';
+        playBtn.classList.remove('playing');
+      } else {
+        bgMusic.play();
+        playBtn.innerHTML = '⏸';
+        playBtn.classList.add('playing');
+      }
+      isPlaying = !isPlaying;
+    });
+
+    // زر كتم الصوت
+    muteBtn.addEventListener('click', function() {
+      if (isMuted) {
+        bgMusic.muted = false;
+        muteBtn.innerHTML = '🔊';
+      } else {
+        bgMusic.muted = true;
+        muteBtn.innerHTML = '🔇';
+      }
+      isMuted = !isMuted;
+    });
+    
   </script>
 </body>
 </html>
