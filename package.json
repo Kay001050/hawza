@@ -1,18 +1,13 @@
 {
-  "name": "hawza",
-  "version": "1.0.0",
-  "description": "[![Netlify Status](https://api.netlify.com/api/v1/badges/6114a7a9-0acd-4775-a9c3-01bb3b857465/deploy-status)](https://app.netlify.com/sites/hawza/deploys)",
-  "main": "index.js",
+  "name": "noor-alhawza-project-v3",
+  "version": "3.0.0",
+  "description": "A knowledge-based AI project with persistent cloud storage.",
+  "main": "netlify/functions/api.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "netlify dev",
+    "build": "echo 'Build script not necessary for this project structure.'"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "express": "^5.1.0",
-    "express-session": "^1.17.3",
-    "dotenv": "^16.3.1"
+    "express": "^5.1.0"
   }
 }

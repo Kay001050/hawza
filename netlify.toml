@@ -1,0 +1,36 @@
+# ملف إعدادات Netlify (النسخة النهائية والمبسطة)
+
+[build]
+  publish = "/"
+  functions = "netlify/functions"
+
+# ===================================================================
+# الترتيب هنا في غاية الأهمية. Netlify يقرأ القواعد من الأعلى للأسفل.
+# ===================================================================
+
+# القاعدة الأولى: عرض صفحة admin.html عند طلب /admin
+# يجب أن تأتي هذه القاعدة "قبل" قاعدة /admin/* العامة
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
+  status = 200
+
+# القاعدة الثانية: توجيه كل طلبات /admin/* إلى الراوتر الخاص بالمسؤول
+# مثال: /admin/login -> /.netlify/functions/api/admin/login
+[[redirects]]
+  from = "/admin/*"
+  to = "/.netlify/functions/api/admin/:splat"
+  status = 200
+  force = true
+
+# القاعدة الثالثة: توجيه كل طلبات /api/* إلى الراوتر العام
+# مثال: /api/questions -> /.netlify/functions/api/api/questions
+# لاحظ أن /api مكررة هنا، وهذا ليس خطأ، بل هو الطريقة التي يعمل بها التوجيه
+# الطلب الأصلي: /api/questions
+# الوجهة في الكود: app.use('/api', publicRouter) والراوتر يحتوي على /questions
+# لذا، المسار النهائي الذي يجب أن يصل للوظيفة هو /.netlify/functions/api/api/questions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/api/:splat"
+  status = 200
+  force = true
