@@ -570,6 +570,7 @@
       flex-wrap: wrap;
       gap: 10px;
       justify-content: flex-start;
+      align-items: flex-start;
     }
 
     .category-chip {
@@ -631,16 +632,26 @@
       color: var(--accent-gold);
     }
 
-    .category-chip.sub-category .count {
-      background: rgba(45, 138, 110, 0.15);
-      color: var(--accent-emerald-light);
-    }
-
-    .categories-separator {
+    .category-divider {
       width: 100%;
       height: 1px;
       background: var(--border-subtle);
       margin: 8px 0;
+    }
+
+    .category-group-title {
+      width: 100%;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 4px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .category-group-title i {
+      color: var(--accent-emerald);
     }
 
     /* Breadcrumbs */
@@ -1175,6 +1186,27 @@
       font-size: 1.4rem;
       color: var(--text-primary);
       margin-bottom: 10px;
+    }
+
+    /* Loading indicator */
+    .loading-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 20px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .loading-indicator i {
+      color: var(--accent-gold);
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     /* Modal */
@@ -1761,7 +1793,28 @@
         <i class="fas fa-book-reader"></i>
         اختر المكتبة
       </span>
-      <div class="library-tabs" id="libraryTabs"></div>
+      <div class="library-tabs">
+        <button class="library-tab active" data-library="main">
+          <span class="library-tab-icon"><i class="fas fa-book-quran"></i></span>
+          <span class="library-tab-name">المكتبة الرئيسية</span>
+        </button>
+        <button class="library-tab" data-library="child">
+          <span class="library-tab-icon"><i class="fas fa-child"></i></span>
+          <span class="library-tab-name">مكتبة الطفل الموالي</span>
+        </button>
+        <button class="library-tab" data-library="electronic">
+          <span class="library-tab-icon"><i class="fas fa-laptop"></i></span>
+          <span class="library-tab-name">المكتبة الإلكترونية</span>
+        </button>
+        <button class="library-tab" data-library="poems">
+          <span class="library-tab-icon"><i class="fas fa-microphone-alt"></i></span>
+          <span class="library-tab-name">قصائد ومجالس</span>
+        </button>
+        <button class="library-tab" data-library="quds">
+          <span class="library-tab-icon"><i class="fas fa-mosque"></i></span>
+          <span class="library-tab-name">صور القدس في عمامة</span>
+        </button>
+      </div>
     </div>
   </section>
 
@@ -1924,31 +1977,30 @@
         main: {
           id: '1sEulys13YfalOS5yVoaQZeDf4nEF3ObJ',
           name: 'المكتبة الرئيسية',
-          icon: 'fa-book-quran',
           deepLoad: false
         },
         child: {
           id: '1t5wlgrqFQyMOYAnKiGN-ee8nUaXoQSsl',
           name: 'مكتبة الطفل الموالي',
-          icon: 'fa-child',
           deepLoad: false
         },
         electronic: {
           id: '1HZwxVbDfNfVOILQX3eg18T-NmUwYy-Uw',
           name: 'المكتبة الإلكترونية',
-          icon: 'fa-laptop',
           deepLoad: false
         },
         poems: {
           id: '1l7zE8Q6B-2Iu_4I9fWBPfdp9ArMQklgE',
-          name: 'قصائد ومجالس',
-          icon: 'fa-microphone-alt',
-          deepLoad: true
+          name: 'قصائد ومجالس كاملة',
+          deepLoad: true,
+          subFolders: {
+            '14l1_3ehfA-5Co-L_3voYy2uX9KCXG-um': 'قصائدها',
+            '1erDstUgjbkoAVf2O0MwpN1g3IOUblO5V': 'مجالسها'
+          }
         },
         quds: {
           id: '1TLLTDDtUKmxWE1ZCHoC9g1WaLcdFNjBZ',
           name: 'صور القدس في عمامة',
-          icon: 'fa-mosque',
           deepLoad: false
         }
       },
@@ -1966,9 +2018,9 @@
       currentFolderId: null,
       folderHistory: [],
       allBooks: [],
-      allFolders: [], // جميع المجلدات
       categories: [],
       subCategories: [],
+      allFolders: {}, // لتخزين جميع المجلدات مع مساراتها
       currentItems: [],
       filteredItems: [],
       selectedCategory: null,
@@ -2019,8 +2071,7 @@
       categoriesToggle: document.getElementById('categoriesToggle'),
       categoriesPanel: document.getElementById('categoriesPanel'),
       categoriesGrid: document.getElementById('categoriesGrid'),
-      showAllBtn: document.getElementById('showAllBtn'),
-      libraryTabs: document.getElementById('libraryTabs')
+      showAllBtn: document.getElementById('showAllBtn')
     };
 
     DOM.currentYear.textContent = new Date().getFullYear();
@@ -2176,46 +2227,42 @@
       DOM.booksGrid.innerHTML = `<div class="status-message"><div class="status-icon"><i class="fas ${icon}"></i></div><h3 class="status-title">${title}</h3><p class="status-text">${text}</p></div>`;
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    // Render Library Tabs
-    // ═══════════════════════════════════════════════════════════════════════════
-    function renderLibraryTabs() {
-      let html = '';
-      Object.entries(CONFIG.LIBRARIES).forEach(([key, lib]) => {
-        html += `
-          <button class="library-tab ${state.currentLibrary === key ? 'active' : ''}" data-library="${key}">
-            <span class="library-tab-icon"><i class="fas ${lib.icon}"></i></span>
-            <span class="library-tab-name">${lib.name}</span>
-          </button>
-        `;
-      });
-      DOM.libraryTabs.innerHTML = html;
-      
-      // Add click handlers
-      document.querySelectorAll('.library-tab').forEach(tab => {
-        tab.addEventListener('click', () => switchLibrary(tab.dataset.library));
-      });
+    function renderLoadingIndicator(message = 'جاري التحميل...') {
+      DOM.booksGrid.innerHTML = `<div class="loading-indicator"><i class="fas fa-spinner"></i><span>${message}</span></div>`;
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // Deep Load for Libraries with sub-folders
+    // Deep Load for Poems Library
     // ═══════════════════════════════════════════════════════════════════════════
     async function loadDeepLibrary(libraryKey) {
       const libraryConfig = CONFIG.LIBRARIES[libraryKey];
       state.isLoading = true;
       state.allBooks = [];
-      state.allFolders = [];
       state.categories = [];
       state.subCategories = [];
+      state.allFolders = {};
       state.totalSize = 0;
       
-      renderSkeletons(8);
+      renderLoadingIndicator('جاري تحميل المكتبة بعمق...');
       
       try {
-        // تحميل محتوى الجذر
+        // تحميل المجلدات الرئيسية
         const rootData = await fetchFolderContents(libraryConfig.id);
         const rootFolders = (rootData.files || []).filter(f => f.mimeType === 'application/vnd.google-apps.folder');
         const rootFiles = (rootData.files || []).filter(f => f.mimeType !== 'application/vnd.google-apps.folder');
+        
+        state.totalCategories = rootFolders.length;
+        
+        // تخزين المجلدات الرئيسية
+        rootFolders.forEach(folder => {
+          state.allFolders[folder.id] = {
+            id: folder.id,
+            name: folder.name,
+            parentId: libraryConfig.id,
+            parentName: libraryConfig.name,
+            depth: 0
+          };
+        });
         
         // إضافة الملفات في الجذر
         rootFiles.forEach(file => {
@@ -2236,45 +2283,46 @@
           state.totalSize += parseInt(file.size) || 0;
         });
         
-        // تحميل كل مجلد رئيسي
-        for (const folder of rootFolders) {
+        // تحميل كل مجلد رئيسي ومحتواه العميق
+        for (let i = 0; i < rootFolders.length; i++) {
+          const folder = rootFolders[i];
+          renderLoadingIndicator(`جاري تحميل: ${folder.name} (${i + 1}/${rootFolders.length})`);
+          
           const categoryInfo = {
             id: folder.id,
             name: folder.name,
             bookCount: 0,
             isSubCategory: false,
-            parentId: libraryConfig.id
+            parentId: libraryConfig.id,
+            depth: 0
           };
           
-          await loadFolderDeepRecursive(folder.id, folder.name, libraryConfig.id, libraryConfig.name, categoryInfo, 0);
+          // تحميل محتوى المجلد الرئيسي
+          await loadFolderDeep(folder.id, folder.name, libraryConfig.id, libraryConfig.name, categoryInfo, 0);
           
           state.categories.push(categoryInfo);
-          state.allFolders.push({
-            id: folder.id,
-            name: folder.name,
-            parentId: libraryConfig.id,
-            isRoot: true
-          });
         }
         
         state.isLoading = false;
         state.totalBooks = state.allBooks.length;
-        state.totalCategories = state.categories.length;
         
         updateStats();
         renderCategories();
+        
         saveToCache({
           allBooks: state.allBooks,
-          allFolders: state.allFolders,
           categories: state.categories,
           subCategories: state.subCategories,
+          allFolders: state.allFolders,
           totalSize: state.totalSize,
           totalBooks: state.totalBooks,
           totalCategories: state.totalCategories
         }, libraryKey);
         
-        // عرض محتوى الجذر
+        // عرض المحتوى الرئيسي
         showRootContent();
+        
+        showToast('تم التحميل', `تم تحميل ${state.totalBooks} ملف من ${state.categories.length} قسم`, 'success');
         
       } catch (error) {
         console.error('Error loading deep library:', error);
@@ -2283,7 +2331,7 @@
       }
     }
 
-    async function loadFolderDeepRecursive(folderId, folderName, rootId, rootName, categoryInfo, depth) {
+    async function loadFolderDeep(folderId, folderName, rootId, rootName, categoryInfo, depth) {
       try {
         const folderData = await fetchFolderContents(folderId);
         const folders = (folderData.files || []).filter(f => f.mimeType === 'application/vnd.google-apps.folder');
@@ -2310,27 +2358,30 @@
           categoryInfo.bookCount++;
         });
         
+        // تخزين المجلدات الفرعية
+        folders.forEach(subFolder => {
+          state.allFolders[subFolder.id] = {
+            id: subFolder.id,
+            name: subFolder.name,
+            parentId: folderId,
+            parentName: folderName,
+            depth: depth + 1
+          };
+        });
+        
         // تحميل المجلدات الفرعية
         for (const subFolder of folders) {
           const subCategoryInfo = {
             id: subFolder.id,
             name: subFolder.name,
             bookCount: 0,
-            isSubCategory: true,
+            isSubCategory: depth >= 0,
             parentId: folderId,
             parentName: folderName,
             depth: depth + 1
           };
           
-          // إضافة المجلد للقائمة
-          state.allFolders.push({
-            id: subFolder.id,
-            name: subFolder.name,
-            parentId: folderId,
-            isRoot: false
-          });
-          
-          await loadFolderDeepRecursive(
+          await loadFolderDeep(
             subFolder.id, 
             subFolder.name, 
             rootId, 
@@ -2362,52 +2413,32 @@
         return;
       }
       
-      state.isLoading = true;
-      state.allBooks = [];
-      state.allFolders = [];
-      state.categories = [];
-      state.subCategories = [];
-      state.totalSize = 0;
-      
-      renderSkeletons(8);
-      
       try {
+        state.isLoading = true;
+        state.allBooks = [];
+        state.categories = [];
+        state.subCategories = [];
+        state.allFolders = {};
+        state.totalSize = 0;
+        
         const rootFolderId = libraryConfig.id;
         const rootData = await fetchFolderContents(rootFolderId);
         const rootFolders = (rootData.files || []).filter(f => f.mimeType === 'application/vnd.google-apps.folder');
-        const rootFiles = (rootData.files || []).filter(f => f.mimeType !== 'application/vnd.google-apps.folder');
         
-        // إضافة الملفات في الجذر
-        rootFiles.forEach(file => {
-          state.allBooks.push({
-            id: file.id,
-            name: file.name,
-            mimeType: file.mimeType,
-            size: parseInt(file.size) || 0,
-            createdTime: file.createdTime,
-            thumbnailLink: file.thumbnailLink,
-            webViewLink: file.webViewLink,
-            iconLink: file.iconLink,
-            categoryId: rootFolderId,
-            categoryName: libraryConfig.name,
-            parentFolderId: null,
-            depth: 0
-          });
-          state.totalSize += parseInt(file.size) || 0;
-        });
+        state.totalCategories = rootFolders.length;
         
         const folderPromises = rootFolders.map(async (folder) => {
           try {
             const folderData = await fetchFolderContents(folder.id);
             const files = (folderData.files || []).filter(f => f.mimeType !== 'application/vnd.google-apps.folder');
             
-            // إضافة المجلد للقائمة
-            state.allFolders.push({
+            // تخزين المجلد
+            state.allFolders[folder.id] = {
               id: folder.id,
               name: folder.name,
               parentId: rootFolderId,
-              isRoot: true
-            });
+              depth: 0
+            };
             
             return {
               folder: { id: folder.id, name: folder.name, bookCount: files.length },
@@ -2421,9 +2452,7 @@
                 webViewLink: file.webViewLink,
                 iconLink: file.iconLink,
                 categoryId: folder.id,
-                categoryName: folder.name,
-                parentFolderId: rootFolderId,
-                depth: 1
+                categoryName: folder.name
               }))
             };
           } catch (e) {
@@ -2444,22 +2473,20 @@
         
         state.isLoading = false;
         state.totalBooks = state.allBooks.length;
-        state.totalCategories = state.categories.length;
         
         updateStats();
         renderCategories();
         
         saveToCache({
           allBooks: state.allBooks,
-          allFolders: state.allFolders,
           categories: state.categories,
           subCategories: state.subCategories,
+          allFolders: state.allFolders,
           totalSize: state.totalSize,
           totalBooks: state.totalBooks,
           totalCategories: state.totalCategories
         }, state.currentLibrary);
         
-        // عرض محتوى الجذر
         showRootContent();
         
       } catch (error) {
@@ -2470,8 +2497,102 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // Show Root Content
+    // Init
     // ═══════════════════════════════════════════════════════════════════════════
+    async function initLibrary() {
+      renderSkeletons(8);
+      
+      const cachedData = loadFromCache(state.currentLibrary);
+      if (cachedData) {
+        state.allBooks = cachedData.allBooks || [];
+        state.categories = cachedData.categories || [];
+        state.subCategories = cachedData.subCategories || [];
+        state.allFolders = cachedData.allFolders || {};
+        state.totalSize = cachedData.totalSize || 0;
+        state.totalBooks = cachedData.totalBooks || 0;
+        state.totalCategories = cachedData.totalCategories || 0;
+        state.isLoading = false;
+        
+        updateStats();
+        renderCategories();
+        showRootContent();
+        refreshDataInBackground();
+        return;
+      }
+      
+      await loadAllData();
+    }
+
+    async function refreshDataInBackground() {
+      // للتحميل العميق، لا نعيد التحميل تلقائياً
+      const libraryConfig = CONFIG.LIBRARIES[state.currentLibrary];
+      if (libraryConfig.deepLoad) return;
+      
+      try {
+        const rootFolderId = libraryConfig.id;
+        const rootData = await fetchFolderContents(rootFolderId);
+        const rootFolders = (rootData.files || []).filter(f => f.mimeType === 'application/vnd.google-apps.folder');
+        
+        const folderPromises = rootFolders.map(async (folder) => {
+          const folderData = await fetchFolderContents(folder.id);
+          const files = (folderData.files || []).filter(f => f.mimeType !== 'application/vnd.google-apps.folder');
+          return {
+            folder: { id: folder.id, name: folder.name, bookCount: files.length },
+            files: files.map(file => ({
+              id: file.id,
+              name: file.name,
+              mimeType: file.mimeType,
+              size: parseInt(file.size) || 0,
+              createdTime: file.createdTime,
+              thumbnailLink: file.thumbnailLink,
+              webViewLink: file.webViewLink,
+              iconLink: file.iconLink,
+              categoryId: folder.id,
+              categoryName: folder.name
+            }))
+          };
+        });
+        
+        const results = await Promise.all(folderPromises);
+        
+        let freshBooks = [];
+        let freshCategories = [];
+        let freshTotalSize = 0;
+        
+        results.forEach(result => {
+          freshCategories.push(result.folder);
+          freshBooks.push(...result.files);
+          result.files.forEach(file => { freshTotalSize += file.size; });
+        });
+        
+        if (freshBooks.length !== state.allBooks.length) {
+          state.allBooks = freshBooks;
+          state.categories = freshCategories;
+          state.totalSize = freshTotalSize;
+          state.totalBooks = freshBooks.length;
+          state.totalCategories = freshCategories.length;
+          
+          updateStats();
+          renderCategories();
+          filterAndRender();
+          
+          saveToCache({
+            allBooks: state.allBooks,
+            categories: state.categories,
+            subCategories: state.subCategories,
+            allFolders: state.allFolders,
+            totalSize: state.totalSize,
+            totalBooks: state.totalBooks,
+            totalCategories: state.totalCategories
+          }, state.currentLibrary);
+          
+          showToast('تم التحديث', 'تم تحديث المكتبة ببيانات جديدة', 'success');
+        }
+      } catch (e) {
+        console.warn('Background refresh failed:', e);
+      }
+    }
+
     function showRootContent() {
       const libraryConfig = CONFIG.LIBRARIES[state.currentLibrary];
       state.currentFolderId = libraryConfig.id;
@@ -2485,61 +2606,24 @@
       DOM.sectionTitleText.textContent = 'جميع الأقسام';
       updateBreadcrumbs();
       
-      // عرض المجلدات والملفات من الجذر
-      state.currentItems = [];
+      // إنشاء قائمة بالمجلدات الرئيسية كـ folders
+      const rootFolders = Object.values(state.allFolders).filter(f => f.parentId === libraryConfig.id);
+      const rootCategories = state.categories.filter(c => !c.isSubCategory);
       
-      // إضافة المجلدات
-      state.allFolders.forEach(folder => {
-        if (folder.parentId === libraryConfig.id) {
-          state.currentItems.push({
-            id: folder.id,
-            name: folder.name,
-            mimeType: 'application/vnd.google-apps.folder'
-          });
-        }
-      });
-      
-      // إضافة الملفات
-      state.allBooks.forEach(book => {
-        if (book.parentFolderId === null || book.parentFolderId === libraryConfig.id) {
-          state.currentItems.push(book);
-        }
-      });
+      // دمج المجلدات مع الفئات
+      state.currentItems = [
+        ...rootCategories.map(cat => ({
+          id: cat.id,
+          name: cat.name,
+          mimeType: 'application/vnd.google-apps.folder',
+          bookCount: cat.bookCount
+        }))
+      ];
       
       filterAndRender();
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    // Init
-    // ═══════════════════════════════════════════════════════════════════════════
-    async function initLibrary() {
-      renderLibraryTabs();
-      renderSkeletons(8);
-      
-      const cachedData = loadFromCache(state.currentLibrary);
-      if (cachedData) {
-        state.allBooks = cachedData.allBooks || [];
-        state.allFolders = cachedData.allFolders || [];
-        state.categories = cachedData.categories || [];
-        state.subCategories = cachedData.subCategories || [];
-        state.totalSize = cachedData.totalSize || 0;
-        state.totalBooks = cachedData.totalBooks || 0;
-        state.totalCategories = cachedData.totalCategories || 0;
-        state.isLoading = false;
-        
-        updateStats();
-        renderCategories();
-        showRootContent();
-        return;
-      }
-      
-      await loadAllData();
-    }
-
-    // ═══════════════════════════════════════════════════════════════════════════
-    // Open Folder
-    // ═══════════════════════════════════════════════════════════════════════════
-    function openFolder(folderId, folderName) {
+    async function openFolder(folderId, folderName) {
       state.currentFolderId = folderId;
       state.folderHistory.push({ id: folderId, name: folderName });
       state.currentPage = 1;
@@ -2551,28 +2635,37 @@
       DOM.sectionTitleText.textContent = folderName;
       updateBreadcrumbs();
       
-      // عرض المحتوى من البيانات المحملة
-      state.currentItems = [];
-      
-      // إضافة المجلدات الفرعية
-      state.allFolders.forEach(folder => {
-        if (folder.parentId === folderId) {
-          state.currentItems.push({
-            id: folder.id,
-            name: folder.name,
+      // للمكتبات ذات التحميل العميق
+      const libraryConfig = CONFIG.LIBRARIES[state.currentLibrary];
+      if (libraryConfig.deepLoad) {
+        // البحث عن المجلدات الفرعية
+        const subFolders = Object.values(state.allFolders).filter(f => f.parentId === folderId);
+        const booksInFolder = state.allBooks.filter(b => b.categoryId === folderId);
+        
+        state.currentItems = [
+          ...subFolders.map(sf => ({
+            id: sf.id,
+            name: sf.name,
             mimeType: 'application/vnd.google-apps.folder'
-          });
-        }
-      });
+          })),
+          ...booksInFolder
+        ];
+        
+        filterAndRender();
+        return;
+      }
       
-      // إضافة الملفات
-      state.allBooks.forEach(book => {
-        if (book.categoryId === folderId) {
-          state.currentItems.push(book);
-        }
-      });
+      // للمكتبات العادية - تحميل من API
+      renderSkeletons(8);
       
-      filterAndRender();
+      try {
+        const data = await fetchFolderContents(folderId);
+        state.currentItems = data.files || [];
+        filterAndRender();
+      } catch (error) {
+        console.error('Error opening folder:', error);
+        renderStatusMessage('fa-exclamation-triangle', 'خطأ في التحميل', 'حدث خطأ أثناء تحميل المحتوى.');
+      }
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -2588,25 +2681,39 @@
       let html = `<div class="category-chip ${!state.selectedCategory ? 'active' : ''}" data-id=""><i class="fas fa-layer-group"></i><span>الكل</span></div>`;
       
       // المجلدات الرئيسية
-      state.categories.forEach(cat => {
-        if (cat.bookCount > 0) {
-          html += `<div class="category-chip ${state.selectedCategory === cat.id ? 'active' : ''}" data-id="${cat.id}"><i class="fas fa-folder"></i><span>${cat.name}</span><span class="count">${cat.bookCount}</span></div>`;
-        }
-      });
+      if (state.categories && state.categories.length > 0) {
+        state.categories.forEach(cat => {
+          if (!cat.isSubCategory) {
+            html += `<div class="category-chip ${state.selectedCategory === cat.id ? 'active' : ''}" data-id="${cat.id}"><i class="fas fa-folder"></i><span>${cat.name}</span><span class="count">${cat.bookCount}</span></div>`;
+          }
+        });
+      }
       
       // المجلدات الفرعية
       if (state.subCategories && state.subCategories.length > 0) {
-        html += `<div class="categories-separator"></div>`;
-        
+        // تجميع حسب العمق
+        const groupedByDepth = {};
         state.subCategories.forEach(subCat => {
-          if (subCat.bookCount > 0) {
-            html += `<div class="category-chip sub-category ${state.selectedCategory === subCat.id ? 'active' : ''}" data-id="${subCat.id}" title="${subCat.parentName || ''}"><i class="fas fa-folder-open"></i><span>${subCat.name}</span><span class="count">${subCat.bookCount}</span></div>`;
-          }
+          const depth = subCat.depth || 1;
+          if (!groupedByDepth[depth]) groupedByDepth[depth] = [];
+          groupedByDepth[depth].push(subCat);
+        });
+        
+        Object.keys(groupedByDepth).sort((a, b) => a - b).forEach(depth => {
+          html += `<div class="category-divider"></div>`;
+          html += `<div class="category-group-title"><i class="fas fa-folder-tree"></i>المجلدات الفرعية (مستوى ${depth})</div>`;
+          
+          groupedByDepth[depth].forEach(subCat => {
+            const indent = '─'.repeat(Math.min(subCat.depth || 1, 3));
+            const parentInfo = subCat.parentName ? `title="في: ${subCat.parentName}"` : '';
+            html += `<div class="category-chip sub-category ${state.selectedCategory === subCat.id ? 'active' : ''}" data-id="${subCat.id}" ${parentInfo}><i class="fas fa-folder-open"></i><span>${indent} ${subCat.name}</span><span class="count">${subCat.bookCount}</span></div>`;
+          });
         });
       }
       
       DOM.categoriesGrid.innerHTML = html;
       
+      // إضافة event listeners
       document.querySelectorAll('.category-chip').forEach(chip => {
         chip.addEventListener('click', () => {
           const id = chip.dataset.id;
@@ -2755,7 +2862,8 @@
     }
 
     function renderFolderCard(folder) {
-      return `<div class="folder-card" data-id="${folder.id}" data-name="${folder.name}"><div class="folder-icon"><i class="fas fa-folder"></i></div><h3 class="folder-name">${folder.name}</h3></div>`;
+      const count = folder.bookCount || state.allBooks.filter(b => b.categoryId === folder.id).length;
+      return `<div class="folder-card" data-id="${folder.id}" data-name="${folder.name}"><div class="folder-icon"><i class="fas fa-folder"></i></div><h3 class="folder-name">${folder.name}</h3>${count > 0 ? `<span class="folder-count">${count} ملف</span>` : ''}</div>`;
     }
 
     function renderBookCard(book, isMobile) {
@@ -2812,7 +2920,7 @@
     // Modal
     // ═══════════════════════════════════════════════════════════════════════════
     function openModal(bookId) {
-      const book = state.allBooks.find(b => b.id === bookId);
+      const book = state.allBooks.find(b => b.id === bookId) || state.currentItems.find(b => b.id === bookId);
       if (!book || book.mimeType === 'application/vnd.google-apps.folder') return;
       
       const cleanName = book.name.replace(/\.[^/.]+$/, '');
@@ -2858,12 +2966,18 @@
     // Library Switching
     // ═══════════════════════════════════════════════════════════════════════════
     function switchLibrary(library) {
+      // مسح البيانات القديمة
       state.currentLibrary = library;
+      state.currentFolderId = null;
       state.folderHistory = [];
       state.currentPage = 1;
       state.searchQuery = '';
       state.selectedCategory = null;
       state.showingAllBooks = false;
+      state.allBooks = [];
+      state.categories = [];
+      state.subCategories = [];
+      state.allFolders = [];
       DOM.searchInput.value = '';
       
       // Update active tab
@@ -2874,9 +2988,9 @@
       const cachedData = loadFromCache(library);
       if (cachedData) {
         state.allBooks = cachedData.allBooks || [];
-        state.allFolders = cachedData.allFolders || [];
         state.categories = cachedData.categories || [];
         state.subCategories = cachedData.subCategories || [];
+        state.allFolders = cachedData.allFolders || {};
         state.totalSize = cachedData.totalSize || 0;
         state.totalBooks = cachedData.totalBooks || 0;
         state.totalCategories = cachedData.totalCategories || 0;
@@ -2884,6 +2998,7 @@
         updateStats();
         renderCategories();
         showRootContent();
+        refreshDataInBackground();
       } else {
         loadAllData();
       }
@@ -2908,6 +3023,11 @@
           state.currentView = btn.dataset.view;
           filterAndRender();
         });
+      });
+      
+      // Library tabs click handlers
+      document.querySelectorAll('.library-tab').forEach(tab => {
+        tab.addEventListener('click', () => switchLibrary(tab.dataset.library));
       });
       
       DOM.categoriesToggle.addEventListener('click', () => {
