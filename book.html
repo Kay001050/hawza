@@ -97,231 +97,6 @@
       border: 2px solid var(--bg-secondary);
     }
 
-    /* ═══════════════════════════════════════════════════════════════════════
-       Loading Progress Bar - الشريط العلوي
-       ═══════════════════════════════════════════════════════════════════════ */
-    .loading-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(10, 21, 23, 0.95);
-      backdrop-filter: blur(10px);
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 24px;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.4s ease, visibility 0.4s ease;
-    }
-
-    .loading-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .loading-spinner {
-      width: 80px;
-      height: 80px;
-      position: relative;
-    }
-
-    .loading-spinner::before,
-    .loading-spinner::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      border: 4px solid transparent;
-    }
-
-    .loading-spinner::before {
-      border-top-color: var(--accent-gold);
-      border-right-color: var(--accent-gold);
-      animation: spin 1.2s linear infinite;
-    }
-
-    .loading-spinner::after {
-      border-bottom-color: var(--accent-emerald);
-      border-left-color: var(--accent-emerald);
-      animation: spin 1.2s linear infinite reverse;
-      animation-delay: 0.3s;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .loading-icon-inner {
-      position: absolute;
-      inset: 12px;
-      background: var(--bg-secondary);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      color: var(--accent-gold);
-    }
-
-    .loading-text {
-      text-align: center;
-    }
-
-    .loading-title {
-      font-family: var(--font-heading);
-      font-size: 1.4rem;
-      color: var(--text-primary);
-      margin-bottom: 8px;
-    }
-
-    .loading-subtitle {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-
-    .loading-progress-container {
-      width: 320px;
-      max-width: 90vw;
-    }
-
-    .loading-progress-bar {
-      height: 8px;
-      background: var(--bg-tertiary);
-      border-radius: var(--radius-full);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .loading-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent-emerald) 0%, var(--accent-gold) 50%, var(--accent-emerald) 100%);
-      background-size: 200% 100%;
-      border-radius: var(--radius-full);
-      width: 0%;
-      transition: width 0.3s ease;
-      animation: shimmer 2s linear infinite;
-    }
-
-    @keyframes shimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    .loading-stats {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 12px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .loading-percentage {
-      font-weight: 700;
-      color: var(--accent-gold);
-      font-size: 1rem;
-    }
-
-    .loading-items {
-      display: flex;
-      gap: 16px;
-    }
-
-    .loading-items span {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .loading-items i {
-      color: var(--accent-emerald-light);
-    }
-
-    /* ═══════════════════════════════════════════════════════════════════════
-       Top Progress Bar - شريط التقدم العلوي
-       ═══════════════════════════════════════════════════════════════════════ */
-    .top-progress-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: transparent;
-      z-index: 10000;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .top-progress-bar.active {
-      opacity: 1;
-    }
-
-    .top-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent-emerald), var(--accent-gold), var(--accent-emerald-light));
-      width: 0%;
-      transition: width 0.2s ease;
-      box-shadow: 0 0 10px var(--accent-gold);
-    }
-
-    .top-progress-bar.indeterminate .top-progress-fill {
-      width: 30%;
-      animation: indeterminate 1.5s ease-in-out infinite;
-    }
-
-    @keyframes indeterminate {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(400%); }
-    }
-
-    /* ═══════════════════════════════════════════════════════════════════════
-       Categories Loading - تحميل التصنيفات
-       ═══════════════════════════════════════════════════════════════════════ */
-    .categories-loading {
-      padding: 20px;
-      text-align: center;
-    }
-
-    .categories-loading-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .categories-loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid var(--border-subtle);
-      border-top-color: var(--accent-gold);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    .categories-loading-text {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .categories-loading-progress {
-      width: 200px;
-      height: 4px;
-      background: var(--bg-tertiary);
-      border-radius: var(--radius-full);
-      overflow: hidden;
-    }
-
-    .categories-loading-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent-emerald), var(--accent-gold));
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-
-    /* ═══════════════════════════════════════════════════════════════════════
-       Main Styles
-       ═══════════════════════════════════════════════════════════════════════ */
     .container {
       width: 100%;
       max-width: 1400px;
@@ -686,31 +461,6 @@
       transition: var(--transition-smooth);
       min-width: 110px;
       text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .library-tab::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(45, 138, 110, 0.1) 0%, rgba(201, 160, 80, 0.1) 100%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .library-tab.loading::before {
-      opacity: 1;
-    }
-
-    .library-tab.loading .library-tab-icon::after {
-      content: '';
-      position: absolute;
-      inset: -2px;
-      border: 2px solid transparent;
-      border-top-color: var(--accent-gold);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
     }
 
     .library-tab:hover {
@@ -729,7 +479,6 @@
     .library-tab-icon {
       font-size: 1.2rem;
       opacity: 0.85;
-      position: relative;
     }
 
     .library-tab-name {
@@ -1173,6 +922,11 @@
       color: var(--text-primary);
       line-height: 1.5;
       font-weight: 600;
+    }
+
+    .folder-count {
+      font-size: 0.75rem;
+      color: var(--text-muted);
     }
 
     /* Book Card */
@@ -1723,7 +1477,7 @@
     }
 
     .footer-bottom {
-      text-align: center;
+      text-text-align: center;
       padding-top: 20px;
       border-top: 1px solid var(--border-subtle);
       color: var(--text-muted);
@@ -1896,9 +1650,6 @@
       
       .toast-container { left: 10px; right: 10px; }
       .toast { max-width: 100%; }
-      
-      .loading-overlay { padding: 20px; }
-      .loading-progress-container { width: 100%; }
     }
 
     @media (max-width: 480px) {
@@ -1942,36 +1693,6 @@
 </head>
 <body>
   <div class="bg-pattern"></div>
-
-  <!-- Top Progress Bar -->
-  <div class="top-progress-bar" id="topProgressBar">
-    <div class="top-progress-fill" id="topProgressFill"></div>
-  </div>
-
-  <!-- Loading Overlay -->
-  <div class="loading-overlay" id="loadingOverlay">
-    <div class="loading-spinner">
-      <div class="loading-icon-inner">
-        <i class="fas fa-book-open"></i>
-      </div>
-    </div>
-    <div class="loading-text">
-      <div class="loading-title" id="loadingTitle">جاري تحميل المكتبة</div>
-      <div class="loading-subtitle" id="loadingSubtitle">يرجى الانتظار...</div>
-    </div>
-    <div class="loading-progress-container">
-      <div class="loading-progress-bar">
-        <div class="loading-progress-fill" id="loadingProgressFill"></div>
-      </div>
-      <div class="loading-stats">
-        <span class="loading-percentage" id="loadingPercentage">0%</span>
-        <div class="loading-items">
-          <span><i class="fas fa-folder"></i> <span id="loadingFolders">0</span></span>
-          <span><i class="fas fa-file"></i> <span id="loadingFiles">0</span></span>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Header -->
   <header class="header" id="header">
@@ -2021,7 +1742,7 @@
       <h1 class="hero-title">المكتبة الرقمية <span>لنور الحوزة</span></h1>
       
       <p class="hero-description">
-        مكتبة تضم مجموعة من الكتب الحوزوية والإسلامية، محدثة تلقائياً ومتاحة للجميع.
+        مكتبة متكاملة تضم مجموعة من الكتب الحوزوية والإسلامية، محدثة تلقائياً ومتاحة للجميع.
       </p>
 
       <div class="hero-stats">
@@ -2061,7 +1782,7 @@
         <i class="fas fa-book-reader"></i>
         اختر المكتبة
       </span>
-      <div class="library-tabs" id="libraryTabs">
+      <div class="library-tabs">
         <button class="library-tab active" data-library="main">
           <span class="library-tab-icon"><i class="fas fa-book-quran"></i></span>
           <span class="library-tab-name">المكتبة الرئيسية</span>
@@ -2256,7 +1977,11 @@
         },
         poems: {
           id: '1l7zE8Q6B-2Iu_4I9fWBPfdp9ArMQklgE',
-          name: 'قصائد ومجالس كاملة'
+          name: 'قصائد ومجالس كاملة',
+          specialFolders: {
+            '14l1_3ehfA-5Co-L_3voYy2uX9KCXG-um': 'قصائدها',
+            '1erDstUgjbkoAVf2O0MwpN1g3IOUblO5V': 'مجالسها'
+          }
         },
         quds: {
           id: '1TLLTDDtUKmxWE1ZCHoC9g1WaLcdFNjBZ',
@@ -2264,7 +1989,7 @@
         }
       },
       PAGE_SIZE: 1000,
-      CACHE_KEY: 'noor_library_v9',
+      CACHE_KEY: 'noor_library_v8',
       CACHE_TIME: 15 * 60 * 1000,
       ITEMS_PER_PAGE: 30
     };
@@ -2277,7 +2002,7 @@
       currentFolderId: null,
       folderHistory: [],
       allBooks: [],
-      allFolders: [],
+      allFolders: [], // جميع المجلدات
       categories: [],
       currentItems: [],
       filteredItems: [],
@@ -2291,16 +2016,11 @@
       totalSize: 0,
       totalBooks: 0,
       totalCategories: 0,
-      categoriesCollapsed: false,
-      // Loading state
-      loadingProgress: 0,
-      loadedFolders: 0,
-      loadedFiles: 0,
-      totalFoldersToLoad: 0
+      categoriesCollapsed: false
     };
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // DOM Elements
+    // DOM
     // ═══════════════════════════════════════════════════════════════════════════
     const DOM = {
       header: document.getElementById('header'),
@@ -2334,76 +2054,10 @@
       categoriesToggle: document.getElementById('categoriesToggle'),
       categoriesPanel: document.getElementById('categoriesPanel'),
       categoriesGrid: document.getElementById('categoriesGrid'),
-      showAllBtn: document.getElementById('showAllBtn'),
-      libraryTabs: document.getElementById('libraryTabs'),
-      // Loading elements
-      loadingOverlay: document.getElementById('loadingOverlay'),
-      loadingTitle: document.getElementById('loadingTitle'),
-      loadingSubtitle: document.getElementById('loadingSubtitle'),
-      loadingProgressFill: document.getElementById('loadingProgressFill'),
-      loadingPercentage: document.getElementById('loadingPercentage'),
-      loadingFolders: document.getElementById('loadingFolders'),
-      loadingFiles: document.getElementById('loadingFiles'),
-      topProgressBar: document.getElementById('topProgressBar'),
-      topProgressFill: document.getElementById('topProgressFill')
+      showAllBtn: document.getElementById('showAllBtn')
     };
 
     DOM.currentYear.textContent = new Date().getFullYear();
-
-    // ═══════════════════════════════════════════════════════════════════════════
-    // Loading Manager
-    // ═══════════════════════════════════════════════════════════════════════════
-    const LoadingManager = {
-      show(title = 'جاري التحميل', subtitle = 'يرجى الانتظار...') {
-        DOM.loadingTitle.textContent = title;
-        DOM.loadingSubtitle.textContent = subtitle;
-        DOM.loadingOverlay.classList.add('active');
-        this.updateProgress(0);
-      },
-
-      hide() {
-        DOM.loadingOverlay.classList.remove('active');
-        this.hideTopProgress();
-      },
-
-      updateProgress(percent) {
-        state.loadingProgress = Math.min(100, Math.max(0, percent));
-        DOM.loadingProgressFill.style.width = state.loadingProgress + '%';
-        DOM.loadingPercentage.textContent = Math.round(state.loadingProgress) + '%';
-      },
-
-      updateStats(folders, files) {
-        state.loadedFolders = folders;
-        state.loadedFiles = files;
-        DOM.loadingFolders.textContent = folders;
-        DOM.loadingFiles.textContent = files;
-      },
-
-      showTopProgress() {
-        DOM.topProgressBar.classList.add('active');
-        DOM.topProgressFill.style.width = '0%';
-      },
-
-      hideTopProgress() {
-        DOM.topProgressBar.classList.remove('active');
-        DOM.topProgressBar.classList.remove('indeterminate');
-      },
-
-      setTopProgress(percent) {
-        DOM.topProgressFill.style.width = Math.min(100, Math.max(0, percent)) + '%';
-      },
-
-      setIndeterminate() {
-        DOM.topProgressBar.classList.add('indeterminate');
-      },
-
-      setLoadingTab(libraryKey, isLoading) {
-        const tab = document.querySelector(`.library-tab[data-library="${libraryKey}"]`);
-        if (tab) {
-          tab.classList.toggle('loading', isLoading);
-        }
-      }
-    };
 
     // ═══════════════════════════════════════════════════════════════════════════
     // Utilities
@@ -2500,6 +2154,12 @@
       }
     }
 
+    function clearCache(library) {
+      try {
+        localStorage.removeItem(CONFIG.CACHE_KEY + '_' + library);
+      } catch (e) {}
+    }
+
     // ═══════════════════════════════════════════════════════════════════════════
     // Toast
     // ═══════════════════════════════════════════════════════════════════════════
@@ -2556,20 +2216,6 @@
       DOM.booksGrid.innerHTML = `<div class="status-message"><div class="status-icon"><i class="fas ${icon}"></i></div><h3 class="status-title">${title}</h3><p class="status-text">${text}</p></div>`;
     }
 
-    function renderCategoriesLoading() {
-      DOM.categoriesGrid.innerHTML = `
-        <div class="categories-loading">
-          <div class="categories-loading-content">
-            <div class="categories-loading-spinner"></div>
-            <div class="categories-loading-text">جاري تحميل التصنيفات...</div>
-            <div class="categories-loading-progress">
-              <div class="categories-loading-progress-fill" id="categoriesLoadingFill"></div>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
     // ═══════════════════════════════════════════════════════════════════════════
     // Data Loading
     // ═══════════════════════════════════════════════════════════════════════════
@@ -2582,26 +2228,13 @@
         state.allFolders = [];
         state.categories = [];
         state.totalSize = 0;
-        state.loadedFolders = 0;
-        state.loadedFiles = 0;
-        
-        // Show loading overlay
-        LoadingManager.show(
-          `جاري تحميل ${libraryConfig.name}`,
-          'يتم تحميل المجلدات والملفات...'
-        );
         
         const rootFolderId = libraryConfig.id;
         
         // تحميل المحتوى الرئيسي
-        LoadingManager.updateSubtitle('جاري تحميل المجلدات الرئيسية...');
         const rootData = await fetchFolderContents(rootFolderId);
         const rootFolders = (rootData.files || []).filter(f => f.mimeType === 'application/vnd.google-apps.folder');
         const rootFiles = (rootData.files || []).filter(f => f.mimeType !== 'application/vnd.google-apps.folder');
-        
-        state.totalFoldersToLoad = rootFolders.length;
-        LoadingManager.updateStats(0, rootFiles.length);
-        LoadingManager.updateProgress(5);
         
         // إضافة المجلدات الرئيسية
         rootFolders.forEach(folder => {
@@ -2638,15 +2271,8 @@
         });
         
         // تحميل محتوى كل مجلد رئيسي
-        let processedFolders = 0;
         for (const folder of rootFolders) {
-          processedFolders++;
-          const progress = 5 + (processedFolders / rootFolders.length) * 90;
-          LoadingManager.updateSubtitle(`جاري تحميل: ${folder.name}`);
-          LoadingManager.updateProgress(progress);
-          
           await loadFolderContentsRecursive(folder.id, folder.name, rootFolderId);
-          LoadingManager.updateStats(state.allFolders.length, state.allBooks.length);
         }
         
         // تحديث أعداد الكتب لكل تصنيف
@@ -2655,14 +2281,6 @@
         state.isLoading = false;
         state.totalBooks = state.allBooks.length;
         state.totalCategories = state.categories.length;
-        
-        LoadingManager.updateProgress(100);
-        LoadingManager.updateSubtitle('تم التحميل بنجاح!');
-        
-        // Hide loading after short delay
-        setTimeout(() => {
-          LoadingManager.hide();
-        }, 500);
         
         updateStats();
         renderCategories();
@@ -2679,9 +2297,7 @@
       } catch (error) {
         console.error('Error loading library:', error);
         state.isLoading = false;
-        LoadingManager.hide();
         renderStatusMessage('fa-exclamation-triangle', 'خطأ في التحميل', 'حدث خطأ أثناء تحميل المكتبة. يرجى تحديث الصفحة.');
-        showToast('خطأ', 'فشل تحميل المكتبة', 'error');
       }
     }
 
@@ -2726,7 +2342,7 @@
           state.totalSize += parseInt(file.size) || 0;
         });
         
-        // تحميل المحتوى الفرعي
+        // تحميل المحتوى الفرعي بشكل متوازي
         if (folders.length > 0) {
           const promises = folders.map(folder => 
             loadFolderContentsRecursive(folder.id, folder.name, folderId)
@@ -2740,6 +2356,7 @@
     }
 
     function updateCategoryCounts() {
+      // حساب عدد الكتب في كل مجلد
       const folderCounts = {};
       
       state.allBooks.forEach(book => {
@@ -2749,6 +2366,7 @@
         folderCounts[book.folderId]++;
       });
       
+      // تحديث أعداد التصنيفات
       state.categories.forEach(cat => {
         cat.bookCount = folderCounts[cat.id] || 0;
       });
@@ -2759,7 +2377,6 @@
     // ═══════════════════════════════════════════════════════════════════════════
     async function initLibrary() {
       renderSkeletons(8);
-      renderCategoriesLoading();
       
       const cachedData = loadFromCache(state.currentLibrary);
       if (cachedData) {
@@ -2776,7 +2393,7 @@
         showRootFolder();
         
         // تحديث في الخلفية
-        setTimeout(() => refreshDataInBackground(), 3000);
+        setTimeout(() => refreshDataInBackground(), 2000);
         return;
       }
       
@@ -2786,9 +2403,6 @@
 
     async function refreshDataInBackground() {
       try {
-        LoadingManager.showTopProgress();
-        LoadingManager.setIndeterminate();
-        
         const libraryConfig = CONFIG.LIBRARIES[state.currentLibrary];
         const rootFolderId = libraryConfig.id;
         
@@ -2796,23 +2410,23 @@
         const rootFolders = (rootData.files || []).filter(f => f.mimeType === 'application/vnd.google-apps.folder');
         
         let totalFiles = 0;
+        const counts = {};
         
         for (const folder of rootFolders) {
           const folderData = await fetchFolderContents(folder.id);
           const files = (folderData.files || []).filter(f => f.mimeType !== 'application/vnd.google-apps.folder');
           totalFiles += files.length;
+          counts[folder.id] = files.length;
         }
         
-        LoadingManager.hideTopProgress();
-        
         if (totalFiles !== state.totalBooks) {
-          showToast('تحديث متاح', 'جاري تحديث البيانات...', 'info');
+          // إعادة تحميل البيانات
           await loadAllData();
           showRootFolder();
+          showToast('تم التحديث', 'تم تحديث المكتبة ببيانات جديدة', 'success');
         }
       } catch (e) {
         console.warn('Background refresh failed:', e);
-        LoadingManager.hideTopProgress();
       }
     }
 
@@ -2833,6 +2447,7 @@
       DOM.sectionTitleText.textContent = 'جميع الأقسام';
       updateBreadcrumbs();
       
+      // عرض المجلدات الرئيسية
       const rootFolders = state.allFolders.filter(f => f.parentId === libraryConfig.id);
       const rootFiles = state.allBooks.filter(b => b.folderId === libraryConfig.id);
       
@@ -2862,6 +2477,7 @@
       
       renderSkeletons(8);
       
+      // عرض المجلدات الفرعية والملفات
       const subFolders = state.allFolders.filter(f => f.parentId === folderId);
       const files = state.allBooks.filter(b => b.folderId === folderId);
       
@@ -2876,15 +2492,13 @@
         ];
         filterAndRender();
       } else {
+        // تحميل من API إذا لم تكن البيانات موجودة
         try {
-          LoadingManager.showTopProgress();
           const data = await fetchFolderContents(folderId);
-          LoadingManager.hideTopProgress();
           state.currentItems = data.files || [];
           filterAndRender();
         } catch (error) {
           console.error('Error opening folder:', error);
-          LoadingManager.hideTopProgress();
           renderStatusMessage('fa-exclamation-triangle', 'خطأ في التحميل', 'حدث خطأ أثناء تحميل المحتوى.');
         }
       }
@@ -2903,22 +2517,20 @@
       const libraryConfig = CONFIG.LIBRARIES[state.currentLibrary];
       const rootFolderId = libraryConfig.id;
       
-      if (state.categories.length === 0) {
-        renderCategoriesLoading();
-        return;
-      }
-      
       let html = `<div class="category-chip ${!state.selectedCategory ? 'active' : ''}" data-id=""><i class="fas fa-layer-group"></i><span>الكل</span></div>`;
       
+      // المجلدات الرئيسية
       const mainCategories = state.categories.filter(c => c.parentId === rootFolderId);
       
       mainCategories.forEach(cat => {
         html += `<div class="category-chip ${state.selectedCategory === cat.id ? 'active' : ''}" data-id="${cat.id}"><i class="fas fa-folder"></i><span>${cat.name}</span><span class="count">${cat.bookCount}</span></div>`;
       });
       
+      // إضافة فاصل والمجلدات الفرعية
       const subCategories = state.categories.filter(c => c.parentId !== rootFolderId && c.bookCount > 0);
       
       if (subCategories.length > 0) {
+        // تجميع حسب المجلد الرئيسي
         const grouped = {};
         subCategories.forEach(sub => {
           if (!grouped[sub.parentId]) {
@@ -2932,12 +2544,12 @@
           if (parent && grouped[parentId].length > 0) {
             html += `<div class="category-group"><div class="category-group-title"><i class="fas fa-folder-open"></i> ${parent.name}</div></div>`;
             
-            grouped[parentId].slice(0, 8).forEach(subCat => {
+            grouped[parentId].slice(0, 10).forEach(subCat => {
               html += `<div class="category-chip sub-category ${state.selectedCategory === subCat.id ? 'active' : ''}" data-id="${subCat.id}"><i class="fas fa-folder-open"></i><span>${subCat.name}</span><span class="count">${subCat.bookCount}</span></div>`;
             });
             
-            if (grouped[parentId].length > 8) {
-              html += `<div class="category-chip sub-category" data-id="${parentId}" data-show-all="true"><i class="fas fa-ellipsis-h"></i><span>+${grouped[parentId].length - 8} المزيد</span></div>`;
+            if (grouped[parentId].length > 10) {
+              html += `<div class="category-chip sub-category" data-id="${parentId}" data-show-all="true"><i class="fas fa-ellipsis-h"></i><span>+${grouped[parentId].length - 10} المزيد</span></div>`;
             }
           }
         });
@@ -2945,12 +2557,14 @@
       
       DOM.categoriesGrid.innerHTML = html;
       
+      // Event listeners للتصنيفات
       document.querySelectorAll('.category-chip').forEach(chip => {
         chip.addEventListener('click', () => {
           const id = chip.dataset.id;
           const showAll = chip.dataset.showAll;
           
           if (showAll === 'true') {
+            // عرض جميع المجلدات الفرعية
             const parentId = chip.dataset.id;
             openFolder(parentId, state.categories.find(c => c.id === parentId)?.name || '');
             return;
@@ -3017,6 +2631,7 @@
       let items = [];
       
       if (state.showingAllBooks) {
+        // عرض جميع الكتب أو كتب تصنيف معين
         items = state.allBooks.map(book => ({ ...book, mimeType: book.mimeType || 'application/octet-stream' }));
         if (state.selectedCategory) {
           items = items.filter(item => item.folderId === state.selectedCategory);
@@ -3077,12 +2692,15 @@
       });
       
       DOM.booksGrid.innerHTML = html;
+      
+      // إضافة event listeners للملفات
       attachItemListeners();
     }
 
     function attachItemListeners() {
       const isMobile = window.innerWidth <= 480;
       
+      // Event listeners للملفات
       document.querySelectorAll('.folder-card').forEach(card => {
         card.addEventListener('click', () => {
           const id = card.dataset.id;
@@ -3221,16 +2839,12 @@
       state.showingAllBooks = false;
       DOM.searchInput.value = '';
       
-      // Update active tab with loading state
+      // Update active tab
       document.querySelectorAll('.library-tab').forEach(tab => {
-        tab.classList.remove('active', 'loading');
-        if (tab.dataset.library === library) {
-          tab.classList.add('loading');
-        }
+        tab.classList.toggle('active', tab.dataset.library === library);
       });
       
       renderSkeletons(8);
-      renderCategoriesLoading();
       
       const cachedData = loadFromCache(library);
       if (cachedData) {
@@ -3242,26 +2856,14 @@
         state.totalCategories = cachedData.totalCategories || 0;
         state.isLoading = false;
         
-        // Update active tab
-        document.querySelectorAll('.library-tab').forEach(tab => {
-          tab.classList.remove('loading');
-          tab.classList.toggle('active', tab.dataset.library === library);
-        });
-        
         updateStats();
         renderCategories();
         showRootFolder();
         
-        setTimeout(() => refreshDataInBackground(), 3000);
+        // تحديث في الخلفية
+        setTimeout(() => refreshDataInBackground(), 2000);
       } else {
         await loadAllData();
-        
-        // Update active tab after loading
-        document.querySelectorAll('.library-tab').forEach(tab => {
-          tab.classList.remove('loading');
-          tab.classList.toggle('active', tab.dataset.library === library);
-        });
-        
         showRootFolder();
       }
     }
@@ -3300,12 +2902,9 @@
         });
       });
       
+      // Library tabs click handlers
       document.querySelectorAll('.library-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          if (!tab.classList.contains('loading')) {
-            switchLibrary(tab.dataset.library);
-          }
-        });
+        tab.addEventListener('click', () => switchLibrary(tab.dataset.library));
       });
       
       DOM.categoriesToggle.addEventListener('click', () => {
