@@ -28,6 +28,10 @@
       --accent-gold-dark: #a07f3a;
       --accent-emerald: #2d8a6e;
       --accent-emerald-light: #3da882;
+      --accent-blue: #3498db;
+      --accent-blue-light: #5dade2;
+      --accent-purple: #9b59b6;
+      --accent-purple-light: #bb8fce;
       
       --text-primary: #f0ebe3;
       --text-secondary: #b8c4c5;
@@ -230,6 +234,250 @@
         opacity: 1;
         transform: translateX(0);
       }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       المكتبات المقترحة - قائمة منسدلة
+       ═══════════════════════════════════════════════════════════════════════ */
+    
+    .suggested-libraries {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .suggested-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .suggested-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .suggested-title i {
+      color: var(--accent-emerald-light);
+    }
+
+    .suggested-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: var(--transition-fast);
+    }
+
+    .suggested-toggle:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent-emerald);
+      color: var(--accent-emerald-light);
+    }
+
+    .suggested-toggle i {
+      font-size: 0.7rem;
+      transition: transform var(--transition-normal);
+    }
+
+    .suggested-toggle.expanded i {
+      transform: rotate(180deg);
+    }
+
+    /* شبكة المكتبات */
+    .libraries-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease;
+      margin-top: 0;
+    }
+
+    .libraries-grid.expanded {
+      max-height: 2000px;
+      opacity: 1;
+      margin-top: 12px;
+    }
+
+    /* بطاقة مكتبة */
+    .library-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      transition: var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .library-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-medium);
+      transform: translateY(-2px);
+    }
+
+    .library-card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .library-card-icon.gold {
+      background: rgba(201, 160, 80, 0.12);
+      color: var(--accent-gold);
+    }
+
+    .library-card-icon.blue {
+      background: rgba(52, 152, 219, 0.12);
+      color: var(--accent-blue-light);
+    }
+
+    .library-card-icon.purple {
+      background: rgba(155, 89, 182, 0.12);
+      color: var(--accent-purple-light);
+    }
+
+    .library-card-icon.emerald {
+      background: rgba(45, 138, 110, 0.12);
+      color: var(--accent-emerald-light);
+    }
+
+    .library-card-icon.telegram {
+      background: rgba(0, 136, 204, 0.12);
+      color: #0088cc;
+    }
+
+    .library-card-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .library-card-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .library-card-url {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .library-card-arrow {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      transition: var(--transition-fast);
+    }
+
+    .library-card:hover .library-card-arrow {
+      color: var(--accent-gold);
+      transform: translateX(-3px);
+    }
+
+    /* قسم المكتبات المجمعة */
+    .libraries-section {
+      margin-bottom: 12px;
+    }
+
+    .libraries-section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .libraries-section-header:hover {
+      background: var(--bg-card);
+    }
+
+    .libraries-section-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+    }
+
+    .libraries-section-icon.websites {
+      background: rgba(52, 152, 219, 0.15);
+      color: var(--accent-blue-light);
+    }
+
+    .libraries-section-icon.telegram {
+      background: rgba(0, 136, 204, 0.15);
+      color: #0088cc;
+    }
+
+    .libraries-section-title {
+      flex: 1;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .libraries-section-count {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      background: var(--bg-card);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+    }
+
+    .libraries-section-arrow {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      transition: transform var(--transition-normal);
+    }
+
+    .libraries-section.expanded .libraries-section-arrow {
+      transform: rotate(180deg);
+    }
+
+    .libraries-section-content {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+      padding: 0 0 0 0;
+    }
+
+    .libraries-section.expanded .libraries-section-content {
+      max-height: 1500px;
+      opacity: 1;
+      padding: 10px 0 0 0;
     }
 
     /* Header */
@@ -689,7 +937,7 @@
 
     /* Categories Panel */
     .categories-panel {
-      max-height: 500px;
+      max-height: 600px;
       overflow-y: auto;
       transition: max-height var(--transition-smooth), opacity var(--transition-smooth), padding var(--transition-smooth);
       opacity: 1;
@@ -1783,6 +2031,14 @@
       
       .toast-container { left: 10px; right: 10px; }
       .toast { max-width: 100%; }
+      
+      .libraries-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .suggested-libraries {
+        padding: 0;
+      }
     }
 
     @media (max-width: 480px) {
@@ -1922,7 +2178,7 @@
         </button>
         <button class="library-tab" data-library="child">
           <span class="library-tab-icon"><i class="fas fa-child"></i></span>
-          <span class="library-tab-name">مكتبة الطفل الموالي</span>
+          <span class="library-tab-name">مكتبة الطفل</span>
         </button>
         <button class="library-tab" data-library="electronic">
           <span class="library-tab-icon"><i class="fas fa-laptop"></i></span>
@@ -1934,7 +2190,7 @@
         </button>
         <button class="library-tab" data-library="quds">
           <span class="library-tab-icon"><i class="fas fa-mosque"></i></span>
-          <span class="library-tab-name">صور القدس في عمامة</span>
+          <span class="library-tab-name">صور القدس</span>
         </button>
       </div>
     </div>
@@ -1955,7 +2211,7 @@
         </button>
       </div>
       
-      <!-- شريط التحميل في التصنيفات -->
+      <!-- شريط التحميل -->
       <div class="categories-progress-wrapper" id="categoriesProgressWrapper">
         <div class="categories-progress-header">
           <div class="categories-progress-title">
@@ -1977,6 +2233,270 @@
       
       <div class="categories-panel" id="categoriesPanel">
         <div class="categories-grid" id="categoriesGrid"></div>
+        
+        <!-- المكتبات المقترحة -->
+        <div class="suggested-libraries" id="suggestedLibraries">
+          <div class="suggested-header">
+            <div class="suggested-title">
+              <i class="fas fa-external-link-alt"></i>
+              <span>مكتبات رقمية مقترحة</span>
+            </div>
+            <button class="suggested-toggle" id="suggestedToggle">
+              <span>عرض الكل</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </div>
+          
+          <div class="libraries-grid" id="librariesGrid">
+            
+            <!-- المكتبات الإلكترونية -->
+            <div class="libraries-section" id="websitesSection">
+              <div class="libraries-section-header" onclick="toggleLibrarySection('websitesSection')">
+                <div class="libraries-section-icon websites">
+                  <i class="fas fa-globe"></i>
+                </div>
+                <span class="libraries-section-title">المكتبات الإلكترونية</span>
+                <span class="libraries-section-count">16 مكتبة</span>
+                <i class="fas fa-chevron-down libraries-section-arrow"></i>
+              </div>
+              <div class="libraries-section-content">
+                <div class="libraries-grid" style="max-height: none; opacity: 1;">
+                  <a href="https://books.almaaref.org/" target="_blank" class="library-card">
+                    <div class="library-card-icon gold"><i class="fas fa-book"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">مكتبة المعارف</div>
+                      <div class="library-card-url">books.almaaref.org</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://alfeker.net/" target="_blank" class="library-card">
+                    <div class="library-card-icon blue"><i class="fas fa-lightbulb"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">شبكة الفكر</div>
+                      <div class="library-card-url">alfeker.net</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://books.rafed.net/" target="_blank" class="library-card">
+                    <div class="library-card-icon emerald"><i class="fas fa-stream"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">مكتبة الرافد</div>
+                      <div class="library-card-url">books.rafed.net</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="http://shiaonlinelibrary.com/" target="_blank" class="library-card">
+                    <div class="library-card-icon purple"><i class="fas fa-book-reader"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">الشيعة أونلاين</div>
+                      <div class="library-card-url">shiaonlinelibrary.com</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://www.mahdi-lib.com/" target="_blank" class="library-card">
+                    <div class="library-card-icon gold"><i class="fas fa-moon"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">مكتبة الإمام المهدي</div>
+                      <div class="library-card-url">mahdi-lib.com</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://m-mahdi.net/" target="_blank" class="library-card">
+                    <div class="library-card-icon emerald"><i class="fas fa-microscope"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">مركز الدراسات التخصصية</div>
+                      <div class="library-card-url">m-mahdi.net</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://ablibrary.net/" target="_blank" class="library-card">
+                    <div class="library-card-icon blue"><i class="fas fa-users"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">مكتبة أهل البيت</div>
+                      <div class="library-card-url">ablibrary.net</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://www.narjeslibrary.com/" target="_blank" class="library-card">
+                    <div class="library-card-icon purple"><i class="fas fa-spa"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">مكتبة النرجس</div>
+                      <div class="library-card-url">narjeslibrary.com</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://www.al-mousa.net/" target="_blank" class="library-card">
+                    <div class="library-card-icon gold"><i class="fas fa-landmark"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">مكتبة الموسى الثقافية</div>
+                      <div class="library-card-url">al-mousa.net</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://www.imamali.net/?id=7508" target="_blank" class="library-card">
+                    <div class="library-card-icon emerald"><i class="fas fa-mosque"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">شبكة الإمام علي</div>
+                      <div class="library-card-url">imamali.net</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://www.aljawadain.org/library/books/all-books" target="_blank" class="library-card">
+                    <div class="library-card-icon blue"><i class="fas fa-book-open"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">مكتبة الجوادين</div>
+                      <div class="library-card-url">aljawadain.org</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://mishkat1.blogspot.com/" target="_blank" class="library-card">
+                    <div class="library-card-icon gold"><i class="fas fa-candle-holder"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">المشكاة الشيعية</div>
+                      <div class="library-card-url">mishkat1.blogspot.com</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://alseraj.net/" target="_blank" class="library-card">
+                    <div class="library-card-icon purple"><i class="fas fa-lightbulb"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">شبكة السراج</div>
+                      <div class="library-card-url">alseraj.net</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://aqaed.net/books" target="_blank" class="library-card">
+                    <div class="library-card-icon emerald"><i class="fas fa-balance-scale"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">مركز الأبحاث العقائدية</div>
+                      <div class="library-card-url">aqaed.net</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://www.ghbook.ir/" target="_blank" class="library-card">
+                    <div class="library-card-icon blue"><i class="fas fa-book"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">المكتبة القائمية</div>
+                      <div class="library-card-url">ghbook.ir</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://www.m-alshirazi.com/part.php?id=34" target="_blank" class="library-card">
+                    <div class="library-card-icon gold"><i class="fas fa-university"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">مكتبة مؤسسة التقى</div>
+                      <div class="library-card-url">m-alshirazi.com</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+            <!-- مكتبات تيليجرام -->
+            <div class="libraries-section" id="telegramSection">
+              <div class="libraries-section-header" onclick="toggleLibrarySection('telegramSection')">
+                <div class="libraries-section-icon telegram">
+                  <i class="fab fa-telegram"></i>
+                </div>
+                <span class="libraries-section-title">مكتبات تيليجرام</span>
+                <span class="libraries-section-count">8 مكتبات</span>
+                <i class="fas fa-chevron-down libraries-section-arrow"></i>
+              </div>
+              <div class="libraries-section-content">
+                <div class="libraries-grid" style="max-height: none; opacity: 1;">
+                  <a href="https://t.me/alnjafy" target="_blank" class="library-card">
+                    <div class="library-card-icon telegram"><i class="fab fa-telegram"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">مكتبة النور</div>
+                      <div class="library-card-url">@alnjafy</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://t.me/shiabooks_pdf" target="_blank" class="library-card">
+                    <div class="library-card-icon telegram"><i class="fab fa-telegram"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">الكتب الشيعية PDF</div>
+                      <div class="library-card-url">@shiabooks_pdf</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://t.me/ww749" target="_blank" class="library-card">
+                    <div class="library-card-icon telegram"><i class="fab fa-telegram"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">مكتبة الفكر</div>
+                      <div class="library-card-url">@ww749</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://t.me/raheb18" target="_blank" class="library-card">
+                    <div class="library-card-icon telegram"><i class="fab fa-telegram"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">مكتبة المعارف</div>
+                      <div class="library-card-url">@raheb18</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://t.me/annv9b" target="_blank" class="library-card">
+                    <div class="library-card-icon telegram"><i class="fab fa-telegram"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">مكتبة الزهراء</div>
+                      <div class="library-card-url">@annv9b</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://t.me/hawza_books" target="_blank" class="library-card">
+                    <div class="library-card-icon telegram"><i class="fab fa-telegram"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">ملخصات كتب حوزوية</div>
+                      <div class="library-card-url">@hawza_books</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://t.me/Al_qarashi97m" target="_blank" class="library-card">
+                    <div class="library-card-icon telegram"><i class="fab fa-telegram"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">الشروح والمتون الحوزوية</div>
+                      <div class="library-card-url">@Al_qarashi97m</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                  
+                  <a href="https://t.me/arirpubl" target="_blank" class="library-card">
+                    <div class="library-card-icon telegram"><i class="fab fa-telegram"></i></div>
+                    <div class="library-card-content">
+                      <div class="library-card-name">دار الثورة الإسلامية</div>
+                      <div class="library-card-url">@arirpubl</div>
+                    </div>
+                    <i class="fas fa-external-link-alt library-card-arrow"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -2100,7 +2620,7 @@
           <h4>تواصل معنا</h4>
           <ul class="footer-links">
             <li><a href="https://t.me/nwr_lhwz" target="_blank"><i class="fab fa-telegram"></i> قناة التيليجرام</a></li>
-            <li><a href="https://chatgpt.com/g/g-67d5f5a8c32c8191ab7bb16ed6a48bfa-nwr-lhwz" target="_blank"><i class="fas fa-robot"></i> الذكاء الاصطناعي</a></li>
+            <li><a href="https://t.me/twasl_noor_alhawza_bot" target="_blank"><i class="fas fa-robot"></i> الذكاء الاصطناعي</a></li>
           </ul>
         </div>
       </div>
@@ -2117,30 +2637,15 @@
     const CONFIG = {
       API_KEY: 'AIzaSyARkJQxrGCn-OWSbOWip2t9A_PV55Ob07o',
       LIBRARIES: {
-        main: {
-          id: '1sEulys13YfalOS5yVoaQZeDf4nEF3ObJ',
-          name: 'المكتبة الرئيسية'
-        },
-        child: {
-          id: '1t5wlgrqFQyMOYAnKiGN-ee8nUaXoQSsl',
-          name: 'مكتبة الطفل الموالي'
-        },
-        electronic: {
-          id: '1HZwxVbDfNfVOILQX3eg18T-NmUwYy-Uw',
-          name: 'المكتبة الإلكترونية'
-        },
-        poems: {
-          id: '1l7zE8Q6B-2Iu_4I9fWBPfdp9ArMQklgE',
-          name: 'قصائد ومجالس كاملة'
-        },
-        quds: {
-          id: '1TLLTDDtUKmxWE1ZCHoC9g1WaLcdFNjBZ',
-          name: 'صور القدس في عمامة'
-        }
+        main: { id: '1sEulys13YfalOS5yVoaQZeDf4nEF3ObJ', name: 'المكتبة الرئيسية' },
+        child: { id: '1t5wlgrqFQyMOYAnKiGN-ee8nUaXoQSsl', name: 'مكتبة الطفل الموالي' },
+        electronic: { id: '1HZwxVbDfNfVOILQX3eg18T-NmUwYy-Uw', name: 'المكتبة الإلكترونية' },
+        poems: { id: '1l7zE8Q6B-2Iu_4I9fWBPfdp9ArMQklgE', name: 'قصائد ومجالس كاملة' },
+        quds: { id: '1TLLTDDtUKmxWE1ZCHoC9g1WaLcdFNjBZ', name: 'صور القدس في عمامة' }
       },
       PAGE_SIZE: 1000,
-      CACHE_KEY: 'noor_library_v11',
-      CACHE_TIME: 30 * 24 * 60 * 60 * 1000, // 30 يوم - تخزين طويل
+      CACHE_KEY: 'noor_library_v12',
+      CACHE_TIME: 30 * 24 * 60 * 60 * 1000,
       ITEMS_PER_PAGE: 30
     };
 
@@ -2170,11 +2675,11 @@
       totalFoldersToLoad: 0,
       loadedFoldersCount: 0,
       isLoadingData: false,
-      librariesLoaded: {} // لتتبع المكتبات المحملة
+      librariesLoaded: {}
     };
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // DOM Elements
+    // DOM
     // ═══════════════════════════════════════════════════════════════════════════
     const DOM = {
       header: document.getElementById('header'),
@@ -2213,7 +2718,9 @@
       categoriesProgressBar: document.getElementById('categoriesProgressBar'),
       progressLoaded: document.getElementById('progressLoaded'),
       progressTotal: document.getElementById('progressTotal'),
-      progressCurrentFolder: document.getElementById('progressCurrentFolder')
+      progressCurrentFolder: document.getElementById('progressCurrentFolder'),
+      suggestedToggle: document.getElementById('suggestedToggle'),
+      librariesGrid: document.getElementById('librariesGrid')
     };
 
     DOM.currentYear.textContent = new Date().getFullYear();
@@ -2234,16 +2741,13 @@
     function updateCategoriesProgress(currentFolderName) {
       state.loadedFoldersCount++;
       const percent = Math.round((state.loadedFoldersCount / state.totalFoldersToLoad) * 100);
-      
       DOM.progressLoaded.textContent = state.loadedFoldersCount;
       DOM.categoriesProgressBar.style.width = `${percent}%`;
       DOM.progressCurrentFolder.textContent = currentFolderName;
     }
 
     function hideCategoriesProgress() {
-      setTimeout(() => {
-        DOM.categoriesProgressWrapper.classList.remove('active');
-      }, 500);
+      setTimeout(() => DOM.categoriesProgressWrapper.classList.remove('active'), 500);
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -2313,36 +2817,26 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // Cache Functions - حفظ دائم
+    // Cache
     // ═══════════════════════════════════════════════════════════════════════════
     function saveToCache(data, library) {
       try {
-        const cacheData = {
-          ...data,
-          timestamp: Date.now(),
-          library
-        };
-        localStorage.setItem(CONFIG.CACHE_KEY + '_' + library, JSON.stringify(cacheData));
-        console.log(`Saved ${library} to cache`);
-      } catch (e) {
-        console.warn('Cache save failed:', e);
-      }
+        localStorage.setItem(CONFIG.CACHE_KEY + '_' + library, JSON.stringify({ ...data, timestamp: Date.now(), library }));
+      } catch (e) {}
     }
 
     function loadFromCache(library) {
       try {
         const cached = localStorage.getItem(CONFIG.CACHE_KEY + '_' + library);
         if (!cached) return null;
-        const data = JSON.parse(cached);
-        // لا نحذف الكاش القديم - نحتفظ به للسرعة
-        return data;
+        return JSON.parse(cached);
       } catch (e) {
         return null;
       }
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // Toast Functions
+    // Toast
     // ═══════════════════════════════════════════════════════════════════════════
     function showToast(title, message, type = 'info') {
       const toast = document.createElement('div');
@@ -2362,7 +2856,7 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // API Functions
+    // API
     // ═══════════════════════════════════════════════════════════════════════════
     async function fetchFromAPI(endpoint, params = {}) {
       const url = new URL(`https://www.googleapis.com/drive/v3/${endpoint}`);
@@ -2383,7 +2877,7 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // Skeleton & Status Functions
+    // Skeleton & Status
     // ═══════════════════════════════════════════════════════════════════════════
     function renderSkeletons(count = 8) {
       let html = '';
@@ -2398,7 +2892,7 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // Data Loading - Progressive
+    // Data Loading
     // ═══════════════════════════════════════════════════════════════════════════
     async function loadAllDataProgressive(isFirstLoad = false) {
       const libraryConfig = CONFIG.LIBRARIES[state.currentLibrary];
@@ -2413,91 +2907,62 @@
       state.totalSize = 0;
       state.totalBooks = 0;
       
-      if (isFirstLoad) {
-        renderSkeletons(8);
-      }
+      if (isFirstLoad) renderSkeletons(8);
       
       try {
-        // تحميل المجلدات الرئيسية
         const rootData = await fetchFolderContents(rootFolderId);
         const rootFolders = (rootData.files || []).filter(f => f.mimeType === 'application/vnd.google-apps.folder');
         const rootFiles = (rootData.files || []).filter(f => f.mimeType !== 'application/vnd.google-apps.folder');
         
-        // إضافة المجلدات الرئيسية
         rootFolders.forEach(folder => {
-          state.allFolders.push({
-            id: folder.id,
-            name: folder.name,
-            parentId: rootFolderId,
-            isRoot: true,
-            depth: 0
-          });
+          state.allFolders.push({ id: folder.id, name: folder.name, parentId: rootFolderId, isRoot: true, depth: 0 });
         });
         
-        // معالجة الملفات في الجذر
         rootFiles.forEach(file => {
           state.allBooks.push({
-            id: file.id,
-            name: file.name,
-            mimeType: file.mimeType,
-            size: parseInt(file.size) || 0,
-            createdTime: file.createdTime,
-            thumbnailLink: file.thumbnailLink,
-            webViewLink: file.webViewLink,
-            iconLink: file.iconLink,
-            folderId: rootFolderId,
-            folderName: libraryName
+            id: file.id, name: file.name, mimeType: file.mimeType, size: parseInt(file.size) || 0,
+            createdTime: file.createdTime, thumbnailLink: file.thumbnailLink,
+            webViewLink: file.webViewLink, iconLink: file.iconLink,
+            folderId: rootFolderId, folderName: libraryName
           });
           state.totalSize += parseInt(file.size) || 0;
         });
         
         state.totalBooks = state.allBooks.length;
         
-        // إظهار شريط التحميل فقط في التحميل الأول
         if (isFirstLoad) {
           showCategoriesProgress(rootFolders.length);
           renderCategoriesInitial(rootFolders);
           updateStats();
         }
         
-        // تحميل كل مجلد تدريجياً
         for (let i = 0; i < rootFolders.length; i++) {
           const folder = rootFolders[i];
           await loadFolderAndSubfoldersProgressive(folder.id, folder.name, rootFolderId, null, 0);
-          
           if (isFirstLoad) {
             updateCategoriesProgress(folder.name);
             updateStats();
           }
         }
         
-        if (isFirstLoad) {
-          hideCategoriesProgress();
-        }
+        if (isFirstLoad) hideCategoriesProgress();
         
         state.isLoading = false;
         state.isLoadingData = false;
         state.totalCategories = state.categories.length;
         state.librariesLoaded[state.currentLibrary] = true;
         
-        // تحديث نهائي
         updateStats();
         renderCategories();
         showRootFolder();
         
-        // حفظ في الكاش
         saveToCache({
-          allBooks: state.allBooks,
-          allFolders: state.allFolders,
+          allBooks: state.allBooks, allFolders: state.allFolders,
           categories: state.categories.map(c => ({ ...c, isNew: false })),
-          totalSize: state.totalSize,
-          totalBooks: state.totalBooks,
-          totalCategories: state.totalCategories
+          totalSize: state.totalSize, totalBooks: state.totalBooks, totalCategories: state.totalCategories
         }, state.currentLibrary);
         
-        if (isFirstLoad) {
-          showToast('تم التحميل', `تم تحميل ${state.totalBooks} كتاب`, 'success');
-        }
+        if (isFirstLoad) showToast('تم التحميل', `تم تحميل ${state.totalBooks} كتاب`, 'success');
         
       } catch (error) {
         console.error('Error loading library:', error);
@@ -2507,7 +2972,6 @@
           hideCategoriesProgress();
           renderStatusMessage('fa-exclamation-triangle', 'خطأ في التحميل', 'حدث خطأ أثناء تحميل المكتبة.');
         }
-        showToast('خطأ', 'فشل تحميل المكتبة', 'error');
       }
     }
 
@@ -2517,56 +2981,33 @@
         const folders = (data.files || []).filter(f => f.mimeType === 'application/vnd.google-apps.folder');
         const files = (data.files || []).filter(f => f.mimeType !== 'application/vnd.google-apps.folder');
         
-        // معالجة الملفات
         files.forEach(file => {
           state.allBooks.push({
-            id: file.id,
-            name: file.name,
-            mimeType: file.mimeType,
-            size: parseInt(file.size) || 0,
-            createdTime: file.createdTime,
-            thumbnailLink: file.thumbnailLink,
-            webViewLink: file.webViewLink,
-            iconLink: file.iconLink,
-            folderId: folderId,
-            folderName: folderName
+            id: file.id, name: file.name, mimeType: file.mimeType, size: parseInt(file.size) || 0,
+            createdTime: file.createdTime, thumbnailLink: file.thumbnailLink,
+            webViewLink: file.webViewLink, iconLink: file.iconLink,
+            folderId: folderId, folderName: folderName
           });
           state.totalSize += parseInt(file.size) || 0;
         });
         
         state.totalBooks = state.allBooks.length;
         
-        // إضافة التصنيف
         let category = state.categories.find(c => c.id === folderId);
         if (!category) {
-          category = {
-            id: folderId,
-            name: folderName,
-            parentId: parentId,
-            parentName: parentName,
-            bookCount: files.length,
-            isNew: true
-          };
+          category = { id: folderId, name: folderName, parentId: parentId, parentName: parentName, bookCount: files.length, isNew: true };
           state.categories.push(category);
         } else {
           category.bookCount = files.length;
           category.isNew = true;
         }
         
-        // إضافة المجلدات الفرعية
         folders.forEach(subFolder => {
-          state.allFolders.push({
-            id: subFolder.id,
-            name: subFolder.name,
-            parentId: folderId,
-            depth: depth + 1
-          });
+          state.allFolders.push({ id: subFolder.id, name: subFolder.name, parentId: folderId, depth: depth + 1 });
         });
         
-        // عرض التصنيف الجديد
         addCategoryToGrid(category);
         
-        // تحميل المجلدات الفرعية
         for (const subFolder of folders) {
           await loadFolderAndSubfoldersProgressive(subFolder.id, subFolder.name, folderId, folderName, depth + 1);
         }
@@ -2578,11 +3019,9 @@
 
     function renderCategoriesInitial(rootFolders) {
       let html = `<div class="category-chip active" data-id=""><i class="fas fa-layer-group"></i><span>الكل</span></div>`;
-      
       rootFolders.forEach(folder => {
         html += `<div class="category-chip" data-id="${folder.id}"><i class="fas fa-folder"></i><span>${folder.name}</span><span class="count">...</span></div>`;
       });
-      
       DOM.categoriesGrid.innerHTML = html;
       attachCategoryListeners();
     }
@@ -2596,7 +3035,6 @@
       }
       
       const isSubCategory = category.parentId && category.parentId !== CONFIG.LIBRARIES[state.currentLibrary].id;
-      
       const chip = document.createElement('div');
       chip.className = `category-chip new-item ${isSubCategory ? 'sub-category' : ''}`;
       chip.dataset.id = category.id;
@@ -2628,10 +3066,7 @@
         DOM.sectionTitleText.textContent = 'جميع الكتب';
       }
       
-      state.folderHistory = [{ 
-        id: CONFIG.LIBRARIES[state.currentLibrary].id, 
-        name: CONFIG.LIBRARIES[state.currentLibrary].name
-      }];
+      state.folderHistory = [{ id: CONFIG.LIBRARIES[state.currentLibrary].id, name: CONFIG.LIBRARIES[state.currentLibrary].name }];
       updateBreadcrumbs();
       filterAndRender();
     }
@@ -2643,14 +3078,12 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // Initialization - تحميل من الكاش أولاً
+    // Initialization
     // ═══════════════════════════════════════════════════════════════════════════
     async function initLibrary() {
-      // محاولة التحميل من الكاش أولاً
       const cachedData = loadFromCache(state.currentLibrary);
       
       if (cachedData && cachedData.allBooks && cachedData.allBooks.length > 0) {
-        // تحميل من الكاش فوراً - بدون انتظار
         state.allBooks = cachedData.allBooks || [];
         state.allFolders = cachedData.allFolders || [];
         state.categories = cachedData.categories || [];
@@ -2663,12 +3096,9 @@
         updateStats();
         renderCategories();
         showRootFolder();
-        
-        console.log(`Loaded ${state.currentLibrary} from cache (${state.totalBooks} books)`);
         return;
       }
       
-      // تحميل جديد فقط إذا لم يوجد كاش
       await loadAllDataProgressive(true);
     }
 
@@ -2724,7 +3154,7 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // UI Update Functions
+    // UI
     // ═══════════════════════════════════════════════════════════════════════════
     function updateStats() {
       DOM.totalBooks.textContent = state.totalBooks;
@@ -2951,7 +3381,7 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // Modal Functions
+    // Modal
     // ═══════════════════════════════════════════════════════════════════════════
     function openModal(bookId) {
       const book = state.allBooks.find(b => b.id === bookId);
@@ -2997,24 +3427,18 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // Library Switching - تحميل فوري من الكاش
+    // Library Switching
     // ═══════════════════════════════════════════════════════════════════════════
     async function switchLibrary(library) {
       if (state.isLoadingData) return;
       
-      // تحديث التبويب النشط
       document.querySelectorAll('.library-tab').forEach(tab => {
         tab.classList.toggle('active', tab.dataset.library === library);
       });
       
-      // إظهار مؤشر التحميل على التبويب
-      const activeTab = document.querySelector(`.library-tab[data-library="${library}"]`);
-      
-      // التحقق من الكاش
       const cachedData = loadFromCache(library);
       
       if (cachedData && cachedData.allBooks && cachedData.allBooks.length > 0) {
-        // تحميل من الكاش فوراً
         state.currentLibrary = library;
         state.folderHistory = [];
         state.currentPage = 1;
@@ -3035,12 +3459,9 @@
         updateStats();
         renderCategories();
         showRootFolder();
-        
-        console.log(`Switched to ${library} from cache`);
         return;
       }
       
-      // إذا لم يوجد كاش، تحميل جديد مع إظهار شريط التحميل
       state.currentLibrary = library;
       state.folderHistory = [];
       state.currentPage = 1;
@@ -3049,11 +3470,37 @@
       state.showingAllBooks = false;
       DOM.searchInput.value = '';
       
+      const activeTab = document.querySelector(`.library-tab[data-library="${library}"]`);
       if (activeTab) activeTab.classList.add('loading');
       
       await loadAllDataProgressive(true);
       
       if (activeTab) activeTab.classList.remove('loading');
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // Suggested Libraries Toggle
+    // ═══════════════════════════════════════════════════════════════════════════
+    function initSuggestedLibraries() {
+      const suggestedToggle = document.getElementById('suggestedToggle');
+      const librariesGrid = document.getElementById('librariesGrid');
+      
+      if (suggestedToggle) {
+        suggestedToggle.addEventListener('click', () => {
+          suggestedToggle.classList.toggle('expanded');
+          librariesGrid.classList.toggle('expanded');
+          
+          const span = suggestedToggle.querySelector('span');
+          span.textContent = librariesGrid.classList.contains('expanded') ? 'إخفاء' : 'عرض الكل';
+        });
+      }
+    }
+    
+    function toggleLibrarySection(sectionId) {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.classList.toggle('expanded');
+      }
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -3113,10 +3560,7 @@
         
         DOM.sectionTitleText.textContent = 'جميع الكتب';
         
-        state.folderHistory = [{ 
-          id: CONFIG.LIBRARIES[state.currentLibrary].id, 
-          name: CONFIG.LIBRARIES[state.currentLibrary].name
-        }];
+        state.folderHistory = [{ id: CONFIG.LIBRARIES[state.currentLibrary].id, name: CONFIG.LIBRARIES[state.currentLibrary].name }];
         updateBreadcrumbs();
         filterAndRender();
       });
@@ -3131,20 +3575,18 @@
       
       window.addEventListener('resize', debounce(() => filterAndRender(), 250));
       
-      // تحديث عند إغلاق أو تحديث الصفحة
       window.addEventListener('beforeunload', () => {
-        // حفظ أي تغييرات قبل إغلاق الصفحة
         if (state.allBooks.length > 0) {
           saveToCache({
-            allBooks: state.allBooks,
-            allFolders: state.allFolders,
-            categories: state.categories,
-            totalSize: state.totalSize,
-            totalBooks: state.totalBooks,
-            totalCategories: state.totalCategories
+            allBooks: state.allBooks, allFolders: state.allFolders,
+            categories: state.categories, totalSize: state.totalSize,
+            totalBooks: state.totalBooks, totalCategories: state.totalCategories
           }, state.currentLibrary);
         }
       });
+      
+      // Init suggested libraries toggle
+      initSuggestedLibraries();
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
