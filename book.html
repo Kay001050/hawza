@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <meta name="description" content="المكتبة الرقمية لنور الحوزة - مكتبة محدثة تلقائياً للكتب الحوزوية والإسلامية">
-  <meta name="theme-color" content="#0a1517">
+  <meta name="theme-color" content="#f8f6f3">
   <meta property="og:title" content="المكتبة الرقمية | نور الحوزة">
   <meta property="og:description" content="مكتبة رقمية للكتب الحوزوية والإسلامية">
   <title>المكتبة الرقمية | نور الحوزة</title>
@@ -17,60 +17,7 @@
 
   <style>
     :root {
-      /* Dark Theme - Default */
-      --bg-primary: #0a1517;
-      --bg-secondary: #0d1c1d;
-      --bg-tertiary: #111f21;
-      --bg-card: #152426;
-      --bg-card-hover: #1a2d2f;
-      
-      --accent-gold: #c9a050;
-      --accent-gold-light: #dbb85c;
-      --accent-gold-dark: #a07f3a;
-      --accent-emerald: #2d8a6e;
-      --accent-emerald-light: #3da882;
-      --accent-blue: #3498db;
-      --accent-blue-light: #5dade2;
-      --accent-purple: #9b59b6;
-      --accent-purple-light: #bb8fce;
-      
-      --text-primary: #f0ebe3;
-      --text-secondary: #b8c4c5;
-      --text-muted: #6b8082;
-      
-      --border-subtle: rgba(201, 160, 80, 0.1);
-      --border-medium: rgba(201, 160, 80, 0.2);
-      --border-strong: rgba(201, 160, 80, 0.3);
-      
-      --glass-bg: rgba(13, 28, 29, 0.95);
-      --glass-border: rgba(201, 160, 80, 0.12);
-      
-      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
-      --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
-      
-      --skeleton-base: #1a2d2f;
-      --skeleton-shine: #243d40;
-      
-      --transition-fast: 0.15s ease;
-      --transition-normal: 0.3s ease;
-      --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --radius-xl: 24px;
-      --radius-full: 9999px;
-      
-      --header-height: 72px;
-      --header-height-mobile: 64px;
-      
-      --font-ui: 'Cairo', sans-serif;
-      --font-heading: 'Amiri', serif;
-    }
-
-    /* Light Theme */
-    [data-theme="light"] {
+      /* Light Theme - Default */
       --bg-primary: #f8f6f3;
       --bg-secondary: #fffefa;
       --bg-tertiary: #f0ede8;
@@ -82,6 +29,10 @@
       --accent-gold-dark: #8a6830;
       --accent-emerald: #1e6b54;
       --accent-emerald-light: #2a8a6e;
+      --accent-blue: #3498db;
+      --accent-blue-light: #5dade2;
+      --accent-purple: #9b59b6;
+      --accent-purple-light: #bb8fce;
       
       --text-primary: #1a1a1a;
       --text-secondary: #4a4a4a;
@@ -100,6 +51,55 @@
       
       --skeleton-base: #e8e6e1;
       --skeleton-shine: #f5f3ef;
+      
+      --transition-fast: 0.15s ease;
+      --transition-normal: 0.3s ease;
+      --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      --header-height: 72px;
+      --header-height-mobile: 64px;
+      
+      --font-ui: 'Cairo', sans-serif;
+      --font-heading: 'Amiri', serif;
+    }
+
+    /* Dark Theme */
+    [data-theme="dark"] {
+      --bg-primary: #0a1517;
+      --bg-secondary: #0d1c1d;
+      --bg-tertiary: #111f21;
+      --bg-card: #152426;
+      --bg-card-hover: #1a2d2f;
+      
+      --accent-gold: #c9a050;
+      --accent-gold-light: #dbb85c;
+      --accent-gold-dark: #a07f3a;
+      --accent-emerald: #2d8a6e;
+      --accent-emerald-light: #3da882;
+      
+      --text-primary: #f0ebe3;
+      --text-secondary: #b8c4c5;
+      --text-muted: #6b8082;
+      
+      --border-subtle: rgba(201, 160, 80, 0.1);
+      --border-medium: rgba(201, 160, 80, 0.2);
+      --border-strong: rgba(201, 160, 80, 0.3);
+      
+      --glass-bg: rgba(13, 28, 29, 0.95);
+      --glass-border: rgba(201, 160, 80, 0.12);
+      
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
+      
+      --skeleton-base: #1a2d2f;
+      --skeleton-shine: #243d40;
     }
 
     *, *::before, *::after {
@@ -152,14 +152,14 @@
       pointer-events: none;
       z-index: 0;
       background: 
-        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201, 160, 80, 0.06), transparent),
-        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(45, 138, 110, 0.05), transparent);
-    }
-
-    [data-theme="light"] .bg-pattern {
-      background: 
         radial-gradient(ellipse 80% 50% at 50% -20%, rgba(160, 127, 58, 0.08), transparent),
         radial-gradient(ellipse 60% 40% at 100% 100%, rgba(30, 107, 84, 0.06), transparent);
+    }
+
+    [data-theme="dark"] .bg-pattern {
+      background: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201, 160, 80, 0.06), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(45, 138, 110, 0.05), transparent);
     }
 
     /* ═══════════════════════════════════════════════════════════════════════
@@ -317,7 +317,7 @@
     .suggested-toggle-btn .toggle-icon {
       width: 42px;
       height: 42px;
-      background: linear-gradient(135deg, rgba(201, 160, 80, 0.15) 0%, rgba(45, 138, 110, 0.15) 100%);
+      background: linear-gradient(135deg, rgba(160, 127, 58, 0.12) 0%, rgba(30, 107, 84, 0.12) 100%);
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
@@ -351,7 +351,7 @@
 
     .suggested-toggle-btn .toggle-count {
       padding: 6px 14px;
-      background: rgba(201, 160, 80, 0.1);
+      background: rgba(160, 127, 58, 0.1);
       border-radius: var(--radius-full);
       font-size: 0.8rem;
       color: var(--accent-gold);
@@ -377,7 +377,6 @@
       color: var(--bg-primary);
     }
 
-    /* المحتوى المنسدل */
     .suggested-content {
       max-height: 0;
       overflow: hidden;
@@ -398,7 +397,6 @@
       padding-top: 20px;
     }
 
-    /* تبويبات المكتبات */
     .library-type-tabs {
       display: flex;
       justify-content: center;
@@ -436,7 +434,6 @@
       font-size: 0.95rem;
     }
 
-    /* شبكة المكتبات */
     .libraries-grid-display {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -455,7 +452,6 @@
       border-radius: 3px;
     }
 
-    /* بطاقة مكتبة */
     .library-card {
       display: flex;
       align-items: center;
@@ -506,7 +502,7 @@
     }
 
     .library-card-icon.gold {
-      background: rgba(201, 160, 80, 0.12);
+      background: rgba(160, 127, 58, 0.12);
       color: var(--accent-gold);
     }
 
@@ -521,7 +517,7 @@
     }
 
     .library-card-icon.emerald {
-      background: rgba(45, 138, 110, 0.12);
+      background: rgba(30, 107, 84, 0.12);
       color: var(--accent-emerald-light);
     }
 
@@ -651,13 +647,13 @@
 
     .nav-link:hover {
       color: var(--accent-gold);
-      background: rgba(201, 160, 80, 0.08);
+      background: rgba(160, 127, 58, 0.08);
       border-color: var(--border-subtle);
     }
 
     .nav-link.active {
       color: var(--accent-gold);
-      background: rgba(201, 160, 80, 0.1);
+      background: rgba(160, 127, 58, 0.1);
       border-color: var(--border-medium);
     }
 
@@ -681,11 +677,11 @@
       color: var(--accent-gold);
     }
 
-    .theme-toggle .fa-sun { display: none; }
-    .theme-toggle .fa-moon { display: block; }
+    .theme-toggle .fa-sun { display: block; }
+    .theme-toggle .fa-moon { display: none; }
     
-    [data-theme="light"] .theme-toggle .fa-sun { display: block; }
-    [data-theme="light"] .theme-toggle .fa-moon { display: none; }
+    [data-theme="dark"] .theme-toggle .fa-sun { display: none; }
+    [data-theme="dark"] .theme-toggle .fa-moon { display: block; }
 
     .btn-primary {
       display: flex;
@@ -758,7 +754,7 @@
       align-items: center;
       gap: 10px;
       padding: 10px 22px;
-      background: rgba(201, 160, 80, 0.08);
+      background: rgba(160, 127, 58, 0.08);
       border: 1px solid var(--border-medium);
       border-radius: var(--radius-full);
       font-size: 0.85rem;
@@ -1103,24 +1099,24 @@
     }
 
     .category-chip.active {
-      background: rgba(201, 160, 80, 0.15);
+      background: rgba(160, 127, 58, 0.15);
       border-color: var(--accent-gold);
       color: var(--accent-gold);
     }
 
     .category-chip.sub-category {
-      background: rgba(45, 138, 110, 0.08);
-      border-color: rgba(45, 138, 110, 0.2);
+      background: rgba(30, 107, 84, 0.08);
+      border-color: rgba(30, 107, 84, 0.2);
     }
 
     .category-chip.sub-category:hover {
-      background: rgba(45, 138, 110, 0.15);
+      background: rgba(30, 107, 84, 0.15);
       border-color: var(--accent-emerald);
       color: var(--accent-emerald-light);
     }
 
     .category-chip.sub-category.active {
-      background: rgba(45, 138, 110, 0.2);
+      background: rgba(30, 107, 84, 0.2);
       border-color: var(--accent-emerald);
       color: var(--accent-emerald-light);
     }
@@ -1132,7 +1128,7 @@
 
     .category-chip .count {
       padding: 2px 6px;
-      background: rgba(201, 160, 80, 0.15);
+      background: rgba(160, 127, 58, 0.15);
       border-radius: var(--radius-sm);
       font-size: 0.65rem;
       font-weight: 600;
@@ -1196,7 +1192,7 @@
     }
 
     .breadcrumb-item.current {
-      background: rgba(201, 160, 80, 0.1);
+      background: rgba(160, 127, 58, 0.1);
       border-color: var(--accent-gold);
       color: var(--accent-gold);
       cursor: default;
@@ -1285,7 +1281,7 @@
       color: var(--text-primary);
       cursor: pointer;
       appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23c9a050' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23a07f3a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: left 12px center;
       transition: var(--transition-fast);
@@ -1374,7 +1370,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 50% 0%, rgba(201, 160, 80, 0.08), transparent 70%);
+      background: radial-gradient(circle at 50% 0%, rgba(160, 127, 58, 0.08), transparent 70%);
       opacity: 0;
       transition: var(--transition-smooth);
     }
@@ -1392,7 +1388,7 @@
     .folder-icon {
       width: 60px;
       height: 60px;
-      background: linear-gradient(135deg, rgba(201, 160, 80, 0.12) 0%, rgba(45, 138, 110, 0.12) 100%);
+      background: linear-gradient(135deg, rgba(160, 127, 58, 0.12) 0%, rgba(30, 107, 84, 0.12) 100%);
       border-radius: var(--radius-lg);
       display: flex;
       align-items: center;
@@ -1489,7 +1485,7 @@
       top: 10px;
       right: 10px;
       padding: 5px 10px;
-      background: rgba(201, 160, 80, 0.92);
+      background: rgba(160, 127, 58, 0.92);
       color: var(--bg-primary);
       border-radius: var(--radius-sm);
       font-size: 0.65rem;
@@ -1502,7 +1498,7 @@
     .book-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(10, 21, 23, 0.95) 0%, rgba(10, 21, 23, 0.5) 50%, transparent 100%);
+      background: linear-gradient(to top, rgba(248, 246, 243, 0.95) 0%, rgba(248, 246, 243, 0.5) 50%, transparent 100%);
       display: flex;
       align-items: flex-end;
       justify-content: center;
@@ -1512,8 +1508,8 @@
       transition: var(--transition-smooth);
     }
 
-    [data-theme="light"] .book-overlay {
-      background: linear-gradient(to top, rgba(248, 246, 243, 0.95) 0%, rgba(248, 246, 243, 0.5) 50%, transparent 100%);
+    [data-theme="dark"] .book-overlay {
+      background: linear-gradient(to top, rgba(10, 21, 23, 0.95) 0%, rgba(10, 21, 23, 0.5) 50%, transparent 100%);
     }
 
     .book-card:hover .book-overlay {
@@ -1597,7 +1593,7 @@
       align-items: center;
       gap: 4px;
       padding: 3px 8px;
-      background: rgba(201, 160, 80, 0.1);
+      background: rgba(160, 127, 58, 0.1);
       border-radius: var(--radius-sm);
       font-weight: 600;
       color: var(--accent-gold);
@@ -1629,11 +1625,11 @@
 
     .books-grid.list-view .book-overlay {
       align-items: center;
-      background: rgba(10, 21, 23, 0.85);
+      background: rgba(248, 246, 243, 0.85);
     }
 
-    [data-theme="light"] .books-grid.list-view .book-overlay {
-      background: rgba(248, 246, 243, 0.85);
+    [data-theme="dark"] .books-grid.list-view .book-overlay {
+      background: rgba(10, 21, 23, 0.85);
     }
 
     .books-grid.list-view .action-btn {
@@ -1699,7 +1695,7 @@
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(10, 21, 23, 0.92);
+      background: rgba(248, 246, 243, 0.92);
       backdrop-filter: blur(12px);
       z-index: 2000;
       display: flex;
@@ -1711,8 +1707,8 @@
       transition: var(--transition-smooth);
     }
 
-    [data-theme="light"] .modal-overlay {
-      background: rgba(248, 246, 243, 0.92);
+    [data-theme="dark"] .modal-overlay {
+      background: rgba(10, 21, 23, 0.92);
     }
 
     .modal-overlay.active {
@@ -1787,7 +1783,7 @@
       align-items: center;
       gap: 8px;
       padding: 7px 14px;
-      background: rgba(45, 138, 110, 0.12);
+      background: rgba(30, 107, 84, 0.12);
       border-radius: var(--radius-full);
       font-size: 0.8rem;
       font-weight: 600;
@@ -1852,7 +1848,7 @@
 
     .modal-btn.primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 0 20px rgba(201, 160, 80, 0.25);
+      box-shadow: 0 0 20px rgba(160, 127, 58, 0.25);
     }
 
     .modal-btn.secondary {
@@ -2030,11 +2026,11 @@
       align-items: center;
       justify-content: center;
       font-size: 0.85rem;
-      background: rgba(201, 160, 80, 0.1);
+      background: rgba(160, 127, 58, 0.1);
       color: var(--accent-gold);
     }
 
-    .toast.success .toast-icon { background: rgba(45, 138, 110, 0.1); color: var(--accent-emerald-light); }
+    .toast.success .toast-icon { background: rgba(30, 107, 84, 0.1); color: var(--accent-emerald-light); }
     .toast.error .toast-icon { background: rgba(231, 76, 60, 0.1); color: #e74c3c; }
 
     .toast-content { flex: 1; }
@@ -2140,12 +2136,12 @@
       
       .book-overlay {
         opacity: 1;
-        background: linear-gradient(to top, rgba(10, 21, 23, 0.85) 0%, transparent 100%);
+        background: linear-gradient(to top, rgba(248, 246, 243, 0.85) 0%, transparent 100%);
         padding: 10px;
       }
       
-      [data-theme="light"] .book-overlay {
-        background: linear-gradient(to top, rgba(248, 246, 243, 0.85) 0%, transparent 100%);
+      [data-theme="dark"] .book-overlay {
+        background: linear-gradient(to top, rgba(10, 21, 23, 0.85) 0%, transparent 100%);
       }
       
       .action-btn { width: 34px; height: 34px; font-size: 0.8rem; transform: translateY(0); }
@@ -2590,7 +2586,7 @@
         quds: { id: '1TLLTDDtUKmxWE1ZCHoC9g1WaLcdFNjBZ', name: 'صور القدس في عمامة' }
       },
       PAGE_SIZE: 1000,
-      CACHE_KEY: 'noor_library_v13',
+      CACHE_KEY: 'noor_library_v14',
       CACHE_TIME: 30 * 24 * 60 * 60 * 1000,
       ITEMS_PER_PAGE: 30
     };
@@ -2706,20 +2702,27 @@
     DOM.currentYear.textContent = new Date().getFullYear();
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // Theme Management
+    // Theme Management - Light is default
     // ═══════════════════════════════════════════════════════════════════════════
     function initTheme() {
-      const savedTheme = localStorage.getItem('noor_library_theme') || 'dark';
-      document.documentElement.setAttribute('data-theme', savedTheme);
+      const savedTheme = localStorage.getItem('noor_library_theme') || 'light';
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
       updateThemeIcon(savedTheme);
     }
 
     function toggleTheme() {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('noor_library_theme', newTheme);
-      updateThemeIcon(newTheme);
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('noor_library_theme', 'light');
+        updateThemeIcon('light');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('noor_library_theme', 'dark');
+        updateThemeIcon('dark');
+      }
     }
 
     function updateThemeIcon(theme) {
@@ -2776,7 +2779,6 @@
         DOM.suggestedToggleBtn.classList.add('expanded');
         DOM.suggestedContent.classList.add('expanded');
         
-        // تحميل المكتبات عند أول فتح
         if (!DOM.librariesGridDisplay.children.length) {
           renderSuggestedLibraries('websites');
         }
@@ -3603,7 +3605,6 @@
       
       DOM.themeToggle.addEventListener('click', toggleTheme);
       
-      // Suggested Libraries Toggle
       DOM.suggestedToggleBtn.addEventListener('click', toggleSuggestedLibraries);
       
       document.addEventListener('keydown', (e) => {
