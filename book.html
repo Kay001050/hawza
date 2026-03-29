@@ -17,6 +17,7 @@
 
   <style>
     :root {
+      /* Dark Theme - Default */
       --bg-primary: #0a1517;
       --bg-secondary: #0d1c1d;
       --bg-tertiary: #111f21;
@@ -48,6 +49,9 @@
       --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
       --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
       
+      --skeleton-base: #1a2d2f;
+      --skeleton-shine: #243d40;
+      
       --transition-fast: 0.15s ease;
       --transition-normal: 0.3s ease;
       --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -63,6 +67,39 @@
       
       --font-ui: 'Cairo', sans-serif;
       --font-heading: 'Amiri', serif;
+    }
+
+    /* Light Theme */
+    [data-theme="light"] {
+      --bg-primary: #f8f6f3;
+      --bg-secondary: #fffefa;
+      --bg-tertiary: #f0ede8;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f5f3ef;
+      
+      --accent-gold: #a07f3a;
+      --accent-gold-light: #b8934a;
+      --accent-gold-dark: #8a6830;
+      --accent-emerald: #1e6b54;
+      --accent-emerald-light: #2a8a6e;
+      
+      --text-primary: #1a1a1a;
+      --text-secondary: #4a4a4a;
+      --text-muted: #7a7a7a;
+      
+      --border-subtle: rgba(160, 127, 58, 0.15);
+      --border-medium: rgba(160, 127, 58, 0.25);
+      --border-strong: rgba(160, 127, 58, 0.35);
+      
+      --glass-bg: rgba(255, 254, 250, 0.95);
+      --glass-border: rgba(160, 127, 58, 0.15);
+      
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+      --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.15);
+      
+      --skeleton-base: #e8e6e1;
+      --skeleton-shine: #f5f3ef;
     }
 
     *, *::before, *::after {
@@ -84,6 +121,7 @@
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
+      transition: background var(--transition-normal), color var(--transition-normal);
     }
 
     a { text-decoration: none; color: inherit; }
@@ -118,8 +156,14 @@
         radial-gradient(ellipse 60% 40% at 100% 100%, rgba(45, 138, 110, 0.05), transparent);
     }
 
+    [data-theme="light"] .bg-pattern {
+      background: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(160, 127, 58, 0.08), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(30, 107, 84, 0.06), transparent);
+    }
+
     /* ═══════════════════════════════════════════════════════════════════════
-       شريط التحميل في قسم التصنيفات فقط
+       شريط التحميل
        ═══════════════════════════════════════════════════════════════════════ */
     
     .categories-progress-wrapper {
@@ -220,126 +264,244 @@
       font-weight: 600;
     }
 
-    /* عنصر التصنيف الجديد مع أنيميشن */
     .category-chip.new-item {
       animation: slideInCategory 0.4s ease;
     }
 
     @keyframes slideInCategory {
-      from {
-        opacity: 0;
-        transform: translateX(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
     }
 
     /* ═══════════════════════════════════════════════════════════════════════
-       المكتبات المقترحة - قائمة منسدلة
+       قسم المكتبات المقترحة - منسدل
        ═══════════════════════════════════════════════════════════════════════ */
     
-    .suggested-libraries {
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border-subtle);
+    .suggested-libraries-section {
+      position: relative;
+      z-index: 50;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-subtle);
     }
 
-    .suggested-header {
+    .suggested-toggle-wrapper {
+      padding: 16px 0;
+    }
+
+    .suggested-toggle-btn {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
+      width: 100%;
+      padding: 16px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 1rem;
+      transition: var(--transition-fast);
     }
 
-    .suggested-title {
+    .suggested-toggle-btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-medium);
+    }
+
+    .suggested-toggle-btn .toggle-right {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 0.85rem;
+      gap: 12px;
+    }
+
+    .suggested-toggle-btn .toggle-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, rgba(201, 160, 80, 0.15) 0%, rgba(45, 138, 110, 0.15) 100%);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-gold);
+      font-size: 1.1rem;
+    }
+
+    .suggested-toggle-btn .toggle-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .suggested-toggle-btn .toggle-title {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .suggested-toggle-btn .toggle-subtitle {
+      font-size: 0.8rem;
       color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .suggested-toggle-btn .toggle-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .suggested-toggle-btn .toggle-count {
+      padding: 6px 14px;
+      background: rgba(201, 160, 80, 0.1);
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      color: var(--accent-gold);
       font-weight: 600;
     }
 
-    .suggested-title i {
-      color: var(--accent-emerald-light);
-    }
-
-    .suggested-toggle {
+    .suggested-toggle-btn .toggle-arrow {
+      width: 32px;
+      height: 32px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      transition: transform var(--transition-normal), background var(--transition-fast);
+    }
+
+    .suggested-toggle-btn.expanded .toggle-arrow {
+      transform: rotate(180deg);
+      background: var(--accent-gold);
+      color: var(--bg-primary);
+    }
+
+    /* المحتوى المنسدل */
+    .suggested-content {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                  opacity 0.4s ease,
+                  padding 0.3s ease;
+      padding: 0 0 0 0;
+    }
+
+    .suggested-content.expanded {
+      max-height: 600px;
+      opacity: 1;
+      padding: 0 0 20px 0;
+    }
+
+    .suggested-inner {
+      padding-top: 20px;
+    }
+
+    /* تبويبات المكتبات */
+    .library-type-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .library-type-tab {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-full);
       color: var(--text-secondary);
-      font-size: 0.75rem;
       font-weight: 600;
+      font-size: 0.85rem;
       transition: var(--transition-fast);
     }
 
-    .suggested-toggle:hover {
-      background: var(--bg-card-hover);
-      border-color: var(--accent-emerald);
-      color: var(--accent-emerald-light);
+    .library-type-tab:hover {
+      border-color: var(--border-medium);
+      color: var(--text-primary);
     }
 
-    .suggested-toggle i {
-      font-size: 0.7rem;
-      transition: transform var(--transition-normal);
+    .library-type-tab.active {
+      background: linear-gradient(135deg, var(--accent-gold-dark) 0%, var(--accent-gold) 100%);
+      border-color: transparent;
+      color: var(--bg-primary);
     }
 
-    .suggested-toggle.expanded i {
-      transform: rotate(180deg);
+    .library-type-tab i {
+      font-size: 0.95rem;
     }
 
     /* شبكة المكتبات */
-    .libraries-grid {
+    .libraries-grid-display {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 10px;
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease;
-      margin-top: 0;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      max-height: 320px;
+      overflow-y: auto;
+      padding: 4px;
     }
 
-    .libraries-grid.expanded {
-      max-height: 2000px;
-      opacity: 1;
-      margin-top: 12px;
+    .libraries-grid-display::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .libraries-grid-display::-webkit-scrollbar-thumb {
+      background: var(--accent-gold-dark);
+      border-radius: 3px;
     }
 
     /* بطاقة مكتبة */
     .library-card {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
+      gap: 12px;
+      padding: 12px 14px;
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-md);
       transition: var(--transition-fast);
       cursor: pointer;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: cardFadeIn 0.4s ease forwards;
+    }
+
+    .library-card:nth-child(1) { animation-delay: 0.05s; }
+    .library-card:nth-child(2) { animation-delay: 0.1s; }
+    .library-card:nth-child(3) { animation-delay: 0.15s; }
+    .library-card:nth-child(4) { animation-delay: 0.2s; }
+    .library-card:nth-child(5) { animation-delay: 0.25s; }
+    .library-card:nth-child(6) { animation-delay: 0.3s; }
+    .library-card:nth-child(7) { animation-delay: 0.35s; }
+    .library-card:nth-child(8) { animation-delay: 0.4s; }
+
+    @keyframes cardFadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .library-card:hover {
       background: var(--bg-card-hover);
       border-color: var(--border-medium);
       transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
     }
 
     .library-card-icon {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.9rem;
+      font-size: 1rem;
       flex-shrink: 0;
     }
 
@@ -374,7 +536,7 @@
     }
 
     .library-card-name {
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: 600;
       color: var(--text-primary);
       white-space: nowrap;
@@ -383,7 +545,7 @@
     }
 
     .library-card-url {
-      font-size: 0.65rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
       white-space: nowrap;
       overflow: hidden;
@@ -399,85 +561,6 @@
     .library-card:hover .library-card-arrow {
       color: var(--accent-gold);
       transform: translateX(-3px);
-    }
-
-    /* قسم المكتبات المجمعة */
-    .libraries-section {
-      margin-bottom: 12px;
-    }
-
-    .libraries-section-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
-      background: var(--bg-tertiary);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: var(--transition-fast);
-    }
-
-    .libraries-section-header:hover {
-      background: var(--bg-card);
-    }
-
-    .libraries-section-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-    }
-
-    .libraries-section-icon.websites {
-      background: rgba(52, 152, 219, 0.15);
-      color: var(--accent-blue-light);
-    }
-
-    .libraries-section-icon.telegram {
-      background: rgba(0, 136, 204, 0.15);
-      color: #0088cc;
-    }
-
-    .libraries-section-title {
-      flex: 1;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .libraries-section-count {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      background: var(--bg-card);
-      padding: 2px 8px;
-      border-radius: var(--radius-full);
-    }
-
-    .libraries-section-arrow {
-      color: var(--text-muted);
-      font-size: 0.7rem;
-      transition: transform var(--transition-normal);
-    }
-
-    .libraries-section.expanded .libraries-section-arrow {
-      transform: rotate(180deg);
-    }
-
-    .libraries-section-content {
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
-      padding: 0 0 0 0;
-    }
-
-    .libraries-section.expanded .libraries-section-content {
-      max-height: 1500px;
-      opacity: 1;
-      padding: 10px 0 0 0;
     }
 
     /* Header */
@@ -496,7 +579,7 @@
     }
 
     .header.scrolled {
-      background: rgba(10, 21, 23, 0.98);
+      background: var(--glass-bg);
       box-shadow: var(--shadow-md);
     }
 
@@ -523,7 +606,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--text-primary);
+      color: white;
       font-size: 1.3rem;
       box-shadow: var(--shadow-sm);
     }
@@ -577,6 +660,32 @@
       background: rgba(201, 160, 80, 0.1);
       border-color: var(--border-medium);
     }
+
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      transition: var(--transition-fast);
+    }
+
+    .theme-toggle:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+    }
+
+    .theme-toggle .fa-sun { display: none; }
+    .theme-toggle .fa-moon { display: block; }
+    
+    [data-theme="light"] .theme-toggle .fa-sun { display: block; }
+    [data-theme="light"] .theme-toggle .fa-moon { display: none; }
 
     .btn-primary {
       display: flex;
@@ -781,7 +890,7 @@
       position: relative;
       z-index: 100;
       padding: 24px 0;
-      background: var(--bg-secondary);
+      background: var(--bg-tertiary);
       border-bottom: 1px solid var(--border-subtle);
     }
 
@@ -935,7 +1044,6 @@
       box-shadow: var(--shadow-md);
     }
 
-    /* Categories Panel */
     .categories-panel {
       max-height: 600px;
       overflow-y: auto;
@@ -1404,6 +1512,10 @@
       transition: var(--transition-smooth);
     }
 
+    [data-theme="light"] .book-overlay {
+      background: linear-gradient(to top, rgba(248, 246, 243, 0.95) 0%, rgba(248, 246, 243, 0.5) 50%, transparent 100%);
+    }
+
     .book-card:hover .book-overlay {
       opacity: 1;
     }
@@ -1520,6 +1632,10 @@
       background: rgba(10, 21, 23, 0.85);
     }
 
+    [data-theme="light"] .books-grid.list-view .book-overlay {
+      background: rgba(248, 246, 243, 0.85);
+    }
+
     .books-grid.list-view .action-btn {
       transform: translateY(0);
     }
@@ -1527,7 +1643,7 @@
     /* Skeleton */
     .skeleton {
       animation: skeletonPulse 1.8s ease-in-out infinite;
-      background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%);
+      background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-shine) 50%, var(--skeleton-base) 75%);
       background-size: 200% 100%;
       border-radius: var(--radius-sm);
     }
@@ -1593,6 +1709,10 @@
       opacity: 0;
       visibility: hidden;
       transition: var(--transition-smooth);
+    }
+
+    [data-theme="light"] .modal-overlay {
+      background: rgba(248, 246, 243, 0.92);
     }
 
     .modal-overlay.active {
@@ -1857,6 +1977,10 @@
       color: var(--accent-emerald-light);
     }
 
+    .footer-links a i.fa-instagram {
+      color: #E1306C;
+    }
+
     .footer-bottom {
       text-align: center;
       padding-top: 20px;
@@ -1957,6 +2081,10 @@
       .modal-cover { min-height: 200px; }
       
       .footer-content { grid-template-columns: 1fr; gap: 30px; }
+
+      .libraries-grid-display {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      }
     }
 
     @media (max-width: 768px) {
@@ -2015,6 +2143,11 @@
         background: linear-gradient(to top, rgba(10, 21, 23, 0.85) 0%, transparent 100%);
         padding: 10px;
       }
+      
+      [data-theme="light"] .book-overlay {
+        background: linear-gradient(to top, rgba(248, 246, 243, 0.85) 0%, transparent 100%);
+      }
+      
       .action-btn { width: 34px; height: 34px; font-size: 0.8rem; transform: translateY(0); }
       
       .folder-card { padding: 20px 12px; }
@@ -2032,12 +2165,37 @@
       .toast-container { left: 10px; right: 10px; }
       .toast { max-width: 100%; }
       
-      .libraries-grid {
+      .libraries-grid-display {
         grid-template-columns: 1fr;
       }
-      
-      .suggested-libraries {
-        padding: 0;
+
+      .library-type-tabs {
+        gap: 8px;
+      }
+
+      .library-type-tab {
+        padding: 10px 16px;
+        font-size: 0.8rem;
+      }
+
+      .suggested-toggle-btn {
+        padding: 14px 18px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .suggested-toggle-btn .toggle-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+      }
+
+      .suggested-toggle-btn .toggle-title {
+        font-size: 0.95rem;
+      }
+
+      .suggested-toggle-btn .toggle-subtitle {
+        font-size: 0.75rem;
       }
     }
 
@@ -2107,8 +2265,14 @@
         </a>
         <a href="https://hawza.netlify.app/r-1447" class="nav-link">
           <i class="fas fa-star"></i>
-          <span>الإصدارات</span>
+          <span>مفكرتنا</span>
         </a>
+        
+        <button class="theme-toggle" id="themeToggle" title="تبديل الوضع">
+          <i class="fas fa-moon"></i>
+          <i class="fas fa-sun"></i>
+        </button>
+        
         <a href="https://t.me/nwr_lhwz" target="_blank" class="btn-primary">
           <i class="fab fa-telegram-plane"></i>
           <span>التيليجرام</span>
@@ -2196,6 +2360,52 @@
     </div>
   </section>
 
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       قسم المكتبات المقترحة - منسدل (مغلق افتراضياً)
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <section class="suggested-libraries-section">
+    <div class="container">
+      <div class="suggested-toggle-wrapper">
+        <button class="suggested-toggle-btn" id="suggestedToggleBtn">
+          <div class="toggle-right">
+            <div class="toggle-icon">
+              <i class="fas fa-external-link-alt"></i>
+            </div>
+            <div class="toggle-text">
+              <span class="toggle-title">مكتبات رقمية مقترحة</span>
+              <span class="toggle-subtitle">مكتبات إسلامية وشيعية متخصصة</span>
+            </div>
+          </div>
+          <div class="toggle-left">
+            <span class="toggle-count">24 مكتبة</span>
+            <div class="toggle-arrow">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </button>
+      </div>
+      
+      <div class="suggested-content" id="suggestedContent">
+        <div class="suggested-inner">
+          <div class="library-type-tabs">
+            <button class="library-type-tab active" data-type="websites">
+              <i class="fas fa-globe"></i>
+              <span>المكتبات الإلكترونية</span>
+            </button>
+            <button class="library-type-tab" data-type="telegram">
+              <i class="fab fa-telegram"></i>
+              <span>مكتبات تيليجرام</span>
+            </button>
+          </div>
+          
+          <div class="libraries-grid-display" id="librariesGridDisplay">
+            <!-- سيتم ملؤها بـ JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Categories Section -->
   <section class="categories-section" id="categoriesSection">
     <div class="container">
@@ -2211,7 +2421,6 @@
         </button>
       </div>
       
-      <!-- شريط التحميل -->
       <div class="categories-progress-wrapper" id="categoriesProgressWrapper">
         <div class="categories-progress-header">
           <div class="categories-progress-title">
@@ -2233,270 +2442,6 @@
       
       <div class="categories-panel" id="categoriesPanel">
         <div class="categories-grid" id="categoriesGrid"></div>
-        
-        <!-- المكتبات المقترحة -->
-        <div class="suggested-libraries" id="suggestedLibraries">
-          <div class="suggested-header">
-            <div class="suggested-title">
-              <i class="fas fa-external-link-alt"></i>
-              <span>مكتبات رقمية مقترحة</span>
-            </div>
-            <button class="suggested-toggle" id="suggestedToggle">
-              <span>عرض الكل</span>
-              <i class="fas fa-chevron-down"></i>
-            </button>
-          </div>
-          
-          <div class="libraries-grid" id="librariesGrid">
-            
-            <!-- المكتبات الإلكترونية -->
-            <div class="libraries-section" id="websitesSection">
-              <div class="libraries-section-header" onclick="toggleLibrarySection('websitesSection')">
-                <div class="libraries-section-icon websites">
-                  <i class="fas fa-globe"></i>
-                </div>
-                <span class="libraries-section-title">المكتبات الإلكترونية</span>
-                <span class="libraries-section-count">16 مكتبة</span>
-                <i class="fas fa-chevron-down libraries-section-arrow"></i>
-              </div>
-              <div class="libraries-section-content">
-                <div class="libraries-grid" style="max-height: none; opacity: 1;">
-                  <a href="https://books.almaaref.org/" target="_blank" class="library-card">
-                    <div class="library-card-icon gold"><i class="fas fa-book"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">مكتبة المعارف</div>
-                      <div class="library-card-url">books.almaaref.org</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://alfeker.net/" target="_blank" class="library-card">
-                    <div class="library-card-icon blue"><i class="fas fa-lightbulb"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">شبكة الفكر</div>
-                      <div class="library-card-url">alfeker.net</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://books.rafed.net/" target="_blank" class="library-card">
-                    <div class="library-card-icon emerald"><i class="fas fa-stream"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">مكتبة الرافد</div>
-                      <div class="library-card-url">books.rafed.net</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="http://shiaonlinelibrary.com/" target="_blank" class="library-card">
-                    <div class="library-card-icon purple"><i class="fas fa-book-reader"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">الشيعة أونلاين</div>
-                      <div class="library-card-url">shiaonlinelibrary.com</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://www.mahdi-lib.com/" target="_blank" class="library-card">
-                    <div class="library-card-icon gold"><i class="fas fa-moon"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">مكتبة الإمام المهدي</div>
-                      <div class="library-card-url">mahdi-lib.com</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://m-mahdi.net/" target="_blank" class="library-card">
-                    <div class="library-card-icon emerald"><i class="fas fa-microscope"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">مركز الدراسات التخصصية</div>
-                      <div class="library-card-url">m-mahdi.net</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://ablibrary.net/" target="_blank" class="library-card">
-                    <div class="library-card-icon blue"><i class="fas fa-users"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">مكتبة أهل البيت</div>
-                      <div class="library-card-url">ablibrary.net</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://www.narjeslibrary.com/" target="_blank" class="library-card">
-                    <div class="library-card-icon purple"><i class="fas fa-spa"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">مكتبة النرجس</div>
-                      <div class="library-card-url">narjeslibrary.com</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://www.al-mousa.net/" target="_blank" class="library-card">
-                    <div class="library-card-icon gold"><i class="fas fa-landmark"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">مكتبة الموسى الثقافية</div>
-                      <div class="library-card-url">al-mousa.net</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://www.imamali.net/?id=7508" target="_blank" class="library-card">
-                    <div class="library-card-icon emerald"><i class="fas fa-mosque"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">شبكة الإمام علي</div>
-                      <div class="library-card-url">imamali.net</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://www.aljawadain.org/library/books/all-books" target="_blank" class="library-card">
-                    <div class="library-card-icon blue"><i class="fas fa-book-open"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">مكتبة الجوادين</div>
-                      <div class="library-card-url">aljawadain.org</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://mishkat1.blogspot.com/" target="_blank" class="library-card">
-                    <div class="library-card-icon gold"><i class="fas fa-candle-holder"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">المشكاة الشيعية</div>
-                      <div class="library-card-url">mishkat1.blogspot.com</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://alseraj.net/" target="_blank" class="library-card">
-                    <div class="library-card-icon purple"><i class="fas fa-lightbulb"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">شبكة السراج</div>
-                      <div class="library-card-url">alseraj.net</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://aqaed.net/books" target="_blank" class="library-card">
-                    <div class="library-card-icon emerald"><i class="fas fa-balance-scale"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">مركز الأبحاث العقائدية</div>
-                      <div class="library-card-url">aqaed.net</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://www.ghbook.ir/" target="_blank" class="library-card">
-                    <div class="library-card-icon blue"><i class="fas fa-book"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">المكتبة القائمية</div>
-                      <div class="library-card-url">ghbook.ir</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://www.m-alshirazi.com/part.php?id=34" target="_blank" class="library-card">
-                    <div class="library-card-icon gold"><i class="fas fa-university"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">مكتبة مؤسسة التقى</div>
-                      <div class="library-card-url">m-alshirazi.com</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-            
-            <!-- مكتبات تيليجرام -->
-            <div class="libraries-section" id="telegramSection">
-              <div class="libraries-section-header" onclick="toggleLibrarySection('telegramSection')">
-                <div class="libraries-section-icon telegram">
-                  <i class="fab fa-telegram"></i>
-                </div>
-                <span class="libraries-section-title">مكتبات تيليجرام</span>
-                <span class="libraries-section-count">8 مكتبات</span>
-                <i class="fas fa-chevron-down libraries-section-arrow"></i>
-              </div>
-              <div class="libraries-section-content">
-                <div class="libraries-grid" style="max-height: none; opacity: 1;">
-                  <a href="https://t.me/alnjafy" target="_blank" class="library-card">
-                    <div class="library-card-icon telegram"><i class="fab fa-telegram"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">مكتبة النور</div>
-                      <div class="library-card-url">@alnjafy</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://t.me/shiabooks_pdf" target="_blank" class="library-card">
-                    <div class="library-card-icon telegram"><i class="fab fa-telegram"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">الكتب الشيعية PDF</div>
-                      <div class="library-card-url">@shiabooks_pdf</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://t.me/ww749" target="_blank" class="library-card">
-                    <div class="library-card-icon telegram"><i class="fab fa-telegram"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">مكتبة الفكر</div>
-                      <div class="library-card-url">@ww749</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://t.me/raheb18" target="_blank" class="library-card">
-                    <div class="library-card-icon telegram"><i class="fab fa-telegram"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">مكتبة المعارف</div>
-                      <div class="library-card-url">@raheb18</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://t.me/annv9b" target="_blank" class="library-card">
-                    <div class="library-card-icon telegram"><i class="fab fa-telegram"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">مكتبة الزهراء</div>
-                      <div class="library-card-url">@annv9b</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://t.me/hawza_books" target="_blank" class="library-card">
-                    <div class="library-card-icon telegram"><i class="fab fa-telegram"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">ملخصات كتب حوزوية</div>
-                      <div class="library-card-url">@hawza_books</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://t.me/Al_qarashi97m" target="_blank" class="library-card">
-                    <div class="library-card-icon telegram"><i class="fab fa-telegram"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">الشروح والمتون الحوزوية</div>
-                      <div class="library-card-url">@Al_qarashi97m</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                  
-                  <a href="https://t.me/arirpubl" target="_blank" class="library-card">
-                    <div class="library-card-icon telegram"><i class="fab fa-telegram"></i></div>
-                    <div class="library-card-content">
-                      <div class="library-card-name">دار الثورة الإسلامية</div>
-                      <div class="library-card-url">@arirpubl</div>
-                    </div>
-                    <i class="fas fa-external-link-alt library-card-arrow"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-            
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -2620,6 +2565,7 @@
           <h4>تواصل معنا</h4>
           <ul class="footer-links">
             <li><a href="https://t.me/nwr_lhwz" target="_blank"><i class="fab fa-telegram"></i> قناة التيليجرام</a></li>
+            <li><a href="https://www.instagram.com/nwr_alhwz/" target="_blank"><i class="fab fa-instagram"></i> الانستقرام</a></li>
             <li><a href="https://t.me/twasl_noor_alhawza_bot" target="_blank"><i class="fas fa-robot"></i> الذكاء الاصطناعي</a></li>
           </ul>
         </div>
@@ -2644,9 +2590,40 @@
         quds: { id: '1TLLTDDtUKmxWE1ZCHoC9g1WaLcdFNjBZ', name: 'صور القدس في عمامة' }
       },
       PAGE_SIZE: 1000,
-      CACHE_KEY: 'noor_library_v12',
+      CACHE_KEY: 'noor_library_v13',
       CACHE_TIME: 30 * 24 * 60 * 60 * 1000,
       ITEMS_PER_PAGE: 30
+    };
+
+    const SUGGESTED_LIBRARIES = {
+      websites: [
+        { name: 'مكتبة المعارف', url: 'https://books.almaaref.org/', domain: 'books.almaaref.org', icon: 'gold' },
+        { name: 'شبكة الفكر', url: 'https://alfeker.net/', domain: 'alfeker.net', icon: 'blue' },
+        { name: 'مكتبة الرافد', url: 'https://books.rafed.net/', domain: 'books.rafed.net', icon: 'emerald' },
+        { name: 'الشيعة أونلاين', url: 'http://shiaonlinelibrary.com/', domain: 'shiaonlinelibrary.com', icon: 'purple' },
+        { name: 'مكتبة الإمام المهدي', url: 'https://www.mahdi-lib.com/', domain: 'mahdi-lib.com', icon: 'gold' },
+        { name: 'مركز الدراسات التخصصية', url: 'https://m-mahdi.net/', domain: 'm-mahdi.net', icon: 'emerald' },
+        { name: 'مكتبة أهل البيت', url: 'https://ablibrary.net/', domain: 'ablibrary.net', icon: 'blue' },
+        { name: 'مكتبة النرجس', url: 'https://www.narjeslibrary.com/', domain: 'narjeslibrary.com', icon: 'purple' },
+        { name: 'مكتبة الموسى الثقافية', url: 'https://www.al-mousa.net/', domain: 'al-mousa.net', icon: 'gold' },
+        { name: 'شبكة الإمام علي', url: 'https://www.imamali.net/?id=7508', domain: 'imamali.net', icon: 'emerald' },
+        { name: 'مكتبة الجوادين', url: 'https://www.aljawadain.org/library/books/all-books', domain: 'aljawadain.org', icon: 'blue' },
+        { name: 'المشكاة الشيعية', url: 'https://mishkat1.blogspot.com/', domain: 'mishkat1.blogspot.com', icon: 'gold' },
+        { name: 'شبكة السراج', url: 'https://alseraj.net/', domain: 'alseraj.net', icon: 'purple' },
+        { name: 'مركز الأبحاث العقائدية', url: 'https://aqaed.net/books', domain: 'aqaed.net', icon: 'emerald' },
+        { name: 'المكتبة القائمية', url: 'https://www.ghbook.ir/', domain: 'ghbook.ir', icon: 'blue' },
+        { name: 'مكتبة مؤسسة التقى', url: 'https://www.m-alshirazi.com/part.php?id=34', domain: 'm-alshirazi.com', icon: 'gold' }
+      ],
+      telegram: [
+        { name: 'مكتبة النور', url: 'https://t.me/alnjafy', domain: '@alnjafy' },
+        { name: 'الكتب الشيعية PDF', url: 'https://t.me/shiabooks_pdf', domain: '@shiabooks_pdf' },
+        { name: 'مكتبة الفكر', url: 'https://t.me/ww749', domain: '@ww749' },
+        { name: 'مكتبة المعارف', url: 'https://t.me/raheb18', domain: '@raheb18' },
+        { name: 'مكتبة الزهراء', url: 'https://t.me/annv9b', domain: '@annv9b' },
+        { name: 'ملخصات كتب حوزوية', url: 'https://t.me/hawza_books', domain: '@hawza_books' },
+        { name: 'الشروح والمتون الحوزوية', url: 'https://t.me/Al_qarashi97m', domain: '@Al_qarashi97m' },
+        { name: 'دار الثورة الإسلامية', url: 'https://t.me/arirpubl', domain: '@arirpubl' }
+      ]
     };
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -2675,7 +2652,8 @@
       totalFoldersToLoad: 0,
       loadedFoldersCount: 0,
       isLoadingData: false,
-      librariesLoaded: {}
+      librariesLoaded: {},
+      currentLibraryType: 'websites'
     };
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -2719,11 +2697,91 @@
       progressLoaded: document.getElementById('progressLoaded'),
       progressTotal: document.getElementById('progressTotal'),
       progressCurrentFolder: document.getElementById('progressCurrentFolder'),
-      suggestedToggle: document.getElementById('suggestedToggle'),
-      librariesGrid: document.getElementById('librariesGrid')
+      themeToggle: document.getElementById('themeToggle'),
+      librariesGridDisplay: document.getElementById('librariesGridDisplay'),
+      suggestedToggleBtn: document.getElementById('suggestedToggleBtn'),
+      suggestedContent: document.getElementById('suggestedContent')
     };
 
     DOM.currentYear.textContent = new Date().getFullYear();
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // Theme Management
+    // ═══════════════════════════════════════════════════════════════════════════
+    function initTheme() {
+      const savedTheme = localStorage.getItem('noor_library_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeIcon(savedTheme);
+    }
+
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('noor_library_theme', newTheme);
+      updateThemeIcon(newTheme);
+    }
+
+    function updateThemeIcon(theme) {
+      const metaTheme = document.querySelector('meta[name="theme-color"]');
+      if (metaTheme) {
+        metaTheme.setAttribute('content', theme === 'dark' ? '#0a1517' : '#f8f6f3');
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // Suggested Libraries
+    // ═══════════════════════════════════════════════════════════════════════════
+    function renderSuggestedLibraries(type) {
+      const libraries = SUGGESTED_LIBRARIES[type] || [];
+      const isTelegram = type === 'telegram';
+      
+      let html = '';
+      libraries.forEach(lib => {
+        html += `
+          <a href="${lib.url}" target="_blank" class="library-card">
+            <div class="library-card-icon ${isTelegram ? 'telegram' : lib.icon}">
+              <i class="${isTelegram ? 'fab fa-telegram' : 'fas fa-book'}"></i>
+            </div>
+            <div class="library-card-content">
+              <div class="library-card-name">${lib.name}</div>
+              <div class="library-card-url">${lib.domain}</div>
+            </div>
+            <i class="fas fa-external-link-alt library-card-arrow"></i>
+          </a>
+        `;
+      });
+      
+      DOM.librariesGridDisplay.innerHTML = html;
+    }
+
+    function initLibraryTypeTabs() {
+      document.querySelectorAll('.library-type-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.library-type-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          state.currentLibraryType = tab.dataset.type;
+          renderSuggestedLibraries(tab.dataset.type);
+        });
+      });
+    }
+
+    function toggleSuggestedLibraries() {
+      const isExpanded = DOM.suggestedToggleBtn.classList.contains('expanded');
+      
+      if (isExpanded) {
+        DOM.suggestedToggleBtn.classList.remove('expanded');
+        DOM.suggestedContent.classList.remove('expanded');
+      } else {
+        DOM.suggestedToggleBtn.classList.add('expanded');
+        DOM.suggestedContent.classList.add('expanded');
+        
+        // تحميل المكتبات عند أول فتح
+        if (!DOM.librariesGridDisplay.children.length) {
+          renderSuggestedLibraries('websites');
+        }
+      }
+    }
 
     // ═══════════════════════════════════════════════════════════════════════════
     // Progress Functions
@@ -3479,31 +3537,6 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // Suggested Libraries Toggle
-    // ═══════════════════════════════════════════════════════════════════════════
-    function initSuggestedLibraries() {
-      const suggestedToggle = document.getElementById('suggestedToggle');
-      const librariesGrid = document.getElementById('librariesGrid');
-      
-      if (suggestedToggle) {
-        suggestedToggle.addEventListener('click', () => {
-          suggestedToggle.classList.toggle('expanded');
-          librariesGrid.classList.toggle('expanded');
-          
-          const span = suggestedToggle.querySelector('span');
-          span.textContent = librariesGrid.classList.contains('expanded') ? 'إخفاء' : 'عرض الكل';
-        });
-      }
-    }
-    
-    function toggleLibrarySection(sectionId) {
-      const section = document.getElementById(sectionId);
-      if (section) {
-        section.classList.toggle('expanded');
-      }
-    }
-
-    // ═══════════════════════════════════════════════════════════════════════════
     // Event Listeners
     // ═══════════════════════════════════════════════════════════════════════════
     function initEventListeners() {
@@ -3568,6 +3601,11 @@
       DOM.modalClose.addEventListener('click', closeModal);
       DOM.bookModal.addEventListener('click', (e) => { if (e.target === DOM.bookModal) closeModal(); });
       
+      DOM.themeToggle.addEventListener('click', toggleTheme);
+      
+      // Suggested Libraries Toggle
+      DOM.suggestedToggleBtn.addEventListener('click', toggleSuggestedLibraries);
+      
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && DOM.bookModal.classList.contains('active')) closeModal();
         if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); DOM.searchInput.focus(); }
@@ -3584,16 +3622,15 @@
           }, state.currentLibrary);
         }
       });
-      
-      // Init suggested libraries toggle
-      initSuggestedLibraries();
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
     // Initialize
     // ═══════════════════════════════════════════════════════════════════════════
     document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
       initEventListeners();
+      initLibraryTypeTabs();
       initLibrary();
     });
   </script>
