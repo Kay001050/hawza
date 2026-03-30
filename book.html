@@ -430,6 +430,524 @@
       color: white;
     }
 
+    .media-card .category-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: linear-gradient(135deg, var(--accent-youtube), #ff6b6b);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: capitalize;
+      box-shadow: 0 2px 8px rgba(255, 0, 0, 0.3);
+      z-index: 10;
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .media-card {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .media-card .media-thumbnail {
+      position: relative;
+      background: linear-gradient(135deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.02) 100%);
+    }
+    
+    .media-card img {
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    
+    .media-card:hover img {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
+
+    .media-card .tags-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    
+    .media-card .tag-badge {
+      position: relative;
+      background: linear-gradient(135deg, var(--accent-youtube), #ff6b6b);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: capitalize;
+      box-shadow: 0 2px 8px rgba(255, 0, 0, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    .media-card .tag-badge:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(255, 0, 0, 0.5);
+    }
+    
+    .media-card .tag-badge.primary {
+      background: linear-gradient(135deg, var(--accent-youtube), #ff4444);
+      font-weight: 700;
+    }
+    
+    .media-card .tag-badge.secondary {
+      background: linear-gradient(135deg, rgba(255, 0, 0, 0.7), rgba(255, 68, 68, 0.7));
+      font-size: 0.65rem;
+      padding: 2px 8px;
+    }
+    
+    .media-card .tags-dropdown {
+      position: absolute;
+      bottom: 100%;
+      right: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      padding: 8px;
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 100;
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+      min-width: 150px;
+    }
+    
+    .media-card .tag-badge:hover .tags-dropdown {
+      display: flex;
+    }
+    
+    .media-card .tags-dropdown .tag-item {
+      padding: 6px 10px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      background: rgba(255, 0, 0, 0.1);
+      color: var(--text-primary);
+      border: 1px solid rgba(255, 0, 0, 0.2);
+      transition: all 0.2s ease;
+      cursor: default;
+    }
+    
+    .media-card .tags-dropdown .tag-item:hover {
+      background: rgba(255, 0, 0, 0.2);
+      border-color: rgba(255, 0, 0, 0.4);
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .media-card {
+      position: relative;
+      overflow: visible;
+    }
+    
+    .media-card .media-thumbnail {
+      position: relative;
+      background: linear-gradient(135deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.02) 100%);
+      overflow: hidden;
+    }
+    
+    .media-card img {
+      transition: transform 0.3s ease, filter 0.3s ease;
+      object-fit: cover;
+    }
+    
+    .media-card:hover img {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
+    
+    .media-card .channel-placeholder {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-youtube), #ff6b6b);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+      font-weight: bold;
+      border: 3px solid var(--accent-youtube);
+    }
+
+    /* Media Grid - Different layouts for channels vs videos */
+    .media-grid {
+      display: grid;
+      gap: 20px;
+      padding: 20px 0;
+    }
+    
+    /* Grid for CHANNELS - 2 per row */
+    .media-grid.channels-view {
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    
+    /* Grid for VIDEOS - 3-4 per row */
+    .media-grid.videos-view {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    
+    @media (max-width: 768px) {
+      .media-grid.channels-view {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 100%;
+      }
+      
+      .media-grid.videos-view {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .media-grid.channels-view {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .media-grid.videos-view {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Media Card - Base */
+    .media-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border-radius: var(--radius-md);
+      overflow: visible;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      background: transparent;
+    }
+    
+    .media-card:hover {
+      transform: translateY(-6px);
+    }
+    
+    /* CHANNEL CARD - Circular */
+    .media-card.channel-card {
+      gap: 12px;
+    }
+    
+    .media-card.channel-card .media-thumbnail {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(255, 0, 0, 0.1) 0%, rgba(255, 68, 68, 0.1) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border: 3px solid var(--accent-youtube);
+      box-shadow: 0 4px 12px rgba(255, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+    
+    .media-card.channel-card:hover .media-thumbnail {
+      box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4);
+      border-color: #ff4444;
+      transform: scale(1.05);
+    }
+    
+    .media-card.channel-card .media-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    
+    /* VIDEO CARD - Rectangular */
+    .media-card.video-card {
+      gap: 10px;
+    }
+    
+    .media-card.video-card .media-thumbnail {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.02) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border: 1px solid var(--border-medium);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .media-card.video-card:hover .media-thumbnail {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      border-color: var(--accent-youtube);
+    }
+    
+    .media-card.video-card .media-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    /* Shared Thumbnail Styles */
+    .media-card .media-thumbnail img {
+      transition: transform 0.3s ease;
+    }
+    
+    .media-card:hover .media-thumbnail img {
+      transform: scale(1.08);
+    }
+    
+    .media-card .media-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0);
+      transition: background 0.3s ease;
+      border-radius: inherit;
+    }
+    
+    .media-card:hover .media-overlay {
+      background: rgba(0, 0, 0, 0.2);
+    }
+    
+    .media-card .media-play-icon {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: var(--accent-youtube);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+    
+    .media-card:hover .media-play-icon {
+      opacity: 1;
+      transform: scale(1);
+    }
+    
+    /* Media Info */
+    .media-card .media-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+    }
+    
+    .media-card.channel-card .media-info {
+      min-height: 60px;
+      justify-content: flex-start;
+    }
+    
+    .media-card.video-card .media-info {
+      align-items: flex-start;
+      text-align: left;
+      padding: 0 4px;
+    }
+    
+    .media-card .media-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+    }
+    
+    .media-card.channel-card .media-title {
+      font-size: 0.85rem;
+    }
+    
+    .media-card.video-card .media-title {
+      font-size: 0.9rem;
+      -webkit-line-clamp: 2;
+    }
+    
+    .media-card .media-channel {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .media-card .media-channel i {
+      font-size: 0.65rem;
+    }
+    
+    /* Tags Container */
+    .media-card .tags-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    
+    .media-card.video-card .tags-container {
+      justify-content: flex-start;
+    }
+    
+    .media-card .tag-badge {
+      position: relative;
+      background: linear-gradient(135deg, var(--accent-youtube), #ff6b6b);
+      color: white;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: capitalize;
+      box-shadow: 0 2px 6px rgba(255, 0, 0, 0.25);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      animation: slideIn 0.3s ease-out;
+      white-space: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .media-card .tag-badge:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(255, 0, 0, 0.4);
+    }
+    
+    .media-card .tag-badge.primary {
+      background: linear-gradient(135deg, var(--accent-youtube), #ff4444);
+      font-weight: 700;
+      padding: 4px 10px;
+      font-size: 0.7rem;
+    }
+    
+    .media-card .tags-dropdown {
+      position: absolute;
+      bottom: 100%;
+      right: 50%;
+      transform: translateX(50%);
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      padding: 8px;
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 100;
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+      min-width: 140px;
+      margin-bottom: 8px;
+    }
+    
+    .media-card .tag-badge:hover .tags-dropdown {
+      display: flex;
+    }
+    
+    .media-card .tags-dropdown .tag-item {
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.65rem;
+      background: rgba(255, 0, 0, 0.1);
+      color: var(--text-primary);
+      border: 1px solid rgba(255, 0, 0, 0.2);
+      transition: all 0.2s ease;
+      cursor: default;
+      white-space: nowrap;
+    }
+    
+    .media-card .tags-dropdown .tag-item:hover {
+      background: rgba(255, 0, 0, 0.2);
+      border-color: rgba(255, 0, 0, 0.4);
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Category Selector - Improved */
+    .category-selector-wrapper {
+      position: relative;
+      min-width: 240px;
+    }
+    
+    .media-select {
+      width: 100%;
+      padding: 11px 16px;
+      border-radius: var(--radius-md);
+      border: 2px solid rgba(255, 0, 0, 0.25);
+      background: linear-gradient(135deg, rgba(255, 0, 0, 0.03) 0%, rgba(255, 68, 68, 0.03) 100%);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      appearance: none;
+      outline: none;
+      transition: all 0.3s ease;
+      padding-right: 40px;
+    }
+    
+    .media-select:hover {
+      border-color: rgba(255, 0, 0, 0.4);
+      background: linear-gradient(135deg, rgba(255, 0, 0, 0.06) 0%, rgba(255, 68, 68, 0.06) 100%);
+    }
+    
+    .media-select:focus {
+      border-color: var(--accent-youtube);
+      box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
+    }
+    
+    .category-selector-wrapper::after {
+      content: "▼";
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent-youtube);
+      pointer-events: none;
+      font-size: 0.7rem;
+      font-weight: bold;
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .media-tab i {
       font-size: 0.95rem;
     }
@@ -3331,30 +3849,33 @@
 
       <div class="media-content" id="mediaContent">
         <div class="media-inner">
-          <div class="media-tabs">
-            <button class="media-tab active" data-tab="channels">
-              <i class="fas fa-tv"></i>
-              <span>القنوات</span>
-            </button>
-            <button class="media-tab" data-tab="videos">
-              <i class="fas fa-video"></i>
-              <span>الفيديوهات</span>
-            </button>
-          </div>
-
-          <!-- Channels Grid -->
-          <div id="channelsGrid" class="media-grid">
-            <div class="media-loading">
-              <i class="fas fa-spinner"></i>
-              <span>جاري تحميل القنوات...</span>
+          <div class="media-controls" style="display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 25px; flex-wrap: wrap;">
+            <!-- Main Tabs (Channels & Videos) -->
+            <div class="media-tabs" id="mainMediaTabs" style="display: flex; gap: 12px;">
+              <button class="media-tab active" data-tab="channels" data-type="main">
+                <i class="fas fa-tv"></i>
+                <span>القنوات</span>
+              </button>
+              <button class="media-tab" data-tab="videos" data-type="main">
+                <i class="fas fa-video"></i>
+                <span>الفيديوهات</span>
+              </button>
+            </div>
+            
+            <!-- Category Selector (Dynamic from Sheets) -->
+            <div class="category-selector-wrapper" style="position: relative; min-width: 220px;">
+              <select id="mediaCategorySelect" class="media-select" style="width: 100%; padding: 10px 14px; border-radius: var(--radius-md); border: 2px solid rgba(255, 0, 0, 0.3); background: linear-gradient(135deg, rgba(255, 0, 0, 0.05) 0%, rgba(255, 68, 68, 0.05) 100%); color: var(--text-primary); font-family: inherit; font-size: 0.9rem; cursor: pointer; appearance: none; outline: none; transition: all var(--transition-fast); font-weight: 500;">
+                <option value="" disabled selected>جاري تحميل التصنيفات...</option>
+              </select>
+              <i class="fas fa-filter" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--accent-youtube); pointer-events: none; font-size: 0.9rem;"></i>
             </div>
           </div>
 
-          <!-- Videos Grid -->
-          <div id="videosGrid" class="media-grid" style="display: none;">
+          <!-- Media Grid -->
+          <div id="mediaGrid" class="media-grid">
             <div class="media-loading">
               <i class="fas fa-spinner"></i>
-              <span>جاري تحميل الفيديوهات...</span>
+              <span>جاري تحميل المحتوى...</span>
             </div>
           </div>
         </div>
@@ -4773,15 +5294,24 @@ ITEMS_PER_PAGE: 30
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // YouTube Media Section Logic
+    // YouTube Media Section - Definitive Logic with Reliable Image & Name Fetching
     // ═══════════════════════════════════════════════════════════════════════════
-    let channelsData = [];
-    let videosData = [];
+    const SHEETS_ID = '1LPJR--wgeH-djNEaxQGzOsf_hBWCY6D7I8T-7TMYc_o';
+    const SHEETS_URL = `https://docs.google.com/spreadsheets/d/${SHEETS_ID}/export?format=csv`;
+    const CHANNELS_DOC = '1owScaZsSqyFi6MAei7IGORFOuXUc5KqBFTp6dW45Xvc';
+    const VIDEOS_DOC = '147ck0G6x_8Dq0P1Bu0D8IKLtmAPDCayqrlGAjkGE95s';
+    
+    let allMediaData = [];
+    let processedUrls = new Set();
+    let categoriesMap = {};
+    let currentCategory = 'all';
+    let activeTab = 'channels';
 
-    function initMediaSection() {
+    async function initMediaSection() {
       const mediaToggleBtn = document.getElementById('mediaToggleBtn');
       const mediaContent = document.getElementById('mediaContent');
-      const mediaTabs = document.querySelectorAll('.media-tab');
+      const mainTabs = document.querySelectorAll('.media-tab[data-type="main"]');
+      const categorySelect = document.getElementById('mediaCategorySelect');
 
       if (mediaToggleBtn) {
         mediaToggleBtn.addEventListener('click', () => {
@@ -4790,137 +5320,320 @@ ITEMS_PER_PAGE: 30
         });
       }
 
-      mediaTabs.forEach(tab => {
+      mainTabs.forEach(tab => {
         tab.addEventListener('click', () => {
-          mediaTabs.forEach(t => t.classList.remove('active'));
+          mainTabs.forEach(t => t.classList.remove('active'));
           tab.classList.add('active');
-          const channelsGrid = document.getElementById('channelsGrid');
-          const videosGrid = document.getElementById('videosGrid');
-          if (tab.dataset.tab === 'channels') {
-            channelsGrid.style.display = 'grid';
-            videosGrid.style.display = 'none';
-          } else {
-            channelsGrid.style.display = 'none';
-            videosGrid.style.display = 'grid';
-          }
+          activeTab = tab.dataset.tab;
+          renderMediaGrid();
         });
       });
 
-      fetchMediaData();
+      categorySelect.addEventListener('change', (e) => {
+        currentCategory = e.target.value;
+        renderMediaGrid();
+      });
+
+      await loadAllDataSequentially();
     }
 
-    async function fetchMediaData() {
-      const channelDocs = ['1owScaZsSqyFi6MAei7IGORFOuXUc5KqBFTp6dW45Xvc'];
-      const videoDocs = ['147ck0G6x_8Dq0P1Bu0D8IKLtmAPDCayqrlGAjkGE95s'];
-      
-      const allChannels = [];
-      for (const docId of channelDocs) {
-        const channels = await fetchFromDoc(docId, 'channels');
-        allChannels.push(...channels);
-      }
-      channelsData = [...new Map(allChannels.map(c => [c.url, c])).values()];
-      renderMediaGrid('channelsGrid', channelsData, 'channel');
-      
-      const allVideos = [];
-      for (const docId of videoDocs) {
-        const videos = await fetchFromDoc(docId, 'videos');
-        allVideos.push(...videos);
-      }
-      videosData = [...new Map(allVideos.map(v => [v.vId, v])).values()];
-      renderMediaGrid('videosGrid', videosData, 'video');
-      
-      const mediaCountSpan = document.getElementById('mediaCount');
-      if (mediaCountSpan) mediaCountSpan.textContent = channelsData.length + videosData.length;
-    }
-
-    async function fetchFromDoc(docId, type) {
+    async function loadAllDataSequentially() {
       try {
-        const url = `https://docs.google.com/document/d/${docId}/export?format=txt`;
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('Fetch failed');
-        const text = await response.text();
+        allMediaData = [];
+        processedUrls.clear();
+        categoriesMap = {};
         
-        if (type === 'channels') {
-          const urlRegex = /(https?:\/\/(?:www\.)?youtube\.com(?:\/channel\/|\/\@)[^\s\/\?]+)/g;
-          const matches = [...new Set(text.match(urlRegex) || [])];
-          
-          // جلب بيانات القنوات بشكل متوازي
-          const channelPromises = matches.map(async (url) => {
-            const handle = url.split('/').pop().replace('@', '');
-            let title = handle;
-            
-            // محاولة جلب اسم القناة الحقيقي عبر oEmbed (يعمل لبعض روابط القنوات)
-            try {
-              const oEmbedUrl = `https://www.youtube.com/oembed?url=${url}&format=json`;
-              const res = await fetch(oEmbedUrl);
-              if (res.ok) {
-                const data = await res.json();
-                title = data.author_name || handle;
-              }
-            } catch (e) {}
-            
-            return {
-              url,
-              title: title,
-              handle: handle,
-              thumbnail: `https://unavatar.io/youtube/${handle}`
-            };
-          });
-          
-          return await Promise.all(channelPromises);
-        } else {
-          const urlRegex = /(https?:\/\/(?:www\.)?youtube\.com\/watch\?v=[0-9A-Za-z_-]{11}|https?:\/\/youtu\.be\/[0-9A-Za-z_-]{11})/g;
-          const matches = [...new Set(text.match(urlRegex) || [])];
-          
-          const videoPromises = matches.map(async (url) => {
-            const vId = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})/)?.[1];
-            let title = "فيديو يوتيوب";
-            try {
-              // محاولة جلب العنوان عبر oEmbed (لا يتطلب API Key)
-              const oEmbedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${vId}&format=json`;
-              const res = await fetch(oEmbedUrl);
-              if (res.ok) {
-                const data = await res.json();
-                title = data.title;
-              }
-            } catch (e) {}
-            
-            return { 
-              url, 
-              title, 
-              vId,
-              thumbnail: `https://img.youtube.com/vi/${vId}/maxresdefault.jpg` 
-            };
-          });
-          
-          return await Promise.all(videoPromises);
-        }
-      } catch (e) { console.error(e); return []; }
+        // Step 1: Load categories from Sheets
+        console.log('Loading categories from Sheets...');
+        await loadCategoriesFromSheets();
+        
+        // Step 2: Load URLs from documents
+        console.log('Loading URLs from documents...');
+        await loadUrlsFromDocuments();
+        
+        // Step 3: Populate dropdown
+        const categories = Object.keys(categoriesMap).sort();
+        const select = document.getElementById('mediaCategorySelect');
+        select.innerHTML = '<option value="all">كل التصنيفات</option>' + 
+          categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+        
+        const mediaCountSpan = document.getElementById('mediaCount');
+        if (mediaCountSpan) mediaCountSpan.textContent = allMediaData.length;
+
+        renderMediaGrid();
+        
+        // Step 4: Fetch real data in background
+        console.log('Fetching real data from YouTube...');
+        fetchRealDataInBackground();
+      } catch (e) {
+        console.error('Error in loadAllDataSequentially:', e);
+        document.getElementById('mediaGrid').innerHTML = '<div class="media-empty"><i class="fas fa-exclamation-triangle"></i><p>فشل تحميل البيانات</p></div>';
+      }
     }
 
-    function renderMediaGrid(gridId, data, type) {
-      const grid = document.getElementById(gridId);
-      if (!grid) return;
-      if (data.length === 0) {
-        grid.innerHTML = `<div class="media-empty"><i class="fas fa-${type==='video'?'video':'tv'}"></i><p>لا توجد عناصر حالياً</p></div>`;
+    async function loadCategoriesFromSheets() {
+      try {
+        const response = await fetch(SHEETS_URL);
+        const csvText = await response.text();
+        
+        const rows = csvText.split('\n').map(row => {
+          return row.split(',').map(cell => cell.trim().replace(/^"|"$/g, ''));
+        });
+
+        const dataRows = rows.slice(1).filter(row => row[0] && row[0].startsWith('http'));
+        
+        for (const row of dataRows) {
+          const url = row[0];
+          const tagsString = row[1] || 'عام';
+          
+          // Filter out URLs from tags - only keep text
+          const tags = tagsString
+            .split(',')
+            .map(t => t.trim())
+            .filter(t => t && !t.startsWith('http'))
+            .filter(t => t);
+          
+          const normalizedUrl = normalizeUrl(url);
+          categoriesMap[normalizedUrl] = tags.length > 0 ? tags : ['عام'];
+          
+          tags.forEach(tag => {
+            if (!categoriesMap[tag]) categoriesMap[tag] = [];
+          });
+        }
+      } catch (e) {
+        console.error('Error loading Sheets:', e);
+      }
+    }
+
+    async function loadUrlsFromDocuments() {
+      const docs = [CHANNELS_DOC, VIDEOS_DOC];
+      
+      for (const docId of docs) {
+        try {
+          const url = `https://docs.google.com/document/d/${docId}/export?format=txt`;
+          const response = await fetch(url);
+          const text = await response.text();
+          
+          // Extract YouTube URLs
+          const urlRegex = /(https?:\/\/(?:www\.)?youtube\.com(?:\/watch\?v=|\/@|\/channel\/)[^\s\/\?]+|https?:\/\/youtu\.be\/[0-9A-Za-z_-]{11})/g;
+          const matches = [...new Set(text.match(urlRegex) || [])];
+          
+          for (const foundUrl of matches) {
+            const normalizedUrl = normalizeUrl(foundUrl);
+            
+            if (!processedUrls.has(normalizedUrl)) {
+              processedUrls.add(normalizedUrl);
+              
+              const tags = categoriesMap[normalizedUrl] || ['عام'];
+              const mediaItem = parseMediaUrl(foundUrl, tags);
+              if (mediaItem) allMediaData.push(mediaItem);
+            }
+          }
+        } catch (e) {
+          console.error(`Error loading document ${docId}:`, e);
+        }
+      }
+    }
+
+    function normalizeUrl(url) {
+      if (url.includes('youtu.be/')) {
+        const vId = url.match(/youtu\.be\/([0-9A-Za-z_-]{11})/)?.[1];
+        return `yt:video:${vId}`;
+      } else if (url.includes('youtube.com/watch')) {
+        const vId = url.match(/v=([0-9A-Za-z_-]{11})/)?.[1];
+        return `yt:video:${vId}`;
+      } else if (url.includes('youtube.com/@')) {
+        const handle = url.split('/@')[1].split('/')[0].split('?')[0];
+        return `yt:channel:${handle}`;
+      } else if (url.includes('youtube.com/channel/')) {
+        const channelId = url.split('/channel/')[1].split('/')[0].split('?')[0];
+        return `yt:channel:${channelId}`;
+      }
+      return url;
+    }
+
+    function parseMediaUrl(url, tags) {
+      try {
+        if (url.includes('youtube.com/watch') || url.includes('youtu.be/')) {
+          const vId = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})/)?.[1];
+          if (!vId) return null;
+          return {
+            url,
+            tags: tags && tags.length > 0 ? tags : ['عام'],
+            vId,
+            type: 'video',
+            title: 'جاري التحميل...',
+            thumbnail: `https://img.youtube.com/vi/${vId}/maxresdefault.jpg`,
+            author: ''
+          };
+        } else if (url.includes('youtube.com/@') || url.includes('youtube.com/channel/')) {
+          let handle = '';
+          if (url.includes('/@')) {
+            handle = url.split('/@')[1].split('/')[0].split('?')[0];
+          } else {
+            handle = url.split('/channel/')[1].split('/')[0].split('?')[0];
+          }
+          
+          return {
+            url,
+            tags: tags && tags.length > 0 ? tags : ['عام'],
+            handle,
+            type: 'channel',
+            title: handle,
+            thumbnail: `https://yt3.ggpht.com/${handle}=s176-c-k-c0x00ffffff-no-rj`,
+            author: ''
+          };
+        }
+      } catch (e) {
+        console.error('Error parsing URL:', url, e);
+      }
+      return null;
+    }
+
+    async function fetchRealDataInBackground() {
+      for (let i = 0; i < allMediaData.length; i++) {
+        const item = allMediaData[i];
+        
+        // Fetch with multiple strategies
+        if (item.type === 'video') {
+          await fetchVideoData(item);
+        } else {
+          await fetchChannelData(item);
+        }
+        
+        // Render after each fetch to show progressive loading
+        renderMediaGrid();
+      }
+    }
+
+    async function fetchVideoData(item) {
+      try {
+        // Strategy 1: Try oEmbed
+        try {
+          const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${item.vId}&format=json`);
+          if (res.ok) {
+            const d = await res.json();
+            item.title = d.title || item.title;
+            item.author = d.author_name || '';
+            return;
+          }
+        } catch (e) {}
+        
+        // Strategy 2: Use noembed.com as fallback
+        try {
+          const res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${item.vId}`);
+          if (res.ok) {
+            const d = await res.json();
+            item.title = d.title || item.title;
+            item.author = d.author_name || '';
+            return;
+          }
+        } catch (e) {}
+        
+        // Strategy 3: Extract from URL or use placeholder
+        if (item.title === 'جاري التحميل...') {
+          item.title = `فيديو يوتيوب - ${item.vId.substring(0, 6)}`;
+        }
+      } catch (e) {
+        console.error('Error fetching video data:', e);
+      }
+    }
+
+    async function fetchChannelData(item) {
+      try {
+        // Strategy 1: Try oEmbed with channel URL
+        try {
+          const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/@${item.handle}&format=json`);
+          if (res.ok) {
+            const d = await res.json();
+            item.title = d.author_name || item.handle;
+            item.author = d.author_name || '';
+            return;
+          }
+        } catch (e) {}
+        
+        // Strategy 2: Try with channel ID
+        try {
+          const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/channel/${item.handle}&format=json`);
+          if (res.ok) {
+            const d = await res.json();
+            item.title = d.author_name || item.handle;
+            item.author = d.author_name || '';
+            return;
+          }
+        } catch (e) {}
+        
+        // Strategy 3: Use handle as title
+        item.title = item.handle;
+        item.author = item.handle;
+        
+        // Strategy 4: Ensure image loads from unavatar
+        item.thumbnail = `https://unavatar.io/youtube/${item.handle}`;
+      } catch (e) {
+        console.error('Error fetching channel data:', e);
+      }
+    }
+
+    function renderMediaGrid() {
+      const grid = document.getElementById('mediaGrid');
+      
+      const filteredData = allMediaData.filter(item => {
+        const matchesCategory = currentCategory === 'all' || (item.tags && item.tags.includes(currentCategory));
+        const matchesTab = activeTab === (item.type === 'channel' ? 'channels' : 'videos');
+        return matchesCategory && matchesTab;
+      });
+      
+      if (filteredData.length === 0) {
+        grid.innerHTML = `<div class="media-empty"><i class="fas fa-info-circle"></i><p>لا توجد ${activeTab === 'channels' ? 'قنوات' : 'مقاطع'} في هذا التصنيف</p></div>`;
         return;
       }
-      grid.innerHTML = data.map(item => `
-        <a href="${item.url}" target="_blank" class="media-card">
-          <div class="media-thumbnail">
-            <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='${type==='video' ? `https://img.youtube.com/vi/${item.vId}/hqdefault.jpg` : 'https://via.placeholder.com/120x120/ff0000/ffffff?text=YT'}'">
-            <div class="media-overlay"></div>
-            <div class="media-play-icon"><i class="fas fa-${type==='video'?'play':'external-link-alt'}"></i></div>
-          </div>
-          <div class="media-info">
-            <div class="media-title" title="${item.title}">${item.title}</div>
-            <div class="media-channel"><i class="fab fa-youtube"></i><span>يوتيوب</span></div>
-          </div>
-        </a>
-      `).join('');
+      
+      // Add appropriate class to grid based on active tab
+      grid.className = `media-grid ${activeTab === 'channels' ? 'channels-view' : 'videos-view'}`;
+
+      grid.innerHTML = filteredData.map(item => {
+        const primaryTag = item.tags && item.tags.length > 0 ? item.tags[0] : 'عام';
+        const additionalTags = item.tags && item.tags.length > 1 ? item.tags.slice(1) : [];
+        
+        let tagsHtml = `<div class="tag-badge primary">${primaryTag}`;
+        if (additionalTags.length > 0) {
+          tagsHtml += '<div class="tags-dropdown">';
+          additionalTags.forEach(tag => {
+            tagsHtml += `<div class="tag-item">${tag}</div>`;
+          });
+          tagsHtml += '</div></div>';
+        } else {
+          tagsHtml += '</div>';
+        }
+        
+        const cardClass = item.type === 'channel' ? 'channel-card' : 'video-card';
+        const imgSrc = item.type === 'channel' ? 
+          `https://unavatar.io/youtube/${item.handle}?fallback=https://via.placeholder.com/140x140/ff0000/ffffff?text=${encodeURIComponent(item.title.charAt(0).toUpperCase())}` :
+          item.thumbnail;
+        
+        return `
+          <a href="${item.url}" target="_blank" class="media-card ${cardClass}">
+            <div class="media-thumbnail">
+              <img src="${imgSrc}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/140x140/ff0000/ffffff?text=${encodeURIComponent(item.type === 'channel' ? item.title.charAt(0).toUpperCase() : 'YT')}'">
+              <div class="media-overlay"></div>
+              <div class="media-play-icon"><i class="fas fa-${item.type === 'video' ? 'play' : 'external-link-alt'}"></i></div>
+            </div>
+            <div class="media-info">
+              <div class="media-title" title="${item.title}">${item.title}</div>
+              <div class="media-channel"><i class="fab fa-youtube"></i><span>${item.author || 'يوتيوب'}</span></div>
+              <div class="tags-container">${tagsHtml}</div>
+            </div>
+          </a>
+        `;
+      }).join('');
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
+    // Initialize// ═══════════════════════════════════════════════════════════════════════════
+    // Initialize// ═══════════════════════════════════════════════════════════════════════════
+    // Initialize// ═══════════════════════════════════════════════════════════════════════════
+    // Initialize// ═══════════════════════════════════════════════════════════════════════════
+    // Initialize// ═══════════════════════════════════════════════════════════════════════════
     // Initialize
     // ═══════════════════════════════════════════════════════════════════════════
     document.addEventListener('DOMContentLoaded', () => {
