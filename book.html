@@ -482,6 +482,9 @@
       padding-bottom: 56.25%;
       background: var(--bg-tertiary);
       overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .media-thumbnail img {
@@ -491,6 +494,43 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .media-card:hover .media-thumbnail img {
+      transform: scale(1.05);
+    }
+
+    /* تصميم دائري لصور القنوات */
+    #channelsGrid .media-thumbnail {
+      padding-bottom: 0;
+      height: 160px;
+      background: none;
+    }
+
+    #channelsGrid .media-thumbnail img {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid var(--accent-youtube);
+      padding: 3px;
+      background: var(--bg-card);
+    }
+
+    #channelsGrid .media-info {
+      text-align: center;
+    }
+
+    #channelsGrid .media-title {
+      -webkit-line-clamp: 1;
+      font-weight: 700;
+    }
+    
+    .channel-loading-text {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-style: italic;
     }
 
     .media-play-icon {
@@ -4770,10 +4810,25 @@ ITEMS_PER_PAGE: 30
     }
 
     async function fetchMediaData() {
-      await Promise.all([
-        fetchFromDoc('1owScaZsSqyFi6MAei7IGORFOuXUc5KqBFTp6dW45Xvc', 'channels'),
-        fetchFromDoc('147ck0G6x_8Dq0P1Bu0D8IKLtmAPDCayqrlGAjkGE95s', 'videos')
-      ]);
+      const channelDocs = ['1owScaZsSqyFi6MAei7IGORFOuXUc5KqBFTp6dW45Xvc'];
+      const videoDocs = ['147ck0G6x_8Dq0P1Bu0D8IKLtmAPDCayqrlGAjkGE95s'];
+      
+      const allChannels = [];
+      for (const docId of channelDocs) {
+        const channels = await fetchFromDoc(docId, 'channels');
+        allChannels.push(...channels);
+      }
+      channelsData = [...new Map(allChannels.map(c => [c.url, c])).values()];
+      renderMediaGrid('channelsGrid', channelsData, 'channel');
+      
+      const allVideos = [];
+      for (const docId of videoDocs) {
+        const videos = await fetchFromDoc(docId, 'videos');
+        allVideos.push(...videos);
+      }
+      videosData = [...new Map(allVideos.map(v => [v.vId, v])).values()];
+      renderMediaGrid('videosGrid', videosData, 'video');
+      
       const mediaCountSpan = document.getElementById('mediaCount');
       if (mediaCountSpan) mediaCountSpan.textContent = channelsData.length + videosData.length;
     }
@@ -4786,23 +4841,61 @@ ITEMS_PER_PAGE: 30
         const text = await response.text();
         
         if (type === 'channels') {
-          const urlRegex = /(https?:\/\/(?:www\.)?youtube\.com(?:\/channel\/|\/\@)[^\s]+)/g;
+          const urlRegex = /(https?:\/\/(?:www\.)?youtube\.com(?:\/channel\/|\/\@)[^\s\/\?]+)/g;
           const matches = [...new Set(text.match(urlRegex) || [])];
-          channelsData = matches.map((url, i) => ({
-            url, title: `قناة مقترحة ${i+1}`, 
-            id: url.split('/').pop()
-          }));
-          renderMediaGrid('channelsGrid', channelsData, 'channel');
-        } else {
-          const urlRegex = /(https?:\/\/(?:www\.)?youtube\.com\/watch\?v=[^\s]+|https?:\/\/youtu\.be\/[^\s]+)/g;
-          const matches = [...new Set(text.match(urlRegex) || [])];
-          videosData = matches.map((url, i) => {
-            const vId = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})/)?.[1];
-            return { url, title: `فيديو مقترح ${i+1}`, vId };
+          
+          // جلب بيانات القنوات بشكل متوازي
+          const channelPromises = matches.map(async (url) => {
+            const handle = url.split('/').pop().replace('@', '');
+            let title = handle;
+            
+            // محاولة جلب اسم القناة الحقيقي عبر oEmbed (يعمل لبعض روابط القنوات)
+            try {
+              const oEmbedUrl = `https://www.youtube.com/oembed?url=${url}&format=json`;
+              const res = await fetch(oEmbedUrl);
+              if (res.ok) {
+                const data = await res.json();
+                title = data.author_name || handle;
+              }
+            } catch (e) {}
+            
+            return {
+              url,
+              title: title,
+              handle: handle,
+              thumbnail: `https://unavatar.io/youtube/${handle}`
+            };
           });
-          renderMediaGrid('videosGrid', videosData, 'video');
+          
+          return await Promise.all(channelPromises);
+        } else {
+          const urlRegex = /(https?:\/\/(?:www\.)?youtube\.com\/watch\?v=[0-9A-Za-z_-]{11}|https?:\/\/youtu\.be\/[0-9A-Za-z_-]{11})/g;
+          const matches = [...new Set(text.match(urlRegex) || [])];
+          
+          const videoPromises = matches.map(async (url) => {
+            const vId = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})/)?.[1];
+            let title = "فيديو يوتيوب";
+            try {
+              // محاولة جلب العنوان عبر oEmbed (لا يتطلب API Key)
+              const oEmbedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${vId}&format=json`;
+              const res = await fetch(oEmbedUrl);
+              if (res.ok) {
+                const data = await res.json();
+                title = data.title;
+              }
+            } catch (e) {}
+            
+            return { 
+              url, 
+              title, 
+              vId,
+              thumbnail: `https://img.youtube.com/vi/${vId}/maxresdefault.jpg` 
+            };
+          });
+          
+          return await Promise.all(videoPromises);
         }
-      } catch (e) { console.error(e); }
+      } catch (e) { console.error(e); return []; }
     }
 
     function renderMediaGrid(gridId, data, type) {
@@ -4815,12 +4908,12 @@ ITEMS_PER_PAGE: 30
       grid.innerHTML = data.map(item => `
         <a href="${item.url}" target="_blank" class="media-card">
           <div class="media-thumbnail">
-            <img src="${type==='video' ? `https://img.youtube.com/vi/${item.vId}/mqdefault.jpg` : `https://via.placeholder.com/320x180/ff0000/ffffff?text=YouTube+Channel`}" alt="${item.title}">
+            <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='${type==='video' ? `https://img.youtube.com/vi/${item.vId}/hqdefault.jpg` : 'https://via.placeholder.com/120x120/ff0000/ffffff?text=YT'}'">
             <div class="media-overlay"></div>
-            <div class="media-play-icon"><i class="fas fa-play"></i></div>
+            <div class="media-play-icon"><i class="fas fa-${type==='video'?'play':'external-link-alt'}"></i></div>
           </div>
           <div class="media-info">
-            <div class="media-title">${item.title}</div>
+            <div class="media-title" title="${item.title}">${item.title}</div>
             <div class="media-channel"><i class="fab fa-youtube"></i><span>يوتيوب</span></div>
           </div>
         </a>
