@@ -915,6 +915,60 @@
       gap: 10px;
       flex-wrap: wrap;
       justify-content: center;
+      align-items: center;
+    }
+    
+    .refresh-pill-btn {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 16px 6px 8px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--accent-gold);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      box-shadow: var(--shadow-sm);
+      margin: 10px;
+      height: 48px;
+    }
+    
+    .refresh-pill-btn:hover {
+      background: var(--accent-gold);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .refresh-icon-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      transition: var(--transition-normal);
+    }
+    
+    .refresh-pill-btn:hover .refresh-icon-circle {
+      background: white;
+      color: var(--accent-gold);
+      transform: rotate(180deg);
+    }
+    
+    .refresh-pill-text {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      transition: var(--transition-normal);
+      white-space: nowrap;
+    }
+    
+    .refresh-pill-btn:hover .refresh-pill-text {
+      color: white;
     }
 
     .library-tab {
@@ -2269,6 +2323,8 @@
           <i class="fas fa-sun"></i>
         </button>
         
+
+        
         <a href="https://t.me/nwr_lhwz" target="_blank" class="btn-primary">
           <i class="fab fa-telegram-plane"></i>
           <span>التيليجرام</span>
@@ -2340,6 +2396,10 @@
           <span class="library-tab-icon"><i class="fas fa-child"></i></span>
           <span class="library-tab-name">مكتبة الطفل الموالي</span>
         </button>
+        <button class="library-tab" data-library="noon">
+          <span class="library-tab-icon"><i class="fas fa-book-reader"></i></span>
+          <span class="library-tab-name">مكتبة نون والقلم</span>
+        </button>
         <button class="library-tab" data-library="electronic">
           <span class="library-tab-icon"><i class="fas fa-laptop"></i></span>
           <span class="library-tab-name">المكتبة الإلكترونية لجامع أهل البيت (ع)</span>
@@ -2351,6 +2411,14 @@
         <button class="library-tab" data-library="quds">
           <span class="library-tab-icon"><i class="fas fa-mosque"></i></span>
           <span class="library-tab-name">صور عمائم القدس</span>
+        </button>
+        
+        <!-- زر تحديث المكتبات الجديد (تصميم مدمج) -->
+        <button class="refresh-pill-btn" id="refreshCache" title="تحديث الكاش لجميع المكتبات">
+          <div class="refresh-icon-circle">
+            <i class="fas fa-sync-alt"></i>
+          </div>
+          <span class="refresh-pill-text">تحديث المكتبات والكتب</span>
         </button>
       </div>
     </div>
@@ -2581,6 +2649,7 @@
       LIBRARIES: {
         main: { id: '1sEulys13YfalOS5yVoaQZeDf4nEF3ObJ', name: 'المكتبة الرئيسية' },
         child: { id: '1t5wlgrqFQyMOYAnKiGN-ee8nUaXoQSsl', name: 'مكتبة الطفل الموالي' },
+        noon: { id: '18y7MZhorEYoKUxEXLD0J6qooPrF11_JL', name: 'مكتبة نون' },
         electronic: { id: '1HZwxVbDfNfVOILQX3eg18T-NmUwYy-Uw', name: 'المكتبة الإلكترونية جامع أهل البيت (ع)' },
         poems: { id: '1l7zE8Q6B-2Iu_4I9fWBPfdp9ArMQklgE', name: 'قصائد ومجالس كاملة' },
         quds: { id: '1TLLTDDtUKmxWE1ZCHoC9g1WaLcdFNjBZ', name: 'صور القدس في عمامة' }
@@ -3604,6 +3673,17 @@ ITEMS_PER_PAGE: 30
       DOM.bookModal.addEventListener('click', (e) => { if (e.target === DOM.bookModal) closeModal(); });
       
       DOM.themeToggle.addEventListener('click', toggleTheme);
+      
+      const refreshBtn = document.getElementById('refreshCache');
+      if (refreshBtn) {
+        refreshBtn.addEventListener('click', () => {
+          Object.keys(CONFIG.LIBRARIES).forEach(lib => {
+            localStorage.removeItem(CONFIG.CACHE_KEY + '_' + lib);
+          });
+          showToast('جاري تحديث المكتبات...', 'success');
+          setTimeout(() => location.reload(), 1000);
+        });
+      }
       
       DOM.suggestedToggleBtn.addEventListener('click', toggleSuggestedLibraries);
       
