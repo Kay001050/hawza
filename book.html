@@ -2139,12 +2139,12 @@
     }
     
     .sidebar-header {
-      padding: 24px;
+      padding: 30px 24px;
       border-bottom: 1px solid var(--border-subtle);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: linear-gradient(135deg, rgba(160, 127, 58, 0.05), transparent);
+      background: linear-gradient(135deg, rgba(160, 127, 58, 0.08), transparent);
     }
     
     .sidebar-brand {
@@ -2154,26 +2154,28 @@
     }
     
     .sidebar-brand-icon {
-      width: 40px;
-      height: 40px;
-      background: var(--accent-gold);
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
+      box-shadow: 0 4px 12px rgba(160, 127, 58, 0.2);
     }
     
     .sidebar-brand-text {
       font-family: var(--font-heading);
-      font-weight: 700;
-      font-size: 1.2rem;
+      font-weight: 800;
+      font-size: 1.3rem;
       color: var(--accent-gold);
+      letter-spacing: -0.5px;
     }
     
     .sidebar-close {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       background: var(--bg-tertiary);
       display: flex;
@@ -2181,17 +2183,34 @@
       justify-content: center;
       color: var(--text-muted);
       transition: var(--transition-fast);
+      border: 1px solid var(--border-subtle);
     }
     
     .sidebar-close:hover {
       background: #e74c3c;
       color: white;
+      transform: rotate(90deg);
+    }
+    
+    .sidebar-content {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      padding: 10px 0;
     }
     
     .sidebar-menu {
-      padding: 20px;
-      flex: 1;
-      overflow-y: auto;
+      padding: 15px 20px;
+    }
+    
+    .menu-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin: 15px 18px 10px;
+      font-weight: 700;
     }
     
     .menu-item {
@@ -2202,57 +2221,73 @@
       border-radius: var(--radius-md);
       color: var(--text-secondary);
       font-weight: 600;
-      transition: var(--transition-fast);
-      margin-bottom: 8px;
+      transition: var(--transition-smooth);
+      margin-bottom: 6px;
+      border: 1px solid transparent;
     }
     
     .menu-item i {
-      width: 20px;
-      font-size: 1.1rem;
+      width: 24px;
+      font-size: 1.2rem;
       color: var(--accent-gold);
+      text-align: center;
     }
     
     .menu-item:hover {
       background: var(--bg-tertiary);
       color: var(--accent-gold);
-      padding-right: 24px;
+      border-color: var(--border-subtle);
+      transform: translateX(-5px);
     }
     
     .menu-item.active {
-      background: rgba(160, 127, 58, 0.1);
+      background: linear-gradient(90deg, rgba(160, 127, 58, 0.12), transparent);
       color: var(--accent-gold);
+      border-right: 4px solid var(--accent-gold);
+      padding-right: 14px;
     }
     
-    .sidebar-footer {
-      padding: 24px;
+    .sidebar-social-section {
+      margin-top: auto;
+      padding: 25px 24px 40px; /* زيادة الحشوة السفلية لتجنب شريط الهاتف */
       border-top: 1px solid var(--border-subtle);
-      background: var(--bg-tertiary);
+      background: linear-gradient(to top, var(--bg-tertiary), transparent);
+    }
+    
+    .social-title {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 15px;
+      text-align: center;
+      font-weight: 600;
     }
     
     .sidebar-social {
       display: flex;
       justify-content: center;
-      gap: 16px;
+      gap: 12px;
     }
     
     .social-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
+      width: 46px;
+      height: 46px;
+      border-radius: var(--radius-md);
       background: var(--bg-card);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--text-secondary);
-      border: 1px solid var(--border-subtle);
-      transition: var(--transition-normal);
-      font-size: 1.2rem;
+      color: var(--accent-gold);
+      border: 1.5px solid var(--border-subtle);
+      transition: var(--transition-smooth);
+      font-size: 1.3rem;
+      box-shadow: var(--shadow-sm);
     }
     
     .social-btn:hover {
-      transform: translateY(-4px);
+      transform: translateY(-5px) scale(1.1);
+      background: var(--accent-gold);
+      color: white;
       border-color: var(--accent-gold);
-      color: var(--accent-gold);
       box-shadow: var(--shadow-md);
     }
 
@@ -2493,36 +2528,40 @@
       </button>
     </div>
     
-    <nav class="sidebar-menu">
-      <a href="https://hawza.netlify.app" class="menu-item">
-        <i class="fas fa-home"></i>
-        <span>الصفحة الرئيسية</span>
-      </a>
-      <a href="#" class="menu-item active">
-        <i class="fas fa-book"></i>
-        <span>المكتبة الرقمية</span>
-      </a>
-      <a href="#" class="menu-item" id="publicationsLink">
-        <i class="fas fa-star"></i>
-        <span>ملف إصداراتنا</span>
-      </a>
-      <a href="https://hawza.netlify.app/about" class="menu-item" target="_blank">
-        <i class="fas fa-info-circle"></i>
-        <span>من نحن</span>
-      </a>
-    </nav>
-    
-    <div class="sidebar-footer">
-      <div class="sidebar-social">
-        <a href="https://t.me/nwr_lhwz" target="_blank" class="social-btn" title="تيليجرام">
-          <i class="fab fa-telegram-plane"></i>
+    <div class="sidebar-content">
+      <div class="menu-label">التنقل السريع</div>
+      <nav class="sidebar-menu">
+        <a href="https://hawza.netlify.app" class="menu-item">
+          <i class="fas fa-home"></i>
+          <span>الصفحة الرئيسية</span>
         </a>
-        <a href="https://www.instagram.com/nwr_alhwz/" target="_blank" class="social-btn" title="انستقرام">
-          <i class="fab fa-instagram"></i>
+        <a href="#" class="menu-item active">
+          <i class="fas fa-book"></i>
+          <span>المكتبة الرقمية</span>
         </a>
-        <a href="https://t.me/twasl_noor_alhawza_bot" target="_blank" class="social-btn" title="تواصل معنا">
-          <i class="fas fa-robot"></i>
+        <a href="#" class="menu-item" id="publicationsLink">
+          <i class="fas fa-star"></i>
+          <span>ملف إصداراتنا</span>
         </a>
+        <a href="https://hawza.netlify.app/about" class="menu-item" target="_blank">
+          <i class="fas fa-info-circle"></i>
+          <span>من نحن</span>
+        </a>
+      </nav>
+      
+      <div class="sidebar-social-section">
+        <div class="social-title">تواصل معنا</div>
+        <div class="sidebar-social">
+          <a href="https://t.me/nwr_lhwz" target="_blank" class="social-btn" title="تيليجرام">
+            <i class="fab fa-telegram-plane"></i>
+          </a>
+          <a href="https://www.instagram.com/nwr_alhwz/" target="_blank" class="social-btn" title="انستقرام">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://t.me/twasl_noor_alhawza_bot" target="_blank" class="social-btn" title="بوت التواصل">
+            <i class="fas fa-robot"></i>
+          </a>
+        </div>
       </div>
     </div>
   </aside>
