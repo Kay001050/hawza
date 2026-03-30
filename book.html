@@ -1208,58 +1208,76 @@
       color: var(--accent-emerald-light);
     }
 
-    /* Breadcrumbs */
-    .breadcrumbs-section {
+    /* Breadcrumbs *    .breadcrumbs-section {
       position: relative;
       z-index: 40;
-      padding: 16px 0;
-      background: var(--bg-tertiary);
+      padding: 14px 0;
+      background: var(--bg-card);
       border-bottom: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-sm);
     }
-
+    
     .breadcrumbs {
       display: flex;
       align-items: center;
-      flex-wrap: wrap;
       gap: 8px;
+      list-style: none;
+      font-size: 0.95rem;
+      flex-wrap: wrap;
     }
-
+    
     .breadcrumb-item {
       display: flex;
       align-items: center;
       gap: 8px;
       padding: 8px 14px;
-      background: var(--bg-card);
+      background: var(--bg-tertiary);
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-full);
-      font-size: 0.85rem;
-      font-weight: 500;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 600;
       color: var(--text-secondary);
       cursor: pointer;
       transition: var(--transition-fast);
     }
-
+    
     .breadcrumb-item:hover {
-      background: var(--bg-card-hover);
-      border-color: var(--border-medium);
+      background: var(--bg-card);
       color: var(--accent-gold);
+      border-color: var(--accent-gold);
     }
-
+    
     .breadcrumb-item.current {
       background: rgba(160, 127, 58, 0.1);
       border-color: var(--accent-gold);
       color: var(--accent-gold);
       cursor: default;
     }
-
+    
     .breadcrumb-separator {
       color: var(--text-muted);
-      font-size: 0.7rem;
+      font-size: 0.8rem;
     }
 
-    /* Controls */
-    .controls-section {
-      position: sticky;
+    /* Folder Card Enhancement */
+    .folder-card {
+      border: 1.5px solid var(--border-subtle);
+      background: linear-gradient(135deg, var(--bg-card), var(--bg-tertiary));
+      transition: var(--transition-smooth);
+    }
+    
+    .folder-card .folder-icon-large {
+      font-size: 3.5rem;
+      color: var(--accent-gold);
+      filter: drop-shadow(0 4px 8px rgba(160, 127, 58, 0.2));
+      margin-bottom: 15px;
+    }
+    
+    .folder-card:hover {
+      border-color: var(--accent-gold);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: var(--shadow-md);
+    }n: sticky;
       top: var(--header-height);
       z-index: 100;
       background: var(--glass-bg);
@@ -3452,26 +3470,18 @@ ITEMS_PER_PAGE: 30
     }
 
     function handleCategoryClick(id) {
-      state.selectedCategory = id || null;
-      state.showingAllBooks = true;
-      state.currentPage = 1;
-      state.searchQuery = '';
-      DOM.searchInput.value = '';
-      
-      document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
-      const chip = DOM.categoriesGrid.querySelector(`[data-id="${id || ''}"]`);
-      if (chip) chip.classList.add('active');
-      
-      if (id) {
-        const cat = state.categories.find(c => c.id === id);
-        DOM.sectionTitleText.textContent = cat ? cat.name : 'الكتب';
-      } else {
-        DOM.sectionTitleText.textContent = 'جميع الكتب';
+      if (!id) {
+        showRootFolder();
+        return;
       }
       
+      const category = state.categories.find(c => c.id === id);
+      const name = category ? category.name : 'المجلد';
+      
+      state.selectedCategory = id;
+      state.showingAllBooks = false;
       state.folderHistory = [{ id: CONFIG.LIBRARIES[state.currentLibrary].id, name: CONFIG.LIBRARIES[state.currentLibrary].name }];
-      updateBreadcrumbs();
-      filterAndRender();
+      openFolder(id, name);
     }
 
     function attachCategoryListeners() {
@@ -3624,7 +3634,7 @@ ITEMS_PER_PAGE: 30
       let html = '';
       state.folderHistory.forEach((folder, index) => {
         const isLast = index === state.folderHistory.length - 1;
-        html += `<span class="breadcrumb-item ${isLast ? 'current' : ''}" data-index="${index}">${index === 0 ? '<i class="fas fa-home"></i>' : '<i class="fas fa-folder-open"></i>'} ${folder.name}</span>`;
+        html += `<span class="breadcrumb-item ${isLast ? 'current' : ''}" data-index="${index}">${index === 0 ? '<i class="fas fa-university"></i>' : '<i class="fas fa-folder-open"></i>'} ${folder.name}</span>`;
         if (!isLast) html += '<span class="breadcrumb-separator"><i class="fas fa-chevron-left"></i></span>';
       });
       
@@ -3730,7 +3740,16 @@ ITEMS_PER_PAGE: 30
     }
 
     function renderFolderCard(folder) {
-      return `<div class="folder-card" data-id="${folder.id}" data-name="${folder.name}"><div class="folder-icon"><i class="fas fa-folder"></i></div><h3 class="folder-name">${folder.name}</h3></div>`;
+      const folderInfo = state.categories.find(c => c.id === folder.id) || { bookCount: 0 };
+      return `
+        <div class="folder-card" data-id="${folder.id}" data-name="${folder.name}">
+          <div class="folder-icon-large"><i class="fas fa-folder"></i></div>
+          <div class="folder-info">
+            <h3 class="folder-name">${folder.name}</h3>
+            <div class="folder-count">${folderInfo.bookCount} ملف</div>
+          </div>
+        </div>
+      `;
     }
 
     function renderBookCard(book, isMobile) {
