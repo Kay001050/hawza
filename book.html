@@ -3881,6 +3881,10 @@
                 <i class="fas fa-play-circle"></i>
                 <span>الفيديوهات</span>
               </button>
+              <button class="media-tab" data-tab="playlists">
+                <i class="fas fa-list"></i>
+                <span>قوائم التشغيل</span>
+              </button>
             </div>
 
             <!-- فلتر التصنيف - لسان منسدل -->
@@ -5392,12 +5396,17 @@ ITEMS_PER_PAGE: 30
     function detectUrlType(url) {
       if (!url) return null;
       const u = url.trim();
+      if (u.includes('youtube.com/playlist')) return 'playlist';
       if (u.includes('youtube.com/watch') || u.includes('youtu.be/')) return 'video';
       if (u.includes('youtube.com/@') || u.includes('youtube.com/channel/') || u.includes('youtube.com/c/') || u.includes('youtube.com/user/')) return 'channel';
       return null;
     }
 
     function extractVideoId(url) {
+      if (url.includes('list=')) {
+        const m = url.match(/[?&]list=([^#&?]+)/);
+        return m ? m[1] : null;
+      }
       const m = url.match(/(?:v=|youtu\.be\/)([0-9A-Za-z_-]{11})/);
       return m ? m[1] : null;
     }
@@ -5447,6 +5456,7 @@ ITEMS_PER_PAGE: 30
           let type = null;
           if (typeHint === 'c') type = 'channel';
           else if (typeHint === 'v') type = 'video';
+          else if (typeHint === 'p') type = 'playlist';
           else type = detectUrlType(urlRaw);
           if (!type) continue; // رابط غير معروف
 
@@ -5458,11 +5468,14 @@ ITEMS_PER_PAGE: 30
           // بيانات الصورة والمعرف المبدئي
           let vId = null, handle = null, thumbnail = '', title = '';
 
-          if (type === 'video') {
+          if (type === 'video' || type === 'playlist') {
             vId = extractVideoId(urlRaw);
             if (!vId) continue;
-            thumbnail = `https://img.youtube.com/vi/${vId}/hqdefault.jpg`;
-            title = nameRaw || 'جاري التحميل...';
+            const isPlaylist = type === 'playlist' || urlRaw.includes('list=');
+            thumbnail = isPlaylist 
+              ? `https://i.ytimg.com/vi/placeholder/hqdefault.jpg`
+              : `https://img.youtube.com/vi/${vId}/hqdefault.jpg`;
+            title = nameRaw || (isPlaylist ? 'قائمة تشغيل جاري التحميل...' : 'جاري التحميل...');
           } else {
             handle = extractChannelHandle(urlRaw);
             if (!handle) continue;
@@ -5525,15 +5538,27 @@ ITEMS_PER_PAGE: 30
       if (!grid) return;
 
       const filtered = allMediaData.filter(item => {
-        const matchTab = (activeTab === 'channels') ? (item.type === 'channel') : (item.type === 'video');
+        let matchTab = false;
+        if (activeTab === 'channels') matchTab = (item.type === 'channel');
+        else if (activeTab === 'videos') matchTab = (item.type === 'video');
+        else if (activeTab === 'playlists') matchTab = (item.type === 'playlist');
+        
         const matchCat = (currentCategory === 'all') || (item.tags && item.tags.includes(currentCategory));
         return matchTab && matchCat;
       });
 
-      grid.className = `media-grid ${activeTab === 'channels' ? 'channels-view' : 'videos-view'}`;
+      // تغيير شكل الشبكة بناءً على التبويب
+      if (activeTab === 'channels') {
+        grid.className = 'media-grid channels-view';
+      } else {
+        grid.className = 'media-grid videos-view';
+      }
 
       if (filtered.length === 0) {
-        grid.innerHTML = `<div class="media-empty"><i class="fas fa-search"></i><p>لا يوجد ${activeTab === 'channels' ? 'قنوات' : 'فيديوهات'} في هذا التصنيف</p></div>`;
+        let typeText = 'قنوات';
+        if (activeTab === 'videos') typeText = 'فيديوهات';
+        else if (activeTab === 'playlists') typeText = 'قوائم تشغيل';
+        grid.innerHTML = `<div class="media-empty"><i class="fas fa-search"></i><p>لا يوجد ${typeText} في هذا التصنيف</p></div>`;
         return;
       }
 
@@ -5594,6 +5619,7 @@ ITEMS_PER_PAGE: 30
         tagsHtml = `<div class="tag-primary-wrapper"><button class="tag-badge-main">${primaryTag}</button></div>`;
       }
 
+      const isPlaylist = item.type === 'playlist' || (!isChannel && item.url.includes('list='));
       const thumbHtml = isChannel
         ? `<div class="media-thumbnail">
              <img src="${imgSrc}" alt="${item.title}" loading="lazy"
@@ -5605,7 +5631,7 @@ ITEMS_PER_PAGE: 30
              <img src="${imgSrc}" alt="${item.title}" loading="lazy"
                onerror="this.src='https://img.youtube.com/vi/${item.vId}/mqdefault.jpg'">
              <div class="media-overlay"></div>
-             <div class="media-play-icon"><i class="fas fa-play"></i></div>
+             <div class="media-play-icon"><i class="fas ${isPlaylist ? 'fa-list' : 'fa-play'}"></i></div>
            </div>`;
 
       const authorLine = item.author
@@ -5631,12 +5657,12 @@ ITEMS_PER_PAGE: 30
         const item = allMediaData[i];
         if (item.nameProvided && item.title && item.title !== 'جاري التحميل...') {
           // الاسم موجود مسبقاً – فقط نحتاج للمؤلف
-          if (item.type === 'video' && !item.author) {
+          if ((item.type === 'video' || item.type === 'playlist') && !item.author) {
             await fetchVideoAuthor(item);
           }
           continue;
         }
-        if (item.type === 'video') await fetchVideoData(item);
+        if (item.type === 'video' || item.type === 'playlist') await fetchVideoData(item);
         else await fetchChannelData(item);
         // تحديث العرض بعد كل عنصر
         renderMediaGrid();
@@ -5645,32 +5671,38 @@ ITEMS_PER_PAGE: 30
 
     async function fetchVideoAuthor(item) {
       try {
-        const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${item.vId}&format=json`);
+        const isPlaylist = item.type === 'playlist' || item.url.includes('list=');
+        const embedUrl = isPlaylist ? `https://www.youtube.com/playlist?list=${item.vId}` : `https://www.youtube.com/watch?v=${item.vId}`;
+        const res = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(embedUrl)}&format=json`);
         if (res.ok) { const d = await res.json(); item.author = d.author_name || ''; }
       } catch (e) {}
     }
 
     async function fetchVideoData(item) {
+      const isPlaylist = item.type === 'playlist' || item.url.includes('list=');
+      const embedUrl = isPlaylist ? `https://www.youtube.com/playlist?list=${item.vId}` : `https://www.youtube.com/watch?v=${item.vId}`;
       try {
-        let res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${item.vId}&format=json`);
+        let res = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(embedUrl)}&format=json`);
         if (res.ok) {
           const d = await res.json();
           item.title  = d.title       || item.title;
           item.author = d.author_name || '';
+          if (isPlaylist && d.thumbnail_url) item.thumbnail = d.thumbnail_url;
           return;
         }
       } catch (e) {}
       try {
-        let res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${item.vId}`);
+        let res = await fetch(`https://noembed.com/embed?url=${encodeURIComponent(embedUrl)}`);
         if (res.ok) {
           const d = await res.json();
           item.title  = d.title       || item.title;
           item.author = d.author_name || '';
+          if (isPlaylist && d.thumbnail_url) item.thumbnail = d.thumbnail_url;
           return;
         }
       } catch (e) {}
       if (!item.title || item.title === 'جاري التحميل...')
-        item.title = `فيديو - ${item.vId.substring(0, 8)}`;
+        item.title = (isPlaylist ? `قائمة - ` : `فيديو - `) + item.vId.substring(0, 8);
     }
 
     async function fetchChannelData(item) {
