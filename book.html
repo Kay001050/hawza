@@ -2398,7 +2398,7 @@
         </button>
         <button class="library-tab" data-library="noon">
           <span class="library-tab-icon"><i class="fas fa-book-reader"></i></span>
-          <span class="library-tab-name">مكتبة نون والقلم</span>
+          <span class="library-tab-name">مكتبة نون</span>
         </button>
         <button class="library-tab" data-library="electronic">
           <span class="library-tab-icon"><i class="fas fa-laptop"></i></span>
@@ -2418,7 +2418,7 @@
           <div class="refresh-icon-circle">
             <i class="fas fa-sync-alt"></i>
           </div>
-          <span class="refresh-pill-text">تحديث المكتبات والكتب</span>
+          <span class="refresh-pill-text">تحديث المكتبات</span>
         </button>
       </div>
     </div>
@@ -2990,12 +2990,20 @@ ITEMS_PER_PAGE: 30
     async function fetchFromAPI(endpoint, params = {}) {
       const url = new URL(`https://www.googleapis.com/drive/v3/${endpoint}`);
       url.searchParams.append('key', CONFIG.API_KEY);
+      
+      // إضافة معلمة لمنع الكاش عند وجود طلب تحديث في الرابط
+      if (window.location.search.includes('refresh=')) {
+        url.searchParams.append('_t', Date.now());
+      }
+      
       Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, value));
-      const response = await fetch(url.toString());
+      
+      const response = await fetch(url.toString(), {
+        cache: window.location.search.includes('refresh=') ? 'no-cache' : 'default'
+      });
       if (!response.ok) throw new Error(`API Error: ${response.status}`);
       return response.json();
     }
-
     async function fetchFolderContents(folderId) {
       return fetchFromAPI('files', {
         q: `'${folderId}' in parents and trashed = false`,
@@ -3677,11 +3685,35 @@ ITEMS_PER_PAGE: 30
       const refreshBtn = document.getElementById('refreshCache');
       if (refreshBtn) {
         refreshBtn.addEventListener('click', () => {
-          Object.keys(CONFIG.LIBRARIES).forEach(lib => {
-            localStorage.removeItem(CONFIG.CACHE_KEY + '_' + lib);
-          });
-          showToast('جاري تحديث المكتبات...', 'success');
-          setTimeout(() => location.reload(), 1000);
+          // إضافة تأثير التحميل على الزر
+          const icon = refreshBtn.querySelector('i');
+          if (icon) icon.classList.add('fa-spin');
+          refreshBtn.style.pointerEvents = 'none';
+          refreshBtn.style.opacity = '0.7';
+
+          try {
+            // مسح جميع مفاتيح التخزين المحلي المتعلقة بالتطبيق
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+              const key = localStorage.key(i);
+              if (key && key.includes(CONFIG.CACHE_KEY)) {
+                keysToRemove.push(key);
+              }
+            }
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+            
+            showToast('جاري تحديث البيانات سحابياً...', 'success');
+            
+            // إعادة تحميل الصفحة مع تجاهل الكاش
+            setTimeout(() => {
+              window.location.href = window.location.pathname + '?refresh=' + Date.now();
+            }, 1000);
+          } catch (error) {
+            showToast('حدث خطأ أثناء التحديث', 'error');
+            if (icon) icon.classList.remove('fa-spin');
+            refreshBtn.style.pointerEvents = 'auto';
+            refreshBtn.style.opacity = '1';
+          }
         });
       }
       
