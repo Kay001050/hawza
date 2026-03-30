@@ -1208,62 +1208,110 @@
       color: var(--accent-emerald-light);
     }
 
-    /* Breadcrumbs *    .breadcrumbs-section {
+    /* Breadcrumbs */
+    .breadcrumbs-section {
       position: relative;
       z-index: 40;
       padding: 14px 0;
-      background: var(--bg-card);
+      background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-tertiary) 100%);
       border-bottom: 1px solid var(--border-subtle);
       box-shadow: var(--shadow-sm);
+      animation: breadcrumbSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes breadcrumbSlideIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
     
     .breadcrumbs {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       list-style: none;
       font-size: 0.95rem;
       flex-wrap: wrap;
+      padding: 2px 0;
     }
     
     .breadcrumb-item {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      background: var(--bg-tertiary);
+      gap: 7px;
+      padding: 7px 14px;
+      background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      font-size: 0.9rem;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
       font-weight: 600;
       color: var(--text-secondary);
       cursor: pointer;
-      transition: var(--transition-fast);
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      white-space: nowrap;
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    
-    .breadcrumb-item:hover {
-      background: var(--bg-card);
+
+    .breadcrumb-item:not(.current):hover {
+      background: rgba(160, 127, 58, 0.1);
       color: var(--accent-gold);
       border-color: var(--accent-gold);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(160, 127, 58, 0.15);
+    }
+
+    .breadcrumb-item:not(.current):active {
+      transform: translateY(0) scale(0.97);
     }
     
     .breadcrumb-item.current {
-      background: rgba(160, 127, 58, 0.1);
+      background: linear-gradient(135deg, rgba(160, 127, 58, 0.15) 0%, rgba(160, 127, 58, 0.08) 100%);
       border-color: var(--accent-gold);
       color: var(--accent-gold);
       cursor: default;
+      font-weight: 700;
+      box-shadow: inset 0 1px 3px rgba(160, 127, 58, 0.1);
+    }
+
+    .breadcrumb-item i {
+      font-size: 0.8rem;
+      opacity: 0.75;
+      flex-shrink: 0;
+    }
+
+    .breadcrumb-item.current i {
+      opacity: 1;
+      color: var(--accent-gold);
     }
     
     .breadcrumb-separator {
       color: var(--text-muted);
-      font-size: 0.8rem;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      opacity: 0.6;
+      transition: opacity 0.2s ease;
     }
 
-    /* Folder Card Enhancement */
+    /* depth indicator: dim older ancestors */
+    .breadcrumb-item[data-index="0"] {
+      background: linear-gradient(135deg, rgba(30, 107, 84, 0.08) 0%, rgba(30, 107, 84, 0.04) 100%);
+      border-color: rgba(30, 107, 84, 0.25);
+      color: var(--accent-emerald-light);
+    }
+
+    .breadcrumb-item[data-index="0"]:hover {
+      background: rgba(30, 107, 84, 0.15);
+      border-color: var(--accent-emerald);
+      color: var(--accent-emerald-light);
+      box-shadow: 0 4px 12px rgba(30, 107, 84, 0.15);
+    }
+
+    /* Folder Card Enhancement (overrides) */
     .folder-card {
       border: 1.5px solid var(--border-subtle);
       background: linear-gradient(135deg, var(--bg-card), var(--bg-tertiary));
-      transition: var(--transition-smooth);
     }
     
     .folder-card .folder-icon-large {
@@ -1271,13 +1319,31 @@
       color: var(--accent-gold);
       filter: drop-shadow(0 4px 8px rgba(160, 127, 58, 0.2));
       margin-bottom: 15px;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+    }
+
+    .folder-card:hover .folder-icon-large {
+      filter: drop-shadow(0 6px 14px rgba(160, 127, 58, 0.35));
+      transform: scale(1.1) rotate(-4deg);
     }
     
     .folder-card:hover {
       border-color: var(--accent-gold);
       transform: translateY(-8px) scale(1.02);
       box-shadow: var(--shadow-md);
-    }n: sticky;
+    }
+
+    [data-theme="dark"] .folder-card {
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(21, 36, 38, 0.8) 100%);
+    }
+
+    [data-theme="dark"] .folder-card:hover {
+      box-shadow: 0 12px 32px rgba(201, 160, 80, 0.15), var(--shadow-lg);
+    }
+
+    /* Controls Section */
+    .controls-section {
+      position: sticky;
       top: var(--header-height);
       z-index: 100;
       background: var(--glass-bg);
@@ -1401,10 +1467,52 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      transition: opacity 0.2s ease;
     }
 
     .section-title i {
       color: var(--accent-gold);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .section-title.updating i {
+      animation: iconBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes iconBounce {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.35) rotate(-8deg); }
+      70%  { transform: scale(0.9) rotate(4deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    /* Navigation progress bar (top of library section) */
+    .nav-progress-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-emerald), var(--accent-gold), var(--accent-emerald-light));
+      background-size: 200% 100%;
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+      animation: none;
+      z-index: 5;
+    }
+
+    .nav-progress-bar.active {
+      transform: scaleX(1);
+      opacity: 1;
+      animation: progressShimmer 1s linear infinite;
+    }
+
+    @keyframes progressShimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
 
     /* Grid */
@@ -1412,7 +1520,35 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 18px;
-      transition: var(--transition-smooth);
+      transition: opacity 0.25s ease;
+    }
+
+    /* Fade-out during folder navigation */
+    .books-grid.navigating {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Staggered entrance for grid items */
+    .books-grid > * {
+      animation: gridItemEnter 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    .books-grid > *:nth-child(1)  { animation-delay: 0.02s; }
+    .books-grid > *:nth-child(2)  { animation-delay: 0.04s; }
+    .books-grid > *:nth-child(3)  { animation-delay: 0.06s; }
+    .books-grid > *:nth-child(4)  { animation-delay: 0.08s; }
+    .books-grid > *:nth-child(5)  { animation-delay: 0.10s; }
+    .books-grid > *:nth-child(6)  { animation-delay: 0.12s; }
+    .books-grid > *:nth-child(7)  { animation-delay: 0.14s; }
+    .books-grid > *:nth-child(8)  { animation-delay: 0.16s; }
+    .books-grid > *:nth-child(9)  { animation-delay: 0.18s; }
+    .books-grid > *:nth-child(10) { animation-delay: 0.20s; }
+    .books-grid > *:nth-child(n+11) { animation-delay: 0.22s; }
+
+    @keyframes gridItemEnter {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     .books-grid.list-view {
@@ -1428,7 +1564,7 @@
       text-align: center;
       border: 1px solid var(--border-subtle);
       cursor: pointer;
-      transition: var(--transition-smooth);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.25s ease, box-shadow 0.3s ease, background 0.25s ease;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -1436,25 +1572,64 @@
       gap: 12px;
       position: relative;
       overflow: hidden;
+      user-select: none;
     }
 
+    /* Shimmer overlay on hover */
     .folder-card::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 50% 0%, rgba(160, 127, 58, 0.08), transparent 70%);
+      background: radial-gradient(circle at 50% 0%, rgba(160, 127, 58, 0.1), transparent 70%);
       opacity: 0;
-      transition: var(--transition-smooth);
+      transition: opacity 0.3s ease;
+    }
+
+    /* Ripple element */
+    .folder-card::after {
+      content: '';
+      position: absolute;
+      left: var(--ripple-x, 50%);
+      top: var(--ripple-y, 50%);
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(160, 127, 58, 0.22);
+      transform: translate(-50%, -50%);
+      transition: width 0.55s ease-out, height 0.55s ease-out, opacity 0.55s ease-out;
+      opacity: 1;
+      pointer-events: none;
+    }
+
+    .folder-card.ripple-active::after {
+      width: 320px;
+      height: 320px;
+      opacity: 0;
     }
 
     .folder-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--border-medium);
-      box-shadow: var(--shadow-lg);
+      transform: translateY(-6px) scale(1.015);
+      border-color: rgba(160, 127, 58, 0.45);
+      box-shadow: 0 12px 32px rgba(160, 127, 58, 0.18), var(--shadow-lg);
+    }
+
+    .folder-card:active {
+      transform: translateY(-2px) scale(0.98);
+      transition-duration: 0.1s;
     }
 
     .folder-card:hover::before {
       opacity: 1;
+    }
+
+    /* Folder card entering animation */
+    .folder-card.folder-enter {
+      animation: folderEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    @keyframes folderEnter {
+      from { opacity: 0; transform: translateY(16px) scale(0.94); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .folder-icon {
@@ -1467,15 +1642,16 @@
       justify-content: center;
       font-size: 1.8rem;
       color: var(--accent-gold);
-      transition: var(--transition-smooth);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
       border: 1px solid var(--border-subtle);
     }
 
     .folder-card:hover .folder-icon {
-      transform: scale(1.1);
+      transform: scale(1.15) rotate(-5deg);
       background: linear-gradient(135deg, var(--accent-gold-dark) 0%, var(--accent-gold) 100%);
       color: var(--bg-primary);
       border-color: transparent;
+      box-shadow: 0 6px 18px rgba(160, 127, 58, 0.3);
     }
 
     .folder-name {
@@ -1484,6 +1660,36 @@
       color: var(--text-primary);
       line-height: 1.5;
       font-weight: 600;
+      transition: color 0.25s ease;
+    }
+
+    .folder-card:hover .folder-name {
+      color: var(--accent-gold);
+    }
+
+    .folder-count {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: rgba(160, 127, 58, 0.08);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      padding: 3px 10px;
+      font-weight: 600;
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .folder-card:hover .folder-count {
+      background: rgba(160, 127, 58, 0.15);
+      color: var(--accent-gold);
+      border-color: rgba(160, 127, 58, 0.3);
+    }
+
+    .folder-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
     }
 
     /* Book Card */
@@ -2374,6 +2580,28 @@
       }
     }
 
+    /* Dark theme breadcrumbs */
+    [data-theme="dark"] .breadcrumbs-section {
+      background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-tertiary) 100%);
+    }
+
+    [data-theme="dark"] .breadcrumb-item {
+      background: rgba(21, 36, 38, 0.8);
+    }
+
+    [data-theme="dark"] .breadcrumb-item[data-index="0"] {
+      background: linear-gradient(135deg, rgba(45, 138, 110, 0.12) 0%, rgba(45, 138, 110, 0.06) 100%);
+      border-color: rgba(45, 138, 110, 0.3);
+    }
+
+    [data-theme="dark"] .breadcrumb-item:not(.current):hover {
+      background: rgba(201, 160, 80, 0.12);
+    }
+
+    [data-theme="dark"] .breadcrumb-item.current {
+      background: linear-gradient(135deg, rgba(201, 160, 80, 0.18) 0%, rgba(201, 160, 80, 0.08) 100%);
+    }
+
     @media (max-width: 768px) {
       .container { padding: 0 14px; }
       
@@ -2440,6 +2668,10 @@
       .folder-card { padding: 20px 12px; }
       .folder-icon { width: 50px; height: 50px; font-size: 1.5rem; }
       .folder-name { font-size: 0.85rem; }
+
+      .breadcrumb-item { padding: 6px 10px; font-size: 0.78rem; max-width: 160px; }
+      .breadcrumbs { gap: 4px; }
+      .breadcrumb-separator { font-size: 0.65rem; }
       
       .pagination { gap: 6px; }
       .page-btn { min-width: 36px; height: 36px; font-size: 0.8rem; }
@@ -2681,7 +2913,7 @@
         </button>
         <button class="library-tab" data-library="noon">
           <span class="library-tab-icon"><i class="fas fa-book-reader"></i></span>
-          <span class="library-tab-name">مكتبة نون</span>
+          <span class="library-tab-name">مكتبة نون والقلم</span>
         </button>
         <button class="library-tab" data-library="electronic">
           <span class="library-tab-icon"><i class="fas fa-laptop"></i></span>
@@ -2701,7 +2933,7 @@
           <div class="refresh-icon-circle">
             <i class="fas fa-sync-alt"></i>
           </div>
-          <span class="refresh-pill-text">تحديث المكتبات</span>
+          <span class="refresh-pill-text">تحديث المكتبات والكتب</span>
         </button>
       </div>
     </div>
@@ -2832,9 +3064,10 @@
 
   <!-- Library Section -->
   <section class="library-section">
+    <div class="nav-progress-bar" id="navProgressBar"></div>
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">
+        <h2 class="section-title" id="sectionTitle">
           <i class="fas fa-folder-open"></i>
           <span id="sectionTitleText">جميع الأقسام</span>
         </h2>
@@ -2932,7 +3165,7 @@
       LIBRARIES: {
         main: { id: '1sEulys13YfalOS5yVoaQZeDf4nEF3ObJ', name: 'المكتبة الرئيسية' },
         child: { id: '1t5wlgrqFQyMOYAnKiGN-ee8nUaXoQSsl', name: 'مكتبة الطفل الموالي' },
-        noon: { id: '18y7MZhorEYoKUxEXLD0J6qooPrF11_JL', name: 'مكتبة نون' },
+        noon: { id: '18y7MZhorEYoKUxEXLD0J6qooPrF11_JL', name: 'مكتبة نون والقلم' },
         publications: { id: '1vuUnMUydyB1ZCR_9ibBEyKdxDcX_OPgi', name: 'إصدارات نور الحوزة' },
         electronic: { id: '1HZwxVbDfNfVOILQX3eg18T-NmUwYy-Uw', name: 'المكتبة الإلكترونية جامع أهل البيت (ع)' },
         poems: { id: '1l7zE8Q6B-2Iu_4I9fWBPfdp9ArMQklgE', name: 'قصائد ومجالس كاملة' },
@@ -3036,6 +3269,8 @@ ITEMS_PER_PAGE: 30
       currentYear: document.getElementById('currentYear'),
       breadcrumbsSection: document.getElementById('breadcrumbsSection'),
       breadcrumbs: document.getElementById('breadcrumbs'),
+      navProgressBar: document.getElementById('navProgressBar'),
+      sectionTitle: document.getElementById('sectionTitle'),
       categoriesSection: document.getElementById('categoriesSection'),
       categoriesToggle: document.getElementById('categoriesToggle'),
       categoriesPanel: document.getElementById('categoriesPanel'),
@@ -3520,50 +3755,91 @@ ITEMS_PER_PAGE: 30
     // ═══════════════════════════════════════════════════════════════════════════
     function showRootFolder() {
       const libraryConfig = CONFIG.LIBRARIES[state.currentLibrary];
-      
-      state.currentFolderId = libraryConfig.id;
-      state.folderHistory = [{ id: libraryConfig.id, name: libraryConfig.name }];
-      state.currentPage = 1;
-      state.searchQuery = '';
-      state.selectedCategory = null;
-      state.showingAllBooks = false;
-      DOM.searchInput.value = '';
-      
-      DOM.sectionTitleText.textContent = 'جميع الأقسام';
-      updateBreadcrumbs();
-      
-      const rootFolders = state.allFolders.filter(f => f.parentId === libraryConfig.id);
-      const rootFiles = state.allBooks.filter(b => b.folderId === libraryConfig.id);
-      
-      state.currentItems = [
-        ...rootFolders.map(f => ({ id: f.id, name: f.name, mimeType: 'application/vnd.google-apps.folder' })),
-        ...rootFiles
-      ];
-      
-      filterAndRender();
+
+      // Transition: fade out
+      DOM.booksGrid.classList.add('navigating');
+      if (DOM.navProgressBar) DOM.navProgressBar.classList.add('active');
+      if (DOM.sectionTitle) {
+        DOM.sectionTitle.classList.remove('updating');
+        void DOM.sectionTitle.offsetWidth;
+        DOM.sectionTitle.classList.add('updating');
+      }
+
+      setTimeout(() => {
+        state.currentFolderId = libraryConfig.id;
+        state.folderHistory = [{ id: libraryConfig.id, name: libraryConfig.name }];
+        state.currentPage = 1;
+        state.searchQuery = '';
+        state.selectedCategory = null;
+        state.showingAllBooks = false;
+        DOM.searchInput.value = '';
+
+        DOM.sectionTitleText.textContent = 'جميع الأقسام';
+        updateBreadcrumbs();
+
+        const rootFolders = state.allFolders.filter(f => f.parentId === libraryConfig.id);
+        const rootFiles = state.allBooks.filter(b => b.folderId === libraryConfig.id);
+
+        state.currentItems = [
+          ...rootFolders.map(f => ({ id: f.id, name: f.name, mimeType: 'application/vnd.google-apps.folder' })),
+          ...rootFiles
+        ];
+
+        filterAndRender();
+
+        DOM.booksGrid.classList.remove('navigating');
+        if (DOM.navProgressBar) DOM.navProgressBar.classList.remove('active');
+      }, 180);
     }
 
     function openFolder(folderId, folderName) {
-      state.currentFolderId = folderId;
-      state.folderHistory.push({ id: folderId, name: folderName });
-      state.currentPage = 1;
-      state.searchQuery = '';
-      state.selectedCategory = null;
-      state.showingAllBooks = false;
-      DOM.searchInput.value = '';
-      
-      DOM.sectionTitleText.textContent = folderName;
-      updateBreadcrumbs();
-      
-      const subFolders = state.allFolders.filter(f => f.parentId === folderId);
-      const files = state.allBooks.filter(b => b.folderId === folderId);
-      
-      state.currentItems = [
-        ...subFolders.map(f => ({ id: f.id, name: f.name, mimeType: 'application/vnd.google-apps.folder' })),
-        ...files
-      ];
-      
-      filterAndRender();
+      // --- Transition: fade out grid, show progress bar ---
+      DOM.booksGrid.classList.add('navigating');
+      if (DOM.navProgressBar) {
+        DOM.navProgressBar.classList.add('active');
+      }
+
+      // Animate section title icon
+      if (DOM.sectionTitle) {
+        DOM.sectionTitle.classList.remove('updating');
+        void DOM.sectionTitle.offsetWidth; // reflow
+        DOM.sectionTitle.classList.add('updating');
+      }
+
+      setTimeout(() => {
+        state.currentFolderId = folderId;
+        state.folderHistory.push({ id: folderId, name: folderName });
+        state.currentPage = 1;
+        state.searchQuery = '';
+        state.selectedCategory = null;
+        state.showingAllBooks = false;
+        DOM.searchInput.value = '';
+
+        DOM.sectionTitleText.textContent = folderName;
+        updateBreadcrumbs();
+
+        const subFolders = state.allFolders.filter(f => f.parentId === folderId);
+        const files = state.allBooks.filter(b => b.folderId === folderId);
+
+        state.currentItems = [
+          ...subFolders.map(f => ({ id: f.id, name: f.name, mimeType: 'application/vnd.google-apps.folder' })),
+          ...files
+        ];
+
+        filterAndRender();
+
+        // Fade grid back in
+        DOM.booksGrid.classList.remove('navigating');
+        if (DOM.navProgressBar) {
+          DOM.navProgressBar.classList.remove('active');
+        }
+
+        // Scroll to library section smoothly
+        const libSection = document.querySelector('.library-section');
+        if (libSection) {
+          libSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 180);
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -3628,18 +3904,33 @@ ITEMS_PER_PAGE: 30
         DOM.breadcrumbsSection.style.display = 'none';
         return;
       }
-      
+
       DOM.breadcrumbsSection.style.display = 'block';
-      
+
       let html = '';
       state.folderHistory.forEach((folder, index) => {
         const isLast = index === state.folderHistory.length - 1;
-        html += `<span class="breadcrumb-item ${isLast ? 'current' : ''}" data-index="${index}">${index === 0 ? '<i class="fas fa-university"></i>' : '<i class="fas fa-folder-open"></i>'} ${folder.name}</span>`;
+        const depth = state.folderHistory.length - 1 - index; // 0 = current, higher = older
+        const icon = index === 0 ? 'fa-university' : (isLast ? 'fa-folder-open' : 'fa-folder');
+        const title = folder.name.length > 28 ? folder.name.substring(0, 26) + '...' : folder.name;
+        html += `<span class="breadcrumb-item ${isLast ? 'current' : ''}" data-index="${index}" data-depth="${depth}" title="${folder.name}"><i class="fas ${icon}"></i>${title}</span>`;
         if (!isLast) html += '<span class="breadcrumb-separator"><i class="fas fa-chevron-left"></i></span>';
       });
-      
+
       DOM.breadcrumbs.innerHTML = html;
-      
+
+      // Animate breadcrumb items in
+      document.querySelectorAll('.breadcrumb-item').forEach((item, i) => {
+        item.style.animation = 'none';
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(-6px)';
+        setTimeout(() => {
+          item.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+          item.style.opacity = '';
+          item.style.transform = '';
+        }, i * 50);
+      });
+
       document.querySelectorAll('.breadcrumb-item:not(.current)').forEach(item => {
         item.addEventListener('click', () => {
           const index = parseInt(item.dataset.index);
@@ -3718,6 +4009,16 @@ ITEMS_PER_PAGE: 30
       const isMobile = window.innerWidth <= 480;
       
       document.querySelectorAll('.folder-card').forEach(card => {
+        // Ripple effect on click
+        card.addEventListener('mousedown', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          card.style.setProperty('--ripple-x', x + 'px');
+          card.style.setProperty('--ripple-y', y + 'px');
+          card.classList.add('ripple-active');
+          setTimeout(() => card.classList.remove('ripple-active'), 600);
+        });
         card.addEventListener('click', () => openFolder(card.dataset.id, card.dataset.name));
       });
       
@@ -3741,12 +4042,13 @@ ITEMS_PER_PAGE: 30
 
     function renderFolderCard(folder) {
       const folderInfo = state.categories.find(c => c.id === folder.id) || { bookCount: 0 };
+      const countLabel = folderInfo.bookCount > 0 ? `${folderInfo.bookCount} ملف` : 'مجلد';
       return `
-        <div class="folder-card" data-id="${folder.id}" data-name="${folder.name}">
-          <div class="folder-icon-large"><i class="fas fa-folder"></i></div>
+        <div class="folder-card folder-enter" data-id="${folder.id}" data-name="${folder.name}">
+          <div class="folder-icon"><i class="fas fa-folder"></i></div>
           <div class="folder-info">
             <h3 class="folder-name">${folder.name}</h3>
-            <div class="folder-count">${folderInfo.bookCount} ملف</div>
+            <div class="folder-count"><i class="fas fa-file" style="font-size:0.65rem;opacity:0.6;"></i> ${countLabel}</div>
           </div>
         </div>
       `;
