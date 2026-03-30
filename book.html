@@ -286,7 +286,31 @@
       z-index: 50;
       background: var(--bg-secondary);
       border-bottom: 1px solid var(--border-subtle);
+      max-height: 0;
+      overflow: visible;
+      opacity: 0;
+      transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                  opacity 0.4s ease,
+                  margin-bottom 0.3s ease;
+      margin-bottom: 0;
+    }
+
+    .media-section.expanded {
+      max-height: none;
+      opacity: 1;
       margin-bottom: 20px;
+      overflow: visible;
+    }
+
+    .media-section.expanded .media-content {
+      max-height: none;
+      opacity: 1;
+      padding: 0 0 28px 0;
+      overflow: visible;
+    }
+
+    .media-section .media-toggle-wrapper {
+      display: none;
     }
 
     .media-toggle-wrapper {
@@ -374,6 +398,51 @@
       transform: rotate(180deg);
       background: var(--accent-youtube);
       color: white;
+    }
+
+    /* تصميم الزر الجديد في قسم المكتبات */
+    .library-tab.media-tab-button {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .library-tab.media-tab-button:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-medium);
+      color: var(--accent-youtube);
+    }
+
+    .library-tab.media-tab-button .library-tab-icon {
+      color: var(--accent-youtube);
+      position: relative;
+    }
+
+    .media-count-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--accent-youtube);
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      border: 2px solid var(--bg-card);
+    }
+
+    /* تحسين تصميم الزر في القائمة الجانبية */
+    #sidebarMediaToggle {
+      color: var(--accent-youtube);
+    }
+
+    #sidebarMediaToggle i {
+      color: var(--accent-youtube);
     }
 
     .media-content {
@@ -3624,6 +3693,10 @@
           <i class="fas fa-book"></i>
           <span>المكتبة الرقمية</span>
         </a>
+        <a href="#" class="menu-item" id="sidebarMediaToggle">
+          <i class="fab fa-youtube"></i>
+          <span>قنوات ومقاطع</span>
+        </a>
         <a href="#" class="menu-item" id="publicationsLink">
           <i class="fas fa-star"></i>
           <span>ملف إصداراتنا</span>
@@ -3681,7 +3754,7 @@
         </button>
       </nav>
     </div>
-  </header>er>
+  </header>
 
   <!-- Hero -->
   <section class="hero">
@@ -3763,6 +3836,12 @@
           <span class="library-tab-name">صور عمائم القدس</span>
         </button>
         
+        <!-- زر القنوات والمقاطع الجديد - منسدل -->
+        <button class="library-tab media-tab-button" id="libraryMediaToggle">
+          <span class="library-tab-icon"><i class="fab fa-youtube"></i><span class="media-count-badge" id="mediaCount">0</span></span>
+          <span class="library-tab-name">قنوات ومقاطع</span>
+        </button>
+        
         <!-- زر تحديث المكتبات الجديد (تصميم مدمج) -->
         <button class="refresh-pill-btn" id="refreshCache" title="تحديث الكاش لجميع المكتبات">
           <div class="refresh-icon-circle">
@@ -3775,26 +3854,10 @@
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════════
-       قسم القنوات والمقاطع - النسخة المحدثة
+       قسم القنوات والمقاطع - منسدل (مغلق افتراضياً)
        ═══════════════════════════════════════════════════════════════════════ -->
   <section class="media-section">
     <div class="container">
-      <div class="media-toggle-wrapper">
-        <button class="media-toggle-btn" id="mediaToggleBtn">
-          <div class="toggle-right" style="flex:1; justify-content:flex-start;">
-            <div class="toggle-icon"><i class="fab fa-youtube"></i></div>
-            <div class="toggle-text">
-              <div class="toggle-title">قنوات ومقاطع</div>
-              <div class="toggle-subtitle">قنوات يوتيوب والفيديوهات المقترحة</div>
-            </div>
-          </div>
-          <div class="toggle-right">
-            <span class="toggle-count" id="mediaCount">0</span>
-            <div class="toggle-arrow"><i class="fas fa-chevron-down"></i></div>
-          </div>
-        </button>
-      </div>
-
       <div class="media-content" id="mediaContent">
         <div class="media-inner">
 
@@ -5737,10 +5800,42 @@ ITEMS_PER_PAGE: 30
       // زر التبديل
       const toggleBtn  = document.getElementById('mediaToggleBtn');
       const content    = document.getElementById('mediaContent');
-      if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
+      const libraryMediaToggle = document.getElementById('libraryMediaToggle');
+      const sidebarMediaToggle = document.getElementById('sidebarMediaToggle');
+
+      // دالة لفتح/إغلاق القسم
+      const toggleMediaSection = () => {
+        const mediaSection = document.querySelector('.media-section');
+        if (toggleBtn) {
           toggleBtn.classList.toggle('expanded');
           content.classList.toggle('expanded');
+        }
+        if (mediaSection) {
+          mediaSection.classList.toggle('expanded');
+        }
+      };
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', toggleMediaSection);
+      }
+      if (libraryMediaToggle) {
+        libraryMediaToggle.addEventListener('click', (e) => {
+          e.preventDefault();
+          toggleMediaSection();
+        });
+      }
+      if (sidebarMediaToggle) {
+        sidebarMediaToggle.addEventListener('click', (e) => {
+          e.preventDefault();
+          toggleMediaSection();
+          // إغلاق القائمة الجانبية بعد النقر
+          const sidebar = document.getElementById('sidebar');
+          const overlay = document.getElementById('sidebarOverlay');
+          const toggle  = document.getElementById('sidebarToggle');
+          if (sidebar) sidebar.classList.remove('active');
+          if (overlay) overlay.classList.remove('active');
+          if (toggle)  toggle.classList.remove('active');
+          document.body.style.overflow = '';
         });
       }
 
