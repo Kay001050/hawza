@@ -2102,6 +2102,190 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Sidebar / Drawer Styles */
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition-normal);
+    }
+    
+    .sidebar-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -320px;
+      width: 300px;
+      height: 100vh;
+      background: var(--bg-card);
+      z-index: 2001;
+      box-shadow: var(--shadow-lg);
+      transition: right var(--transition-smooth);
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid var(--border-subtle);
+    }
+    
+    .sidebar.active {
+      right: 0;
+    }
+    
+    .sidebar-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, rgba(160, 127, 58, 0.05), transparent);
+    }
+    
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .sidebar-brand-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--accent-gold);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+    
+    .sidebar-brand-text {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--accent-gold);
+    }
+    
+    .sidebar-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: var(--transition-fast);
+    }
+    
+    .sidebar-close:hover {
+      background: #e74c3c;
+      color: white;
+    }
+    
+    .sidebar-menu {
+      padding: 20px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      font-weight: 600;
+      transition: var(--transition-fast);
+      margin-bottom: 8px;
+    }
+    
+    .menu-item i {
+      width: 20px;
+      font-size: 1.1rem;
+      color: var(--accent-gold);
+    }
+    
+    .menu-item:hover {
+      background: var(--bg-tertiary);
+      color: var(--accent-gold);
+      padding-right: 24px;
+    }
+    
+    .menu-item.active {
+      background: rgba(160, 127, 58, 0.1);
+      color: var(--accent-gold);
+    }
+    
+    .sidebar-footer {
+      padding: 24px;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-tertiary);
+    }
+    
+    .sidebar-social {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+    
+    .social-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+      transition: var(--transition-normal);
+      font-size: 1.2rem;
+    }
+    
+    .social-btn:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+      box-shadow: var(--shadow-md);
+    }
+
+    .menu-toggle {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-md);
+      background: var(--bg-tertiary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      color: var(--accent-gold);
+      transition: var(--transition-fast);
+      cursor: pointer;
+      border: 1px solid var(--border-subtle);
+      padding: 0 10px;
+    }
+    
+    .menu-toggle:hover {
+      background: var(--accent-gold);
+      color: white;
+    }
+    
+    .menu-toggle span {
+      width: 22px;
+      height: 2px;
+      background: currentColor;
+      border-radius: 2px;
+      transition: var(--transition-fast);
+    }
+
     /* Responsive */
     @media (max-width: 1200px) {
       .footer-content { grid-template-columns: 1fr 1fr; }
@@ -2292,6 +2476,57 @@
   <div class="bg-pattern"></div>
 
   <!-- Header -->
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Sidebar / Drawer -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">
+          <i class="fas fa-book-open"></i>
+        </div>
+        <div class="sidebar-brand-text">نور الحوزة</div>
+      </div>
+      <button class="sidebar-close" id="sidebarClose">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <nav class="sidebar-menu">
+      <a href="https://hawza.netlify.app" class="menu-item">
+        <i class="fas fa-home"></i>
+        <span>الصفحة الرئيسية</span>
+      </a>
+      <a href="#" class="menu-item active">
+        <i class="fas fa-book"></i>
+        <span>المكتبة الرقمية</span>
+      </a>
+      <a href="#" class="menu-item" id="publicationsLink">
+        <i class="fas fa-star"></i>
+        <span>ملف إصداراتنا</span>
+      </a>
+      <a href="https://hawza.netlify.app/about" class="menu-item" target="_blank">
+        <i class="fas fa-info-circle"></i>
+        <span>من نحن</span>
+      </a>
+    </nav>
+    
+    <div class="sidebar-footer">
+      <div class="sidebar-social">
+        <a href="https://t.me/nwr_lhwz" target="_blank" class="social-btn" title="تيليجرام">
+          <i class="fab fa-telegram-plane"></i>
+        </a>
+        <a href="https://www.instagram.com/nwr_alhwz/" target="_blank" class="social-btn" title="انستقرام">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://t.me/twasl_noor_alhawza_bot" target="_blank" class="social-btn" title="تواصل معنا">
+          <i class="fas fa-robot"></i>
+        </a>
+      </div>
+    </div>
+  </aside>
+
   <header class="header" id="header">
     <div class="container nav-container">
       <a href="https://hawza.netlify.app" class="brand">
@@ -2309,29 +2544,20 @@
           <i class="fas fa-home"></i>
           <span>الرئيسية</span>
         </a>
-        <a href="#" class="nav-link active">
-          <i class="fas fa-book"></i>
-          <span>المكتبة</span>
-        </a>
-        <a href="https://hawza.netlify.app/r-1447" class="nav-link">
-          <i class="fas fa-star"></i>
-          <span>مفكرتنا</span>
-        </a>
         
         <button class="theme-toggle" id="themeToggle" title="تبديل الوضع">
           <i class="fas fa-moon"></i>
           <i class="fas fa-sun"></i>
         </button>
         
-
-        
-        <a href="https://t.me/nwr_lhwz" target="_blank" class="btn-primary">
-          <i class="fab fa-telegram-plane"></i>
-          <span>التيليجرام</span>
-        </a>
+        <button class="menu-toggle" id="sidebarToggle" title="القائمة">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </nav>
     </div>
-  </header>
+  </header>er>
 
   <!-- Hero -->
   <section class="hero">
@@ -2398,7 +2624,7 @@
         </button>
         <button class="library-tab" data-library="noon">
           <span class="library-tab-icon"><i class="fas fa-book-reader"></i></span>
-          <span class="library-tab-name">مكتبة نون والقلم</span>
+          <span class="library-tab-name">مكتبة نون</span>
         </button>
         <button class="library-tab" data-library="electronic">
           <span class="library-tab-icon"><i class="fas fa-laptop"></i></span>
@@ -2418,7 +2644,7 @@
           <div class="refresh-icon-circle">
             <i class="fas fa-sync-alt"></i>
           </div>
-          <span class="refresh-pill-text">تحديث المكتبات والكتب</span>
+          <span class="refresh-pill-text">تحديث المكتبات</span>
         </button>
       </div>
     </div>
@@ -2649,13 +2875,14 @@
       LIBRARIES: {
         main: { id: '1sEulys13YfalOS5yVoaQZeDf4nEF3ObJ', name: 'المكتبة الرئيسية' },
         child: { id: '1t5wlgrqFQyMOYAnKiGN-ee8nUaXoQSsl', name: 'مكتبة الطفل الموالي' },
-        noon: { id: '18y7MZhorEYoKUxEXLD0J6qooPrF11_JL', name: 'مكتبة نون والقلم' },
+        noon: { id: '18y7MZhorEYoKUxEXLD0J6qooPrF11_JL', name: 'مكتبة نون' },
+        publications: { id: '1vuUnMUydyB1ZCR_9ibBEyKdxDcX_OPgi', name: 'إصدارات نور الحوزة' },
         electronic: { id: '1HZwxVbDfNfVOILQX3eg18T-NmUwYy-Uw', name: 'المكتبة الإلكترونية جامع أهل البيت (ع)' },
         poems: { id: '1l7zE8Q6B-2Iu_4I9fWBPfdp9ArMQklgE', name: 'قصائد ومجالس كاملة' },
         quds: { id: '1TLLTDDtUKmxWE1ZCHoC9g1WaLcdFNjBZ', name: 'صور القدس في عمامة' }
       },
       PAGE_SIZE: 1000,
-CACHE_KEY: 'noor_library_v16',
+CACHE_KEY: 'noor_library_v15',
 CACHE_TIME: 12 * 60 * 60 * 1000,
 ITEMS_PER_PAGE: 30
     };
@@ -3682,6 +3909,31 @@ ITEMS_PER_PAGE: 30
       
       DOM.themeToggle.addEventListener('click', toggleTheme);
       
+      // Sidebar Logic
+      const sidebar = document.getElementById('sidebar');
+      const sidebarOverlay = document.getElementById('sidebarOverlay');
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const sidebarClose = document.getElementById('sidebarClose');
+      const publicationsLink = document.getElementById('publicationsLink');
+
+      const toggleSidebar = (show) => {
+        sidebar.classList.toggle('active', show);
+        sidebarOverlay.classList.toggle('active', show);
+        document.body.style.overflow = show ? 'hidden' : '';
+      };
+
+      sidebarToggle.addEventListener('click', () => toggleSidebar(true));
+      sidebarClose.addEventListener('click', () => toggleSidebar(false));
+      sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+      
+      if (publicationsLink) {
+        publicationsLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          toggleSidebar(false);
+          switchLibrary('publications');
+        });
+      }
+
       const refreshBtn = document.getElementById('refreshCache');
       if (refreshBtn) {
         refreshBtn.addEventListener('click', () => {
