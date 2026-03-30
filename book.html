@@ -278,7 +278,7 @@
     }
 
     /* ═══════════════════════════════════════════════════════════════════════
-       قسم القنوات والمقاطع
+       قسم القنوات والمقاطع - النسخة المحدثة
        ═══════════════════════════════════════════════════════════════════════ */
     
     .media-section {
@@ -383,24 +383,23 @@
       transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
                   opacity 0.4s ease,
                   padding 0.3s ease;
-      padding: 0 0 0 0;
+      padding: 0;
     }
 
     .media-content.expanded {
-      max-height: 1200px;
+      max-height: 2000px;
       opacity: 1;
-      padding: 0 0 20px 0;
+      padding: 0 0 28px 0;
     }
 
     .media-inner {
       padding-top: 20px;
     }
 
+    /* ── أزرار تبويب القنوات/الفيديوهات ── */
     .media-tabs {
       display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
@@ -408,752 +407,705 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 10px 20px;
+      padding: 10px 22px;
       background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+      border: 1.5px solid var(--border-subtle);
       border-radius: var(--radius-full);
       color: var(--text-secondary);
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       transition: var(--transition-fast);
       cursor: pointer;
     }
 
     .media-tab:hover {
-      border-color: var(--border-medium);
-      color: var(--text-primary);
+      border-color: rgba(255,0,0,0.35);
+      color: var(--accent-youtube);
+      background: rgba(255,0,0,0.04);
     }
 
     .media-tab.active {
-      background: linear-gradient(135deg, var(--accent-youtube) 0%, var(--accent-youtube-light) 100%);
+      background: linear-gradient(135deg, var(--accent-youtube) 0%, #ff4444 100%);
       border-color: transparent;
       color: white;
+      box-shadow: 0 4px 14px rgba(255,0,0,0.3);
     }
 
-    .media-card .category-badge {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: linear-gradient(135deg, var(--accent-youtube), #ff6b6b);
-      color: white;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: capitalize;
-      box-shadow: 0 2px 8px rgba(255, 0, 0, 0.3);
-      z-index: 10;
-      animation: slideIn 0.3s ease-out;
-    }
-    
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .media-card {
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .media-card .media-thumbnail {
-      position: relative;
-      background: linear-gradient(135deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.02) 100%);
-    }
-    
-    .media-card img {
-      transition: transform 0.3s ease, filter 0.3s ease;
-    }
-    
-    .media-card:hover img {
-      transform: scale(1.05);
-      filter: brightness(1.1);
-    }
+    .media-tab i { font-size: 0.95rem; }
 
-    .media-card .tags-container {
+    /* ── فلتر التصنيفات - لسان منسدل ── */
+    .media-controls-bar {
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
       flex-wrap: wrap;
-      margin-top: 6px;
-    }
-    
-    .media-card .tag-badge {
-      position: relative;
-      background: linear-gradient(135deg, var(--accent-youtube), #ff6b6b);
-      color: white;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: capitalize;
-      box-shadow: 0 2px 8px rgba(255, 0, 0, 0.3);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      animation: slideIn 0.3s ease-out;
-    }
-    
-    .media-card .tag-badge:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(255, 0, 0, 0.5);
-    }
-    
-    .media-card .tag-badge.primary {
-      background: linear-gradient(135deg, var(--accent-youtube), #ff4444);
-      font-weight: 700;
-    }
-    
-    .media-card .tag-badge.secondary {
-      background: linear-gradient(135deg, rgba(255, 0, 0, 0.7), rgba(255, 68, 68, 0.7));
-      font-size: 0.65rem;
-      padding: 2px 8px;
-    }
-    
-    .media-card .tags-dropdown {
-      position: absolute;
-      bottom: 100%;
-      right: 0;
-      background: var(--bg-card);
-      border: 1px solid var(--border-medium);
-      border-radius: var(--radius-md);
-      padding: 8px;
-      display: none;
-      flex-direction: column;
-      gap: 4px;
-      z-index: 100;
-      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
-      min-width: 150px;
-    }
-    
-    .media-card .tag-badge:hover .tags-dropdown {
-      display: flex;
-    }
-    
-    .media-card .tags-dropdown .tag-item {
-      padding: 6px 10px;
-      border-radius: 12px;
-      font-size: 0.7rem;
-      background: rgba(255, 0, 0, 0.1);
-      color: var(--text-primary);
-      border: 1px solid rgba(255, 0, 0, 0.2);
-      transition: all 0.2s ease;
-      cursor: default;
-    }
-    
-    .media-card .tags-dropdown .tag-item:hover {
-      background: rgba(255, 0, 0, 0.2);
-      border-color: rgba(255, 0, 0, 0.4);
-    }
-    
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .media-card {
-      position: relative;
-      overflow: visible;
-    }
-    
-    .media-card .media-thumbnail {
-      position: relative;
-      background: linear-gradient(135deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.02) 100%);
-      overflow: hidden;
-    }
-    
-    .media-card img {
-      transition: transform 0.3s ease, filter 0.3s ease;
-      object-fit: cover;
-    }
-    
-    .media-card:hover img {
-      transform: scale(1.05);
-      filter: brightness(1.1);
-    }
-    
-    .media-card .channel-placeholder {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent-youtube), #ff6b6b);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 2rem;
-      font-weight: bold;
-      border: 3px solid var(--accent-youtube);
     }
 
-    /* Media Grid - Different layouts for channels vs videos */
-    .media-grid {
-      display: grid;
-      gap: 20px;
-      padding: 20px 0;
-    }
-    
-    /* Grid for CHANNELS - 2 per row */
-    .media-grid.channels-view {
-      grid-template-columns: repeat(2, 1fr);
-      max-width: 400px;
-      margin: 0 auto;
-    }
-    
-    /* Grid for VIDEOS - 3-4 per row */
-    .media-grid.videos-view {
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    }
-    
-    @media (max-width: 768px) {
-      .media-grid.channels-view {
-        grid-template-columns: repeat(2, 1fr);
-        max-width: 100%;
-      }
-      
-      .media-grid.videos-view {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .media-grid.channels-view {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      
-      .media-grid.videos-view {
-        grid-template-columns: 1fr;
-      }
-    }
-    
-    /* Media Card - Base */
-    .media-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      border-radius: var(--radius-md);
-      overflow: visible;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      text-decoration: none;
-      color: inherit;
-      background: transparent;
-    }
-    
-    .media-card:hover {
-      transform: translateY(-6px);
-    }
-    
-    /* CHANNEL CARD - Circular */
-    .media-card.channel-card {
-      gap: 12px;
-    }
-    
-    .media-card.channel-card .media-thumbnail {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      overflow: hidden;
-      background: linear-gradient(135deg, rgba(255, 0, 0, 0.1) 0%, rgba(255, 68, 68, 0.1) 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      border: 3px solid var(--accent-youtube);
-      box-shadow: 0 4px 12px rgba(255, 0, 0, 0.2);
-      transition: all 0.3s ease;
-      flex-shrink: 0;
-    }
-    
-    .media-card.channel-card:hover .media-thumbnail {
-      box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4);
-      border-color: #ff4444;
-      transform: scale(1.05);
-    }
-    
-    .media-card.channel-card .media-thumbnail img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
-    }
-    
-    /* VIDEO CARD - Rectangular */
-    .media-card.video-card {
-      gap: 10px;
-    }
-    
-    .media-card.video-card .media-thumbnail {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      background: linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.02) 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      border: 1px solid var(--border-medium);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-    }
-    
-    .media-card.video-card:hover .media-thumbnail {
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-      border-color: var(--accent-youtube);
-    }
-    
-    .media-card.video-card .media-thumbnail img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    /* Shared Thumbnail Styles */
-    .media-card .media-thumbnail img {
-      transition: transform 0.3s ease;
-    }
-    
-    .media-card:hover .media-thumbnail img {
-      transform: scale(1.08);
-    }
-    
-    .media-card .media-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0);
-      transition: background 0.3s ease;
-      border-radius: inherit;
-    }
-    
-    .media-card:hover .media-overlay {
-      background: rgba(0, 0, 0, 0.2);
-    }
-    
-    .media-card .media-play-icon {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      background: var(--accent-youtube);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 16px;
-      opacity: 0;
-      transform: scale(0.8);
-      transition: all 0.3s ease;
-      z-index: 10;
-    }
-    
-    .media-card:hover .media-play-icon {
-      opacity: 1;
-      transform: scale(1);
-    }
-    
-    /* Media Info */
-    .media-card .media-info {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      width: 100%;
-    }
-    
-    .media-card.channel-card .media-info {
-      min-height: 60px;
-      justify-content: flex-start;
-    }
-    
-    .media-card.video-card .media-info {
-      align-items: flex-start;
-      text-align: left;
-      padding: 0 4px;
-    }
-    
-    .media-card .media-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      line-height: 1.3;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      word-break: break-word;
-    }
-    
-    .media-card.channel-card .media-title {
-      font-size: 0.85rem;
-    }
-    
-    .media-card.video-card .media-title {
-      font-size: 0.9rem;
-      -webkit-line-clamp: 2;
-    }
-    
-    .media-card .media-channel {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    
-    .media-card .media-channel i {
-      font-size: 0.65rem;
-    }
-    
-    /* Tags Container */
-    .media-card .tags-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      flex-wrap: wrap;
-      width: 100%;
-    }
-    
-    .media-card.video-card .tags-container {
-      justify-content: flex-start;
-    }
-    
-    .media-card .tag-badge {
-      position: relative;
-      background: linear-gradient(135deg, var(--accent-youtube), #ff6b6b);
-      color: white;
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-size: 0.65rem;
-      font-weight: 600;
-      text-transform: capitalize;
-      box-shadow: 0 2px 6px rgba(255, 0, 0, 0.25);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      animation: slideIn 0.3s ease-out;
-      white-space: nowrap;
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    
-    .media-card .tag-badge:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 10px rgba(255, 0, 0, 0.4);
-    }
-    
-    .media-card .tag-badge.primary {
-      background: linear-gradient(135deg, var(--accent-youtube), #ff4444);
-      font-weight: 700;
-      padding: 4px 10px;
-      font-size: 0.7rem;
-    }
-    
-    .media-card .tags-dropdown {
-      position: absolute;
-      bottom: 100%;
-      right: 50%;
-      transform: translateX(50%);
-      background: var(--bg-card);
-      border: 1px solid var(--border-medium);
-      border-radius: var(--radius-md);
-      padding: 8px;
-      display: none;
-      flex-direction: column;
-      gap: 4px;
-      z-index: 100;
-      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
-      min-width: 140px;
-      margin-bottom: 8px;
-    }
-    
-    .media-card .tag-badge:hover .tags-dropdown {
-      display: flex;
-    }
-    
-    .media-card .tags-dropdown .tag-item {
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 0.65rem;
-      background: rgba(255, 0, 0, 0.1);
-      color: var(--text-primary);
-      border: 1px solid rgba(255, 0, 0, 0.2);
-      transition: all 0.2s ease;
-      cursor: default;
-      white-space: nowrap;
-    }
-    
-    .media-card .tags-dropdown .tag-item:hover {
-      background: rgba(255, 0, 0, 0.2);
-      border-color: rgba(255, 0, 0, 0.4);
-    }
-    
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Category Selector - Improved */
-    .category-selector-wrapper {
+    .category-filter-wrapper {
       position: relative;
       min-width: 240px;
+      flex-shrink: 0;
     }
-    
-    .media-select {
-      width: 100%;
-      padding: 11px 16px;
-      border-radius: var(--radius-md);
-      border: 2px solid rgba(255, 0, 0, 0.25);
-      background: linear-gradient(135deg, rgba(255, 0, 0, 0.03) 0%, rgba(255, 68, 68, 0.03) 100%);
-      color: var(--text-primary);
-      font-family: inherit;
-      font-size: 0.95rem;
-      font-weight: 500;
-      cursor: pointer;
-      appearance: none;
-      outline: none;
-      transition: all 0.3s ease;
-      padding-right: 40px;
-    }
-    
-    .media-select:hover {
-      border-color: rgba(255, 0, 0, 0.4);
-      background: linear-gradient(135deg, rgba(255, 0, 0, 0.06) 0%, rgba(255, 68, 68, 0.06) 100%);
-    }
-    
-    .media-select:focus {
-      border-color: var(--accent-youtube);
-      box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
-    }
-    
-    .category-selector-wrapper::after {
-      content: "▼";
+
+    .category-filter-wrapper .filter-icon {
       position: absolute;
       right: 14px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--accent-youtube);
       pointer-events: none;
+      font-size: 0.85rem;
+      z-index: 2;
+    }
+
+    .category-filter-wrapper .filter-arrow {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
       font-size: 0.7rem;
-      font-weight: bold;
-    }
-    
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
+      z-index: 2;
+      transition: transform 0.3s ease;
     }
 
-    .media-tab i {
-      font-size: 0.95rem;
+    .media-category-select {
+      width: 100%;
+      padding: 11px 40px 11px 38px;
+      border-radius: var(--radius-md);
+      border: 2px solid rgba(255, 0, 0, 0.2);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      outline: none;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-sm);
     }
 
+    .media-category-select:hover {
+      border-color: rgba(255, 0, 0, 0.4);
+      box-shadow: 0 0 0 3px rgba(255,0,0,0.06);
+    }
+
+    .media-category-select:focus {
+      border-color: var(--accent-youtube);
+      box-shadow: 0 0 0 4px rgba(255,0,0,0.1);
+    }
+
+    .media-category-select option {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-weight: 500;
+      padding: 8px;
+    }
+
+    /* ── شبكة البطاقات ── */
     .media-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 16px;
-      padding: 4px;
+      gap: 18px;
+      padding: 4px 0;
     }
 
+    .media-grid.channels-view {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      max-width: 700px;
+    }
+
+    .media-grid.videos-view {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    @media (max-width: 768px) {
+      .media-grid.channels-view { grid-template-columns: repeat(3, 1fr); max-width: 100%; }
+      .media-grid.videos-view   { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .media-grid.channels-view { grid-template-columns: repeat(2, 1fr); }
+      .media-grid.videos-view   { grid-template-columns: 1fr; }
+    }
+
+    /* ── البطاقة الأساسية ── */
     .media-card {
       position: relative;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
       border-radius: var(--radius-lg);
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      transition: var(--transition-normal);
+      overflow: visible;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
-      opacity: 0;
-      transform: translateY(10px);
-      animation: cardFadeIn 0.4s ease forwards;
+      background: transparent;
+      color: inherit;
     }
 
-    .media-card:nth-child(1) { animation-delay: 0.05s; }
-    .media-card:nth-child(2) { animation-delay: 0.1s; }
-    .media-card:nth-child(3) { animation-delay: 0.15s; }
-    .media-card:nth-child(4) { animation-delay: 0.2s; }
-    .media-card:nth-child(5) { animation-delay: 0.25s; }
-    .media-card:nth-child(6) { animation-delay: 0.3s; }
-    .media-card:nth-child(7) { animation-delay: 0.35s; }
-    .media-card:nth-child(8) { animation-delay: 0.4s; }
+    .media-card:hover { transform: translateY(-7px); }
 
-    @keyframes cardFadeIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    /* ── بطاقة القناة ── */
+    .media-card.channel-card { gap: 10px; }
+
+    .media-card.channel-card .media-thumbnail {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid var(--accent-youtube);
+      box-shadow: 0 4px 16px rgba(255,0,0,0.22);
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      flex-shrink: 0;
+      background: var(--bg-tertiary);
     }
 
-    .media-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-md);
+    .media-card.channel-card:hover .media-thumbnail {
+      box-shadow: 0 8px 28px rgba(255,0,0,0.42);
+      transform: scale(1.06);
+    }
+
+    .media-card.channel-card .media-thumbnail img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    /* ── بطاقة الفيديو ── */
+    .media-card.video-card { gap: 10px; }
+
+    .media-card.video-card .media-thumbnail {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1.5px solid var(--border-subtle);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+      position: relative;
+      background: var(--bg-tertiary);
+    }
+
+    .media-card.video-card:hover .media-thumbnail {
+      box-shadow: 0 6px 20px rgba(255,0,0,0.2);
       border-color: var(--accent-youtube);
     }
 
-    .media-thumbnail {
-      position: relative;
-      width: 100%;
-      padding-bottom: 56.25%;
-      background: var(--bg-tertiary);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .media-thumbnail img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+    .media-card.video-card .media-thumbnail img {
+      width: 100%; height: 100%;
       object-fit: cover;
-      transition: transform 0.5s ease;
+      transition: transform 0.4s ease;
     }
 
-    .media-card:hover .media-thumbnail img {
-      transform: scale(1.05);
-    }
+    .media-card.video-card:hover .media-thumbnail img { transform: scale(1.06); }
 
-    /* تصميم دائري لصور القنوات */
-    #channelsGrid .media-thumbnail {
-      padding-bottom: 0;
-      height: 160px;
-      background: none;
-    }
-
-    #channelsGrid .media-thumbnail img {
-      position: relative;
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      border: 3px solid var(--accent-youtube);
-      padding: 3px;
-      background: var(--bg-card);
-    }
-
-    #channelsGrid .media-info {
-      text-align: center;
-    }
-
-    #channelsGrid .media-title {
-      -webkit-line-clamp: 1;
-      font-weight: 700;
-    }
-    
-    .channel-loading-text {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      font-style: italic;
-    }
-
+    /* ── أيقونة التشغيل ── */
     .media-play-icon {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 48px;
-      height: 48px;
-      background: rgba(255, 0, 0, 0.9);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.7);
+      width: 44px; height: 44px;
+      background: rgba(255,0,0,0.88);
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 1rem;
       opacity: 0;
-      transition: opacity var(--transition-normal);
+      transition: all 0.3s ease;
       z-index: 10;
+      backdrop-filter: blur(4px);
     }
 
     .media-card:hover .media-play-icon {
       opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
     }
 
     .media-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.55) 100%);
       opacity: 0;
-      transition: opacity var(--transition-normal);
+      transition: opacity 0.3s ease;
+      border-radius: inherit;
       z-index: 5;
     }
 
-    .media-card:hover .media-overlay {
-      opacity: 1;
+    .media-card:hover .media-overlay { opacity: 1; }
+
+    /* ── معلومات البطاقة ── */
+    .media-card .media-info {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
     }
 
-    .media-info {
-      padding: 12px;
-      background: var(--bg-card);
+    .media-card.video-card .media-info {
+      align-items: flex-start;
+      text-align: right;
+      padding: 0 2px;
     }
 
-    .media-title {
-      font-size: 0.9rem;
-      font-weight: 600;
+    .media-card .media-title {
+      font-size: 0.88rem;
+      font-weight: 700;
       color: var(--text-primary);
-      margin-bottom: 6px;
+      line-height: 1.35;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      word-break: break-word;
     }
 
-    .media-channel {
-      font-size: 0.75rem;
+    .media-card.channel-card .media-title { font-size: 0.82rem; }
+
+    .media-card .media-channel {
+      font-size: 0.72rem;
       color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      display: flex; align-items: center; gap: 4px;
     }
 
-    .media-channel i {
-      color: var(--accent-youtube);
-      font-size: 0.7rem;
-    }
+    .media-card .media-channel i { font-size: 0.65rem; color: var(--accent-youtube); }
 
-    .media-loading {
+    /* ── شارة التصنيف مع القائمة المنسدلة ── */
+    .media-card .tags-container {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 40px 20px;
+      gap: 5px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .media-card.video-card .tags-container { justify-content: flex-start; }
+
+    /* الشارة الرئيسية - تحتوي على القائمة المنسدلة */
+    .media-card .tag-primary-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .media-card .tag-badge-main {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: linear-gradient(135deg, var(--accent-youtube), #e60000);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(255,0,0,0.28);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+      user-select: none;
+      border: none;
+      font-family: var(--font-ui);
+    }
+
+    .media-card .tag-badge-main:hover {
+      box-shadow: 0 4px 14px rgba(255,0,0,0.45);
+      background: linear-gradient(135deg, #e60000, var(--accent-youtube));
+    }
+
+    .media-card .tag-badge-main .tag-more-indicator {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px; height: 16px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 50%;
+      font-size: 0.6rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    /* القائمة المنسدلة للتصنيفات الإضافية */
+    .media-card .tags-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      min-width: 160px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      padding: 6px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
+      pointer-events: none;
+    }
+
+    .media-card .tag-primary-wrapper.open .tags-dropdown-menu,
+    .media-card .tag-primary-wrapper:focus-within .tags-dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .media-card .tags-dropdown-menu::before {
+      content: '';
+      position: absolute;
+      top: -7px;
+      right: 14px;
+      width: 12px; height: 12px;
+      background: var(--bg-card);
+      border-top: 1.5px solid var(--border-medium);
+      border-right: 1.5px solid var(--border-medium);
+      transform: rotate(-45deg);
+    }
+
+    .media-card .tags-dropdown-menu .dropdown-header {
+      font-size: 0.65rem;
       color: var(--text-muted);
-      gap: 10px;
+      font-weight: 600;
+      padding: 4px 8px 6px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
-    .media-loading i {
-      animation: spin 1s linear infinite;
+    .media-card .tags-dropdown-menu .tag-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      transition: background 0.18s ease, color 0.18s ease;
+      cursor: default;
+      white-space: nowrap;
     }
 
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+    .media-card .tags-dropdown-menu .tag-item:hover {
+      background: rgba(255,0,0,0.08);
+      color: var(--accent-youtube);
     }
+
+    .media-card .tags-dropdown-menu .tag-item i {
+      font-size: 0.6rem;
+      color: var(--accent-youtube);
+      opacity: 0.7;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── حالات التحميل والأخطاء ── */
+    .media-loading {
+      display: flex; align-items: center; justify-content: center;
+      padding: 50px 20px; color: var(--text-muted); gap: 12px;
+      font-size: 0.95rem;
+    }
+    .media-loading i { animation: spin 1s linear infinite; font-size: 1.2rem; color: var(--accent-youtube); }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
     .media-error {
-      padding: 20px;
-      background: rgba(255, 0, 0, 0.1);
-      border: 1px solid rgba(255, 0, 0, 0.3);
-      border-radius: var(--radius-md);
-      color: var(--accent-youtube);
-      text-align: center;
-      font-size: 0.9rem;
+      padding: 24px; background: rgba(255,0,0,0.07);
+      border: 1.5px solid rgba(255,0,0,0.25);
+      border-radius: var(--radius-md); color: var(--accent-youtube);
+      text-align: center; font-size: 0.9rem;
     }
 
     .media-empty {
-      padding: 40px 20px;
-      text-align: center;
-      color: var(--text-muted);
+      padding: 50px 20px; text-align: center; color: var(--text-muted);
+    }
+    .media-empty i { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.4; display: block; }
+
+    /* ────────────────────────────────────────────────────────────────────────────────
+       بطاقة المعلومات المنبثقة (Media Info Card)
+    ──────────────────────────────────────────────────────────────────────────────── */
+
+    /* طبقة الخلفية */
+    .media-info-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 9000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s;
     }
 
-    .media-empty i {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      opacity: 0.5;
+    .media-info-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* البطاقة نفسها */
+    .media-info-card {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      width: min(520px, 94vw);
+      max-height: 88vh;
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.35), 0 0 0 1px var(--border-subtle);
+      z-index: 9001;
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .media-info-card.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* رأس البطاقة */
+    .mic-header {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 22px 22px 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: linear-gradient(135deg, rgba(255,0,0,0.04) 0%, transparent 60%);
+    }
+
+    .mic-thumbnail {
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .mic-thumbnail img {
+      display: block;
+      object-fit: cover;
+    }
+
+    .mic-thumbnail.channel-thumb img {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      border: 2.5px solid var(--accent-youtube);
+      box-shadow: 0 4px 14px rgba(255,0,0,0.25);
+    }
+
+    .mic-thumbnail.video-thumb img {
+      width: 120px; height: 68px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border-subtle);
+    }
+
+    .mic-type-badge {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: white;
+      border: 2px solid var(--bg-card);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .mic-type-badge.channel { background: #1565c0; }
+    .mic-type-badge.video   { background: var(--accent-youtube); }
+
+    .mic-header-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .mic-type-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent-youtube);
+      margin-bottom: 6px;
+    }
+
+    .mic-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.3;
+      margin-bottom: 8px;
+      word-break: break-word;
+    }
+
+    .mic-tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .mic-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      background: rgba(255,0,0,0.1);
+      color: var(--accent-youtube);
+      border: 1px solid rgba(255,0,0,0.2);
+    }
+
+    .mic-close-btn {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .mic-close-btn:hover {
+      background: rgba(255,0,0,0.1);
+      color: var(--accent-youtube);
+      border-color: rgba(255,0,0,0.3);
+      transform: rotate(90deg);
+    }
+
+    /* جسم البطاقة */
+    .mic-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .mic-body::-webkit-scrollbar { width: 5px; }
+    .mic-body::-webkit-scrollbar-thumb { background: var(--accent-youtube); border-radius: 3px; opacity: 0.5; }
+
+    /* صفوف المعلومات */
+    .mic-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .mic-row-icon {
+      width: 34px; height: 34px;
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .mic-row-icon.bio    { background: rgba(30,107,84,0.12);  color: var(--accent-emerald-light); }
+    .mic-row-icon.target { background: rgba(52,152,219,0.12); color: var(--accent-blue-light); }
+    .mic-row-icon.notes  { background: rgba(160,127,58,0.12); color: var(--accent-gold); }
+
+    .mic-row-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .mic-row-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 5px;
+    }
+
+    .mic-row-value {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    /* ذيل البطاقة */
+    .mic-footer {
+      padding: 14px 22px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      background: var(--bg-tertiary);
+    }
+
+    .mic-open-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 18px;
+      background: linear-gradient(135deg, var(--accent-youtube), #c00);
+      color: white;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 14px rgba(255,0,0,0.28);
+    }
+
+    .mic-open-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255,0,0,0.4);
+    }
+
+    .mic-share-btn {
+      width: 42px; height: 42px;
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-medium);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .mic-share-btn:hover {
+      background: rgba(160,127,58,0.1);
+      color: var(--accent-gold);
+      border-color: var(--accent-gold);
+    }
+
+    /* استجابة الشاشات الصغيرة */
+    @media (max-width: 480px) {
+      .media-info-card { width: 96vw; max-height: 92vh; }
+      .mic-header { padding: 16px 16px 14px; gap: 12px; }
+      .mic-body { padding: 16px; }
+      .mic-footer { padding: 12px 16px; }
+      .mic-title { font-size: 0.95rem; }
+      .mic-thumbnail.video-thumb img { width: 90px; height: 52px; }
     }
 
     /* ═══════════════════════════════════════════════════════════════════════
@@ -3823,16 +3775,14 @@
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════════
-       قسم القنوات والمقاطع
+       قسم القنوات والمقاطع - النسخة المحدثة
        ═══════════════════════════════════════════════════════════════════════ -->
   <section class="media-section">
     <div class="container">
       <div class="media-toggle-wrapper">
         <button class="media-toggle-btn" id="mediaToggleBtn">
-          <div class="toggle-right" style="flex: 1; justify-content: flex-start;">
-            <div class="toggle-icon">
-              <i class="fab fa-youtube"></i>
-            </div>
+          <div class="toggle-right" style="flex:1; justify-content:flex-start;">
+            <div class="toggle-icon"><i class="fab fa-youtube"></i></div>
             <div class="toggle-text">
               <div class="toggle-title">قنوات ومقاطع</div>
               <div class="toggle-subtitle">قنوات يوتيوب والفيديوهات المقترحة</div>
@@ -3840,48 +3790,79 @@
           </div>
           <div class="toggle-right">
             <span class="toggle-count" id="mediaCount">0</span>
-            <div class="toggle-arrow">
-              <i class="fas fa-chevron-down"></i>
-            </div>
+            <div class="toggle-arrow"><i class="fas fa-chevron-down"></i></div>
           </div>
         </button>
       </div>
 
       <div class="media-content" id="mediaContent">
         <div class="media-inner">
-          <div class="media-controls" style="display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 25px; flex-wrap: wrap;">
-            <!-- Main Tabs (Channels & Videos) -->
-            <div class="media-tabs" id="mainMediaTabs" style="display: flex; gap: 12px;">
-              <button class="media-tab active" data-tab="channels" data-type="main">
+
+          <!-- شريط التحكم -->
+          <div class="media-controls-bar">
+            <!-- أزرار التبويب -->
+            <div class="media-tabs" id="mainMediaTabs">
+              <button class="media-tab active" data-tab="channels">
                 <i class="fas fa-tv"></i>
                 <span>القنوات</span>
               </button>
-              <button class="media-tab" data-tab="videos" data-type="main">
-                <i class="fas fa-video"></i>
+              <button class="media-tab" data-tab="videos">
+                <i class="fas fa-play-circle"></i>
                 <span>الفيديوهات</span>
               </button>
             </div>
-            
-            <!-- Category Selector (Dynamic from Sheets) -->
-            <div class="category-selector-wrapper" style="position: relative; min-width: 220px;">
-              <select id="mediaCategorySelect" class="media-select" style="width: 100%; padding: 10px 14px; border-radius: var(--radius-md); border: 2px solid rgba(255, 0, 0, 0.3); background: linear-gradient(135deg, rgba(255, 0, 0, 0.05) 0%, rgba(255, 68, 68, 0.05) 100%); color: var(--text-primary); font-family: inherit; font-size: 0.9rem; cursor: pointer; appearance: none; outline: none; transition: all var(--transition-fast); font-weight: 500;">
-                <option value="" disabled selected>جاري تحميل التصنيفات...</option>
+
+            <!-- فلتر التصنيف - لسان منسدل -->
+            <div class="category-filter-wrapper">
+              <i class="fas fa-tag filter-icon"></i>
+              <select id="mediaCategorySelect" class="media-category-select">
+                <option value="all">جميع التصنيفات</option>
               </select>
-              <i class="fas fa-filter" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--accent-youtube); pointer-events: none; font-size: 0.9rem;"></i>
+              <i class="fas fa-chevron-down filter-arrow"></i>
             </div>
           </div>
 
-          <!-- Media Grid -->
-          <div id="mediaGrid" class="media-grid">
+          <!-- شبكة البطاقات -->
+          <div id="mediaGrid" class="media-grid channels-view">
             <div class="media-loading">
               <i class="fas fa-spinner"></i>
-              <span>جاري تحميل المحتوى...</span>
+              <span>جاري تحميل البيانات...</span>
             </div>
           </div>
+
         </div>
       </div>
     </div>
   </section>
+
+  <!-- ═══ بطاقة المعلومات المنبثقة ═══ -->
+  <div class="media-info-overlay" id="mediaInfoOverlay"></div>
+  <div class="media-info-card" id="mediaInfoCard" role="dialog" aria-modal="true">
+    <div class="mic-header" id="micHeader">
+      <div class="mic-thumbnail" id="micThumbnail">
+        <img id="micThumbImg" src="" alt="">
+        <span class="mic-type-badge" id="micTypeBadge"></span>
+      </div>
+      <div class="mic-header-info">
+        <div class="mic-type-label" id="micTypeLabel"></div>
+        <div class="mic-title" id="micTitle"></div>
+        <div class="mic-tags-row" id="micTagsRow"></div>
+      </div>
+      <button class="mic-close-btn" id="micCloseBtn" aria-label="إغلاق">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="mic-body" id="micBody"></div>
+    <div class="mic-footer">
+      <a href="#" target="_blank" class="mic-open-btn" id="micOpenBtn">
+        <i class="fab fa-youtube"></i>
+        <span>فتح على يوتيوب</span>
+      </a>
+      <button class="mic-share-btn" id="micShareBtn" title="مشاركة الرابط">
+        <i class="fas fa-share-alt"></i>
+      </button>
+    </div>
+  </div>
 
   <!-- ═══════════════════════════════════════════════════════════════════════
        قسم المكتبات المقترحة - منسدل (مغلق افتراضياً)
@@ -5294,348 +5275,534 @@ ITEMS_PER_PAGE: 30
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // YouTube Media Section - Definitive Logic with Reliable Image & Name Fetching
+    // قسم القنوات والفيديوهات - النسخة المحدثة – مرتبطة بمستند البيانات التصنيفية فقط
     // ═══════════════════════════════════════════════════════════════════════════
-    const SHEETS_ID = '1LPJR--wgeH-djNEaxQGzOsf_hBWCY6D7I8T-7TMYc_o';
-    const SHEETS_URL = `https://docs.google.com/spreadsheets/d/${SHEETS_ID}/export?format=csv`;
-    const CHANNELS_DOC = '1owScaZsSqyFi6MAei7IGORFOuXUc5KqBFTp6dW45Xvc';
-    const VIDEOS_DOC = '147ck0G6x_8Dq0P1Bu0D8IKLtmAPDCayqrlGAjkGE95s';
-    
-    let allMediaData = [];
-    let processedUrls = new Set();
-    let categoriesMap = {};
+
+    // ── الثوابت ──
+    const MEDIA_SHEETS_ID  = '1LPJR--wgeH-djNEaxQGzOsf_hBWCY6D7I8T-7TMYc_o';
+    const MEDIA_SHEETS_URL = `https://docs.google.com/spreadsheets/d/${MEDIA_SHEETS_ID}/export?format=csv&gid=0`;
+
+    // ── الحالة ──
+    let allMediaData   = [];
     let currentCategory = 'all';
-    let activeTab = 'channels';
+    let activeTab       = 'channels';
 
+    // ───────────────────────────────────────────────────────────────────────────
+    // تحليل CSV مع دعم الحقول المقتبسة (quoted fields)
+    // ───────────────────────────────────────────────────────────────────────────
+    function parseCSVRow(row) {
+      const result = [];
+      let current = '';
+      let inQuotes = false;
+      for (let i = 0; i < row.length; i++) {
+        const ch = row[i];
+        if (ch === '"') {
+          if (inQuotes && row[i + 1] === '"') { current += '"'; i++; }
+          else inQuotes = !inQuotes;
+        } else if (ch === ',' && !inQuotes) {
+          result.push(current.trim());
+          current = '';
+        } else {
+          current += ch;
+        }
+      }
+      result.push(current.trim());
+      return result;
+    }
+
+    function parseCSV(text) {
+      const lines = text.split(/\r?\n/);
+      return lines.map(l => parseCSVRow(l));
+    }
+
+    // ───────────────────────────────────────────────────────────────────────────
+    // تحديد نوع الرابط (channel / video)
+    // ───────────────────────────────────────────────────────────────────────────
+    function detectUrlType(url) {
+      if (!url) return null;
+      const u = url.trim();
+      if (u.includes('youtube.com/watch') || u.includes('youtu.be/')) return 'video';
+      if (u.includes('youtube.com/@') || u.includes('youtube.com/channel/') || u.includes('youtube.com/c/') || u.includes('youtube.com/user/')) return 'channel';
+      return null;
+    }
+
+    function extractVideoId(url) {
+      const m = url.match(/(?:v=|youtu\.be\/)([0-9A-Za-z_-]{11})/);
+      return m ? m[1] : null;
+    }
+
+    function extractChannelHandle(url) {
+      if (url.includes('/@')) return url.split('/@')[1].split(/[\/\?]/)[0];
+      if (url.includes('/channel/')) return url.split('/channel/')[1].split(/[\/\?]/)[0];
+      if (url.includes('/c/')) return url.split('/c/')[1].split(/[\/\?]/)[0];
+      if (url.includes('/user/')) return url.split('/user/')[1].split(/[\/\?]/)[0];
+      return null;
+    }
+
+    // ───────────────────────────────────────────────────────────────────────────
+    // جلب بيانات مستند Sheets وبناء قائمة allMediaData
+    // ───────────────────────────────────────────────────────────────────────────
+    async function loadMediaFromSheets() {
+      const grid = document.getElementById('mediaGrid');
+      grid.innerHTML = '<div class="media-loading"><i class="fas fa-spinner"></i><span>جاري تحميل البيانات...</span></div>';
+
+      try {
+        const resp = await fetch(MEDIA_SHEETS_URL);
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const csvText = await resp.text();
+        const rows = parseCSV(csvText);
+
+        // تجاهل السطر الأول (الرأس)
+        const dataRows = rows.slice(1).filter(r => r[1] && r[1].trim());
+
+        allMediaData = [];
+        const seenUrls = new Set();
+
+        for (const row of dataRows) {
+          // A=الاسم, B=الرابط, C=التصنيف, D=النوع, E=نبذة, F=موجه إلى, G=أمور أخرى
+          const nameRaw    = (row[0] || '').trim();
+          const urlRaw     = (row[1] || '').trim();
+          const tagsRaw    = (row[2] || '').trim();
+          const typeHint   = (row[3] || '').trim().toLowerCase(); // c أو v
+          const bio        = (row[4] || '').trim();
+          const audience   = (row[5] || '').trim();
+          const notes      = (row[6] || '').trim();
+
+          if (!urlRaw) continue;
+          if (seenUrls.has(urlRaw)) continue;
+          seenUrls.add(urlRaw);
+
+          // تحديد النوع من عمود D أولاً ثم من الرابط
+          let type = null;
+          if (typeHint === 'c') type = 'channel';
+          else if (typeHint === 'v') type = 'video';
+          else type = detectUrlType(urlRaw);
+          if (!type) continue; // رابط غير معروف
+
+          // التصنيفات
+          const tags = tagsRaw
+            ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean)
+            : ['عام'];
+
+          // بيانات الصورة والمعرف المبدئي
+          let vId = null, handle = null, thumbnail = '', title = '';
+
+          if (type === 'video') {
+            vId = extractVideoId(urlRaw);
+            if (!vId) continue;
+            thumbnail = `https://img.youtube.com/vi/${vId}/hqdefault.jpg`;
+            title = nameRaw || 'جاري التحميل...';
+          } else {
+            handle = extractChannelHandle(urlRaw);
+            if (!handle) continue;
+            thumbnail = `https://unavatar.io/youtube/${handle}`;
+            title = nameRaw || handle;
+          }
+
+          allMediaData.push({
+            url: urlRaw, type, tags, title, thumbnail,
+            vId, handle,
+            bio, audience, notes,
+            nameProvided: !!nameRaw,
+            author: ''
+          });
+        }
+
+        // تحديث عداد العناصر
+        const countEl = document.getElementById('mediaCount');
+        if (countEl) countEl.textContent = allMediaData.length;
+
+        // بناء قائمة التصنيفات
+        buildCategoryDropdown();
+
+        // عرض فوري
+        renderMediaGrid();
+
+        // جلب البيانات الحقيقية في الخلفية
+        fetchRealDataInBackground();
+
+      } catch (err) {
+        console.error('Media load error:', err);
+        grid.innerHTML = `<div class="media-error"><i class="fas fa-exclamation-triangle"></i> تعذّر تحميل البيانات: ${err.message}</div>`;
+      }
+    }
+
+    function buildCategoryDropdown() {
+      const select = document.getElementById('mediaCategorySelect');
+      if (!select) return;
+
+      // جمع كل التصنيفات الفريدة
+      const catSet = new Set();
+      allMediaData.forEach(item => item.tags.forEach(t => catSet.add(t)));
+      const cats = [...catSet].sort((a, b) => a.localeCompare(b, 'ar'));
+
+      select.innerHTML = '<option value="all">جميع التصنيفات</option>';
+      cats.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        if (cat === currentCategory) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    // ───────────────────────────────────────────────────────────────────────────
+    // عرض الشبكة
+    // ───────────────────────────────────────────────────────────────────────────
+    function renderMediaGrid() {
+      const grid = document.getElementById('mediaGrid');
+      if (!grid) return;
+
+      const filtered = allMediaData.filter(item => {
+        const matchTab = (activeTab === 'channels') ? (item.type === 'channel') : (item.type === 'video');
+        const matchCat = (currentCategory === 'all') || (item.tags && item.tags.includes(currentCategory));
+        return matchTab && matchCat;
+      });
+
+      grid.className = `media-grid ${activeTab === 'channels' ? 'channels-view' : 'videos-view'}`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="media-empty"><i class="fas fa-search"></i><p>لا يوجد ${activeTab === 'channels' ? 'قنوات' : 'فيديوهات'} في هذا التصنيف</p></div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map((item, idx) => buildMediaCard(item, idx)).join('');
+
+      // إضافة مستمعي النقر لكل بطاقة
+      grid.querySelectorAll('.media-card').forEach((card, i) => {
+        card.addEventListener('click', (e) => {
+          e.preventDefault();
+          openMediaInfoCard(filtered[i]);
+        });
+      });
+
+      // إدارة القائمة المنسدلة للتصنيفات
+      grid.querySelectorAll('.tag-primary-wrapper').forEach(wrapper => {
+        const btn = wrapper.querySelector('.tag-badge-main');
+        if (btn) {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            const isOpen = wrapper.classList.contains('open');
+            // إغلاق كل المفتوحة
+            document.querySelectorAll('.tag-primary-wrapper.open').forEach(w => w.classList.remove('open'));
+            if (!isOpen) wrapper.classList.add('open');
+          });
+        }
+      });
+    }
+
+    function buildMediaCard(item, idx) {
+      const isChannel = item.type === 'channel';
+      const cardClass = isChannel ? 'channel-card' : 'video-card';
+      const imgSrc    = isChannel
+        ? `https://unavatar.io/youtube/${item.handle}?fallback=https://ui-avatars.com/api/?name=${encodeURIComponent(item.title)}&background=ff0000&color=fff&size=130`
+        : item.thumbnail;
+
+      // بناء شارة التصنيف مع القائمة المنسدلة
+      const primaryTag = item.tags[0] || 'عام';
+      const extraTags  = item.tags.slice(1);
+      let tagsHtml = '';
+
+      if (extraTags.length > 0) {
+        const dropdownItems = extraTags.map(t =>
+          `<div class="tag-item"><i class="fas fa-tag"></i>${t}</div>`
+        ).join('');
+        tagsHtml = `
+          <div class="tag-primary-wrapper">
+            <button class="tag-badge-main">
+              ${primaryTag}
+              <span class="tag-more-indicator">+${extraTags.length}</span>
+            </button>
+            <div class="tags-dropdown-menu">
+              <div class="dropdown-header">تصنيفات أخرى</div>
+              ${dropdownItems}
+            </div>
+          </div>`;
+      } else {
+        tagsHtml = `<div class="tag-primary-wrapper"><button class="tag-badge-main">${primaryTag}</button></div>`;
+      }
+
+      const thumbHtml = isChannel
+        ? `<div class="media-thumbnail">
+             <img src="${imgSrc}" alt="${item.title}" loading="lazy"
+               onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(item.title.charAt(0))}&background=cc0000&color=fff&size=130'">
+             <div class="media-overlay"></div>
+             <div class="media-play-icon"><i class="fas fa-external-link-alt"></i></div>
+           </div>`
+        : `<div class="media-thumbnail">
+             <img src="${imgSrc}" alt="${item.title}" loading="lazy"
+               onerror="this.src='https://img.youtube.com/vi/${item.vId}/mqdefault.jpg'">
+             <div class="media-overlay"></div>
+             <div class="media-play-icon"><i class="fas fa-play"></i></div>
+           </div>`;
+
+      const authorLine = item.author
+        ? `<div class="media-channel"><i class="fab fa-youtube"></i><span>${item.author}</span></div>`
+        : '';
+
+      return `
+        <div class="media-card ${cardClass}" style="animation-delay:${idx * 0.05}s">
+          ${thumbHtml}
+          <div class="media-info">
+            <div class="media-title" title="${item.title}">${item.title}</div>
+            ${authorLine}
+            <div class="tags-container">${tagsHtml}</div>
+          </div>
+        </div>`;
+    }
+
+    // ───────────────────────────────────────────────────────────────────────────
+    // جلب البيانات الحقيقية من يوتيوب في الخلفية
+    // ───────────────────────────────────────────────────────────────────────────
+    async function fetchRealDataInBackground() {
+      for (let i = 0; i < allMediaData.length; i++) {
+        const item = allMediaData[i];
+        if (item.nameProvided && item.title && item.title !== 'جاري التحميل...') {
+          // الاسم موجود مسبقاً – فقط نحتاج للمؤلف
+          if (item.type === 'video' && !item.author) {
+            await fetchVideoAuthor(item);
+          }
+          continue;
+        }
+        if (item.type === 'video') await fetchVideoData(item);
+        else await fetchChannelData(item);
+        // تحديث العرض بعد كل عنصر
+        renderMediaGrid();
+      }
+    }
+
+    async function fetchVideoAuthor(item) {
+      try {
+        const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${item.vId}&format=json`);
+        if (res.ok) { const d = await res.json(); item.author = d.author_name || ''; }
+      } catch (e) {}
+    }
+
+    async function fetchVideoData(item) {
+      try {
+        let res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${item.vId}&format=json`);
+        if (res.ok) {
+          const d = await res.json();
+          item.title  = d.title       || item.title;
+          item.author = d.author_name || '';
+          return;
+        }
+      } catch (e) {}
+      try {
+        let res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${item.vId}`);
+        if (res.ok) {
+          const d = await res.json();
+          item.title  = d.title       || item.title;
+          item.author = d.author_name || '';
+          return;
+        }
+      } catch (e) {}
+      if (!item.title || item.title === 'جاري التحميل...')
+        item.title = `فيديو - ${item.vId.substring(0, 8)}`;
+    }
+
+    async function fetchChannelData(item) {
+      try {
+        const handleUrl = item.handle.startsWith('UC')
+          ? `https://www.youtube.com/channel/${item.handle}`
+          : `https://www.youtube.com/@${item.handle}`;
+        let res = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(handleUrl)}&format=json`);
+        if (res.ok) {
+          const d = await res.json();
+          item.title  = d.author_name || item.handle;
+          item.author = d.author_name || '';
+          return;
+        }
+      } catch (e) {}
+      item.title  = item.title || item.handle;
+      item.author = item.handle;
+    }
+
+    // ───────────────────────────────────────────────────────────────────────────
+    // بطاقة المعلومات المنبثقة
+    // ───────────────────────────────────────────────────────────────────────────
+    function openMediaInfoCard(item) {
+      const overlay  = document.getElementById('mediaInfoOverlay');
+      const card     = document.getElementById('mediaInfoCard');
+      const thumbEl  = document.getElementById('micThumbnail');
+      const thumbImg = document.getElementById('micThumbImg');
+      const badge    = document.getElementById('micTypeBadge');
+      const typeLabel= document.getElementById('micTypeLabel');
+      const titleEl  = document.getElementById('micTitle');
+      const tagsRow  = document.getElementById('micTagsRow');
+      const body     = document.getElementById('micBody');
+      const openBtn  = document.getElementById('micOpenBtn');
+
+      const isChannel = item.type === 'channel';
+
+      // ─ الصورة
+      thumbEl.className = `mic-thumbnail ${isChannel ? 'channel-thumb' : 'video-thumb'}`;
+      thumbImg.src = isChannel
+        ? `https://unavatar.io/youtube/${item.handle}?fallback=https://ui-avatars.com/api/?name=${encodeURIComponent(item.title.charAt(0))}&background=cc0000&color=fff&size=130`
+        : item.thumbnail;
+      thumbImg.alt = item.title;
+      thumbImg.onerror = () => {
+        thumbImg.src = isChannel
+          ? `https://ui-avatars.com/api/?name=${encodeURIComponent(item.title.charAt(0))}&background=cc0000&color=fff&size=130`
+          : `https://img.youtube.com/vi/${item.vId}/mqdefault.jpg`;
+      };
+
+      // ─ شارة النوع
+      badge.className = `mic-type-badge ${isChannel ? 'channel' : 'video'}`;
+      badge.innerHTML = isChannel ? '<i class="fas fa-tv"></i>' : '<i class="fas fa-play"></i>';
+
+      // ─ تسمية النوع
+      typeLabel.innerHTML = isChannel
+        ? '<i class="fas fa-tv"></i> قناة يوتيوب'
+        : '<i class="fas fa-play-circle"></i> مقطع فيديو';
+
+      // ─ العنوان
+      titleEl.textContent = item.title;
+
+      // ─ التصنيفات
+      tagsRow.innerHTML = item.tags.map(t =>
+        `<span class="mic-tag"><i class="fas fa-tag"></i>${t}</span>`
+      ).join('');
+
+      // ─ جسم البطاقة
+      let bodyHtml = '';
+
+      if (item.bio) {
+        bodyHtml += `
+          <div class="mic-row">
+            <div class="mic-row-icon bio"><i class="fas fa-info-circle"></i></div>
+            <div class="mic-row-content">
+              <div class="mic-row-label">نبذة</div>
+              <div class="mic-row-value">${item.bio}</div>
+            </div>
+          </div>`;
+      }
+
+      if (item.audience) {
+        bodyHtml += `
+          <div class="mic-row">
+            <div class="mic-row-icon target"><i class="fas fa-users"></i></div>
+            <div class="mic-row-content">
+              <div class="mic-row-label">موجه إلى</div>
+              <div class="mic-row-value">${item.audience}</div>
+            </div>
+          </div>`;
+      }
+
+      if (item.notes) {
+        bodyHtml += `
+          <div class="mic-row">
+            <div class="mic-row-icon notes"><i class="fas fa-sticky-note"></i></div>
+            <div class="mic-row-content">
+              <div class="mic-row-label">ملاحظات وروابط</div>
+              <div class="mic-row-value">${item.notes}</div>
+            </div>
+          </div>`;
+      }
+
+      if (!bodyHtml) {
+        bodyHtml = `<div style="text-align:center;padding:30px 0;color:var(--text-muted);">
+          <i class="fab fa-youtube" style="font-size:2rem;margin-bottom:10px;display:block;color:var(--accent-youtube);opacity:0.5;"></i>
+          <p style="font-size:0.85rem;">اضغط على الزر أدناه لفتح الرابط</p>
+        </div>`;
+      }
+
+      body.innerHTML = bodyHtml;
+
+      // ─ زر الفتح
+      openBtn.href = item.url;
+      openBtn.innerHTML = isChannel
+        ? '<i class="fab fa-youtube"></i> فتح القناة'
+        : '<i class="fas fa-play"></i> مشاهدة الفيديو';
+
+      // ─ إظهار
+      overlay.classList.add('active');
+      card.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMediaInfoCard() {
+      const overlay = document.getElementById('mediaInfoOverlay');
+      const card    = document.getElementById('mediaInfoCard');
+      overlay.classList.remove('active');
+      card.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // ───────────────────────────────────────────────────────────────────────────
+    // تهيئة قسم الميديا
+    // ───────────────────────────────────────────────────────────────────────────
     async function initMediaSection() {
-      const mediaToggleBtn = document.getElementById('mediaToggleBtn');
-      const mediaContent = document.getElementById('mediaContent');
-      const mainTabs = document.querySelectorAll('.media-tab[data-type="main"]');
-      const categorySelect = document.getElementById('mediaCategorySelect');
-
-      if (mediaToggleBtn) {
-        mediaToggleBtn.addEventListener('click', () => {
-          mediaToggleBtn.classList.toggle('expanded');
-          mediaContent.classList.toggle('expanded');
+      // زر التبديل
+      const toggleBtn  = document.getElementById('mediaToggleBtn');
+      const content    = document.getElementById('mediaContent');
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          toggleBtn.classList.toggle('expanded');
+          content.classList.toggle('expanded');
         });
       }
 
-      mainTabs.forEach(tab => {
+      // أزرار التبويب
+      document.querySelectorAll('.media-tab').forEach(tab => {
         tab.addEventListener('click', () => {
-          mainTabs.forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.media-tab').forEach(t => t.classList.remove('active'));
           tab.classList.add('active');
           activeTab = tab.dataset.tab;
           renderMediaGrid();
         });
       });
 
-      categorySelect.addEventListener('change', (e) => {
-        currentCategory = e.target.value;
-        renderMediaGrid();
-      });
-
-      await loadAllDataSequentially();
-    }
-
-    async function loadAllDataSequentially() {
-      try {
-        allMediaData = [];
-        processedUrls.clear();
-        categoriesMap = {};
-        
-        // Step 1: Load categories from Sheets
-        console.log('Loading categories from Sheets...');
-        await loadCategoriesFromSheets();
-        
-        // Step 2: Load URLs from documents
-        console.log('Loading URLs from documents...');
-        await loadUrlsFromDocuments();
-        
-        // Step 3: Populate dropdown
-        const categories = Object.keys(categoriesMap).sort();
-        const select = document.getElementById('mediaCategorySelect');
-        select.innerHTML = '<option value="all">كل التصنيفات</option>' + 
-          categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
-        
-        const mediaCountSpan = document.getElementById('mediaCount');
-        if (mediaCountSpan) mediaCountSpan.textContent = allMediaData.length;
-
-        renderMediaGrid();
-        
-        // Step 4: Fetch real data in background
-        console.log('Fetching real data from YouTube...');
-        fetchRealDataInBackground();
-      } catch (e) {
-        console.error('Error in loadAllDataSequentially:', e);
-        document.getElementById('mediaGrid').innerHTML = '<div class="media-empty"><i class="fas fa-exclamation-triangle"></i><p>فشل تحميل البيانات</p></div>';
-      }
-    }
-
-    async function loadCategoriesFromSheets() {
-      try {
-        const response = await fetch(SHEETS_URL);
-        const csvText = await response.text();
-        
-        const rows = csvText.split('\n').map(row => {
-          return row.split(',').map(cell => cell.trim().replace(/^"|"$/g, ''));
+      // فلتر التصنيف
+      const catSelect = document.getElementById('mediaCategorySelect');
+      if (catSelect) {
+        catSelect.addEventListener('change', (e) => {
+          currentCategory = e.target.value;
+          renderMediaGrid();
         });
-
-        const dataRows = rows.slice(1).filter(row => row[0] && row[0].startsWith('http'));
-        
-        for (const row of dataRows) {
-          const url = row[0];
-          const tagsString = row[1] || 'عام';
-          
-          // Filter out URLs from tags - only keep text
-          const tags = tagsString
-            .split(',')
-            .map(t => t.trim())
-            .filter(t => t && !t.startsWith('http'))
-            .filter(t => t);
-          
-          const normalizedUrl = normalizeUrl(url);
-          categoriesMap[normalizedUrl] = tags.length > 0 ? tags : ['عام'];
-          
-          tags.forEach(tag => {
-            if (!categoriesMap[tag]) categoriesMap[tag] = [];
-          });
-        }
-      } catch (e) {
-        console.error('Error loading Sheets:', e);
       }
-    }
 
-    async function loadUrlsFromDocuments() {
-      const docs = [CHANNELS_DOC, VIDEOS_DOC];
-      
-      for (const docId of docs) {
-        try {
-          const url = `https://docs.google.com/document/d/${docId}/export?format=txt`;
-          const response = await fetch(url);
-          const text = await response.text();
-          
-          // Extract YouTube URLs
-          const urlRegex = /(https?:\/\/(?:www\.)?youtube\.com(?:\/watch\?v=|\/@|\/channel\/)[^\s\/\?]+|https?:\/\/youtu\.be\/[0-9A-Za-z_-]{11})/g;
-          const matches = [...new Set(text.match(urlRegex) || [])];
-          
-          for (const foundUrl of matches) {
-            const normalizedUrl = normalizeUrl(foundUrl);
-            
-            if (!processedUrls.has(normalizedUrl)) {
-              processedUrls.add(normalizedUrl);
-              
-              const tags = categoriesMap[normalizedUrl] || ['عام'];
-              const mediaItem = parseMediaUrl(foundUrl, tags);
-              if (mediaItem) allMediaData.push(mediaItem);
+      // بطاقة المعلومات - زر الإغلاق
+      const closeBtn = document.getElementById('micCloseBtn');
+      const overlay  = document.getElementById('mediaInfoOverlay');
+      if (closeBtn) closeBtn.addEventListener('click', closeMediaInfoCard);
+      if (overlay)  overlay.addEventListener('click', closeMediaInfoCard);
+
+      // زر المشاركة
+      const shareBtn = document.getElementById('micShareBtn');
+      if (shareBtn) {
+        shareBtn.addEventListener('click', () => {
+          const openBtn = document.getElementById('micOpenBtn');
+          if (openBtn && openBtn.href) {
+            if (navigator.share) {
+              navigator.share({ url: openBtn.href, title: document.getElementById('micTitle')?.textContent || '' });
+            } else {
+              navigator.clipboard.writeText(openBtn.href).then(() => showToast('تم نسخ الرابط', 'success'));
             }
           }
-        } catch (e) {
-          console.error(`Error loading document ${docId}:`, e);
+        });
+      }
+
+      // إغلاق بالضغط على Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          const card = document.getElementById('mediaInfoCard');
+          if (card && card.classList.contains('active')) closeMediaInfoCard();
         }
-      }
-    }
-
-    function normalizeUrl(url) {
-      if (url.includes('youtu.be/')) {
-        const vId = url.match(/youtu\.be\/([0-9A-Za-z_-]{11})/)?.[1];
-        return `yt:video:${vId}`;
-      } else if (url.includes('youtube.com/watch')) {
-        const vId = url.match(/v=([0-9A-Za-z_-]{11})/)?.[1];
-        return `yt:video:${vId}`;
-      } else if (url.includes('youtube.com/@')) {
-        const handle = url.split('/@')[1].split('/')[0].split('?')[0];
-        return `yt:channel:${handle}`;
-      } else if (url.includes('youtube.com/channel/')) {
-        const channelId = url.split('/channel/')[1].split('/')[0].split('?')[0];
-        return `yt:channel:${channelId}`;
-      }
-      return url;
-    }
-
-    function parseMediaUrl(url, tags) {
-      try {
-        if (url.includes('youtube.com/watch') || url.includes('youtu.be/')) {
-          const vId = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})/)?.[1];
-          if (!vId) return null;
-          return {
-            url,
-            tags: tags && tags.length > 0 ? tags : ['عام'],
-            vId,
-            type: 'video',
-            title: 'جاري التحميل...',
-            thumbnail: `https://img.youtube.com/vi/${vId}/maxresdefault.jpg`,
-            author: ''
-          };
-        } else if (url.includes('youtube.com/@') || url.includes('youtube.com/channel/')) {
-          let handle = '';
-          if (url.includes('/@')) {
-            handle = url.split('/@')[1].split('/')[0].split('?')[0];
-          } else {
-            handle = url.split('/channel/')[1].split('/')[0].split('?')[0];
-          }
-          
-          return {
-            url,
-            tags: tags && tags.length > 0 ? tags : ['عام'],
-            handle,
-            type: 'channel',
-            title: handle,
-            thumbnail: `https://yt3.ggpht.com/${handle}=s176-c-k-c0x00ffffff-no-rj`,
-            author: ''
-          };
-        }
-      } catch (e) {
-        console.error('Error parsing URL:', url, e);
-      }
-      return null;
-    }
-
-    async function fetchRealDataInBackground() {
-      for (let i = 0; i < allMediaData.length; i++) {
-        const item = allMediaData[i];
-        
-        // Fetch with multiple strategies
-        if (item.type === 'video') {
-          await fetchVideoData(item);
-        } else {
-          await fetchChannelData(item);
-        }
-        
-        // Render after each fetch to show progressive loading
-        renderMediaGrid();
-      }
-    }
-
-    async function fetchVideoData(item) {
-      try {
-        // Strategy 1: Try oEmbed
-        try {
-          const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${item.vId}&format=json`);
-          if (res.ok) {
-            const d = await res.json();
-            item.title = d.title || item.title;
-            item.author = d.author_name || '';
-            return;
-          }
-        } catch (e) {}
-        
-        // Strategy 2: Use noembed.com as fallback
-        try {
-          const res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${item.vId}`);
-          if (res.ok) {
-            const d = await res.json();
-            item.title = d.title || item.title;
-            item.author = d.author_name || '';
-            return;
-          }
-        } catch (e) {}
-        
-        // Strategy 3: Extract from URL or use placeholder
-        if (item.title === 'جاري التحميل...') {
-          item.title = `فيديو يوتيوب - ${item.vId.substring(0, 6)}`;
-        }
-      } catch (e) {
-        console.error('Error fetching video data:', e);
-      }
-    }
-
-    async function fetchChannelData(item) {
-      try {
-        // Strategy 1: Try oEmbed with channel URL
-        try {
-          const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/@${item.handle}&format=json`);
-          if (res.ok) {
-            const d = await res.json();
-            item.title = d.author_name || item.handle;
-            item.author = d.author_name || '';
-            return;
-          }
-        } catch (e) {}
-        
-        // Strategy 2: Try with channel ID
-        try {
-          const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/channel/${item.handle}&format=json`);
-          if (res.ok) {
-            const d = await res.json();
-            item.title = d.author_name || item.handle;
-            item.author = d.author_name || '';
-            return;
-          }
-        } catch (e) {}
-        
-        // Strategy 3: Use handle as title
-        item.title = item.handle;
-        item.author = item.handle;
-        
-        // Strategy 4: Ensure image loads from unavatar
-        item.thumbnail = `https://unavatar.io/youtube/${item.handle}`;
-      } catch (e) {
-        console.error('Error fetching channel data:', e);
-      }
-    }
-
-    function renderMediaGrid() {
-      const grid = document.getElementById('mediaGrid');
-      
-      const filteredData = allMediaData.filter(item => {
-        const matchesCategory = currentCategory === 'all' || (item.tags && item.tags.includes(currentCategory));
-        const matchesTab = activeTab === (item.type === 'channel' ? 'channels' : 'videos');
-        return matchesCategory && matchesTab;
       });
-      
-      if (filteredData.length === 0) {
-        grid.innerHTML = `<div class="media-empty"><i class="fas fa-info-circle"></i><p>لا توجد ${activeTab === 'channels' ? 'قنوات' : 'مقاطع'} في هذا التصنيف</p></div>`;
-        return;
-      }
-      
-      // Add appropriate class to grid based on active tab
-      grid.className = `media-grid ${activeTab === 'channels' ? 'channels-view' : 'videos-view'}`;
 
-      grid.innerHTML = filteredData.map(item => {
-        const primaryTag = item.tags && item.tags.length > 0 ? item.tags[0] : 'عام';
-        const additionalTags = item.tags && item.tags.length > 1 ? item.tags.slice(1) : [];
-        
-        let tagsHtml = `<div class="tag-badge primary">${primaryTag}`;
-        if (additionalTags.length > 0) {
-          tagsHtml += '<div class="tags-dropdown">';
-          additionalTags.forEach(tag => {
-            tagsHtml += `<div class="tag-item">${tag}</div>`;
-          });
-          tagsHtml += '</div></div>';
-        } else {
-          tagsHtml += '</div>';
+      // إغلاق القوائم المنسدلة عند النقر خارجها
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.tag-primary-wrapper')) {
+          document.querySelectorAll('.tag-primary-wrapper.open').forEach(w => w.classList.remove('open'));
         }
-        
-        const cardClass = item.type === 'channel' ? 'channel-card' : 'video-card';
-        const imgSrc = item.type === 'channel' ? 
-          `https://unavatar.io/youtube/${item.handle}?fallback=https://via.placeholder.com/140x140/ff0000/ffffff?text=${encodeURIComponent(item.title.charAt(0).toUpperCase())}` :
-          item.thumbnail;
-        
-        return `
-          <a href="${item.url}" target="_blank" class="media-card ${cardClass}">
-            <div class="media-thumbnail">
-              <img src="${imgSrc}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/140x140/ff0000/ffffff?text=${encodeURIComponent(item.type === 'channel' ? item.title.charAt(0).toUpperCase() : 'YT')}'">
-              <div class="media-overlay"></div>
-              <div class="media-play-icon"><i class="fas fa-${item.type === 'video' ? 'play' : 'external-link-alt'}"></i></div>
-            </div>
-            <div class="media-info">
-              <div class="media-title" title="${item.title}">${item.title}</div>
-              <div class="media-channel"><i class="fab fa-youtube"></i><span>${item.author || 'يوتيوب'}</span></div>
-              <div class="tags-container">${tagsHtml}</div>
-            </div>
-          </a>
-        `;
-      }).join('');
+      });
+
+      // جلب البيانات
+      await loadMediaFromSheets();
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    // Initialize// ═══════════════════════════════════════════════════════════════════════════
-    // Initialize// ═══════════════════════════════════════════════════════════════════════════
-    // Initialize// ═══════════════════════════════════════════════════════════════════════════
-    // Initialize// ═══════════════════════════════════════════════════════════════════════════
-    // Initialize// ═══════════════════════════════════════════════════════════════════════════
-    // Initialize
-    // ═══════════════════════════════════════════════════════════════════════════
     document.addEventListener('DOMContentLoaded', () => {
       initTheme();
       initEventListeners();
