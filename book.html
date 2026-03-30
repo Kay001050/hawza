@@ -33,6 +33,8 @@
       --accent-blue-light: #5dade2;
       --accent-purple: #9b59b6;
       --accent-purple-light: #bb8fce;
+      --accent-youtube: #ff0000;
+      --accent-youtube-light: #ff4444;
       
       --text-primary: #1a1a1a;
       --text-secondary: #4a4a4a;
@@ -82,6 +84,8 @@
       --accent-gold-dark: #a07f3a;
       --accent-emerald: #2d8a6e;
       --accent-emerald-light: #3da882;
+      --accent-youtube: #ff0000;
+      --accent-youtube-light: #ff4444;
       
       --text-primary: #f0ebe3;
       --text-secondary: #b8c4c5;
@@ -271,6 +275,327 @@
     @keyframes slideInCategory {
       from { opacity: 0; transform: translateX(-20px); }
       to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       قسم القنوات والمقاطع
+       ═══════════════════════════════════════════════════════════════════════ */
+    
+    .media-section {
+      position: relative;
+      z-index: 50;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 20px;
+    }
+
+    .media-toggle-wrapper {
+      padding: 16px 0;
+    }
+
+    .media-toggle-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 16px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 1rem;
+      transition: var(--transition-fast);
+    }
+
+    .media-toggle-btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-medium);
+    }
+
+    .media-toggle-btn .toggle-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .media-toggle-btn .toggle-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, rgba(255, 0, 0, 0.12) 0%, rgba(255, 68, 68, 0.12) 100%);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-youtube);
+      font-size: 1.1rem;
+    }
+
+    .media-toggle-btn .toggle-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .media-toggle-btn .toggle-title {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .media-toggle-btn .toggle-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .media-toggle-btn .toggle-count {
+      padding: 6px 14px;
+      background: rgba(255, 0, 0, 0.1);
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      color: var(--accent-youtube);
+      font-weight: 600;
+    }
+
+    .media-toggle-btn .toggle-arrow {
+      width: 32px;
+      height: 32px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      transition: transform var(--transition-normal), background var(--transition-fast);
+    }
+
+    .media-toggle-btn.expanded .toggle-arrow {
+      transform: rotate(180deg);
+      background: var(--accent-youtube);
+      color: white;
+    }
+
+    .media-content {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                  opacity 0.4s ease,
+                  padding 0.3s ease;
+      padding: 0 0 0 0;
+    }
+
+    .media-content.expanded {
+      max-height: 1200px;
+      opacity: 1;
+      padding: 0 0 20px 0;
+    }
+
+    .media-inner {
+      padding-top: 20px;
+    }
+
+    .media-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .media-tab {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .media-tab:hover {
+      border-color: var(--border-medium);
+      color: var(--text-primary);
+    }
+
+    .media-tab.active {
+      background: linear-gradient(135deg, var(--accent-youtube) 0%, var(--accent-youtube-light) 100%);
+      border-color: transparent;
+      color: white;
+    }
+
+    .media-tab i {
+      font-size: 0.95rem;
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+      padding: 4px;
+    }
+
+    .media-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      transition: var(--transition-normal);
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: cardFadeIn 0.4s ease forwards;
+    }
+
+    .media-card:nth-child(1) { animation-delay: 0.05s; }
+    .media-card:nth-child(2) { animation-delay: 0.1s; }
+    .media-card:nth-child(3) { animation-delay: 0.15s; }
+    .media-card:nth-child(4) { animation-delay: 0.2s; }
+    .media-card:nth-child(5) { animation-delay: 0.25s; }
+    .media-card:nth-child(6) { animation-delay: 0.3s; }
+    .media-card:nth-child(7) { animation-delay: 0.35s; }
+    .media-card:nth-child(8) { animation-delay: 0.4s; }
+
+    @keyframes cardFadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .media-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--accent-youtube);
+    }
+
+    .media-thumbnail {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      background: var(--bg-tertiary);
+      overflow: hidden;
+    }
+
+    .media-thumbnail img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .media-play-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 0, 0, 0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      opacity: 0;
+      transition: opacity var(--transition-normal);
+      z-index: 10;
+    }
+
+    .media-card:hover .media-play-icon {
+      opacity: 1;
+    }
+
+    .media-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+      opacity: 0;
+      transition: opacity var(--transition-normal);
+      z-index: 5;
+    }
+
+    .media-card:hover .media-overlay {
+      opacity: 1;
+    }
+
+    .media-info {
+      padding: 12px;
+      background: var(--bg-card);
+    }
+
+    .media-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .media-channel {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .media-channel i {
+      color: var(--accent-youtube);
+      font-size: 0.7rem;
+    }
+
+    .media-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      gap: 10px;
+    }
+
+    .media-loading i {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .media-error {
+      padding: 20px;
+      background: rgba(255, 0, 0, 0.1);
+      border: 1px solid rgba(255, 0, 0, 0.3);
+      border-radius: var(--radius-md);
+      color: var(--accent-youtube);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .media-empty {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .media-empty i {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      opacity: 0.5;
     }
 
     /* ═══════════════════════════════════════════════════════════════════════
@@ -2940,6 +3265,64 @@
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════════════
+       قسم القنوات والمقاطع
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <section class="media-section">
+    <div class="container">
+      <div class="media-toggle-wrapper">
+        <button class="media-toggle-btn" id="mediaToggleBtn">
+          <div class="toggle-right" style="flex: 1; justify-content: flex-start;">
+            <div class="toggle-icon">
+              <i class="fab fa-youtube"></i>
+            </div>
+            <div class="toggle-text">
+              <div class="toggle-title">قنوات ومقاطع</div>
+              <div class="toggle-subtitle">قنوات يوتيوب والفيديوهات المقترحة</div>
+            </div>
+          </div>
+          <div class="toggle-right">
+            <span class="toggle-count" id="mediaCount">0</span>
+            <div class="toggle-arrow">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </button>
+      </div>
+
+      <div class="media-content" id="mediaContent">
+        <div class="media-inner">
+          <div class="media-tabs">
+            <button class="media-tab active" data-tab="channels">
+              <i class="fas fa-tv"></i>
+              <span>القنوات</span>
+            </button>
+            <button class="media-tab" data-tab="videos">
+              <i class="fas fa-video"></i>
+              <span>الفيديوهات</span>
+            </button>
+          </div>
+
+          <!-- Channels Grid -->
+          <div id="channelsGrid" class="media-grid">
+            <div class="media-loading">
+              <i class="fas fa-spinner"></i>
+              <span>جاري تحميل القنوات...</span>
+            </div>
+          </div>
+
+          <!-- Videos Grid -->
+          <div id="videosGrid" class="media-grid" style="display: none;">
+            <div class="media-loading">
+              <i class="fas fa-spinner"></i>
+              <span>جاري تحميل الفيديوهات...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
        قسم المكتبات المقترحة - منسدل (مغلق افتراضياً)
        ═══════════════════════════════════════════════════════════════════════ -->
   <section class="suggested-libraries-section">
@@ -4350,6 +4733,101 @@ ITEMS_PER_PAGE: 30
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
+    // YouTube Media Section Logic
+    // ═══════════════════════════════════════════════════════════════════════════
+    let channelsData = [];
+    let videosData = [];
+
+    function initMediaSection() {
+      const mediaToggleBtn = document.getElementById('mediaToggleBtn');
+      const mediaContent = document.getElementById('mediaContent');
+      const mediaTabs = document.querySelectorAll('.media-tab');
+
+      if (mediaToggleBtn) {
+        mediaToggleBtn.addEventListener('click', () => {
+          mediaToggleBtn.classList.toggle('expanded');
+          mediaContent.classList.toggle('expanded');
+        });
+      }
+
+      mediaTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          mediaTabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          const channelsGrid = document.getElementById('channelsGrid');
+          const videosGrid = document.getElementById('videosGrid');
+          if (tab.dataset.tab === 'channels') {
+            channelsGrid.style.display = 'grid';
+            videosGrid.style.display = 'none';
+          } else {
+            channelsGrid.style.display = 'none';
+            videosGrid.style.display = 'grid';
+          }
+        });
+      });
+
+      fetchMediaData();
+    }
+
+    async function fetchMediaData() {
+      await Promise.all([
+        fetchFromDoc('1owScaZsSqyFi6MAei7IGORFOuXUc5KqBFTp6dW45Xvc', 'channels'),
+        fetchFromDoc('147ck0G6x_8Dq0P1Bu0D8IKLtmAPDCayqrlGAjkGE95s', 'videos')
+      ]);
+      const mediaCountSpan = document.getElementById('mediaCount');
+      if (mediaCountSpan) mediaCountSpan.textContent = channelsData.length + videosData.length;
+    }
+
+    async function fetchFromDoc(docId, type) {
+      try {
+        const url = `https://docs.google.com/document/d/${docId}/export?format=txt`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Fetch failed');
+        const text = await response.text();
+        
+        if (type === 'channels') {
+          const urlRegex = /(https?:\/\/(?:www\.)?youtube\.com(?:\/channel\/|\/\@)[^\s]+)/g;
+          const matches = [...new Set(text.match(urlRegex) || [])];
+          channelsData = matches.map((url, i) => ({
+            url, title: `قناة مقترحة ${i+1}`, 
+            id: url.split('/').pop()
+          }));
+          renderMediaGrid('channelsGrid', channelsData, 'channel');
+        } else {
+          const urlRegex = /(https?:\/\/(?:www\.)?youtube\.com\/watch\?v=[^\s]+|https?:\/\/youtu\.be\/[^\s]+)/g;
+          const matches = [...new Set(text.match(urlRegex) || [])];
+          videosData = matches.map((url, i) => {
+            const vId = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})/)?.[1];
+            return { url, title: `فيديو مقترح ${i+1}`, vId };
+          });
+          renderMediaGrid('videosGrid', videosData, 'video');
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    function renderMediaGrid(gridId, data, type) {
+      const grid = document.getElementById(gridId);
+      if (!grid) return;
+      if (data.length === 0) {
+        grid.innerHTML = `<div class="media-empty"><i class="fas fa-${type==='video'?'video':'tv'}"></i><p>لا توجد عناصر حالياً</p></div>`;
+        return;
+      }
+      grid.innerHTML = data.map(item => `
+        <a href="${item.url}" target="_blank" class="media-card">
+          <div class="media-thumbnail">
+            <img src="${type==='video' ? `https://img.youtube.com/vi/${item.vId}/mqdefault.jpg` : `https://via.placeholder.com/320x180/ff0000/ffffff?text=YouTube+Channel`}" alt="${item.title}">
+            <div class="media-overlay"></div>
+            <div class="media-play-icon"><i class="fas fa-play"></i></div>
+          </div>
+          <div class="media-info">
+            <div class="media-title">${item.title}</div>
+            <div class="media-channel"><i class="fab fa-youtube"></i><span>يوتيوب</span></div>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
     // Initialize
     // ═══════════════════════════════════════════════════════════════════════════
     document.addEventListener('DOMContentLoaded', () => {
@@ -4357,6 +4835,7 @@ ITEMS_PER_PAGE: 30
       initEventListeners();
       initLibraryTypeTabs();
       initLibrary();
+      initMediaSection();
     });
   </script>
 </body>
