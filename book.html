@@ -3888,9 +3888,9 @@
     }
 
     .duas-content {
-      max-height: 1000px;
+      max-height: 5000px;
       overflow: hidden;
-      transition: max-height 0.4s ease;
+      transition: max-height 0.5s ease;
     }
 
     .duas-content.collapsed {
@@ -3900,8 +3900,8 @@
 
     .duas-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
       padding: 0 24px;
     }
 
@@ -3909,14 +3909,13 @@
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-lg);
-      padding: 24px;
+      padding: 28px;
       transition: var(--transition-normal);
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      cursor: pointer;
-      overflow: hidden;
+      gap: 18px;
       position: relative;
+      box-shadow: var(--shadow-sm);
     }
 
     .duas-card::before {
@@ -3924,11 +3923,10 @@
       position: absolute;
       top: 0;
       right: 0;
-      width: 4px;
+      width: 6px;
       height: 100%;
       background: linear-gradient(180deg, var(--accent-gold), var(--accent-gold-light));
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
     }
 
     .duas-card:hover {
@@ -3938,146 +3936,26 @@
       transform: translateY(-4px);
     }
 
-    .duas-card:hover::before {
-      opacity: 1;
-    }
-
     .duas-card-title {
       font-family: var(--font-heading);
-      font-size: 1.3rem;
+      font-size: 1.5rem;
       font-weight: 700;
       color: var(--accent-gold);
       margin: 0;
       line-height: 1.4;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 12px;
     }
 
     .duas-card-text {
       font-family: var(--font-heading);
-      font-size: 1.05rem;
-      line-height: 1.8;
+      font-size: 1.2rem;
+      line-height: 1.9;
       color: var(--text-primary);
       margin: 0;
-      text-align: justify;
-      flex-grow: 1;
-      max-height: 200px;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 8;
-      -webkit-box-orient: vertical;
-    }
-
-    .duas-card-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .duas-card-btn {
-      flex: 1;
-      padding: 10px 16px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-subtle);
-      background: var(--bg-secondary);
-      color: var(--accent-gold);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: var(--transition-normal);
-      cursor: pointer;
-    }
-
-    .duas-card-btn:hover {
-      background: var(--accent-gold);
-      color: white;
-      border-color: var(--accent-gold);
-    }
-
-    .duas-card-view {
-      border-color: var(--accent-gold);
-    }
-
-    .duas-card-download {
-      border-color: var(--accent-emerald);
-      color: var(--accent-emerald);
-    }
-
-    .duas-card-download:hover {
-      background: var(--accent-emerald);
-      border-color: var(--accent-emerald);
-      color: white;
-    }
-
-    .duas-folder-card {
-      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-light) 100%);
-      border: none;
-      color: white;
-      text-decoration: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
       text-align: center;
-      min-height: 280px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .duas-folder-card::before {
-      opacity: 1;
-      background: linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
-    }
-
-    .duas-folder-card:hover {
-      background: linear-gradient(135deg, var(--accent-gold-light) 0%, var(--accent-gold) 100%);
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px rgba(160, 127, 58, 0.3);
-    }
-
-    .duas-folder-icon {
-      font-size: 3.5rem;
-      color: white;
-      margin-bottom: 16px;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-
-    .duas-folder-card .duas-card-title {
-      color: white;
-      font-size: 1.5rem;
-      margin-bottom: 8px;
-    }
-
-    .duas-folder-desc {
-      color: rgba(255, 255, 255, 0.9);
-      font-size: 0.95rem;
-      margin: 0 0 16px 0;
-      line-height: 1.5;
-    }
-
-    .duas-folder-action {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: white;
-      font-weight: 700;
-      font-size: 1rem;
-      padding: 12px 24px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: var(--radius-full);
-      transition: var(--transition-normal);
-    }
-
-    .duas-folder-card:hover .duas-folder-action {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateX(-4px);
+      white-space: pre-wrap;
+      word-wrap: break-word;
     }
 
     .duas-loading {
@@ -4086,14 +3964,15 @@
       align-items: center;
       justify-content: center;
       gap: 12px;
-      padding: 40px 24px;
+      padding: 60px 24px;
       color: var(--text-secondary);
-      font-size: 1rem;
+      font-size: 1.1rem;
     }
 
     .duas-loading i {
       animation: spin 1s linear infinite;
       color: var(--accent-gold);
+      font-size: 1.5rem;
     }
 
     @keyframes spin {
@@ -4118,6 +3997,9 @@
       }
       .duas-header h2 {
         font-size: 1.4rem;
+      }
+      .duas-card-text {
+        font-size: 1.1rem;
       }
     }
 
@@ -6573,8 +6455,8 @@ ITEMS_PER_PAGE: 30
 
       try {
         const folderId = '1_06Vo6UthBtmHCY7KjpywaAZeDbYNIjV';
-        const apiKey = 'AIzaSyDyWJOw5w-1ycj5_xLjjHdUQXV-VfZqLqE';
-        const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&fields=files(id,name,mimeType)&pageSize=100&key=${apiKey}`;
+        const apiKey = CONFIG.API_KEY;
+        const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType)&pageSize=100&key=${apiKey}`;
         
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('API Error');
@@ -6584,40 +6466,55 @@ ITEMS_PER_PAGE: 30
         const docFiles = files.filter(f => f.mimeType === 'application/vnd.google-apps.document');
         
         if (docFiles.length === 0) {
-          grid.innerHTML = '<div class="duas-error"><i class="fas fa-inbox"></i> لم يتم العثور على أدعية</div>';
+          grid.innerHTML = '<div class="duas-error"><i class="fas fa-inbox"></i> لم يتم العثور على أدعية في المجلد</div>';
           return;
         }
 
         grid.innerHTML = '';
         
-        for (let i = 0; i < docFiles.length; i++) {
-          const file = docFiles[i];
-          const docId = file.id;
-          const title = file.name;
-          
+        // جلب محتوى كل مستند بالتوازي لتحسين السرعة
+        const fetchPromises = docFiles.map(async (file) => {
           try {
-            const exportUrl = `https://docs.google.com/document/d/${docId}/export?format=txt`;
+            const exportUrl = `https://docs.google.com/document/d/${file.id}/export?format=txt&key=${apiKey}`;
             const textResponse = await fetch(exportUrl);
             
             if (textResponse.ok) {
               const text = await textResponse.text();
-              const cleanText = text.trim();
+              // تنظيف النص من أي علامات غريبة قد تأتي من التصدير
+              const cleanText = text.replace(/\uFEFF/g, '').trim();
               
-              const card = document.createElement('div');
-              card.className = 'duas-card';
-              card.innerHTML = `
-                <h3 class="duas-card-title">${title}</h3>
-                <p class="duas-card-text">${cleanText}</p>
-              `;
-              grid.appendChild(card);
+              return {
+                title: file.name,
+                content: cleanText
+              };
             }
           } catch (e) {
-            console.error(`Error fetching ${title}:`, e);
+            console.error(`Error fetching ${file.name}:`, e);
           }
+          return null;
+        });
+
+        const results = await Promise.all(fetchPromises);
+        
+        results.forEach(result => {
+          if (result && result.content) {
+            const card = document.createElement('div');
+            card.className = 'duas-card';
+            card.innerHTML = `
+              <h3 class="duas-card-title">${result.title}</h3>
+              <div class="duas-card-text">${result.content}</div>
+            `;
+            grid.appendChild(card);
+          }
+        });
+
+        if (grid.innerHTML === '') {
+          grid.innerHTML = '<div class="duas-error"><i class="fas fa-info-circle"></i> لم يتم جلب أي نصوص من المستندات</div>';
         }
+
       } catch (error) {
         console.error('Error loading duas:', error);
-        grid.innerHTML = '<div class="duas-error"><i class="fas fa-exclamation-circle"></i> خطأ في تحميل الأدعية</div>';
+        grid.innerHTML = '<div class="duas-error"><i class="fas fa-exclamation-circle"></i> خطأ في الاتصال بمكتبة الأدعية</div>';
       }
     }
 
