@@ -298,14 +298,16 @@
     }
 
     .media-section.expanded {
-      max-height: none; /* إزالة الحد الأقصى للارتفاع لظهور جميع العناصر */
+      max-height: 800px; /* تحديد ارتفاع أقصى مناسب */
       opacity: 1;
       margin-bottom: 20px;
-      overflow: visible;
+      overflow-y: auto; /* تفعيل التمرير الرأسي */
+      scrollbar-width: thin; /* تحسين شكل شريط التمرير */
+      scrollbar-color: var(--accent-gold) transparent;
     }
 
     .media-section.expanded .media-content {
-      max-height: none; /* إزالة الحد الأقصى للارتفاع لظهور جميع العناصر */
+      max-height: none; 
       opacity: 1;
       padding: 0 0 28px 0;
       overflow: visible;
@@ -5725,6 +5727,15 @@ ITEMS_PER_PAGE: 30
     // ───────────────────────────────────────────────────────────────────────────
     // بطاقة المعلومات المنبثقة
     // ───────────────────────────────────────────────────────────────────────────
+    function formatNotes(text) {
+      if (!text) return '';
+      // تحويل Markdown [text](url) إلى رابط HTML
+      let formatted = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" style="color:#3498db; text-decoration:underline; font-weight:600;">$1</a>');
+      // تحويل الروابط العادية المتبقية إلى روابط قابلة للنقر
+      formatted = formatted.replace(/(?<!=")(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#3498db; text-decoration:underline; font-weight:600;">$1</a>');
+      return formatted;
+    }
+
     function openMediaInfoCard(item) {
       const overlay  = document.getElementById('mediaInfoOverlay');
       const card     = document.getElementById('mediaInfoCard');
@@ -5777,7 +5788,7 @@ ITEMS_PER_PAGE: 30
             <div class="mic-row-icon bio"><i class="fas fa-info-circle"></i></div>
             <div class="mic-row-content">
               <div class="mic-row-label">نبذة</div>
-              <div class="mic-row-value">${item.bio}</div>
+              <div class="mic-row-text">${formatNotes(item.bio)}</div>
             </div>
           </div>`;
       }
@@ -5785,10 +5796,10 @@ ITEMS_PER_PAGE: 30
       if (item.audience) {
         bodyHtml += `
           <div class="mic-row">
-            <div class="mic-row-icon target"><i class="fas fa-users"></i></div>
+            <div class="mic-row-icon audience"><i class="fas fa-users"></i></div>
             <div class="mic-row-content">
               <div class="mic-row-label">موجه إلى</div>
-              <div class="mic-row-value">${item.audience}</div>
+              <div class="mic-row-text">${formatNotes(item.audience)}</div>
             </div>
           </div>`;
       }
@@ -5798,8 +5809,8 @@ ITEMS_PER_PAGE: 30
           <div class="mic-row">
             <div class="mic-row-icon notes"><i class="fas fa-sticky-note"></i></div>
             <div class="mic-row-content">
-              <div class="mic-row-label">ملاحظات وروابط</div>
-              <div class="mic-row-value">${item.notes}</div>
+              <div class="mic-row-label">أمور أخرى</div>
+              <div class="mic-row-text">${formatNotes(item.notes)}</div>
             </div>
           </div>`;
       }
