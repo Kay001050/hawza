@@ -3947,45 +3947,97 @@
       box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
-      height: 80px; /* ارتفاع المربع الصغير */
+      height: 100px; /* زيادة الارتفاع قليلاً ليكون أوضح */
       z-index: 1;
+      justify-content: center;
+      background: linear-gradient(145deg, var(--bg-card), var(--bg-tertiary));
+    }
+
+    .duas-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--accent-gold);
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
 
     .duas-card:hover {
       border-color: var(--accent-gold);
       box-shadow: var(--shadow-md);
-      transform: translateY(-2px);
+      transform: translateY(-4px);
+    }
+
+    .duas-card:hover::before {
+      opacity: 1;
     }
 
     .duas-card.active {
-      height: 600px; /* الارتفاع عند التوسع */
-      grid-column: 1 / -1; /* التوسع ليصبح مستطيلاً بعرض الشبكة بالكامل */
-      z-index: 999; /* قيمة عالية لضمان الظهور فوق العناصر الأخرى */
-      transform: scale(1.01);
+      height: 75vh; /* ارتفاع مرن بناءً على الشاشة */
+      max-height: 800px;
+      grid-column: 1 / -1;
+      z-index: 2000;
+      transform: none;
       box-shadow: var(--shadow-lg);
       border-color: var(--accent-gold);
-      position: relative;
+      position: sticky; /* جعل البطاقة بالكامل ثابتة */
+      top: 80px; /* مسافة من أعلى الصفحة (تحت الهيدر) */
+      margin: 20px 0;
+      background: var(--bg-card);
     }
 
     /* إصلاح التداخل مع الهيدر الثابت */
     .duas-card.active .duas-card-header {
       position: sticky;
       top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 2001;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
       border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-card);
     }
 
     .duas-card-header {
-      padding: 0 20px;
-      height: 70px;
+      padding: 0 24px;
+      height: 80px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
-      background: var(--bg-secondary);
+      background: transparent;
       transition: background 0.3s ease;
       flex-shrink: 0;
+      position: relative;
+    }
+
+    .duas-card-close {
+      display: none;
+      width: 32px;
+      height: 32px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+      transition: all 0.3s ease;
+      margin-right: 15px;
+    }
+
+    .duas-card.active .duas-card-close {
+      display: flex;
+    }
+
+    .duas-card-close:hover {
+      background: #ff4444;
+      color: white;
+      transform: rotate(90deg);
+    }
+
+    .duas-card-controls {
+      display: flex;
+      align-items: center;
     }
 
     .duas-card-header:hover {
@@ -4066,15 +4118,16 @@
 
     .duas-card-text {
       font-family: 'Amiri', serif;
-      font-size: 1.35rem;
-      line-height: 2.1;
+      font-size: 1.6rem; /* تكبير الخط للأدعية */
+      line-height: 2.4;
       color: var(--text-primary);
-      margin: 0;
+      margin: 0 auto;
+      max-width: 800px; /* حصر النص لسهولة القراءة */
       text-align: center;
       white-space: pre-wrap;
       word-wrap: break-word;
       text-shadow: 0 1px 0 rgba(255,255,255,0.5);
-      padding-bottom: 10px;
+      padding: 20px 0;
     }
 
     [data-theme="dark"] .duas-card-text {
@@ -6773,43 +6826,56 @@ ITEMS_PER_PAGE: 30
         card.innerHTML = `
           <div class="duas-card-header">
             <h3 class="duas-card-title"><i class="fas fa-scroll"></i> ${item.title}</h3>
-            <i class="fas fa-chevron-down duas-card-arrow"></i>
+            <div class="duas-card-controls">
+               <div class="duas-card-close"><i class="fas fa-times"></i></div>
+               <i class="fas fa-chevron-down duas-card-arrow"></i>
+            </div>
           </div>
           <div class="duas-card-body">
             <div class="duas-card-text-wrapper">
-              <div class="duas-card-text" data-loaded="false">اضغط للتحميل...</div>
+              <div class="duas-card-text" data-loaded="false">جاري تحميل كلمات الدعاء المباركة...</div>
             </div>
             <div class="duas-card-decoration"><i class="fas fa-star"></i></div>
           </div>
         `;
         
-        card.querySelector('.duas-card-header').addEventListener('click', async () => {
+        const toggleCard = async (e) => {
+          // إذا كان النقر على زر الإغلاق، نقوم بالإغلاق فقط
+          const isCloseBtn = e.target.closest('.duas-card-close');
           const isActive = card.classList.contains('active');
           const textContainer = card.querySelector('.duas-card-text');
           
-          grid.querySelectorAll('.duas-card.active').forEach(c => { if(c !== card) c.classList.remove('active'); });
-          
-          if (!isActive) {
-            if (textContainer.getAttribute('data-loaded') !== 'true') {
-              textContainer.innerHTML = '<div class="duas-loading"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</div>';
-              try {
-                const res = await fetch(item.url);
-                const text = await res.text();
-                textContainer.innerHTML = text.replace(/\uFEFF/g, '').trim();
-                textContainer.setAttribute('data-loaded', 'true');
-              } catch (e) {
-                textContainer.innerHTML = '<div class="duas-error">تعذر التحميل</div>';
-              }
-            }
-            card.classList.add('active');
-            setTimeout(() => {
-              const offset = 100;
-              window.scrollTo({ top: card.getBoundingClientRect().top + window.pageYOffset - offset, behavior: 'smooth' });
-            }, 500);
-          } else {
+          if (isCloseBtn || isActive) {
             card.classList.remove('active');
+            return;
           }
-        });
+
+          // إغلاق أي بطاقة أخرى مفتوحة
+          grid.querySelectorAll('.duas-card.active').forEach(c => c.classList.remove('active'));
+          
+          if (textContainer.getAttribute('data-loaded') !== 'true') {
+            textContainer.innerHTML = '<div class="duas-loading"><i class="fas fa-spinner fa-spin"></i> جاري تحميل كلمات الدعاء المباركة...</div>';
+            try {
+              const res = await fetch(item.url);
+              const text = await res.text();
+              textContainer.innerHTML = text.replace(/\uFEFF/g, '').trim();
+              textContainer.setAttribute('data-loaded', 'true');
+            } catch (e) {
+              textContainer.innerHTML = '<div class="duas-error">تعذر التحميل، يرجى المحاولة لاحقاً</div>';
+            }
+          }
+          
+          card.classList.add('active');
+          
+          // تمرير سلس للبطاقة لتكون في المنتصف
+          setTimeout(() => {
+            const offset = 100;
+            const cardTop = card.getBoundingClientRect().top + window.pageYOffset;
+            window.scrollTo({ top: cardTop - offset, behavior: 'smooth' });
+          }, 400);
+        };
+
+        card.querySelector('.duas-card-header').addEventListener('click', toggleCard);
         
         grid.appendChild(card);
       });
