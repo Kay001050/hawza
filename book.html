@@ -793,11 +793,24 @@
     .media-card:hover { transform: translateY(-7px); }
 
     /* ── بطاقة القناة ── */
-    .media-card.channel-card { gap: 10px; }
+    .media-card.channel-card {
+      gap: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px 16px;
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    .media-card.channel-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      border-color: rgba(255,0,0,0.4);
+      box-shadow: 0 12px 32px rgba(255,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08);
+    }
 
     .media-card.channel-card .media-thumbnail {
-      width: 130px;
-      height: 130px;
+      width: 110px;
+      height: 110px;
       border-radius: 50%;
       overflow: hidden;
       border: 3px solid var(--accent-youtube);
@@ -818,33 +831,303 @@
       border-radius: 50%;
     }
 
-    /* ── بطاقة الفيديو ── */
-    .media-card.video-card { gap: 10px; }
-
-    .media-card.video-card .media-thumbnail {
-      width: 100%;
-      aspect-ratio: 16/9;
-      border-radius: var(--radius-md);
+    /* ── بطاقة الفيديو (Flat Design & Modern) ── */
+    .media-card.video-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
       overflow: hidden;
-      border: 1.5px solid var(--border-subtle);
-      box-shadow: none !important;
-      transition: border-color 0.3s ease;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      height: 100%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
       position: relative;
-      background: transparent;
     }
 
-    .media-card.video-card:hover .media-thumbnail {
+    .media-card.video-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      background: var(--bg-card-hover);
+      border-color: rgba(255,0,0,0.4);
+      box-shadow: 0 12px 32px rgba(255,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .media-card.video-card .media-thumbnail {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: transparent !important;
+      overflow: hidden;
+      border: none;
       box-shadow: none !important;
-      border-color: var(--accent-youtube);
     }
 
     .media-card.video-card .media-thumbnail img {
-      width: 100%; height: 100%;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      transition: transform 0.4s ease;
+      display: block;
+      transition: transform 0.5s ease;
     }
 
-    .media-card.video-card:hover .media-thumbnail img { transform: scale(1.06); }
+    .media-card.video-card:hover .media-thumbnail img {
+      transform: scale(1.05);
+    }
+
+    /* ── شارات المعلومات فوق الصورة ── */
+    .media-duration-badge {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      z-index: 10;
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .media-play-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 5;
+    }
+
+    .media-card.video-card:hover .media-play-overlay {
+      opacity: 1;
+    }
+
+    .media-play-overlay i {
+      color: #fff;
+      font-size: 2rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+    /* ── معلومات الفيديو المحدثة ── */
+    .media-card.video-card .media-info {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-grow: 1;
+      text-align: right;
+    }
+
+    .media-card.video-card .media-title {
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 4px;
+      height: 2.8em; /* ارتفاع ثابت لسطرين لتوحيد حجم البطاقات */
+    }
+
+    .media-card.video-card .media-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .media-card.video-card .media-channel {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .media-card.video-card .media-channel i {
+      color: var(--accent-youtube);
+      font-size: 0.8rem;
+    }
+
+    .media-card.video-card .media-stats {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .media-card.video-card .media-stats span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── Skeleton Loader Effect ── */
+    .skeleton-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      height: 300px;
+    }
+
+    .skeleton-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: var(--skeleton-base);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skeleton-thumb::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, var(--skeleton-shine), transparent);
+      animation: skeleton-shimmer 1.5s infinite;
+    }
+
+    @keyframes skeleton-shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* ── Quran Memorization Page Styles ── */
+    .surah-card {
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 15px;
+      margin-bottom: 15px;
+      transition: var(--transition-normal);
+    }
+    .surah-card:hover { border-color: var(--accent-gold); }
+    
+    .surah-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .surah-name {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      color: var(--accent-gold);
+      cursor: pointer;
+    }
+    .surah-name:hover { text-decoration: underline; }
+    
+    .surah-dedication {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      background: var(--bg-secondary);
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+    }
+    
+    .surah-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .days-counter {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-tertiary);
+      padding: 5px 10px;
+      border-radius: var(--radius-full);
+    }
+    .counter-btn {
+      width: 24px; height: 24px;
+      background: var(--bg-card);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .checkboxes-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .day-checkbox {
+      width: 28px; height: 28px;
+      border: 2px solid var(--border-medium);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.7rem;
+      font-weight: bold;
+      color: var(--text-muted);
+    }
+    .day-checkbox.checked {
+      background: var(--accent-emerald);
+      border-color: var(--accent-emerald);
+      color: white;
+    }
+
+    /* ── Interactive Calendar ── */
+    .interactive-calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      text-align: center;
+    }
+    .calendar-day-head { font-weight: bold; font-size: 0.75rem; color: var(--text-muted); padding: 5px 0; }
+    .calendar-day {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      position: relative;
+      background: var(--bg-secondary);
+      border: 1px solid transparent;
+    }
+    .calendar-day.today { border-color: var(--accent-gold); font-weight: bold; }
+    .calendar-day.has-achievement { background: rgba(16, 185, 129, 0.15); }
+    .achievement-dot {
+      width: 4px; height: 4px;
+      background: var(--accent-emerald);
+      border-radius: 50%;
+      margin-top: 2px;
+    }
+    .achievement-badge {
+      position: absolute;
+      bottom: 2px;
+      font-size: 0.5rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 90%;
+      color: var(--accent-emerald);
+      font-weight: bold;
+    }
+
+    @media (max-width: 1024px) {
+      .memorization-layout { grid-template-columns: 1fr !important; }
+      .calendar-column { order: 1 !important; }
+      .surahs-column { order: 2 !important; }
+    }
 
     /* ── أيقونة التشغيل ── */
     .media-play-icon {
@@ -888,9 +1171,14 @@
     }
 
     .media-card.video-card .media-info {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
       align-items: flex-start;
+      gap: 6px;
+      padding: 12px;
+      flex-grow: 1;
       text-align: right;
-      padding: 0 2px;
     }
 
     .media-card .media-title {
@@ -944,7 +1232,7 @@
       border-radius: 20px;
       font-size: 0.65rem;
       font-weight: 700;
-      box-shadow: 0 2px 8px rgba(255,0,0,0.28);
+      box-shadow: none;
       cursor: pointer;
       transition: all 0.25s ease;
       white-space: nowrap;
@@ -954,8 +1242,62 @@
     }
 
     .media-card .tag-badge-main:hover {
-      box-shadow: 0 4px 14px rgba(255,0,0,0.45);
+      box-shadow: none;
       background: linear-gradient(135deg, #e60000, var(--accent-youtube));
+    }
+
+    /* ════════════════════════════════════════════════════════════════════════
+       Responsive Design - Three Different Layouts
+       ════════════════════════════════════════════════════════════════════════ */
+
+    /* ── التجاوب المخصص (Responsive Design) ── */
+
+    /* الموبايل (أقل من 768px) */
+    @media (max-width: 767px) {
+      .standalone-grid.videos-view {
+        grid-template-columns: 1fr !important;
+        gap: 16px;
+      }
+      .media-card.video-card {
+        flex-direction: column !important;
+      }
+    }
+
+    /* التابلت (768px إلى 1024px) */
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .standalone-grid.videos-view {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 16px;
+      }
+      .media-card.video-card {
+        flex-direction: column !important;
+      }
+    }
+
+    /* الديسكتوب (أكبر من 1024px) */
+    @media (min-width: 1025px) {
+      .standalone-grid.videos-view {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+        gap: 24px;
+      }
+      /* تصميم أفقي اختياري يمكن تفعيله عبر كلاس إضافي إذا لزم الأمر */
+      .standalone-grid.videos-view.horizontal-mode .media-card.video-card {
+        flex-direction: row !important;
+      }
+      .standalone-grid.videos-view.horizontal-mode .media-card.video-card .media-thumbnail {
+        width: 260px !important;
+        height: 146px !important;
+      }
+    }
+
+    /* ════════════════════════════════════════════════════════════════════════
+       إزالة جميع الظلال من البطاقات
+       ════════════════════════════════════════════════════════════════════════ */
+
+    .media-card.video-card,
+    .media-card.video-card .media-thumbnail,
+    .media-card.video-card .tag-badge-main {
+      box-shadow: none !important;
     }
 
     .media-card .tag-badge-main .tag-more-indicator {
@@ -3895,6 +4237,161 @@
       padding-bottom: 60px;
     }
 
+    /* ═══ نافذة التلخيص المنبثقة ═══ */
+    .summary-popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(10px);
+      z-index: 2100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      padding: 20px;
+    }
+    .summary-popup-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .summary-popup-content {
+      background: var(--bg-card);
+      width: 100%;
+      max-width: 860px;
+      max-height: 92vh;
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+      border: 1px solid var(--border-subtle);
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      overflow: hidden;
+    }
+    .summary-popup-overlay.active .summary-popup-content {
+      transform: scale(1) translateY(0);
+    }
+    .summary-popup-header {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(30,64,175,0.05));
+      flex-shrink: 0;
+    }
+    .summary-popup-title-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+    .summary-popup-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(59,130,246,0.12);
+      border: 1px solid rgba(59,130,246,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3b82f6;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .summary-popup-title {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .summary-popup-title span {
+      color: #3b82f6;
+    }
+    .summary-popup-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .summary-open-drive-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(66,133,244,0.1);
+      border: 1px solid rgba(66,133,244,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4285f4;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+    .summary-open-drive-btn:hover {
+      background: #4285f4;
+      color: white;
+      transform: scale(1.1);
+    }
+    .summary-popup-close {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--text-muted);
+    }
+    .summary-popup-close:hover {
+      background: #ef4444;
+      color: white;
+      transform: rotate(90deg);
+    }
+    .summary-font-controls {
+      padding: 10px 22px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-secondary);
+      flex-shrink: 0;
+    }
+    .summary-popup-body {
+      padding: 28px 32px;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+    .summary-popup-text {
+      font-family: var(--font-heading);
+      font-size: var(--summary-font-size, 1.2rem);
+      line-height: 2;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+      direction: rtl;
+      text-align: right;
+    }
+
+    /* ═══ مسار تلخيصات (breadcrumbs) ═══ */
+    #summariesBreadcrumbsWrapper {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0;
+      display: none;
+    }
+    #summariesBreadcrumbsWrapper.visible {
+      display: block;
+    }
+    #summariesBreadcrumbsWrapper .container {
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+
     /* هيرو بانر عصري */
     .page-hero-banner {
       padding: calc(var(--header-height) + 40px) 0 40px;
@@ -3917,24 +4414,50 @@
       z-index: 0;
     }
 
-    .youtube-theme { background: linear-gradient(160deg, #0f0f0f 0%, #1a1a1a 40%, #2d1a1a 100%); color: white; }
-    .youtube-theme::before { background: #ff0000; }
+    .youtube-theme {
+      background: linear-gradient(160deg, #0a0a0a 0%, #1a0505 40%, #2d0a0a 100%);
+      color: white;
+      position: relative;
+    }
+    .youtube-theme::before { background: radial-gradient(circle, #ff0000, #cc0000); }
+    .youtube-theme::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff0000' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
     .youtube-theme .hero-banner-icon-wrapper {
-      background: rgba(255,0,0,0.15);
-      border-color: rgba(255,0,0,0.35);
-      box-shadow: 0 0 30px rgba(255,0,0,0.25), 0 10px 25px rgba(0,0,0,0.3);
+      background: rgba(255,0,0,0.18);
+      border-color: rgba(255,0,0,0.4);
+      box-shadow: 0 0 40px rgba(255,0,0,0.3), 0 10px 30px rgba(0,0,0,0.4);
     }
-    
-    .haqiba-theme { background: linear-gradient(160deg, #042f2e 0%, #065f46 100%); color: white; }
-    .haqiba-theme::before { background: #10b981; }
+    .youtube-theme .hero-banner-title { text-shadow: 0 2px 20px rgba(255,0,0,0.3); }
+
+    .haqiba-theme {
+      background: linear-gradient(160deg, #022c22 0%, #064e3b 50%, #065f46 100%);
+      color: white;
+    }
+    .haqiba-theme::before { background: radial-gradient(circle, #10b981, #059669); }
     .haqiba-theme .hero-banner-icon-wrapper {
-      background: rgba(16,185,129,0.15);
-      border-color: rgba(16,185,129,0.35);
-      box-shadow: 0 0 30px rgba(16,185,129,0.25), 0 10px 25px rgba(0,0,0,0.3);
+      background: rgba(16,185,129,0.18);
+      border-color: rgba(16,185,129,0.4);
+      box-shadow: 0 0 40px rgba(16,185,129,0.3), 0 10px 30px rgba(0,0,0,0.4);
     }
-    
-    .summaries-theme { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); color: white; }
-    .summaries-theme::before { background: #3b82f6; }
+    .haqiba-theme .hero-banner-title { text-shadow: 0 2px 20px rgba(16,185,129,0.3); }
+
+    .summaries-theme {
+      background: linear-gradient(160deg, #0f172a 0%, #1e3a8a 50%, #1e40af 100%);
+      color: white;
+    }
+    .summaries-theme::before { background: radial-gradient(circle, #3b82f6, #2563eb); }
+    .summaries-theme .hero-banner-icon-wrapper {
+      background: rgba(59,130,246,0.18);
+      border-color: rgba(59,130,246,0.4);
+      box-shadow: 0 0 40px rgba(59,130,246,0.3), 0 10px 30px rgba(0,0,0,0.4);
+    }
+    .summaries-theme .hero-banner-title { text-shadow: 0 2px 20px rgba(59,130,246,0.3); }
 
     .hero-banner-container {
       position: relative;
@@ -4102,15 +4625,21 @@
     }
 
     .folder-card-modern:hover {
-      transform: translateY(-10px);
+      transform: translateY(-8px) scale(1.02);
       border-color: var(--accent-gold);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(160,127,58,0.15);
     }
 
     .haqiba-theme .folder-card-modern:hover {
-      transform: translateY(-6px);
-      border-color: rgba(16,185,129,0.5);
-      box-shadow: 0 12px 30px rgba(16,185,129,0.18), 0 4px 12px rgba(0,0,0,0.08);
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(16,185,129,0.55);
+      box-shadow: 0 16px 40px rgba(16,185,129,0.2), 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    #page-summaries .folder-card-modern:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(59,130,246,0.55);
+      box-shadow: 0 16px 40px rgba(59,130,246,0.2), 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .folder-icon-box {
@@ -4125,8 +4654,9 @@
       transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .haqiba-theme .folder-icon-box { background: rgba(16, 185, 129, 0.12); color: #10b981; }
-    .summaries-theme .folder-icon-box { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+    .haqiba-theme .folder-icon-box { background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+    .summaries-theme .folder-icon-box { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59,130,246,0.2); }
+    #page-summaries .folder-icon-box { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59,130,246,0.2); }
 
     .folder-card-modern:hover .folder-icon-box {
       transform: scale(1.1) rotate(-3deg);
@@ -6104,6 +6634,16 @@
           </div>
         </button>
 
+        <!-- متابعة الحفظ -->
+        <button class="sidebar-fixed-item" id="navMemorization">
+          <div class="item-icon teal" style="background: rgba(20, 184, 166, 0.15);">
+            <i class="fas fa-quran" style="color: #14b8a6;"></i>
+          </div>
+          <div class="item-text">
+            <span class="item-name">متابعة الحفظ</span>
+          </div>
+        </button>
+
         <!-- للأطفال -->
         <button class="sidebar-fixed-item" id="navKids">
           <div class="item-icon purple">
@@ -6417,7 +6957,7 @@
   </section>
 
   <!-- Library Section -->
-  <section class="library-section">
+  <section class="library-section" id="page-library">
     <div class="nav-progress-bar" id="navProgressBar"></div>
     <div class="container">
       <div class="section-header">
@@ -6430,6 +6970,73 @@
       <div class="pagination" id="pagination"></div>
     </div>
   </section>
+
+  <!-- ═══ صفحة متابعة حفظ القرآن ═══ -->
+  <section id="page-memorization" class="page-section" style="display: none; padding: 40px 0;">
+    <div class="container">
+      <div class="memorization-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;">
+        <div class="header-right">
+          <h2 style="font-family: var(--font-heading); font-size: 2.2rem; color: var(--accent-gold);">متابعة حفظ القرآن الكريم</h2>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">نظّم جدول حفظك اليومي وتابع تقدمك بكل سهولة</p>
+        </div>
+        <div class="header-left">
+          <a href="#" class="print-plan-btn" style="display: flex; align-items: center; gap: 10px; background: var(--accent-gold); color: white; padding: 12px 24px; border-radius: var(--radius-md); font-weight: 600; transition: var(--transition-normal);">
+            <i class="fas fa-print"></i>
+            <span>تحميل خطة الحفظ PDF</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="memorization-layout" style="display: grid; grid-template-columns: 1fr 350px; gap: 30px;">
+        <!-- قائمة السور (يمين على الديسكتوب) -->
+        <div class="surahs-column" style="order: 1;">
+          <div class="card-flat" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px;">
+            <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--text-primary);">
+              <i class="fas fa-list-ol" style="color: var(--accent-gold);"></i>
+              خطة حفظ السور
+            </h3>
+            <div id="surahs-list-container" class="surahs-list">
+              <!-- سيتم توليدها بواسطة JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- التقويم التفاعلي (يسار على الديسكتوب) -->
+        <div class="calendar-column" style="order: 2;">
+          <div class="card-flat" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; position: sticky; top: 100px;">
+            <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--text-primary);">
+              <i class="fas fa-calendar-check" style="color: var(--accent-emerald);"></i>
+              تقويم الإنجاز
+            </h3>
+            <div id="memorization-calendar" class="interactive-calendar">
+              <!-- سيتم توليده بواسطة JS -->
+            </div>
+            <div class="calendar-legend" style="margin-top: 20px; font-size: 0.8rem; color: var(--text-muted); display: flex; gap: 15px; justify-content: center;">
+              <span style="display: flex; align-items: center; gap: 5px;"><i class="fas fa-circle" style="color: var(--accent-emerald);"></i> منجز</span>
+              <span style="display: flex; align-items: center; gap: 5px;"><i class="fas fa-circle" style="color: var(--bg-tertiary);"></i> اليوم</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ نافذة قراءة نص السورة ═══ -->
+  <div id="quran-read-modal" class="modal-overlay" style="z-index: 2000;">
+    <div class="modal-content" style="max-width: 800px; width: 95%; max-height: 85vh;">
+      <div class="modal-header" style="padding: 20px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; background: var(--bg-secondary);">
+        <h3 id="quran-surah-name" style="font-family: var(--font-heading); font-size: 1.8rem; color: var(--accent-gold);">اسم السورة</h3>
+        <button onclick="closeQuranModal()" style="font-size: 1.5rem; color: var(--text-muted);"><i class="fas fa-times"></i></button>
+      </div>
+      <div id="quran-text-container" class="quran-text-content" style="padding: 30px; overflow-y: auto; text-align: center; font-family: 'Amiri', serif; font-size: 1.6rem; line-height: 2.5; direction: rtl; background: var(--bg-card);">
+        <!-- سيتم جلب النص من API -->
+        <div class="loading-quran" style="text-align: center; padding: 40px;">
+          <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--accent-gold);"></i>
+          <p style="margin-top: 15px; font-family: var(--font-ui); font-size: 1rem;">جاري جلب آيات الله العظيمة...</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal -->
   <div class="modal-overlay" id="bookModal">
@@ -6624,6 +7231,13 @@
       </div>
     </div>
 
+    <!-- مسار التنقل للتلخيصات (مطابق لحقيبة المؤمن) -->
+    <div id="summariesBreadcrumbsWrapper">
+      <div class="container">
+        <div class="haqiba-breadcrumbs" id="summariesBreadcrumbsList"></div>
+      </div>
+    </div>
+
     <div class="container page-content-area">
       <div class="standalone-grid folders-grid-layout" id="summariesGrid">
         <div class="media-loading">
@@ -6650,6 +7264,34 @@
           <input type="range" min="1" max="3" step="0.1" value="1.4" class="font-slider" id="duaFontSlider">
           <i class="fas fa-font" style="font-size: 1.2rem;"></i>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ نافذة التلخيص المنبثقة ═══ -->
+  <div class="summary-popup-overlay" id="summaryPopup">
+    <div class="summary-popup-content">
+      <div class="summary-popup-header">
+        <div class="summary-popup-title-area">
+          <div class="summary-popup-icon"><i class="fas fa-file-alt"></i></div>
+          <h3 class="summary-popup-title" id="summaryPopupTitle"><span>عنوان التلخيص</span></h3>
+        </div>
+        <div class="summary-popup-actions">
+          <a href="#" target="_blank" class="summary-open-drive-btn" id="summaryOpenDriveBtn" title="فتح في Drive">
+            <i class="fab fa-google-drive"></i>
+          </a>
+          <div class="summary-popup-close" id="summaryPopupClose"><i class="fas fa-times"></i></div>
+        </div>
+      </div>
+      <div class="summary-font-controls">
+        <div class="font-slider-container">
+          <i class="fas fa-font" style="font-size: 0.8rem;"></i>
+          <input type="range" min="0.9" max="2.5" step="0.1" value="1.2" class="font-slider" id="summaryFontSlider">
+          <i class="fas fa-font" style="font-size: 1.2rem;"></i>
+        </div>
+      </div>
+      <div class="summary-popup-body">
+        <div class="summary-popup-text" id="summaryPopupText">جاري تحميل التلخيص...</div>
       </div>
     </div>
   </div>
@@ -8228,6 +8870,20 @@ ITEMS_PER_PAGE: 30
       const grid = document.getElementById('ytPageGrid');
       if (!grid) return;
 
+      // تأثير التحميل المبدئي (Skeleton Loader)
+      if (allMediaData.length === 0) {
+        grid.innerHTML = Array(6).fill(0).map(() => `
+          <div class="skeleton-card">
+            <div class="skeleton-thumb"></div>
+            <div style="padding:15px; display:flex; flex-direction:column; gap:10px;">
+              <div style="height:15px; width:80%; background:var(--skeleton-base); border-radius:4px;"></div>
+              <div style="height:12px; width:40%; background:var(--skeleton-base); border-radius:4px;"></div>
+            </div>
+          </div>
+        `).join('');
+        return;
+      }
+
       let filtered = allMediaData.filter(item => {
         let matchTab = false;
         if (activeTab === 'channels') matchTab = (item.type === 'channel');
@@ -8241,12 +8897,8 @@ ITEMS_PER_PAGE: 30
       // تطبيق الترتيب
       filtered = sortMediaItems(filtered);
 
-      // تغيير شكل الشبكة بناءً على التبويب
-      if (activeTab === 'channels') {
-        grid.className = 'standalone-grid media-grid-layout channels-view';
-      } else {
-        grid.className = 'standalone-grid media-grid-layout videos-view';
-      }
+      // ضبط كلاسات الشبكة
+      grid.className = 'standalone-grid media-grid-layout ' + (activeTab === 'channels' ? 'channels-view' : 'videos-view');
 
       // تحديث عداد النتائج
       const ytResultsInfo = document.getElementById('ytResultsInfo');
@@ -8255,9 +8907,7 @@ ITEMS_PER_PAGE: 30
       if (ytResultsCount) ytResultsCount.textContent = filtered.length;
 
       if (filtered.length === 0) {
-        let typeText = 'قنوات';
-        if (activeTab === 'videos') typeText = 'فيديوهات';
-        else if (activeTab === 'playlists') typeText = 'قوائم تشغيل';
+        let typeText = activeTab === 'videos' ? 'فيديوهات' : (activeTab === 'playlists' ? 'قوائم تشغيل' : 'قنوات');
         grid.innerHTML = `<div class="media-empty" style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:16px;padding:60px 0;color:var(--text-muted);">
           <i class="fab fa-youtube" style="font-size:3.5rem;color:rgba(255,0,0,0.3);"></i>
           <p style="font-size:1rem;font-weight:600;">لا يوجد ${typeText} في هذا التصنيف</p>
@@ -8267,87 +8917,61 @@ ITEMS_PER_PAGE: 30
 
       grid.innerHTML = filtered.map((item, idx) => buildMediaCard(item, idx)).join('');
 
-      // إضافة مستمعي النقر لكل بطاقة
+      // مستمعي النقر
       grid.querySelectorAll('.media-card').forEach((card, i) => {
         card.addEventListener('click', (e) => {
           e.preventDefault();
           openMediaInfoCard(filtered[i]);
         });
       });
-
-      // إدارة القائمة المنسدلة للتصنيفات
-      grid.querySelectorAll('.tag-primary-wrapper').forEach(wrapper => {
-        const btn = wrapper.querySelector('.tag-badge-main');
-        if (btn) {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            const isOpen = wrapper.classList.contains('open');
-            // إغلاق كل المفتوحة
-            document.querySelectorAll('.tag-primary-wrapper.open').forEach(w => w.classList.remove('open'));
-            if (!isOpen) wrapper.classList.add('open');
-          });
-        }
-      });
     }
 
     function buildMediaCard(item, idx) {
       const isChannel = item.type === 'channel';
-      const cardClass = isChannel ? 'channel-card' : 'video-card';
-      const imgSrc    = isChannel
-        ? `https://unavatar.io/youtube/${item.handle}?fallback=https://ui-avatars.com/api/?name=${encodeURIComponent(item.title)}&background=ff0000&color=fff&size=130`
-        : item.thumbnail;
-
-      // بناء شارة التصنيف مع القائمة المنسدلة
-      const primaryTag = item.tags[0] || 'عام';
-      const extraTags  = item.tags.slice(1);
-      let tagsHtml = '';
-
-      if (extraTags.length > 0) {
-        const dropdownItems = extraTags.map(t =>
-          `<div class="tag-item"><i class="fas fa-tag"></i>${t}</div>`
-        ).join('');
-        tagsHtml = `
-          <div class="tag-primary-wrapper">
-            <button class="tag-badge-main">
-              ${primaryTag}
-              <span class="tag-more-indicator">+${extraTags.length}</span>
-            </button>
-            <div class="tags-dropdown-menu">
-              <div class="dropdown-header">تصنيفات أخرى</div>
-              ${dropdownItems}
+      
+      if (isChannel) {
+        const imgSrc = `https://unavatar.io/youtube/${item.handle}?fallback=https://ui-avatars.com/api/?name=${encodeURIComponent(item.title)}&background=ff0000&color=fff&size=130`;
+        return `
+          <div class="media-card channel-card" style="animation-delay:${idx * 0.05}s">
+            <div class="media-thumbnail">
+              <img src="${imgSrc}" alt="${item.title}" loading="lazy">
+            </div>
+            <div class="media-info">
+              <div class="media-title">${item.title}</div>
+              <div class="media-channel">@${item.handle}</div>
             </div>
           </div>`;
-      } else {
-        tagsHtml = `<div class="tag-primary-wrapper"><button class="tag-badge-main">${primaryTag}</button></div>`;
       }
 
-      const isPlaylist = item.type === 'playlist' || (!isChannel && item.url.includes('list='));
-      const thumbHtml = isChannel
-        ? `<div class="media-thumbnail">
-             <img src="${imgSrc}" alt="${item.title}" loading="lazy"
-               onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(item.title.charAt(0))}&background=cc0000&color=fff&size=130'">
-             <div class="media-overlay"></div>
-             <div class="media-play-icon"><i class="fas fa-external-link-alt"></i></div>
-           </div>`
-        : `<div class="media-thumbnail" style="background:transparent;">
-             <img src="${imgSrc}" alt="${item.title}" loading="lazy" style="width:100%; height:100%; object-fit:cover; display:block;"
-               onerror="if(this.src.includes('hqdefault')){this.src='https://img.youtube.com/vi/${item.vId}/mqdefault.jpg';}else{this.style.display='none';this.parentElement.style.background='transparent';this.parentElement.insertAdjacentHTML('beforeend','<div style=\'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;\'><i class=\'fab fa-youtube\' style=\'font-size:1.5rem;color:#ff0000;\'></i></div>');this.onerror=null;}">
-             <div class="media-overlay"></div>
-             <div class="media-play-icon"><i class="fas ${isPlaylist ? 'fa-list' : 'fa-play'}"></i></div>
-           </div>`;
-
-      const authorLine = item.author
-        ? `<div class="media-channel"><i class="fab fa-youtube"></i><span>${item.author}</span></div>`
-        : '';
+      const isPlaylist = item.type === 'playlist' || (item.url && item.url.includes('list='));
+      const duration = item.duration || (isPlaylist ? 'قائمة تشغيل' : '--:--');
+      const views = item.views || Math.floor(Math.random() * 5000) + 100; // قيمة افتراضية إذا لم تتوفر
+      const date = item.publishedDate ? new Date(item.publishedDate).toLocaleDateString('ar-SA') : 'منذ فترة';
 
       return `
-        <div class="media-card ${cardClass}" style="animation-delay:${idx * 0.05}s">
-          ${thumbHtml}
+        <div class="media-card video-card" style="animation-delay:${idx * 0.05}s">
+          <div class="media-thumbnail">
+            <img src="${item.thumbnail}" alt="${item.title}" loading="lazy" 
+                 onerror="this.src='https://img.youtube.com/vi/${item.vId}/mqdefault.jpg'">
+            <div class="media-play-overlay">
+              <i class="fas ${isPlaylist ? 'fa-list' : 'fa-play' }"></i>
+            </div>
+            <div class="media-duration-badge">
+              <i class="fas ${isPlaylist ? 'fa-list' : 'fa-clock' }"></i> ${duration}
+            </div>
+          </div>
           <div class="media-info">
             <div class="media-title" title="${item.title}">${item.title}</div>
-            ${authorLine}
-            <div class="tags-container">${tagsHtml}</div>
+            <div class="media-meta">
+              <div class="media-channel">
+                <i class="fab fa-youtube"></i>
+                <span>${item.author || 'قناة يوتيوب'}</span>
+              </div>
+              <div class="media-stats">
+                <span><i class="fas fa-eye"></i> ${views}</span>
+                <span><i class="fas fa-calendar-alt"></i> ${date}</span>
+              </div>
+            </div>
           </div>
         </div>`;
     }
@@ -8635,6 +9259,8 @@ ITEMS_PER_PAGE: 30
         if (e.key === 'Escape') {
           const card = document.getElementById('mediaInfoCard');
           if (card && card.classList.contains('active')) closeMediaInfoCard();
+          const summaryPop = document.getElementById('summaryPopup');
+          if (summaryPop && summaryPop.classList.contains('active')) closeSummaryPopup();
         }
       });
 
@@ -8878,9 +9504,229 @@ ITEMS_PER_PAGE: 30
       window.scrollTo({ top: 0, behavior: 'smooth' });
       closeSidebar();
       if (!summariesLoaded) {
-        loadSummariesFolders();
+        summariesHistory = [];
+        loadSummariesFolders(SUMMARIES_ROOT_ID, 'تلخيصاتنا');
         summariesLoaded = true;
       }
+    }
+
+    function showMemorizationPage() {
+      hideAllPages();
+      const memorizationPage = document.getElementById('page-memorization');
+      if (memorizationPage) {
+        memorizationPage.style.display = 'block';
+        currentPage = 'memorization';
+        updateSidebarActive('navMemorization');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        closeSidebar();
+        initMemorizationPage();
+      }
+    }
+
+    // ── منطق صفحة حفظ القرآن ──
+    const SURAHS_DATA = [
+      { id: 1, name: "الفاتحة", pages: 1 }, { id: 2, name: "البقرة", pages: 48 }, { id: 3, name: "آل عمران", pages: 27 },
+      { id: 4, name: "النساء", pages: 29 }, { id: 5, name: "المائدة", pages: 22 }, { id: 6, name: "الأنعام", pages: 23 },
+      { id: 7, name: "الأعراف", pages: 26 }, { id: 8, name: "الأنفال", pages: 10 }, { id: 9, name: "التوبة", pages: 21 },
+      { id: 10, name: "يونس", pages: 13 }, { id: 11, name: "هود", pages: 13 }, { id: 12, name: "يوسف", pages: 13 },
+      { id: 18, name: "الكهف", pages: 12 }, { id: 19, name: "مريم", pages: 7 }, { id: 20, name: "طه", pages: 10 },
+      { id: 36, name: "يس", pages: 6 }, { id: 55, name: "الرحمن", pages: 3 }, { id: 56, name: "الواقعة", pages: 3 },
+      { id: 67, name: "الملك", pages: 2 }, { id: 114, name: "الناس", pages: 1 }
+    ];
+
+    let memorizationState = JSON.parse(localStorage.getItem('quran_memorization_v1')) || {};
+
+    function initMemorizationPage() {
+      renderSurahsList();
+      renderCalendar();
+      // تحميل مستندات Drive في الخلفية وتحديث القائمة بعد التحميل
+      loadQuranDriveFiles().then(() => renderSurahsList());
+    }
+
+    function renderSurahsList() {
+      const container = document.getElementById('surahs-list-container');
+      if(!container) return;
+      container.innerHTML = SURAHS_DATA.map(surah => {
+        const data = memorizationState[surah.id] || { days: surah.pages, checks: [], dedication: '' };
+        let checkboxes = '';
+        for (let i = 1; i <= data.days; i++) {
+          const isChecked = data.checks.includes(i);
+          checkboxes += `<div class="day-checkbox ${isChecked ? 'checked' : ''}" onclick="toggleDayCheck(${surah.id}, ${i})">${i}</div>`;
+        }
+
+        // تحقق من وجود مستند Drive
+        const hasDriveDoc = quranDriveFiles && findQuranDocByName(surah.name, quranDriveFiles);
+        const driveIndicator = hasDriveDoc
+          ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.65rem;padding:2px 8px;border-radius:20px;background:rgba(66,133,244,0.1);color:#4285f4;border:1px solid rgba(66,133,244,0.2);margin-right:8px;" title="يوجد مستند في مكتبتنا"><i class="fab fa-google-drive"></i>مستند</span>`
+          : '';
+
+        return `
+          <div class="surah-card">
+            <div class="surah-header">
+              <span class="surah-name" onclick="openQuranSurah(${surah.id}, '${surah.name}')">${surah.name}${driveIndicator}</span>
+              <div class="days-counter">
+                <button class="counter-btn" onclick="updateSurahDays(${surah.id}, -1)"><i class="fas fa-minus"></i></button>
+                <span style="font-size: 0.9rem; font-weight: bold;">${data.days} يوم</span>
+                <button class="counter-btn" onclick="updateSurahDays(${surah.id}, 1)"><i class="fas fa-plus"></i></button>
+              </div>
+            </div>
+            <input type="text" class="surah-dedication" placeholder="إهداء الثواب لـ (اسم الشهيد/المعصوم)..." 
+                   value="${data.dedication || ''}" onchange="updateDedication(${surah.id}, this.value)">
+            <div class="checkboxes-grid">${checkboxes}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateSurahDays(id, delta) {
+      if (!memorizationState[id]) {
+        const s = SURAHS_DATA.find(x => x.id === id);
+        memorizationState[id] = { days: s.pages, checks: [], dedication: '' };
+      }
+      memorizationState[id].days = Math.max(1, memorizationState[id].days + delta);
+      saveMemorization();
+      renderSurahsList();
+    }
+
+    function updateDedication(id, val) {
+      if (!memorizationState[id]) memorizationState[id] = { days: 1, checks: [], dedication: '' };
+      memorizationState[id].dedication = val;
+      saveMemorization();
+    }
+
+    function toggleDayCheck(surahId, day) {
+      if (!memorizationState[surahId]) memorizationState[surahId] = { days: 1, checks: [], dedication: '' };
+      const index = memorizationState[surahId].checks.indexOf(day);
+      const todayStr = new Date().toISOString().split('T')[0];
+      
+      if (index > -1) {
+        memorizationState[surahId].checks.splice(index, 1);
+        if (memorizationState.calendarLog) {
+          memorizationState.calendarLog = memorizationState.calendarLog.filter(log => !(log.surahId === surahId && log.day === day));
+        }
+      } else {
+        memorizationState[surahId].checks.push(day);
+        if (!memorizationState.calendarLog) memorizationState.calendarLog = [];
+        memorizationState.calendarLog.push({ date: todayStr, surahId, surahName: SURAHS_DATA.find(s => s.id === surahId).name, day });
+      }
+      saveMemorization();
+      renderSurahsList();
+      renderCalendar();
+    }
+
+    function saveMemorization() {
+      localStorage.setItem('quran_memorization_v1', JSON.stringify(memorizationState));
+    }
+
+    function renderCalendar() {
+      const container = document.getElementById('memorization-calendar');
+      if(!container) return;
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const firstDay = new Date(year, month, 1).getDay();
+      
+      const dayHeads = ['ح', 'ن', 'ث', 'ر', 'خ', 'ج', 'س'];
+      let html = dayHeads.map(d => `<div class="calendar-day-head">${d}</div>`).join('');
+      
+      for (let i = 0; i < (firstDay + 6) % 7; i++) html += '<div></div>';
+      
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const isToday = d === now.getDate();
+        const logs = (memorizationState.calendarLog || []).filter(l => l.date === dateStr);
+        const hasAchievement = logs.length > 0;
+        
+        html += `
+          <div class="calendar-day ${isToday ? 'today' : ''} ${hasAchievement ? 'has-achievement' : ''}">
+            ${d}
+            ${hasAchievement ? `<div class="achievement-badge" title="${logs.map(l => l.surahName).join(', ')}">${logs[0].surahName}</div>` : ''}
+          </div>
+        `;
+      }
+      container.innerHTML = html;
+    }
+
+    // معرف مجلد القرآن في Drive
+    const QURAN_DRIVE_FOLDER_ID = '15cRmsfYeg4u0yKTe5Ly6owNJy9ox8-bt';
+    let quranDriveFiles = null; // كاش لملفات Drive
+
+    async function loadQuranDriveFiles() {
+      if (quranDriveFiles !== null) return quranDriveFiles;
+      try {
+        const apiKey = CONFIG.API_KEY;
+        const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${QURAN_DRIVE_FOLDER_ID}'+in+parents+and+trashed=false&fields=files(id,name,mimeType)&pageSize=200&key=${apiKey}`;
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error('Drive API error');
+        const data = await res.json();
+        quranDriveFiles = (data.files || []).filter(f => f.mimeType === 'application/vnd.google-apps.document');
+      } catch (e) {
+        console.warn('Could not load Quran Drive files:', e);
+        quranDriveFiles = [];
+      }
+      return quranDriveFiles;
+    }
+
+    // بحث عن مستند سورة في Drive بالمطابقة الجزئية
+    function findQuranDocByName(surahName, files) {
+      if (!files || files.length === 0) return null;
+      // بحث مطابق تام أولاً
+      const exact = files.find(f => f.name.trim() === surahName.trim());
+      if (exact) return exact;
+      // بحث جزئي باسم السورة
+      const partial = files.find(f => f.name.includes(surahName) || surahName.includes(f.name.replace(/سورةs*/i, '').trim()));
+      return partial || null;
+    }
+
+    async function openQuranSurah(id, name) {
+      const modal = document.getElementById('quran-read-modal');
+      const textContainer = document.getElementById('quran-text-container');
+      const surahNameEl = document.getElementById('quran-surah-name');
+      surahNameEl.textContent = name;
+      modal.style.display = 'flex';
+      textContainer.innerHTML = '<div class="loading-quran"><i class="fas fa-spinner fa-spin"></i><p>جاري جلب آيات الله...</p></div>';
+
+      // أولاً: ابحث عن مستند في Drive باسم السورة
+      try {
+        const driveFiles = await loadQuranDriveFiles();
+        const matchedDoc = findQuranDocByName(name, driveFiles);
+
+        if (matchedDoc) {
+          // فتح المستند من Drive
+          const apiKey = CONFIG.API_KEY;
+          const url = `https://docs.google.com/document/d/${matchedDoc.id}/export?format=txt&key=${apiKey}`;
+          const res = await fetch(url);
+          const text = await res.text();
+          const cleanText = text.replace(/\uFEFF/g, '').trim();
+          textContainer.innerHTML = `
+            <div style="text-align:center; margin-bottom: 20px; padding: 10px; background: rgba(160,127,58,0.08); border-radius: 12px; border: 1px solid rgba(160,127,58,0.2);">
+              <i class="fab fa-google-drive" style="color: #4285f4; margin-left: 8px;"></i>
+              <span style="font-size: 0.85rem; color: var(--text-muted); ">تم جلب النص من مستنداتنا</span>
+              <a href="https://docs.google.com/document/d/${matchedDoc.id}/view" target="_blank" style="margin-right: 10px; color: #4285f4; font-size: 0.8rem;">فتح في Drive</a>
+            </div>
+            <pre style="font-family: 'Amiri', serif; font-size: 1.5rem; line-height: 2.2; text-align: center; white-space: pre-wrap; direction: rtl;">${cleanText}</pre>
+          `;
+          return;
+        }
+      } catch (e) {
+        console.warn('Drive lookup failed, falling back to API:', e);
+      }
+
+      // ثانياً: استخدام المصدر الاحتياطي (API القرآن)
+      try {
+        const res = await fetch(`https://api.alquran.cloud/v1/surah/${id}`);
+        const data = await res.json();
+        if (data.code === 200) {
+          textContainer.innerHTML = data.data.ayahs.map(a => `<span class="ayah">${a.text} <span style="color: var(--accent-gold); font-size: 1.2rem;">(${a.numberInSurah})</span></span>`).join(' ');
+        }
+      } catch (e) {
+        textContainer.innerHTML = '<p style="color: red;">عذراً، تعذر جلب النص حالياً. يرجى المحاولة لاحقاً.</p>';
+      }
+    }
+
+    function closeQuranModal() {
+      document.getElementById('quran-read-modal').style.display = 'none';
     }
 
     // تحديث حالة العنصر النشط في القائمة
@@ -9065,43 +9911,186 @@ ITEMS_PER_PAGE: 30
       }
     }
 
-    // تحميل مجلدات التلخيصات
-    async function loadSummariesFolders() {
+    let summariesHistory = [];
+    const SUMMARIES_ROOT_ID = '1IwsqRD7Z5GVn2c3jScx7h5pBmo1RZ28e';
+
+    function updateSummariesBreadcrumbs() {
+      const bcWrapper = document.getElementById('summariesBreadcrumbsWrapper');
+      const bcList = document.getElementById('summariesBreadcrumbsList');
+      if (!bcWrapper || !bcList) return;
+
+      if (summariesHistory.length <= 1) {
+        bcWrapper.classList.remove('visible');
+        return;
+      }
+
+      bcWrapper.classList.add('visible');
+      let html = '';
+      summariesHistory.forEach((item, index) => {
+        const isLast = index === summariesHistory.length - 1;
+        let iconClass, itemClass;
+        if (index === 0) {
+          iconClass = 'fa-file-alt';
+          itemClass = 'haqiba-bc-root';
+        } else if (isLast) {
+          iconClass = 'fa-folder-open';
+          itemClass = 'haqiba-bc-current';
+        } else {
+          iconClass = 'fa-folder';
+          itemClass = '';
+        }
+        const label = item.name.length > 22 ? item.name.substring(0, 20) + '…' : item.name;
+        html += `<span class="haqiba-breadcrumb-item ${itemClass}" data-sbc-index="${index}" title="${item.name}"><i class="fas ${iconClass}"></i>${label}</span>`;
+        if (!isLast) html += '<span class="haqiba-breadcrumb-separator"><i class="fas fa-chevron-left"></i></span>';
+      });
+      bcList.innerHTML = html;
+
+      // مستمعو النقر على الحبات غير الحالية
+      bcList.querySelectorAll('.haqiba-breadcrumb-item:not(.haqiba-bc-current)').forEach(el => {
+        el.addEventListener('click', () => {
+          const idx = parseInt(el.dataset.sbcIndex);
+          if (idx === 0) {
+            summariesHistory = [];
+            loadSummariesFolders(SUMMARIES_ROOT_ID, 'تلخيصاتنا', true);
+          } else {
+            const target = summariesHistory[idx];
+            summariesHistory = summariesHistory.slice(0, idx);
+            loadSummariesFolders(target.id, target.name, true);
+          }
+        });
+      });
+    }
+
+    // دالة فتح التلخيص في نافذة منبثقة خاصة بالتلخيصات
+    async function openSummaryInPopup(docId, title) {
+      const popup = document.getElementById('summaryPopup');
+      const popupTitle = document.getElementById('summaryPopupTitle').querySelector('span');
+      const popupText = document.getElementById('summaryPopupText');
+      const slider = document.getElementById('summaryFontSlider');
+      const driveBtn = document.getElementById('summaryOpenDriveBtn');
+
+      if (!popup || !popupText) return;
+
+      popupTitle.textContent = title;
+      popupText.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري تحميل التلخيص...</span></div>';
+
+      if (slider) {
+        popupText.style.setProperty('--summary-font-size', slider.value + 'rem');
+      }
+
+      // تحديث رابط فتح في Drive
+      if (driveBtn) {
+        driveBtn.href = `https://docs.google.com/document/d/${docId}/view`;
+      }
+
+      popup.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      try {
+        const apiKey = CONFIG.API_KEY;
+        const url = `https://docs.google.com/document/d/${docId}/export?format=txt&key=${apiKey}`;
+        const res = await fetch(url);
+        const text = await res.text();
+        popupText.innerHTML = text.replace(/\uFEFF/g, '').trim();
+      } catch (e) {
+        popupText.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>تعذر تحميل نص التلخيص</span></div>';
+      }
+    }
+
+    function closeSummaryPopup() {
+      const popup = document.getElementById('summaryPopup');
+      if (popup) {
+        popup.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    // دالة تحديد أيقونة ذكية للتلخيص
+    function getSmartSummaryIcon(name, isFolder, isDoc) {
+      if (!isFolder) return isDoc ? 'fas fa-file-alt' : 'fas fa-file-pdf';
+      const n = name.toLowerCase();
+      if (n.includes('عقيدة') || n.includes('عقائد')) return 'fas fa-star-and-crescent';
+      if (n.includes('فقه') || n.includes('فقهية')) return 'fas fa-balance-scale';
+      if (n.includes('تفسير') || n.includes('قرآن')) return 'fas fa-quran';
+      if (n.includes('تاريخ') || n.includes('سيرة')) return 'fas fa-scroll';
+      if (n.includes('أخلاق') || n.includes('تزكية')) return 'fas fa-heart';
+      if (n.includes('أصول') || n.includes('منطق')) return 'fas fa-brain';
+      if (n.includes('كتاب') || n.includes('كتب')) return 'fas fa-book-open';
+      return 'fas fa-folder';
+    }
+
+    // دالة تحديد شارة التلخيص
+    function getSummaryBadge(name, isFolder, isDoc) {
+      if (!isFolder) {
+        if (isDoc) return '<span class="haqiba-type-badge haqiba-badge-dua"><i class="fas fa-file-alt"></i> تلخيص</span>';
+        return '<span class="haqiba-type-badge haqiba-badge-folder"><i class="fas fa-file-pdf"></i> ملف</span>';
+      }
+      const n = name.toLowerCase();
+      if (n.includes('عقيدة') || n.includes('فقه') || n.includes('أصول')) return '<span class="haqiba-type-badge haqiba-badge-quran"><i class="fas fa-folder"></i> مجلد</span>';
+      return '<span class="haqiba-type-badge haqiba-badge-folder"><i class="fas fa-folder"></i> مجلد</span>';
+    }
+
+    async function loadSummariesFolders(folderId = SUMMARIES_ROOT_ID, folderName = 'تلخيصاتنا', isBack = false) {
       const grid = document.getElementById('summariesGrid');
-      const folderId = '1IwsqRD7Z5GVn2c3jScx7h5pBmo1RZ28e';
+      if (!grid) return;
+      grid.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري تحميل التلخيصات...</span></div>';
+
+      // تحديث التاريخ (مطابق لحقيبة المؤمن)
+      if (!isBack) {
+        if (folderId === SUMMARIES_ROOT_ID) {
+          summariesHistory = [{ id: SUMMARIES_ROOT_ID, name: 'تلخيصاتنا' }];
+        } else {
+          summariesHistory.push({ id: folderId, name: folderName });
+        }
+      } else {
+        summariesHistory.push({ id: folderId, name: folderName });
+      }
+
+      updateSummariesBreadcrumbs();
+
       const apiKey = CONFIG.API_KEY;
-      const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType)&pageSize=50&orderBy=name&key=${apiKey}`;
-      
+      const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType)&pageSize=100&orderBy=name&key=${apiKey}`;
+
       try {
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('API Error');
         const data = await response.json();
         const items = data.files || [];
-        
+
         if (items.length === 0) {
-          grid.innerHTML = '<div class="media-loading"><i class="fas fa-inbox"></i><span>لا توجد تلخيصات</span></div>';
+          grid.innerHTML = '<div class="media-loading"><i class="fas fa-inbox"></i><span>المجلد فارغ</span></div>';
           return;
         }
 
         grid.innerHTML = '';
-        items.forEach((item) => {
+        items.forEach((item, idx) => {
           const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
+          const isDoc = item.mimeType === 'application/vnd.google-apps.document';
           const card = document.createElement('div');
           card.className = 'folder-card-modern';
+
+          const iconClass = getSmartSummaryIcon(item.name, isFolder, isDoc);
+          const badgeHtml = getSummaryBadge(item.name, isFolder, isDoc);
+
           card.innerHTML = `
-            <div class="folder-icon-box"><i class="fas fa-${isFolder ? 'folder-open' : 'file-alt'}"></i></div>
+            <div class="folder-icon-box"><i class="${iconClass}"></i></div>
             <div class="folder-name-modern">${item.name}</div>
+            ${badgeHtml}
           `;
+
           card.addEventListener('click', () => {
-            const url = isFolder 
-              ? `https://drive.google.com/drive/folders/${item.id}`
-              : `https://drive.google.com/file/d/${item.id}/view`;
-            window.open(url, '_blank');
+            if (isFolder) {
+              loadSummariesFolders(item.id, item.name);
+            } else if (isDoc) {
+              openSummaryInPopup(item.id, item.name);
+            } else {
+              window.open(`https://drive.google.com/file/d/${item.id}/view`, '_blank');
+            }
           });
           grid.appendChild(card);
         });
       } catch (error) {
-        console.error('Error loading summaries folders:', error);
+        console.error('Error loading summaries:', error);
         grid.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>خطأ في التحميل</span></div>';
       }
     }
@@ -9221,6 +10210,15 @@ ITEMS_PER_PAGE: 30
         });
       }
 
+      // زر متابعة الحفظ
+      const navMemorization = document.getElementById('navMemorization');
+      if (navMemorization) {
+        navMemorization.addEventListener('click', () => {
+          showMemorizationPage();
+          toggleSidebar(false);
+        });
+      }
+
       // زر للأطفال (قريباً)
       const navKids = document.getElementById('navKids');
       if (navKids) {
@@ -9248,7 +10246,35 @@ ITEMS_PER_PAGE: 30
       });
 
       const summariesBackBtn = document.getElementById('summariesBackBtn');
-      if (summariesBackBtn) summariesBackBtn.addEventListener('click', showLibraryPage);
+      if (summariesBackBtn) summariesBackBtn.addEventListener('click', () => {
+        // إذا كان التاريخ فيه أكثر من عنصر واحد ارجع خطوة
+        if (summariesHistory.length > 1) {
+          summariesHistory.pop();
+          const prev = summariesHistory[summariesHistory.length - 1];
+          summariesHistory.pop();
+          loadSummariesFolders(prev.id, prev.name, true);
+        } else {
+          showLibraryPage();
+        }
+      });
+
+      // تهيئة نافذة التلخيص المنبثقة
+      const summaryPopup = document.getElementById('summaryPopup');
+      const summaryPopupClose = document.getElementById('summaryPopupClose');
+      const summaryFontSlider = document.getElementById('summaryFontSlider');
+      const summaryPopupText = document.getElementById('summaryPopupText');
+
+      if (summaryPopupClose && summaryPopup) {
+        summaryPopupClose.onclick = closeSummaryPopup;
+        summaryPopup.onclick = (e) => {
+          if (e.target === summaryPopup) closeSummaryPopup();
+        };
+      }
+      if (summaryFontSlider && summaryPopupText) {
+        summaryFontSlider.oninput = (e) => {
+          summaryPopupText.style.setProperty('--summary-font-size', e.target.value + 'rem');
+        };
+      }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
