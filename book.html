@@ -3960,10 +3960,20 @@
     .duas-card.active {
       height: 600px; /* الارتفاع عند التوسع */
       grid-column: 1 / -1; /* التوسع ليصبح مستطيلاً بعرض الشبكة بالكامل */
-      z-index: 10;
+      z-index: 999; /* قيمة عالية لضمان الظهور فوق العناصر الأخرى */
       transform: scale(1.01);
       box-shadow: var(--shadow-lg);
       border-color: var(--accent-gold);
+      position: relative;
+    }
+
+    /* إصلاح التداخل مع الهيدر الثابت */
+    .duas-card.active .duas-card-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     .duas-card-header {
@@ -4120,6 +4130,55 @@
       padding: 40px 24px;
       text-align: center;
       color: var(--text-secondary);
+    }
+
+    /* ── أزرار التنقل (Pagination) ── */
+    .duas-pagination {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 30px;
+      padding: 20px 0;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .duas-page-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--accent-gold);
+      border-radius: var(--radius-md);
+      color: var(--accent-gold);
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .duas-page-btn:hover:not(:disabled) {
+      background: var(--accent-gold);
+      color: white;
+      box-shadow: 0 4px 12px rgba(160, 127, 58, 0.2);
+    }
+
+    .duas-page-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      border-color: var(--text-muted);
+      color: var(--text-muted);
+    }
+
+    .duas-page-info {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      background: var(--bg-tertiary);
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
     }
 
     @media (max-width: 768px) {
@@ -6580,6 +6639,10 @@ ITEMS_PER_PAGE: 30
       await loadMediaFromSheets();
     }
 
+    let allDuasData = [];
+    let currentDuaPage = 1;
+    const duasPerPage = 10;
+
     async function initDuasSection() {
       const grid = document.getElementById('duasGrid');
       const toggleBtn = document.getElementById('duasToggleBtn');
@@ -6587,15 +6650,22 @@ ITEMS_PER_PAGE: 30
       
       if (!toggleBtn) return;
 
-      // جعل القسم مغلقاً افتراضياً
       toggleBtn.classList.add('collapsed');
       content.classList.remove('expanded');
 
       toggleBtn.addEventListener('click', () => {
         const isExpanded = content.classList.toggle('expanded');
         toggleBtn.classList.toggle('collapsed', !isExpanded);
+        if (isExpanded && allDuasData.length === 0) {
+          fetchDuasData();
+        }
       });
+    }
 
+    async function fetchDuasData() {
+      const grid = document.getElementById('duasGrid');
+      grid.innerHTML = '<div class="duas-loading"><i class="fas fa-spinner fa-spin"></i> جاري جلب قائمة الأدعية...</div>';
+      
       try {
         const folderId = '1_06Vo6UthBtmHCY7KjpywaAZeDbYNIjV';
         const apiKey = CONFIG.API_KEY;
@@ -6606,84 +6676,105 @@ ITEMS_PER_PAGE: 30
         
         const data = await response.json();
         const files = data.files || [];
-        const docFiles = files.filter(f => f.mimeType === 'application/vnd.google-apps.document');
+        allDuasData = files.filter(f => f.mimeType === 'application/vnd.google-apps.document').map(f => ({
+          id: f.id,
+          title: f.name,
+          url: `https://docs.google.com/document/d/${f.id}/export?format=txt&key=${apiKey}`
+        }));
         
-        if (docFiles.length === 0) {
-          grid.innerHTML = '<div class="duas-error"><i class="fas fa-inbox"></i> لم يتم العثور على أدعية في المجلد</div>';
+        if (allDuasData.length === 0) {
+          grid.innerHTML = '<div class="duas-error"><i class="fas fa-inbox"></i> لم يتم العثور على أدعية</div>';
           return;
         }
 
-        grid.innerHTML = '';
-        
-        const fetchPromises = docFiles.map(async (file) => {
-          try {
-            const exportUrl = `https://docs.google.com/document/d/${file.id}/export?format=txt&key=${apiKey}`;
-            const textResponse = await fetch(exportUrl);
-            
-            if (textResponse.ok) {
-              const text = await textResponse.text();
-              const cleanText = text.replace(/\uFEFF/g, '').trim();
-              
-              return {
-                title: file.name,
-                content: cleanText
-              };
-            }
-          } catch (e) {
-            console.error(`Error fetching ${file.name}:`, e);
-          }
-          return null;
-        });
-
-        const results = await Promise.all(fetchPromises);
-        
-        results.forEach(result => {
-          if (result && result.content) {
-            const card = document.createElement('div');
-            card.className = 'duas-card';
-            card.innerHTML = `
-              <div class="duas-card-header">
-                <h3 class="duas-card-title"><i class="fas fa-scroll"></i> ${result.title}</h3>
-                <i class="fas fa-chevron-down duas-card-arrow"></i>
-              </div>
-              <div class="duas-card-body">
-                <div class="duas-card-text-wrapper">
-                  <div class="duas-card-text">${result.content}</div>
-                </div>
-                <div class="duas-card-decoration"><i class="fas fa-star"></i></div>
-              </div>
-            `;
-            
-            // إضافة وظيفة الفتح والإغلاق للبطاقة
-            card.querySelector('.duas-card-header').addEventListener('click', (e) => {
-              const isActive = card.classList.contains('active');
-              
-              // إغلاق أي بطاقة أخرى مفتوحة لضمان سلاسة العرض
-              grid.querySelectorAll('.duas-card.active').forEach(c => {
-                if(c !== card) c.classList.remove('active');
-              });
-              
-              card.classList.toggle('active');
-              
-              // تمرير سلس للبطاقة لتتوسط الشاشة عند الفتح
-              if (!isActive) {
-                setTimeout(() => {
-                  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 500);
-              }
-            });
-            
-            grid.appendChild(card);
-          }
-        });
-
-        if (grid.innerHTML === '') {
-          grid.innerHTML = '<div class="duas-error"><i class="fas fa-info-circle"></i> لم يتم جلب أي نصوص من المستندات</div>';
-        }
-
+        renderDuasPage(1);
       } catch (error) {
         console.error('Error loading duas:', error);
         grid.innerHTML = '<div class="duas-error"><i class="fas fa-exclamation-circle"></i> خطأ في الاتصال بمكتبة الأدعية</div>';
+      }
+    }
+
+    function renderDuasPage(page) {
+      const grid = document.getElementById('duasGrid');
+      grid.innerHTML = '';
+      currentDuaPage = page;
+      
+      const start = (page - 1) * duasPerPage;
+      const end = start + duasPerPage;
+      const paginatedItems = allDuasData.slice(start, end);
+      
+      paginatedItems.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'duas-card';
+        card.innerHTML = `
+          <div class="duas-card-header">
+            <h3 class="duas-card-title"><i class="fas fa-scroll"></i> ${item.title}</h3>
+            <i class="fas fa-chevron-down duas-card-arrow"></i>
+          </div>
+          <div class="duas-card-body">
+            <div class="duas-card-text-wrapper">
+              <div class="duas-card-text" data-loaded="false">اضغط للتحميل...</div>
+            </div>
+            <div class="duas-card-decoration"><i class="fas fa-star"></i></div>
+          </div>
+        `;
+        
+        card.querySelector('.duas-card-header').addEventListener('click', async () => {
+          const isActive = card.classList.contains('active');
+          const textContainer = card.querySelector('.duas-card-text');
+          
+          grid.querySelectorAll('.duas-card.active').forEach(c => { if(c !== card) c.classList.remove('active'); });
+          
+          if (!isActive) {
+            if (textContainer.getAttribute('data-loaded') !== 'true') {
+              textContainer.innerHTML = '<div class="duas-loading"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</div>';
+              try {
+                const res = await fetch(item.url);
+                const text = await res.text();
+                textContainer.innerHTML = text.replace(/\uFEFF/g, '').trim();
+                textContainer.setAttribute('data-loaded', 'true');
+              } catch (e) {
+                textContainer.innerHTML = '<div class="duas-error">تعذر التحميل</div>';
+              }
+            }
+            card.classList.add('active');
+            setTimeout(() => {
+              const offset = 100;
+              window.scrollTo({ top: card.getBoundingClientRect().top + window.pageYOffset - offset, behavior: 'smooth' });
+            }, 500);
+          } else {
+            card.classList.remove('active');
+          }
+        });
+        
+        grid.appendChild(card);
+      });
+
+      // إضافة أزرار التنقل
+      const totalPages = Math.ceil(allDuasData.length / duasPerPage);
+      if (totalPages > 1) {
+        const pagination = document.createElement('div');
+        pagination.className = 'duas-pagination';
+        pagination.innerHTML = `
+          <button class="duas-page-btn" id="prevDuaPage" ${page === 1 ? 'disabled' : ''}>
+            <i class="fas fa-chevron-right"></i> السابق
+          </button>
+          <div class="duas-page-info">صفحة ${page} من ${totalPages}</div>
+          <button class="duas-page-btn" id="nextDuaPage" ${page === totalPages ? 'disabled' : ''}>
+            التالي <i class="fas fa-chevron-left"></i>
+          </button>
+        `;
+        
+        pagination.querySelector('#prevDuaPage').onclick = () => {
+          renderDuasPage(page - 1);
+          grid.scrollIntoView({ behavior: 'smooth' });
+        };
+        pagination.querySelector('#nextDuaPage').onclick = () => {
+          renderDuasPage(page + 1);
+          grid.scrollIntoView({ behavior: 'smooth' });
+        };
+        
+        grid.appendChild(pagination);
       }
     }
 
