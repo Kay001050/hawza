@@ -2272,20 +2272,6 @@
       justify-content: flex-start;
     }
 
-    /* وضع العرض الأفقي (List View) للأقسام */
-    .categories-grid.list-view {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .categories-grid.list-view .category-chip {
-      width: 100%;
-      border-radius: var(--radius-sm);
-      justify-content: flex-start;
-      padding: 10px 16px;
-    }
-
     .category-chip {
       display: flex;
       align-items: center;
@@ -2300,8 +2286,6 @@
       transition: var(--transition-fast);
       cursor: pointer;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .category-chip:hover {
@@ -3795,32 +3779,12 @@
       .library-tab { padding: 10px 12px; min-width: auto; flex: 1; min-width: 80px; }
       .library-tab-name { font-size: 0.75rem; }
       
-      .categories-grid { 
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px; 
-      }
-      .categories-grid.list-view {
-        display: flex;
-        flex-direction: column;
-      }
-      .category-chip { 
-        padding: 8px 10px; 
-        font-size: 0.75rem; 
-        justify-content: center;
-        white-space: normal;
-        text-align: center;
-        height: 100%;
-      }
-      .categories-grid.list-view .category-chip {
-        justify-content: flex-start;
-        text-align: right;
-      }
+      .categories-grid { gap: 6px; }
+      .category-chip { padding: 6px 10px; font-size: 0.75rem; }
       
       .controls-container { flex-direction: column; align-items: stretch; }
       .controls-left { justify-content: center; }
-      /* .view-toggles { display: none; } */
-      .view-toggles { display: flex !important; }
+      .view-toggles { display: none; }
       
       .books-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -4064,9 +4028,7 @@
       transform: scale(1.01);
       box-shadow: var(--shadow-lg);
       border-color: var(--accent-gold);
-      position: sticky;
-      top: 80px;
-      bottom: 20px;
+      position: relative;
     }
 
     /* إصلاح التداخل مع الهيدر الثابت */
@@ -4677,7 +4639,24 @@
         </button>
       </div>
       
-      <!-- تم حذف قسم تحديث الأقسام -->
+      <div class="categories-progress-wrapper" id="categoriesProgressWrapper">
+        <div class="categories-progress-header">
+          <div class="categories-progress-title">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>جاري تحميل التصنيفات الفرعية...</span>
+          </div>
+          <div class="categories-progress-count">
+            <span id="progressLoaded">0</span> من <span id="progressTotal">0</span>
+          </div>
+        </div>
+        <div class="categories-progress-bar-wrapper">
+          <div class="categories-progress-bar" id="categoriesProgressBar"></div>
+        </div>
+        <div class="categories-progress-status">
+          <i class="fas fa-folder-open"></i>
+          <span>جاري تحميل: <span class="categories-progress-current" id="progressCurrentFolder">-</span></span>
+        </div>
+      </div>
       
       <div class="categories-panel" id="categoriesPanel">
         <div class="categories-grid" id="categoriesGrid"></div>
@@ -4696,6 +4675,14 @@
   <section class="controls-section">
     <div class="container controls-container">
       <div class="controls-left">
+        <div class="view-toggles">
+          <button class="view-btn active" data-view="grid" title="عرض شبكي">
+            <i class="fas fa-th-large"></i>
+          </button>
+          <button class="view-btn" data-view="list" title="عرض قائمة">
+            <i class="fas fa-list"></i>
+          </button>
+        </div>
         <div class="sort-wrapper">
           <span class="sort-label">الترتيب:</span>
           <select class="sort-select" id="sortSelect">
@@ -4704,27 +4691,6 @@
             <option value="newest">الأحدث</option>
             <option value="oldest">الأقدم</option>
           </select>
-        </div>
-        <!-- أزرار تبديل العرض (الكتب والأقسام) -->
-        <div class="view-toggles" style="display: flex !important; gap: 10px; margin-right: 10px;">
-          <div style="display: flex; gap: 4px; align-items: center;">
-            <span style="font-size: 0.7rem; color: var(--text-muted);">الكتب:</span>
-            <button class="view-btn active" data-view="grid" title="عرض الكتب شبكي">
-              <i class="fas fa-th-large"></i>
-            </button>
-            <button class="view-btn" data-view="list" title="عرض الكتب قائمة">
-              <i class="fas fa-list"></i>
-            </button>
-          </div>
-          <div style="display: flex; gap: 4px; align-items: center; border-right: 1px solid var(--border-subtle); padding-right: 10px;">
-            <span style="font-size: 0.7rem; color: var(--text-muted);">الأقسام:</span>
-            <button class="view-btn active" id="catGridViewBtn" title="عرض الأقسام شبكي">
-              <i class="fas fa-th-large"></i>
-            </button>
-            <button class="view-btn" id="catListViewBtn" title="عرض الأقسام قائمة">
-              <i class="fas fa-list"></i>
-            </button>
-          </div>
         </div>
       </div>
       <div class="results-info">
@@ -6803,34 +6769,12 @@ ITEMS_PER_PAGE: 30
     let currentDuaPage = 1;
     const duasPerPage = 10;
 
-    function initCategoryViewToggles() {
-      const gridBtn = document.getElementById('catGridViewBtn');
-      const listBtn = document.getElementById('catListViewBtn');
-      const grid = document.getElementById('categoriesGrid');
-      
-      if (!gridBtn || !listBtn || !grid) return;
-      
-      gridBtn.onclick = () => {
-        gridBtn.classList.add('active');
-        listBtn.classList.remove('active');
-        grid.classList.remove('list-view');
-      };
-      
-      listBtn.onclick = () => {
-        listBtn.classList.add('active');
-        gridBtn.classList.remove('active');
-        grid.classList.add('list-view');
-      };
-    }
-
     async function initDuasSection() {
       const grid = document.getElementById('duasGrid');
       const toggleBtn = document.getElementById('duasToggleBtn');
       const content = document.getElementById('duasContent');
       
       if (!toggleBtn) return;
-
-      initCategoryViewToggles();
 
       toggleBtn.classList.add('collapsed');
       content.classList.remove('expanded');
