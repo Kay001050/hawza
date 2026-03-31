@@ -3833,61 +3833,73 @@
       background: var(--bg-secondary);
       border-top: 1px solid var(--border-subtle);
       border-bottom: 1px solid var(--border-subtle);
-      padding: 24px 0;
+      padding: 0;
       margin-bottom: 20px;
+      overflow: hidden;
     }
 
     .duas-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 20px;
-      padding: 0 24px;
+      padding: 20px 30px;
+      cursor: pointer;
+      background: linear-gradient(to left, var(--bg-card), transparent);
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+    }
+
+    .duas-header:hover {
+      background: var(--bg-card-hover);
+      border-left-color: var(--accent-gold);
     }
 
     .duas-header h2 {
       font-family: var(--font-heading);
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: var(--text-primary);
       margin: 0;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 15px;
     }
 
     .duas-header h2 i {
       color: var(--accent-gold);
+      font-size: 1.4rem;
+      filter: drop-shadow(0 2px 4px rgba(160, 127, 58, 0.2));
     }
 
     .duas-toggle-btn {
-      background: var(--bg-card);
+      background: var(--bg-tertiary);
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      width: 40px;
-      height: 40px;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       color: var(--accent-gold);
-      transition: var(--transition-normal);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .duas-toggle-btn:hover {
-      background: var(--bg-card-hover);
-      border-color: var(--border-medium);
+    .duas-header:hover .duas-toggle-btn {
+      background: var(--accent-gold);
+      color: white;
+      transform: scale(1.1);
     }
 
     .duas-toggle-btn i {
-      transition: transform 0.3s ease;
+      transition: transform 0.4s ease;
     }
 
     .duas-toggle-btn.collapsed i {
       transform: rotate(0deg);
     }
 
-    .duas-toggle-btn i {
+    .duas-toggle-btn:not(.collapsed) i {
       transform: rotate(180deg);
     }
 
@@ -3975,28 +3987,122 @@
       opacity: 1;
     }
 
-    .duas-card.active {
-      height: 75vh; /* ارتفاع مرن بناءً على الشاشة */
-      max-height: 800px;
-      grid-column: 1 / -1;
-      z-index: 2000;
-      transform: none;
-      box-shadow: var(--shadow-lg);
-      border-color: var(--accent-gold);
-      position: sticky; /* جعل البطاقة بالكامل ثابتة */
-      top: 80px; /* مسافة من أعلى الصفحة (تحت الهيدر) */
-      margin: 20px 0;
-      background: var(--bg-card);
+    /* ── النافذة المنبثقة للأدعية (Dua Popup) ── */
+    .dua-popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+      padding: 20px;
     }
 
-    /* إصلاح التداخل مع الهيدر الثابت */
-    .duas-card.active .duas-card-header {
+    .dua-popup-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .dua-popup-content {
+      background: var(--bg-card);
+      width: 100%;
+      max-width: 800px;
+      max-height: 85vh;
+      border-radius: var(--radius-lg);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-strong);
+      transform: translateY(30px) scale(0.95);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+    }
+
+    .dua-popup-overlay.active .dua-popup-content {
+      transform: translateY(0) scale(1);
+    }
+
+    .dua-popup-header {
+      padding: 20px 30px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-secondary);
       position: sticky;
       top: 0;
-      z-index: 2001;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-      border-bottom: 1px solid var(--border-subtle);
-      background: var(--bg-card);
+      z-index: 10;
+    }
+
+    .dua-popup-title {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      color: var(--accent-gold);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dua-popup-close {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .dua-popup-close:hover {
+      background: #ff4444;
+      color: white;
+      transform: rotate(90deg);
+      border-color: #ff4444;
+    }
+
+    .dua-popup-body {
+      padding: 40px 30px;
+      overflow-y: auto;
+      flex-grow: 1;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-gold) transparent;
+    }
+
+    .dua-popup-body::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .dua-popup-body::-webkit-scrollbar-thumb {
+      background: var(--accent-gold);
+      border-radius: 10px;
+    }
+
+    .dua-popup-text {
+      font-family: 'Amiri', serif;
+      font-size: 1.8rem;
+      line-height: 2.6;
+      color: var(--text-primary);
+      text-align: center;
+      white-space: pre-wrap;
+      margin: 0;
+    }
+
+    .dua-popup-footer {
+      padding: 20px;
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-secondary);
     }
 
     .duas-card-header {
@@ -4744,7 +4850,7 @@
   <!-- مكتبة الأدعية -->
   <section class="duas-section">
     <div class="container">
-      <div class="duas-header">
+      <div class="duas-header" id="duasHeader">
         <h2><i class="fas fa-scroll"></i> مكتبة الأدعية</h2>
         <button class="duas-toggle-btn collapsed" id="duasToggleBtn">
           <i class="fas fa-chevron-down"></i>
@@ -4757,6 +4863,22 @@
       </div>
     </div>
   </section>
+
+  <!-- نافذة الدعاء المنبثقة -->
+  <div class="dua-popup-overlay" id="duaPopup">
+    <div class="dua-popup-content">
+      <div class="dua-popup-header">
+        <h3 class="dua-popup-title" id="duaPopupTitle"><i class="fas fa-scroll"></i> <span>اسم الدعاء</span></h3>
+        <div class="dua-popup-close" id="duaPopupClose"><i class="fas fa-times"></i></div>
+      </div>
+      <div class="dua-popup-body">
+        <div class="dua-popup-text" id="duaPopupText">جاري تحميل كلمات الدعاء...</div>
+      </div>
+      <div class="dua-popup-footer">
+        <div class="duas-card-decoration"><i class="fas fa-star"></i></div>
+      </div>
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer class="footer">
@@ -6761,22 +6883,37 @@ ITEMS_PER_PAGE: 30
     const duasPerPage = 10;
 
     async function initDuasSection() {
-      const grid = document.getElementById('duasGrid');
       const toggleBtn = document.getElementById('duasToggleBtn');
+      const header = document.getElementById('duasHeader');
       const content = document.getElementById('duasContent');
       
-      if (!toggleBtn) return;
+      if (!header) return;
 
-      toggleBtn.classList.add('collapsed');
-      content.classList.remove('expanded');
-
-      toggleBtn.addEventListener('click', () => {
+      const toggleAction = () => {
         const isExpanded = content.classList.toggle('expanded');
         toggleBtn.classList.toggle('collapsed', !isExpanded);
         if (isExpanded && allDuasData.length === 0) {
           fetchDuasData();
         }
-      });
+      };
+
+      header.addEventListener('click', toggleAction);
+      
+      // تهيئة إغلاق الـ Popup
+      const popup = document.getElementById('duaPopup');
+      const closeBtn = document.getElementById('duaPopupClose');
+      if (closeBtn && popup) {
+        closeBtn.onclick = () => {
+          popup.classList.remove('active');
+          document.body.style.overflow = '';
+        };
+        popup.onclick = (e) => {
+          if (e.target === popup) {
+            popup.classList.remove('active');
+            document.body.style.overflow = '';
+          }
+        };
+      }
     }
 
     async function fetchDuasData() {
@@ -6827,55 +6964,29 @@ ITEMS_PER_PAGE: 30
           <div class="duas-card-header">
             <h3 class="duas-card-title"><i class="fas fa-scroll"></i> ${item.title}</h3>
             <div class="duas-card-controls">
-               <div class="duas-card-close"><i class="fas fa-times"></i></div>
-               <i class="fas fa-chevron-down duas-card-arrow"></i>
+               <i class="fas fa-chevron-left duas-card-arrow"></i>
             </div>
-          </div>
-          <div class="duas-card-body">
-            <div class="duas-card-text-wrapper">
-              <div class="duas-card-text" data-loaded="false">جاري تحميل كلمات الدعاء المباركة...</div>
-            </div>
-            <div class="duas-card-decoration"><i class="fas fa-star"></i></div>
           </div>
         `;
         
-        const toggleCard = async (e) => {
-          // إذا كان النقر على زر الإغلاق، نقوم بالإغلاق فقط
-          const isCloseBtn = e.target.closest('.duas-card-close');
-          const isActive = card.classList.contains('active');
-          const textContainer = card.querySelector('.duas-card-text');
+        card.addEventListener('click', async () => {
+          const popup = document.getElementById('duaPopup');
+          const popupTitle = document.getElementById('duaPopupTitle').querySelector('span');
+          const popupText = document.getElementById('duaPopupText');
           
-          if (isCloseBtn || isActive) {
-            card.classList.remove('active');
-            return;
-          }
+          popupTitle.textContent = item.title;
+          popupText.innerHTML = '<div class="duas-loading"><i class="fas fa-spinner fa-spin"></i> جاري تحميل كلمات الدعاء المباركة...</div>';
+          popup.classList.add('active');
+          document.body.style.overflow = 'hidden';
 
-          // إغلاق أي بطاقة أخرى مفتوحة
-          grid.querySelectorAll('.duas-card.active').forEach(c => c.classList.remove('active'));
-          
-          if (textContainer.getAttribute('data-loaded') !== 'true') {
-            textContainer.innerHTML = '<div class="duas-loading"><i class="fas fa-spinner fa-spin"></i> جاري تحميل كلمات الدعاء المباركة...</div>';
-            try {
-              const res = await fetch(item.url);
-              const text = await res.text();
-              textContainer.innerHTML = text.replace(/\uFEFF/g, '').trim();
-              textContainer.setAttribute('data-loaded', 'true');
-            } catch (e) {
-              textContainer.innerHTML = '<div class="duas-error">تعذر التحميل، يرجى المحاولة لاحقاً</div>';
-            }
+          try {
+            const res = await fetch(item.url);
+            const text = await res.text();
+            popupText.innerHTML = text.replace(/\uFEFF/g, '').trim();
+          } catch (e) {
+            popupText.innerHTML = '<div class="duas-error">تعذر التحميل، يرجى المحاولة لاحقاً</div>';
           }
-          
-          card.classList.add('active');
-          
-          // تمرير سلس للبطاقة لتكون في المنتصف
-          setTimeout(() => {
-            const offset = 100;
-            const cardTop = card.getBoundingClientRect().top + window.pageYOffset;
-            window.scrollTo({ top: cardTop - offset, behavior: 'smooth' });
-          }, 400);
-        };
-
-        card.querySelector('.duas-card-header').addEventListener('click', toggleCard);
+        });
         
         grid.appendChild(card);
       });
