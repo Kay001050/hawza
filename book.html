@@ -3549,6 +3549,604 @@
       padding-right: 14px;
     }
     
+    /* ═══════════════════════════════════════════════════════════════════════════
+       CSS القائمة الجانبية الجديدة
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    /* زر الصفحة الرئيسية المنسدل */
+    .sidebar-home-section {
+      padding: 8px 14px;
+    }
+
+    .sidebar-home-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: linear-gradient(135deg, rgba(160,127,58,0.1), rgba(160,127,58,0.04));
+      border: 1.5px solid rgba(160,127,58,0.25);
+      border-radius: var(--radius-md);
+      color: var(--accent-gold);
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .sidebar-home-toggle:hover {
+      background: linear-gradient(135deg, rgba(160,127,58,0.18), rgba(160,127,58,0.08));
+      border-color: var(--accent-gold);
+    }
+
+    .sidebar-home-toggle .toggle-left-part {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar-home-toggle .home-arrow {
+      font-size: 0.75rem;
+      transition: transform 0.3s ease;
+      color: var(--accent-gold-dark);
+    }
+
+    .sidebar-home-toggle.open .home-arrow {
+      transform: rotate(180deg);
+    }
+
+    /* القائمة المنسدلة */
+    .sidebar-home-dropdown {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .sidebar-home-dropdown.open {
+      max-height: 400px;
+      opacity: 1;
+    }
+
+    .sidebar-home-dropdown-inner {
+      padding: 8px 0 4px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .sidebar-sub-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 18px 9px 14px;
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: var(--transition-fast);
+      border-right: 3px solid transparent;
+      margin-right: 8px;
+    }
+
+    .sidebar-sub-item i {
+      font-size: 0.65rem;
+      color: var(--accent-gold-dark);
+      opacity: 0.7;
+    }
+
+    .sidebar-sub-item:hover {
+      background: rgba(160,127,58,0.08);
+      color: var(--accent-gold);
+      border-right-color: var(--accent-gold);
+      transform: translateX(-4px);
+    }
+
+    /* فاصل */
+    .sidebar-divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 10px 20px;
+      opacity: 0.6;
+    }
+
+    /* العناصر الثابتة */
+    .sidebar-fixed-section {
+      padding: 4px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sidebar-fixed-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      background: transparent;
+      border: 1.5px solid transparent;
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      text-align: right;
+    }
+
+    .sidebar-fixed-item:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--border-subtle);
+      color: var(--text-primary);
+      transform: translateX(-3px);
+    }
+
+    .sidebar-fixed-item.active {
+      background: linear-gradient(90deg, rgba(160,127,58,0.12), transparent);
+      border-right: 3px solid var(--accent-gold);
+      color: var(--accent-gold);
+    }
+
+    .item-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .item-icon.gold {
+      background: rgba(160,127,58,0.12);
+      color: var(--accent-gold);
+    }
+
+    .item-icon.youtube {
+      background: rgba(255,0,0,0.1);
+      color: var(--accent-youtube);
+    }
+
+    .item-icon.emerald {
+      background: rgba(16,185,129,0.1);
+      color: #10b981;
+    }
+
+    .item-icon.blue {
+      background: rgba(59,130,246,0.1);
+      color: #3b82f6;
+    }
+
+    .item-icon.purple {
+      background: rgba(139,92,246,0.1);
+      color: #8b5cf6;
+    }
+
+    .sidebar-fixed-item.active .item-icon.gold { background: rgba(160,127,58,0.2); }
+    .sidebar-fixed-item.active .item-icon.youtube { background: rgba(255,0,0,0.18); }
+    .sidebar-fixed-item.active .item-icon.emerald { background: rgba(16,185,129,0.18); }
+    .sidebar-fixed-item.active .item-icon.blue { background: rgba(59,130,246,0.18); }
+    .sidebar-fixed-item.active .item-icon.purple { background: rgba(139,92,246,0.18); }
+
+    .item-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      flex: 1;
+    }
+
+    .item-name {
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .item-badge {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+    }
+
+    .item-badge.coming-soon {
+      background: rgba(139,92,246,0.15);
+      color: #8b5cf6;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       CSS التصميم المتطور للصفحات المستقلة (يوتيوب، حقيبة، تلخيصات)
+       ═══════════════════════════════════════════════════════════════════════════ */
+    
+    /* نافذة الدعاء المنبثقة */
+    .dua-popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      padding: 20px;
+    }
+    .dua-popup-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .dua-popup-content {
+      background: var(--bg-card);
+      width: 100%;
+      max-width: 800px;
+      max-height: 90vh;
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-subtle);
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+    .dua-popup-overlay.active .dua-popup-content {
+      transform: scale(1);
+    }
+    .dua-popup-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .dua-popup-title {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      color: var(--accent-gold);
+      margin: 0;
+    }
+    .dua-popup-close {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .dua-popup-close:hover {
+      background: #ff4444;
+      color: white;
+    }
+    .dua-popup-body {
+      padding: 30px;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+    .dua-popup-text {
+      font-family: 'Amiri', serif;
+      font-size: var(--dua-font-size, 1.4rem);
+      line-height: 2;
+      text-align: center;
+      white-space: pre-wrap;
+      color: var(--text-primary);
+    }
+    .dua-font-controls {
+      padding: 15px 24px;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-tertiary);
+      border-radius: 0 0 24px 24px;
+    }
+    .font-slider-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+    .font-slider {
+      flex-grow: 1;
+      accent-color: var(--accent-gold);
+    }
+    
+    .standalone-page-wrapper {
+      display: none;
+      min-height: 100vh;
+      background: var(--bg-secondary);
+      padding-bottom: 60px;
+    }
+
+    /* هيرو بانر عصري */
+    .page-hero-banner {
+      padding: calc(var(--header-height) + 40px) 0 40px;
+      margin-bottom: 30px;
+      border-bottom: 1px solid var(--border-subtle);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-hero-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      z-index: 0;
+    }
+
+    .youtube-theme { background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; }
+    .youtube-theme::before { background: #ff0000; }
+    
+    .haqiba-theme { background: linear-gradient(135deg, #064e3b 0%, #065f46 100%); color: white; }
+    .haqiba-theme::before { background: #10b981; }
+    
+    .summaries-theme { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); color: white; }
+    .summaries-theme::before { background: #3b82f6; }
+
+    .hero-banner-container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-back-btn-modern {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: var(--radius-full);
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 24px;
+      backdrop-filter: blur(4px);
+      position: relative;
+      z-index: 100;
+    }
+
+    .page-back-btn-modern:hover {
+      background: white;
+      color: #333;
+      transform: translateX(5px);
+    }
+
+    .hero-banner-content {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .hero-banner-icon-wrapper {
+      width: 72px;
+      height: 72px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .hero-banner-title {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 0 0 8px 0;
+      letter-spacing: -1px;
+    }
+
+    .hero-banner-subtitle {
+      font-size: 1.1rem;
+      opacity: 0.85;
+      margin: 0;
+      font-weight: 400;
+    }
+
+    /* شريط التحكم المستقل */
+    .standalone-controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .standalone-tabs {
+      display: flex;
+      gap: 12px;
+      background: var(--bg-card);
+      padding: 6px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .standalone-tab {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+    }
+
+    .standalone-tab.active {
+      background: var(--accent-gold);
+      color: white;
+      box-shadow: 0 4px 12px rgba(160, 127, 58, 0.3);
+    }
+
+    .tab-badge {
+      background: rgba(0,0,0,0.1);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+    }
+
+    .standalone-tab.active .tab-badge { background: rgba(255,255,255,0.2); }
+
+    .standalone-filters {
+      display: flex;
+      gap: 15px;
+    }
+
+    .filter-select-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .standalone-select {
+      padding: 12px 45px 12px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      appearance: none;
+      transition: all 0.3s ease;
+    }
+
+    .standalone-select:focus {
+      border-color: var(--accent-gold);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(160, 127, 58, 0.1);
+    }
+
+    .filter-icon-main, .sort-icon-main {
+      position: absolute;
+      right: 15px;
+      color: var(--accent-gold);
+      pointer-events: none;
+    }
+
+    /* شبكة المحتوى المستقلة */
+    .standalone-grid {
+      display: grid;
+      gap: 24px;
+    }
+
+    .media-grid-layout {
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    .folders-grid-layout {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    /* بطاقات المجلدات الجديدة */
+    .folder-card-modern {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 30px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .folder-card-modern:hover {
+      transform: translateY(-10px);
+      border-color: var(--accent-gold);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+
+    .folder-icon-box {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .haqiba-theme .folder-icon-box { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+    .summaries-theme .folder-icon-box { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+
+    .folder-card-modern:hover .folder-icon-box {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .folder-name-modern {
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+
+    /* تحسين التجاوب للهواتف */
+    @media (max-width: 768px) {
+      .page-hero-banner { padding: calc(var(--header-height-mobile) + 40px) 0 30px; }
+      .hero-banner-content { flex-direction: column; text-align: center; gap: 15px; }
+      .page-back-btn-modern { position: relative; z-index: 1001; margin-top: 10px; }
+      .hero-banner-title { font-size: 1.8rem; }
+      .hero-banner-icon-wrapper { width: 60px; height: 60px; font-size: 1.8rem; }
+      
+      .standalone-controls-bar { flex-direction: column; align-items: stretch; }
+      .standalone-tabs { overflow-x: auto; padding: 4px; }
+      .standalone-tab { white-space: nowrap; padding: 8px 15px; }
+      
+      .standalone-filters { flex-direction: column; }
+      .standalone-select { width: 100%; }
+      
+      .media-grid-layout { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+      .folders-grid-layout { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .folder-card-modern { padding: 20px 10px; }
+      .folder-name-modern { font-size: 0.9rem; }
+    }
+
+    /* لودينج متطور */
+    .media-loading {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      padding: 80px 0;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(160, 127, 58, 0.1);
+      border-top-color: var(--accent-gold);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
     .sidebar-social-section {
       margin-top: auto;
       padding: 25px 24px 40px; /* زيادة الحشوة السفلية لتجنب شريط الهاتف */
@@ -3621,6 +4219,747 @@
       background: currentColor;
       border-radius: 2px;
       transition: var(--transition-fast);
+    }
+
+    /* ═══ القائمة الجانبية الجديدة ═══ */
+    
+    /* قسم الصفحة الرئيسية - منسدل */
+    .sidebar-home-section {
+      padding: 8px 16px 4px;
+    }
+
+    .sidebar-home-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, rgba(160,127,58,0.1), rgba(30,107,84,0.07));
+      border: 1px solid var(--border-medium);
+      color: var(--accent-gold);
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      margin-bottom: 4px;
+    }
+
+    .sidebar-home-toggle:hover {
+      background: linear-gradient(135deg, rgba(160,127,58,0.18), rgba(30,107,84,0.12));
+      border-color: var(--accent-gold);
+    }
+
+    .sidebar-home-toggle .toggle-left-part {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar-home-toggle .home-arrow {
+      font-size: 0.75rem;
+      transition: transform var(--transition-normal);
+      color: var(--accent-gold);
+    }
+
+    .sidebar-home-toggle.open .home-arrow {
+      transform: rotate(180deg);
+    }
+
+    /* القائمة المنسدلة للرئيسية */
+    .sidebar-home-dropdown {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+      opacity: 0;
+      margin-bottom: 0;
+    }
+
+    .sidebar-home-dropdown.open {
+      max-height: 400px;
+      opacity: 1;
+      margin-bottom: 8px;
+    }
+
+    .sidebar-home-dropdown-inner {
+      background: linear-gradient(135deg, rgba(30,107,84,0.06), rgba(160,127,58,0.04));
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 6px 0;
+      margin: 0 4px;
+    }
+
+    .sidebar-sub-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 18px;
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: var(--transition-fast);
+      cursor: pointer;
+      border-right: 3px solid transparent;
+      text-decoration: none;
+    }
+
+    .sidebar-sub-item:hover {
+      color: var(--accent-emerald-light);
+      background: rgba(30,107,84,0.08);
+      border-right-color: var(--accent-emerald-light);
+      padding-right: 22px;
+    }
+
+    .sidebar-sub-item i {
+      font-size: 0.75rem;
+      color: var(--accent-emerald-light);
+      width: 14px;
+      text-align: center;
+      opacity: 0.8;
+    }
+
+    /* فاصل */
+    .sidebar-divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 10px 20px;
+    }
+
+    /* العناصر الثابتة */
+    .sidebar-fixed-section {
+      padding: 4px 16px;
+    }
+
+    .sidebar-fixed-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 16px;
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: var(--transition-smooth);
+      margin-bottom: 5px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      width: 100%;
+      background: none;
+      font-family: inherit;
+      text-align: right;
+    }
+
+    .sidebar-fixed-item .item-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      transition: var(--transition-fast);
+    }
+
+    .sidebar-fixed-item .item-icon.gold {
+      background: rgba(160,127,58,0.12);
+      color: var(--accent-gold);
+    }
+    .sidebar-fixed-item .item-icon.emerald {
+      background: rgba(30,107,84,0.12);
+      color: var(--accent-emerald-light);
+    }
+    .sidebar-fixed-item .item-icon.youtube {
+      background: rgba(255,0,0,0.1);
+      color: var(--accent-youtube);
+    }
+    .sidebar-fixed-item .item-icon.blue {
+      background: rgba(52,152,219,0.12);
+      color: var(--accent-blue);
+    }
+    .sidebar-fixed-item .item-icon.purple {
+      background: rgba(155,89,182,0.12);
+      color: var(--accent-purple);
+    }
+    .sidebar-fixed-item .item-icon.teal {
+      background: rgba(26,188,156,0.12);
+      color: #1abc9c;
+    }
+
+    .sidebar-fixed-item .item-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-fixed-item .item-name {
+      font-weight: 700;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+    }
+
+    .sidebar-fixed-item .item-badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.65rem;
+      padding: 1px 7px;
+      border-radius: var(--radius-full);
+      font-weight: 700;
+      margin-top: 2px;
+      width: fit-content;
+    }
+
+    .sidebar-fixed-item .item-badge.coming-soon {
+      background: rgba(155,89,182,0.15);
+      color: var(--accent-purple);
+    }
+
+    .sidebar-fixed-item:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--border-subtle);
+      transform: translateX(-4px);
+    }
+
+    .sidebar-fixed-item:hover .item-icon.gold { background: rgba(160,127,58,0.2); }
+    .sidebar-fixed-item:hover .item-icon.emerald { background: rgba(30,107,84,0.2); }
+    .sidebar-fixed-item:hover .item-icon.youtube { background: rgba(255,0,0,0.18); }
+    .sidebar-fixed-item:hover .item-icon.blue { background: rgba(52,152,219,0.2); }
+    .sidebar-fixed-item:hover .item-icon.purple { background: rgba(155,89,182,0.2); }
+    .sidebar-fixed-item:hover .item-icon.teal { background: rgba(26,188,156,0.2); }
+
+    .sidebar-fixed-item.active {
+      background: linear-gradient(90deg, rgba(160,127,58,0.1), transparent);
+      border-right: 3px solid var(--accent-gold);
+      padding-right: 13px;
+    }
+
+    /* صفحة حقيبة المؤمن */
+    #page-haqiba, #page-youtube, #page-summaries {
+      display: none;
+    }
+
+    #page-haqiba.page-active, #page-youtube.page-active, #page-summaries.page-active {
+      display: block;
+    }
+
+    .page-hero {
+      background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-tertiary) 100%);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 40px 0 30px;
+      margin-bottom: 0;
+    }
+
+    .page-hero-content {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .page-hero-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+
+    .page-hero-icon.gold {
+      background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
+      color: white;
+      box-shadow: 0 8px 24px rgba(160,127,58,0.3);
+    }
+
+    .page-hero-icon.youtube {
+      background: linear-gradient(135deg, #c00, var(--accent-youtube));
+      color: white;
+      box-shadow: 0 8px 24px rgba(255,0,0,0.3);
+    }
+
+    .page-hero-icon.blue {
+      background: linear-gradient(135deg, #2980b9, var(--accent-blue));
+      color: white;
+      box-shadow: 0 8px 24px rgba(52,152,219,0.3);
+    }
+
+    .page-hero-title {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .page-hero-subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 768px) {
+      .page-hero {
+        padding: 24px 0 20px;
+      }
+
+      .page-hero-content {
+        gap: 12px;
+      }
+
+      .page-hero-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 1.4rem;
+      }
+
+      .page-hero-title {
+        font-size: 1.4rem;
+      }
+
+      .page-hero-subtitle {
+        font-size: 0.85rem;
+      }
+    }
+
+    .page-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-full);
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      margin-bottom: 20px;
+    }
+
+    .page-back-btn:hover {
+      background: var(--bg-tertiary);
+      color: var(--accent-gold);
+      border-color: var(--accent-gold);
+    }
+
+    /* صفحة اليوتيوب - شريط التحكم عمودي */
+    .standalone-controls-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 20px;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .standalone-tabs {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .standalone-tab {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      width: 100%;
+    }
+
+    .standalone-tab.active {
+      background: var(--accent-gold);
+      color: white;
+      border-color: var(--accent-gold);
+    }
+
+    .standalone-tab:hover {
+      border-color: var(--accent-gold);
+      background: var(--bg-card-hover);
+    }
+
+    .tab-badge {
+      margin-left: auto;
+      background: rgba(255,255,255,0.2);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .standalone-filters {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .filter-select-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      width: 100%;
+    }
+
+    .filter-icon-main, .sort-icon-main {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .standalone-select {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .standalone-select option {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    @media (max-width: 768px) {
+      .standalone-controls-bar {
+        padding: 16px;
+        gap: 12px;
+      }
+
+      .standalone-tab {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* شبكة اليوتيوب المستقلة */
+    .standalone-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      padding: 20px 0;
+      width: 100%;
+    }
+
+    @media (max-width: 1024px) {
+      .standalone-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 14px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .standalone-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .standalone-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .standalone-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+    }
+
+    .media-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      text-decoration: none;
+      color: inherit;
+      height: 100%;
+      min-height: 200px;
+    }
+
+    .media-card:hover {
+      border-color: var(--accent-gold);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .media-thumbnail {
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .media-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-thumb::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-duration-badge {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      z-index: 1;
+    }
+
+    .media-name {
+      padding: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      line-height: 1.3;
+      word-break: break-word;
+      color: var(--text-primary);
+      flex-grow: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .media-category {
+      padding: 0 10px 8px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    @media (max-width: 768px) {
+      .media-card {
+        min-height: 180px;
+      }
+
+      .media-name {
+        padding: 8px;
+        font-size: 0.85rem;
+      }
+
+      .media-category {
+        padding: 0 8px 6px;
+        font-size: 0.7rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .media-card {
+        border-radius: var(--radius-sm);
+        min-height: 160px;
+      }
+
+      .media-name {
+        padding: 6px;
+        font-size: 0.8rem;
+      }
+
+      .media-category {
+        padding: 0 6px 4px;
+        font-size: 0.65rem;
+      }
+    }
+
+    /* حقيبة المؤمن - شبكة المجلدات */
+    .haqiba-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      padding: 30px 0;
+    }
+
+    @media (max-width: 768px) {
+      .haqiba-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .haqiba-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+    }
+
+    .haqiba-folder-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .haqiba-folder-card:hover {
+      border-color: var(--accent-gold);
+      background: var(--bg-card-hover);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .haqiba-folder-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, rgba(160,127,58,0.15), rgba(30,107,84,0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      color: var(--accent-gold);
+    }
+
+    .haqiba-folder-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .haqiba-folder-count {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      background: var(--bg-tertiary);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+    }
+
+    /* صفحة يوتيوب المستقلة */
+    .youtube-page-wrapper {
+      min-height: calc(100vh - var(--header-height));
+      background: var(--bg-primary);
+    }
+
+    /* صفحة التلخيصات */
+    .summaries-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      padding: 30px 0;
+    }
+
+    .summary-folder-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .summary-folder-card:hover {
+      border-color: var(--accent-blue);
+      background: var(--bg-card-hover);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .summary-folder-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, rgba(52,152,219,0.15), rgba(155,89,182,0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      color: var(--accent-blue);
+    }
+
+    .summary-folder-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    /* صفحة حقيبة المؤمن - الأدعية المضمنة */
+    .haqiba-duas-section {
+      padding: 20px 0;
+    }
+
+    /* تحميل المجلدات */
+    .folders-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .folders-loading i {
+      color: var(--accent-gold);
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+      .haqiba-grid, .summaries-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .page-hero-title { font-size: 1.5rem; }
+    }
+
+    @media (max-width: 480px) {
+      .haqiba-grid, .summaries-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     /* Responsive */
@@ -4385,30 +5724,109 @@
     </div>
     
     <div class="sidebar-content">
-      <div class="menu-label">التنقل السريع</div>
-      <nav class="sidebar-menu">
-        <a href="https://hawza.netlify.app" class="menu-item">
-          <i class="fas fa-home"></i>
-          <span>الصفحة الرئيسية</span>
-        </a>
-        <a href="#" class="menu-item active">
-          <i class="fas fa-book"></i>
-          <span>المكتبة الرقمية</span>
-        </a>
-        <a href="#" class="menu-item" id="sidebarMediaToggle">
-          <i class="fab fa-youtube"></i>
-          <span>قنوات ومقاطع</span>
-        </a>
-        <a href="#" class="menu-item" id="publicationsLink">
-          <i class="fas fa-star"></i>
-          <span>ملف إصداراتنا</span>
-        </a>
-        <a href="https://hawza.netlify.app/about" class="menu-item" target="_blank">
-          <i class="fas fa-info-circle"></i>
-          <span>من نحن</span>
-        </a>
-      </nav>
-      
+
+      <!-- قسم الصفحة الرئيسية المنسدل -->
+      <div class="sidebar-home-section">
+        <button class="sidebar-home-toggle" id="sidebarHomeToggle">
+          <div class="toggle-left-part">
+            <i class="fas fa-home"></i>
+            <span>الصفحة الرئيسية</span>
+          </div>
+          <i class="fas fa-chevron-down home-arrow"></i>
+        </button>
+
+        <div class="sidebar-home-dropdown" id="sidebarHomeDropdown">
+          <div class="sidebar-home-dropdown-inner">
+            <a href="https://hawza.netlify.app" class="sidebar-sub-item" target="_blank">
+              <i class="fas fa-chevron-left"></i>
+              <span>الرئيسية</span>
+            </a>
+            <a href="https://hawza.netlify.app/about" class="sidebar-sub-item" target="_blank">
+              <i class="fas fa-chevron-left"></i>
+              <span>من نحن</span>
+            </a>
+            <a href="https://hawza.netlify.app/sources" class="sidebar-sub-item" target="_blank">
+              <i class="fas fa-chevron-left"></i>
+              <span>مصادرنا</span>
+            </a>
+            <a href="https://hawza.netlify.app/faq" class="sidebar-sub-item" target="_blank">
+              <i class="fas fa-chevron-left"></i>
+              <span>الأسئلة</span>
+            </a>
+            <a href="https://hawza.netlify.app/publications" class="sidebar-sub-item" target="_blank">
+              <i class="fas fa-chevron-left"></i>
+              <span>إصداراتنا</span>
+            </a>
+            <a href="https://hawza.netlify.app/about" class="sidebar-sub-item" target="_blank">
+              <i class="fas fa-chevron-left"></i>
+              <span>من نحن</span>
+            </a>
+            <a href="https://hawza.netlify.app/channels" class="sidebar-sub-item" target="_blank">
+              <i class="fas fa-chevron-left"></i>
+              <span>قنواتنا</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <!-- العناصر الثابتة -->
+      <div class="sidebar-fixed-section">
+
+        <!-- مكتبتنا -->
+        <button class="sidebar-fixed-item active" id="navLibrary">
+          <div class="item-icon gold">
+            <i class="fas fa-book-open"></i>
+          </div>
+          <div class="item-text">
+            <span class="item-name">مكتبتنا</span>
+          </div>
+        </button>
+
+        <!-- قنوات ومقاطع -->
+        <button class="sidebar-fixed-item" id="navYoutube">
+          <div class="item-icon youtube">
+            <i class="fab fa-youtube"></i>
+          </div>
+          <div class="item-text">
+            <span class="item-name">قنوات ومقاطع</span>
+          </div>
+        </button>
+
+        <!-- حقيبة المؤمن -->
+        <button class="sidebar-fixed-item" id="navHaqiba">
+          <div class="item-icon emerald">
+            <i class="fas fa-scroll"></i>
+          </div>
+          <div class="item-text">
+            <span class="item-name">حقيبة المؤمن</span>
+          </div>
+        </button>
+
+        <!-- تلخيصاتنا -->
+        <button class="sidebar-fixed-item" id="navSummaries">
+          <div class="item-icon blue">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <div class="item-text">
+            <span class="item-name">تلخيصاتنا</span>
+          </div>
+        </button>
+
+        <!-- للأطفال -->
+        <button class="sidebar-fixed-item" id="navKids">
+          <div class="item-icon purple">
+            <i class="fas fa-child"></i>
+          </div>
+          <div class="item-text">
+            <span class="item-name">للأطفال</span>
+            <span class="item-badge coming-soon">قريباً</span>
+          </div>
+        </button>
+
+      </div>
+
       <div class="sidebar-social-section">
         <div class="social-title">تواصل معنا</div>
         <div class="sidebar-social">
@@ -4538,11 +5956,7 @@
           <span class="library-tab-name">صور عمائم القدس</span>
         </button>
         
-        <!-- زر القنوات والمقاطع الجديد - منسدل -->
-        <button class="library-tab media-tab-button" id="libraryMediaToggle">
-          <span class="library-tab-icon"><i class="fab fa-youtube"></i><span class="media-count-badge" id="mediaCount">0</span></span>
-          <span class="library-tab-name">قنوات ومقاطع</span>
-        </button>
+
         
         <!-- زر تحديث المكتبات الجديد (تصميم مدمج) -->
         <button class="refresh-pill-btn" id="refreshCache" title="تحديث الكاش لجميع المكتبات">
@@ -4555,75 +5969,7 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════════════════
-       قسم القنوات والمقاطع - منسدل (مغلق افتراضياً)
-       ═══════════════════════════════════════════════════════════════════════ -->
-  <section class="media-section">
-    <div class="container">
-      <div class="media-content" id="mediaContent">
-        <div class="media-inner">
 
-          <!-- شريط التحكم -->
-          <div class="media-controls-bar">
-            <!-- أزرار التبويب -->
-            <div class="media-tabs" id="mainMediaTabs">
-              <button class="media-tab active" data-tab="channels">
-                <i class="fas fa-tv"></i>
-                <span>القنوات</span>
-                <span class="tab-count" id="tabCountChannels">0</span>
-              </button>
-              <button class="media-tab" data-tab="videos">
-                <i class="fas fa-play-circle"></i>
-                <span>الفيديوهات</span>
-                <span class="tab-count" id="tabCountVideos">0</span>
-              </button>
-              <button class="media-tab" data-tab="playlists">
-                <i class="fas fa-list"></i>
-                <span>قوائم التشغيل</span>
-                <span class="tab-count" id="tabCountPlaylists">0</span>
-              </button>
-            </div>
-
-            <!-- مجموعة الفلاتر (التصنيف + الترتيب) -->
-            <div class="media-filters-group">
-              <!-- فلتر التصنيف - لسان منسدل -->
-              <div class="category-filter-wrapper">
-                <span class="filter-label-badge"><i class="fas fa-tag"></i> تصنيف</span>
-                <i class="fas fa-layer-group filter-icon"></i>
-                <select id="mediaCategorySelect" class="media-category-select">
-                  <option value="all">جميع التصنيفات</option>
-                </select>
-                <i class="fas fa-chevron-down filter-arrow"></i>
-              </div>
-
-              <!-- زر الترتيب -->
-              <div class="media-sort-wrapper">
-                <span class="sort-label-badge"><i class="fas fa-sort"></i> ترتيب</span>
-                <i class="fas fa-sort-amount-down sort-icon"></i>
-                <select id="mediaSortSelect" class="media-sort-select">
-                  <option value="default">الترتيب الافتراضي</option>
-                  <option value="name-asc">الاسم (أ ← ي)</option>
-                  <option value="name-desc">الاسم (ي ← أ)</option>
-                  <option value="date-newest">الأحدث تحميلاً</option>
-                  <option value="date-oldest">الأقدم تحميلاً</option>
-                </select>
-                <i class="fas fa-chevron-down sort-arrow"></i>
-              </div>
-            </div>
-          </div>
-
-          <!-- شبكة البطاقات -->
-          <div id="mediaGrid" class="media-grid channels-view">
-            <div class="media-loading">
-              <i class="fas fa-spinner"></i>
-              <span>جاري تحميل البيانات...</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- ═══ بطاقة المعلومات المنبثقة ═══ -->
   <div class="media-info-overlay" id="mediaInfoOverlay"></div>
@@ -4841,22 +6187,140 @@
   <!-- Toast -->
   <div class="toast-container" id="toastContainer"></div>
 
-  <!-- مكتبة الأدعية -->
-  <section class="duas-section">
-    <div class="container">
-      <div class="duas-header" id="duasHeader">
-        <h2><i class="fas fa-scroll"></i> مكتبة الأدعية</h2>
-        <div class="duas-toggle-btn collapsed" id="duasToggleBtn">
-          <i class="fas fa-chevron-down"></i>
-        </div>
-      </div>
-      <div class="duas-content" id="duasContent">
-        <div class="duas-grid" id="duasGrid">
-          <div class="duas-loading"><i class="fas fa-spinner fa-spin"></i><span>جاري تحميل الأدعية...</span></div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       صفحة قنوات ومقاطع (يوتيوب مستقل) - تصميم متطور
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <div id="page-youtube" class="standalone-page-wrapper">
+    <div class="page-hero-banner youtube-theme">
+      <div class="container hero-banner-container">
+        <button class="page-back-btn-modern" id="ytBackBtn">
+          <i class="fas fa-chevron-right"></i>
+          <span>العودة للمكتبة</span>
+        </button>
+        <div class="hero-banner-content">
+          <div class="hero-banner-icon-wrapper">
+            <i class="fab fa-youtube"></i>
+          </div>
+          <div class="hero-banner-text">
+            <h1 class="hero-banner-title">قنوات ومقاطع</h1>
+            <p class="hero-banner-subtitle">مكتبة يوتيوب التعليمية لنور الحوزة</p>
+          </div>
         </div>
       </div>
     </div>
-  </section>
+
+    <div class="container page-content-area">
+      <div class="standalone-controls-bar">
+        <div class="standalone-tabs" id="ytPageTabs">
+          <button class="standalone-tab active" data-tab-yt="channels">
+            <i class="fas fa-tv"></i>
+            <span>القنوات</span>
+            <span class="tab-badge" id="ytTabChannels">0</span>
+          </button>
+          <button class="standalone-tab" data-tab-yt="videos">
+            <i class="fas fa-play-circle"></i>
+            <span>الفيديوهات</span>
+            <span class="tab-badge" id="ytTabVideos">0</span>
+          </button>
+          <button class="standalone-tab" data-tab-yt="playlists">
+            <i class="fas fa-list"></i>
+            <span>قوائم التشغيل</span>
+            <span class="tab-badge" id="ytTabPlaylists">0</span>
+          </button>
+        </div>
+
+        <div class="standalone-filters">
+          <div class="filter-select-wrapper">
+            <i class="fas fa-filter filter-icon-main"></i>
+            <select id="ytCategorySelect" class="standalone-select">
+              <option value="all">جميع التصنيفات</option>
+            </select>
+          </div>
+          <div class="filter-select-wrapper">
+            <i class="fas fa-sort-amount-down sort-icon-main"></i>
+            <select id="ytSortSelect" class="standalone-select">
+              <option value="default">الترتيب الافتراضي</option>
+              <option value="name-asc">الاسم (أ ← ي)</option>
+              <option value="name-desc">الاسم (ي ← أ)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="ytPageGrid" class="standalone-grid media-grid-layout">
+        <div class="media-loading">
+          <div class="loading-spinner"></div>
+          <span>جاري تحميل المحتوى...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       صفحة حقيبة المؤمن - تصميم متطور
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <div id="page-haqiba" class="standalone-page-wrapper">
+    <div class="page-hero-banner haqiba-theme">
+      <div class="container hero-banner-container">
+        <button class="page-back-btn-modern" id="haqibaBackBtn">
+          <i class="fas fa-chevron-right"></i>
+          <span>العودة للمكتبة</span>
+        </button>
+        <div class="hero-banner-content">
+          <div class="hero-banner-icon-wrapper">
+            <i class="fas fa-scroll"></i>
+          </div>
+          <div class="hero-banner-text">
+            <h1 class="hero-banner-title">حقيبة المؤمن</h1>
+            <p class="hero-banner-subtitle">مكتبة الأدعية والمناجاة والقرآن الكريم</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container page-content-area">
+      <div class="standalone-grid folders-grid-layout" id="haqibaGrid">
+        <div class="media-loading">
+          <div class="loading-spinner"></div>
+          <span>جاري تحميل حقيبة المؤمن...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       صفحة تلخيصاتنا - تصميم متطور
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <div id="page-summaries" class="standalone-page-wrapper">
+    <div class="page-hero-banner summaries-theme">
+      <div class="container hero-banner-container">
+        <button class="page-back-btn-modern" id="summariesBackBtn">
+          <i class="fas fa-chevron-right"></i>
+          <span>العودة للمكتبة</span>
+        </button>
+        <div class="hero-banner-content">
+          <div class="hero-banner-icon-wrapper">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <div class="hero-banner-text">
+            <h1 class="hero-banner-title">تلخيصاتنا</h1>
+            <p class="hero-banner-subtitle">تلخيصات وملخصات من مصادر نور الحوزة</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container page-content-area">
+      <div class="standalone-grid folders-grid-layout" id="summariesGrid">
+        <div class="media-loading">
+          <div class="loading-spinner"></div>
+          <span>جاري تحميل التلخيصات...</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- نافذة الدعاء المنبثقة المحسنة -->
   <div class="dua-popup-overlay" id="duaPopup">
@@ -6021,12 +7485,11 @@ ITEMS_PER_PAGE: 30
       
       DOM.themeToggle.addEventListener('click', toggleTheme);
       
-      // Sidebar Logic
+      // Sidebar Logic - تم نقلها إلى initNewSidebar
       const sidebar = document.getElementById('sidebar');
       const sidebarOverlay = document.getElementById('sidebarOverlay');
       const sidebarToggle = document.getElementById('sidebarToggle');
       const sidebarClose = document.getElementById('sidebarClose');
-      const publicationsLink = document.getElementById('publicationsLink');
 
       const toggleSidebar = (show) => {
         sidebar.classList.toggle('active', show);
@@ -6037,14 +7500,6 @@ ITEMS_PER_PAGE: 30
       sidebarToggle.addEventListener('click', () => toggleSidebar(true));
       sidebarClose.addEventListener('click', () => toggleSidebar(false));
       sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
-      
-      if (publicationsLink) {
-        publicationsLink.addEventListener('click', (e) => {
-          e.preventDefault();
-          toggleSidebar(false);
-          switchLibrary('publications');
-        });
-      }
 
       const refreshBtn = document.getElementById('refreshCache');
       if (refreshBtn) {
@@ -6139,8 +7594,34 @@ ITEMS_PER_PAGE: 30
     }
 
     function parseCSV(text) {
-      const lines = text.split(/\r?\n/);
-      return lines.map(l => parseCSVRow(l));
+      const result = [];
+      let row = [];
+      let current = '';
+      let inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        const next = text[i + 1];
+        if (ch === '"') {
+          if (inQuotes && next === '"') { current += '"'; i++; }
+          else inQuotes = !inQuotes;
+        } else if (ch === ',' && !inQuotes) {
+          row.push(current.trim());
+          current = '';
+        } else if ((ch === '\n' || (ch === '\r' && next === '\n')) && !inQuotes) {
+          if (ch === '\r') i++;
+          row.push(current.trim());
+          result.push(row);
+          row = [];
+          current = '';
+        } else {
+          current += ch;
+        }
+      }
+      if (current || row.length > 0) {
+        row.push(current.trim());
+        result.push(row);
+      }
+      return result;
     }
 
     // ───────────────────────────────────────────────────────────────────────────
@@ -6176,8 +7657,9 @@ ITEMS_PER_PAGE: 30
     // جلب بيانات مستند Sheets وبناء قائمة allMediaData
     // ───────────────────────────────────────────────────────────────────────────
     async function loadMediaFromSheets() {
-      const grid = document.getElementById('mediaGrid');
-      grid.innerHTML = '<div class="media-loading"><i class="fas fa-spinner"></i><span>جاري تحميل البيانات...</span></div>';
+      const grid = document.getElementById('ytPageGrid');
+      if (!grid) return;
+      grid.innerHTML = '<div class="media-loading"><i class="fas fa-spinner fa-spin"></i><span>جاري تحميل البيانات...</span></div>';
 
       try {
         const resp = await fetch(MEDIA_SHEETS_URL);
@@ -6192,9 +7674,10 @@ ITEMS_PER_PAGE: 30
         }
         
         const rows = parseCSV(csvText);
+        console.log('Parsed rows count:', rows.length);
 
         // تجاهل السطر الأول (الرأس)
-        const dataRows = rows.slice(1).filter(r => r[1] && r[1].trim());
+        const dataRows = rows.slice(1).filter(r => r && r.length >= 2 && r[1] && r[1].trim());
         
         // إذا لم توجد بيانات، استخدم البيانات الاحتياطية
         if (dataRows.length === 0) {
@@ -6268,7 +7751,7 @@ ITEMS_PER_PAGE: 30
           return;
         }
 
-        // تحديث عداد العناصر
+        // تحديث عداد العناصر (اختياري - إن وُجد)
         const countEl = document.getElementById('mediaCount');
         if (countEl) countEl.textContent = allMediaData.length;
 
@@ -6308,7 +7791,7 @@ ITEMS_PER_PAGE: 30
         {
           url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
           type: 'video',
-          tags: ['موسيقى'],
+          tags: ['عام'],
           title: 'مقطع فيديو',
           thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
           vId: 'dQw4w9WgXcQ',
@@ -6330,7 +7813,7 @@ ITEMS_PER_PAGE: 30
     }
 
     function buildCategoryDropdown() {
-      const select = document.getElementById('mediaCategorySelect');
+      const select = document.getElementById('ytCategorySelect');
       if (!select) return;
 
       // جمع التصنيفات الخاصة بالتبويب النشط فقط
@@ -6378,9 +7861,10 @@ ITEMS_PER_PAGE: 30
       const videoCount    = allMediaData.filter(i => i.type === 'video').length;
       const playlistCount = allMediaData.filter(i => i.type === 'playlist').length;
 
-      const elC = document.getElementById('tabCountChannels');
-      const elV = document.getElementById('tabCountVideos');
-      const elP = document.getElementById('tabCountPlaylists');
+      // العناصر الجديدة في صفحة يوتيوب المستقلة
+      const elC = document.getElementById('ytTabChannels');
+      const elV = document.getElementById('ytTabVideos');
+      const elP = document.getElementById('ytTabPlaylists');
       if (elC) elC.textContent = channelCount;
       if (elV) elV.textContent = videoCount;
       if (elP) elP.textContent = playlistCount;
@@ -6419,7 +7903,7 @@ ITEMS_PER_PAGE: 30
     }
 
     function renderMediaGrid() {
-      const grid = document.getElementById('mediaGrid');
+      const grid = document.getElementById('ytPageGrid');
       if (!grid) return;
 
       let filtered = allMediaData.filter(item => {
@@ -6437,9 +7921,9 @@ ITEMS_PER_PAGE: 30
 
       // تغيير شكل الشبكة بناءً على التبويب
       if (activeTab === 'channels') {
-        grid.className = 'media-grid channels-view';
+        grid.className = 'standalone-grid media-grid-layout channels-view';
       } else {
-        grid.className = 'media-grid videos-view';
+        grid.className = 'standalone-grid media-grid-layout videos-view';
       }
 
       if (filtered.length === 0) {
@@ -6541,20 +8025,25 @@ ITEMS_PER_PAGE: 30
     // جلب البيانات الحقيقية من يوتيوب في الخلفية
     // ───────────────────────────────────────────────────────────────────────────
     async function fetchRealDataInBackground() {
+      let updatesCount = 0;
       for (let i = 0; i < allMediaData.length; i++) {
         const item = allMediaData[i];
         if (item.nameProvided && item.title && item.title !== 'جاري التحميل...') {
           // الاسم موجود مسبقاً – فقط نحتاج للمؤلف
           if ((item.type === 'video' || item.type === 'playlist') && !item.author) {
             await fetchVideoAuthor(item);
+            updatesCount++;
           }
           continue;
         }
         if (item.type === 'video' || item.type === 'playlist') await fetchVideoData(item);
         else await fetchChannelData(item);
-        // تحديث العرض بعد كل عنصر
+        updatesCount++;
+        // تحديث العرض في الخلفية بعد كل عنصر
         renderMediaGrid();
       }
+      // تحديث نهائي بعد اكتمال كل الجلب
+      if (updatesCount > 0) renderMediaGrid();
     }
 
     async function fetchVideoAuthor(item) {
@@ -6645,8 +8134,9 @@ ITEMS_PER_PAGE: 30
     // ───────────────────────────────────────────────────────────────────────────
     function formatNotes(text) {
       if (!text) return '';
+      let formatted = text.replace(/\n/g, '<br>');
       // تحويل Markdown [text](url) إلى رابط HTML
-      let formatted = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" style="color:#3498db; text-decoration:underline; font-weight:600;">$1</a>');
+      formatted = formatted.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" style="color:#3498db; text-decoration:underline; font-weight:600;">$1</a>');
       // تحويل الروابط العادية المتبقية إلى روابط قابلة للنقر
       formatted = formatted.replace(/(?<!=")(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#3498db; text-decoration:underline; font-weight:600;">$1</a>');
       return formatted;
@@ -6761,79 +8251,31 @@ ITEMS_PER_PAGE: 30
     }
 
     // ───────────────────────────────────────────────────────────────────────────
-    // تهيئة قسم الميديا
+    // تهيئة قسم الميديا (محدث للصفحة المستقلة)
     // ───────────────────────────────────────────────────────────────────────────
     async function initMediaSection() {
-      // زر التبديل
-      const toggleBtn  = document.getElementById('mediaToggleBtn');
-      const content    = document.getElementById('mediaContent');
-      const libraryMediaToggle = document.getElementById('libraryMediaToggle');
-      const sidebarMediaToggle = document.getElementById('sidebarMediaToggle');
+      // تهيئة نافذة الدعاء المنبثقة
+      const duaPopup = document.getElementById('duaPopup');
+      const duaClose = document.getElementById('duaPopupClose');
+      const duaSlider = document.getElementById('duaFontSlider');
+      const duaText = document.getElementById('duaPopupText');
 
-      // دالة لفتح/إغلاق القسم
-      const toggleMediaSection = () => {
-        const mediaSection = document.querySelector('.media-section');
-        if (toggleBtn) {
-          toggleBtn.classList.toggle('expanded');
-          content.classList.toggle('expanded');
-        }
-        if (mediaSection) {
-          mediaSection.classList.toggle('expanded');
-        }
-      };
-
-      if (toggleBtn) {
-        toggleBtn.addEventListener('click', toggleMediaSection);
-      }
-      if (libraryMediaToggle) {
-        libraryMediaToggle.addEventListener('click', (e) => {
-          e.preventDefault();
-          toggleMediaSection();
-        });
-      }
-      if (sidebarMediaToggle) {
-        sidebarMediaToggle.addEventListener('click', (e) => {
-          e.preventDefault();
-          toggleMediaSection();
-          // إغلاق القائمة الجانبية بعد النقر
-          const sidebar = document.getElementById('sidebar');
-          const overlay = document.getElementById('sidebarOverlay');
-          const toggle  = document.getElementById('sidebarToggle');
-          if (sidebar) sidebar.classList.remove('active');
-          if (overlay) overlay.classList.remove('active');
-          if (toggle)  toggle.classList.remove('active');
+      if (duaClose && duaPopup) {
+        duaClose.onclick = () => {
+          duaPopup.classList.remove('active');
           document.body.style.overflow = '';
-        });
+        };
+        duaPopup.onclick = (e) => {
+          if (e.target === duaPopup) {
+            duaPopup.classList.remove('active');
+            document.body.style.overflow = '';
+          }
+        };
       }
-
-      // أزرار التبويب
-      document.querySelectorAll('.media-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          document.querySelectorAll('.media-tab').forEach(t => t.classList.remove('active'));
-          tab.classList.add('active');
-          activeTab = tab.dataset.tab;
-          currentCategory = 'all'; // إعادة التصنيف عند تغيير التبويب
-          buildCategoryDropdown(); // إعادة بناء التصنيفات للتبويب الجديد
-          renderMediaGrid();
-        });
-      });
-
-      // فلتر التصنيف
-      const catSelect = document.getElementById('mediaCategorySelect');
-      if (catSelect) {
-        catSelect.addEventListener('change', (e) => {
-          currentCategory = e.target.value;
-          renderMediaGrid();
-        });
-      }
-
-      // فلتر الترتيب
-      const sortSelect = document.getElementById('mediaSortSelect');
-      if (sortSelect) {
-        sortSelect.addEventListener('change', (e) => {
-          currentSort = e.target.value;
-          renderMediaGrid();
-        });
+      if (duaSlider && duaText) {
+        duaSlider.oninput = (e) => {
+          duaText.style.setProperty('--dua-font-size', e.target.value + 'rem');
+        };
       }
 
       // بطاقة المعلومات - زر الإغلاق
@@ -6865,15 +8307,7 @@ ITEMS_PER_PAGE: 30
         }
       });
 
-      // إغلاق القوائم المنسدلة عند النقر خارجها
-      document.addEventListener('click', (e) => {
-        if (!e.target.closest('.tag-primary-wrapper')) {
-          document.querySelectorAll('.tag-primary-wrapper.open').forEach(w => w.classList.remove('open'));
-        }
-      });
-
-      // جلب البيانات
-      await loadMediaFromSheets();
+      // ملاحظة: لا يتم استدعاء loadMediaFromSheets هنا لأنها تُستدعى فقط عند فتح صفحة يوتيوب عبر initYtPage()
     }
 
     let allDuasData = [];
@@ -6881,22 +8315,6 @@ ITEMS_PER_PAGE: 30
     const duasPerPage = 10;
 
     async function initDuasSection() {
-      const toggleBtn = document.getElementById('duasToggleBtn');
-      const header = document.getElementById('duasHeader');
-      const content = document.getElementById('duasContent');
-      
-      if (!header) return;
-
-      const toggleAction = () => {
-        const isExpanded = content.classList.toggle('expanded');
-        toggleBtn.classList.toggle('collapsed', !isExpanded);
-        if (isExpanded && allDuasData.length === 0) {
-          fetchDuasData();
-        }
-      };
-
-      header.addEventListener('click', toggleAction);
-      
       // تهيئة إغلاق الـ Popup والتحكم بالخط
       const popup = document.getElementById('duaPopup');
       const closeBtn = document.getElementById('duaPopupClose');
@@ -7026,13 +8444,399 @@ ITEMS_PER_PAGE: 30
       }
     }
 
+    // ═══════════════════════════════════════════════════════════════════════════
+    // نظام التنقل بين الصفحات
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // العناصر الرئيسية للصفحات
+    const MAIN_PAGES = {
+      library: [
+        document.querySelector('.hero'),
+        document.querySelector('.library-switcher'),
+        document.querySelector('.suggested-libraries-section'),
+        document.querySelector('.categories-section'),
+        document.querySelector('.breadcrumbs-section'),
+        document.querySelector('.controls-section'),
+        document.querySelector('.library-section')
+      ],
+      youtube: document.getElementById('page-youtube'),
+      haqiba: document.getElementById('page-haqiba'),
+      summaries: document.getElementById('page-summaries')
+    };
+
+    let currentPage = 'library';
+    let haqibaLoaded = false;
+    let summariesLoaded = false;
+    let ytPageLoaded = false;
+
+    // دالة إخفاء كل صفحة
+    function hideAllPages() {
+      // إخفاء صفحة المكتبة
+      MAIN_PAGES.library.forEach(el => { if (el) el.style.display = 'none'; });
+      // إخفاء صفحة يوتيوب
+      if (MAIN_PAGES.youtube) MAIN_PAGES.youtube.style.display = 'none';
+      // إخفاء صفحة حقيبة المؤمن
+      if (MAIN_PAGES.haqiba) MAIN_PAGES.haqiba.style.display = 'none';
+      // إخفاء صفحة التلخيصات
+      if (MAIN_PAGES.summaries) MAIN_PAGES.summaries.style.display = 'none';
+    }
+
+    function closeSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      const toggle = document.getElementById('sidebarToggle');
+      if (sidebar) sidebar.classList.remove('active');
+      if (overlay) overlay.classList.remove('active');
+      if (toggle) toggle.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // عرض صفحة المكتبة
+    function showLibraryPage() {
+      hideAllPages();
+      MAIN_PAGES.library.forEach(el => { if (el) el.style.display = ''; });
+      // إعادة عرض قسم التصفح بشكل صحيح
+      const breadcrumbs = document.getElementById('breadcrumbsSection');
+      if (breadcrumbs && state.folderHistory.length > 0) breadcrumbs.style.display = '';
+      currentPage = 'library';
+      updateSidebarActive('navLibrary');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      closeSidebar();
+    }
+
+    // عرض صفحة يوتيوب
+    function showYoutubePage() {
+      hideAllPages();
+      if (MAIN_PAGES.youtube) MAIN_PAGES.youtube.style.display = 'block';
+      currentPage = 'youtube';
+      updateSidebarActive('navYoutube');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      closeSidebar();
+      if (!ytPageLoaded) {
+        ytPageLoaded = true;
+        initYtPage();
+      } else {
+        // الصفحة سبق تحميلها - فقط أعد العرض
+        updateTabCounts();
+        buildCategoryDropdown();
+        renderMediaGrid();
+      }
+    }
+
+    // عرض صفحة حقيبة المؤمن
+    function showHaqibaPage() {
+      hideAllPages();
+      if (MAIN_PAGES.haqiba) MAIN_PAGES.haqiba.style.display = 'block';
+      currentPage = 'haqiba';
+      updateSidebarActive('navHaqiba');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      closeSidebar();
+      if (!haqibaLoaded) {
+        loadHaqibaFolders();
+        haqibaLoaded = true;
+      }
+    }
+
+    // عرض صفحة التلخيصات
+    function showSummariesPage() {
+      hideAllPages();
+      if (MAIN_PAGES.summaries) MAIN_PAGES.summaries.style.display = 'block';
+      currentPage = 'summaries';
+      updateSidebarActive('navSummaries');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      closeSidebar();
+      if (!summariesLoaded) {
+        loadSummariesFolders();
+        summariesLoaded = true;
+      }
+    }
+
+    // تحديث حالة العنصر النشط في القائمة
+    function updateSidebarActive(activeId) {
+      document.querySelectorAll('.sidebar-fixed-item').forEach(item => {
+        item.classList.toggle('active', item.id === activeId);
+      });
+    }
+
+    // تحميل مجلدات حقيبة المؤمن (مطور ليدعم الأدعية والملفات)
+    async function loadHaqibaFolders(folderId = '1_06Vo6UthBtmHCY7KjpywaAZeDbYNIjV') {
+      const grid = document.getElementById('haqibaGrid');
+      grid.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري تحميل المحتوى...</span></div>';
+      
+      const apiKey = CONFIG.API_KEY;
+      const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType)&pageSize=100&orderBy=name&key=${apiKey}`;
+      
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('API Error');
+        const data = await response.json();
+        const items = data.files || [];
+        
+        if (items.length === 0) {
+          grid.innerHTML = '<div class="media-loading"><i class="fas fa-inbox"></i><span>المجلد فارغ</span></div>';
+          return;
+        }
+
+        grid.innerHTML = '';
+        
+        // إذا لم نكن في المجلد الرئيسي، أضف زر العودة للخلف
+        if (folderId !== '1_06Vo6UthBtmHCY7KjpywaAZeDbYNIjV') {
+          const backCard = document.createElement('div');
+          backCard.className = 'folder-card-modern';
+          backCard.innerHTML = `
+            <div class="folder-icon-box" style="background:rgba(160,127,58,0.1); color:var(--accent-gold);"><i class="fas fa-arrow-right"></i></div>
+            <div class="folder-name-modern">رجوع للخلف</div>
+          `;
+          backCard.onclick = () => loadHaqibaFolders('1_06Vo6UthBtmHCY7KjpywaAZeDbYNIjV');
+          grid.appendChild(backCard);
+        }
+
+        const folderIcons = ['fas fa-book-open', 'fas fa-hands-praying', 'fas fa-quran', 'fas fa-moon', 'fas fa-star-and-crescent', 'fas fa-scroll', 'fas fa-heart'];
+        
+        items.forEach((item, idx) => {
+          const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
+          const isDoc = item.mimeType === 'application/vnd.google-apps.document';
+          const card = document.createElement('div');
+          card.className = 'folder-card-modern';
+          
+          let iconClass = folderIcons[idx % folderIcons.length];
+          if (!isFolder) iconClass = isDoc ? 'fas fa-file-alt' : 'fas fa-file-pdf';
+          
+          card.innerHTML = `
+            <div class="folder-icon-box"><i class="${iconClass}"></i></div>
+            <div class="folder-name-modern">${item.name}</div>
+          `;
+          
+          card.addEventListener('click', async () => {
+            if (isFolder) {
+              loadHaqibaFolders(item.id);
+            } else if (isDoc) {
+              // فتح الدعاء في Popup كما في الكود القديم
+              openDuaInPopup(item.id, item.name);
+            } else {
+              window.open(`https://drive.google.com/file/d/${item.id}/view`, '_blank');
+            }
+          });
+          grid.appendChild(card);
+        });
+      } catch (error) {
+        console.error('Error loading haqiba folders:', error);
+        grid.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>خطأ في التحميل</span></div>';
+      }
+    }
+
+    async function openDuaInPopup(docId, title) {
+      const popup = document.getElementById('duaPopup');
+      const popupTitle = document.getElementById('duaPopupTitle').querySelector('span');
+      const popupText = document.getElementById('duaPopupText');
+      const slider = document.getElementById('duaFontSlider');
+      
+      if (!popup || !popupText) return;
+
+      popupTitle.textContent = title;
+      popupText.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري تحميل الدعاء...</span></div>';
+      
+      if(slider) {
+        popupText.style.setProperty('--dua-font-size', slider.value + 'rem');
+      }
+
+      popup.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      try {
+        const apiKey = CONFIG.API_KEY;
+        const url = `https://docs.google.com/document/d/${docId}/export?format=txt&key=${apiKey}`;
+        const res = await fetch(url);
+        const text = await res.text();
+        popupText.innerHTML = text.replace(/\uFEFF/g, '').trim();
+      } catch (e) {
+        popupText.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>تعذر تحميل نص الدعاء</span></div>';
+      }
+    }
+
+    // تحميل مجلدات التلخيصات
+    async function loadSummariesFolders() {
+      const grid = document.getElementById('summariesGrid');
+      const folderId = '1IwsqRD7Z5GVn2c3jScx7h5pBmo1RZ28e';
+      const apiKey = CONFIG.API_KEY;
+      const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType)&pageSize=50&orderBy=name&key=${apiKey}`;
+      
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('API Error');
+        const data = await response.json();
+        const items = data.files || [];
+        
+        if (items.length === 0) {
+          grid.innerHTML = '<div class="media-loading"><i class="fas fa-inbox"></i><span>لا توجد تلخيصات</span></div>';
+          return;
+        }
+
+        grid.innerHTML = '';
+        items.forEach((item) => {
+          const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
+          const card = document.createElement('div');
+          card.className = 'folder-card-modern';
+          card.innerHTML = `
+            <div class="folder-icon-box"><i class="fas fa-${isFolder ? 'folder-open' : 'file-alt'}"></i></div>
+            <div class="folder-name-modern">${item.name}</div>
+          `;
+          card.addEventListener('click', () => {
+            const url = isFolder 
+              ? `https://drive.google.com/drive/folders/${item.id}`
+              : `https://drive.google.com/file/d/${item.id}/view`;
+            window.open(url, '_blank');
+          });
+          grid.appendChild(card);
+        });
+      } catch (error) {
+        console.error('Error loading summaries folders:', error);
+        grid.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>خطأ في التحميل</span></div>';
+      }
+    }
+
+    // تهيئة صفحة يوتيوب المستقلة
+    function initYtPage() {
+      // إعادة تعيين الحالة للقيم الافتراضية
+      activeTab       = 'channels';
+      currentCategory = 'all';
+      currentSort     = 'default';
+
+      // تعيين التبويب النشط في الواجهة
+      document.querySelectorAll('[data-tab-yt]').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.tabYt === activeTab);
+      });
+
+      // أزرار التبويب
+      document.querySelectorAll('[data-tab-yt]').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('[data-tab-yt]').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          activeTab = tab.dataset.tabYt;
+          currentCategory = 'all';
+          // إعادة تعيين قائمة التصنيفات للتبويب الجديد
+          buildCategoryDropdown();
+          renderMediaGrid();
+        });
+      });
+
+      // قائمة التصنيفات
+      const catSel = document.getElementById('ytCategorySelect');
+      if (catSel) {
+        catSel.value = 'all';
+        catSel.addEventListener('change', (e) => {
+          currentCategory = e.target.value;
+          renderMediaGrid();
+        });
+      }
+
+      // قائمة الترتيب
+      const sortSel = document.getElementById('ytSortSelect');
+      if (sortSel) {
+        sortSel.value = 'default';
+        sortSel.addEventListener('change', (e) => {
+          currentSort = e.target.value;
+          renderMediaGrid();
+        });
+      }
+
+      // جلب البيانات من Google Sheets
+      loadMediaFromSheets();
+    }
+
+    function updateYtTabCounts() {
+      const el1 = document.getElementById('ytTabChannels');
+      const el2 = document.getElementById('ytTabVideos');
+      const el3 = document.getElementById('ytTabPlaylists');
+      if (el1) el1.textContent = allMediaData.filter(i => i.type === 'channel').length;
+      if (el2) el2.textContent = allMediaData.filter(i => i.type === 'video').length;
+      if (el3) el3.textContent = allMediaData.filter(i => i.type === 'playlist').length;
+    }
+
+
+
+    // تهيئة القائمة الجانبية الجديدة
+    function initNewSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const toggleSidebar = (show) => {
+        sidebar.classList.toggle('active', show);
+        const overlay = document.getElementById('sidebarOverlay');
+        if (overlay) overlay.classList.toggle('active', show);
+        document.body.style.overflow = show ? 'hidden' : '';
+      };
+
+      // زر الصفحة الرئيسية المنسدل
+      const homeToggle = document.getElementById('sidebarHomeToggle');
+      const homeDropdown = document.getElementById('sidebarHomeDropdown');
+      if (homeToggle && homeDropdown) {
+        homeToggle.addEventListener('click', () => {
+          homeToggle.classList.toggle('open');
+          homeDropdown.classList.toggle('open');
+        });
+      }
+
+      // زر مكتبتنا
+      const navLibrary = document.getElementById('navLibrary');
+      if (navLibrary) {
+        navLibrary.addEventListener('click', () => {
+          showLibraryPage();
+          toggleSidebar(false);
+        });
+      }
+
+      // زر قنوات ومقاطع
+      const navYoutube = document.getElementById('navYoutube');
+      if (navYoutube) {
+        navYoutube.addEventListener('click', () => {
+          showYoutubePage();
+        });
+      }
+
+      // زر حقيبة المؤمن
+      const navHaqiba = document.getElementById('navHaqiba');
+      if (navHaqiba) {
+        navHaqiba.addEventListener('click', () => {
+          showHaqibaPage();
+          toggleSidebar(false);
+        });
+      }
+
+      // زر تلخيصاتنا
+      const navSummaries = document.getElementById('navSummaries');
+      if (navSummaries) {
+        navSummaries.addEventListener('click', () => {
+          showSummariesPage();
+          toggleSidebar(false);
+        });
+      }
+
+      // زر للأطفال (قريباً)
+      const navKids = document.getElementById('navKids');
+      if (navKids) {
+        navKids.addEventListener('click', () => {
+          showToast('قريباً', 'سيتم إضافة صفحة الأطفال قريباً', 'info');
+          toggleSidebar(false);
+        });
+      }
+
+      // أزرار العودة
+      const ytBackBtn = document.getElementById('ytBackBtn');
+      if (ytBackBtn) ytBackBtn.addEventListener('click', showLibraryPage);
+
+      const haqibaBackBtn = document.getElementById('haqibaBackBtn');
+      if (haqibaBackBtn) haqibaBackBtn.addEventListener('click', showLibraryPage);
+
+      const summariesBackBtn = document.getElementById('summariesBackBtn');
+      if (summariesBackBtn) summariesBackBtn.addEventListener('click', showLibraryPage);
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       initTheme();
       initEventListeners();
       initLibraryTypeTabs();
       initLibrary();
       initMediaSection();
-      initDuasSection();
+      initNewSidebar();
     });
   </script>
 </body>
