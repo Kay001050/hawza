@@ -512,78 +512,235 @@
 
     .media-tab i { font-size: 0.95rem; }
 
+    /* عداد عناصر التبويب */
+    .media-tab .tab-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
+      background: rgba(255,255,255,0.2);
+      border-radius: var(--radius-full);
+      font-size: 0.68rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .media-tab:not(.active) .tab-count {
+      background: rgba(255,0,0,0.12);
+      color: var(--accent-youtube);
+    }
+
+    .media-tab:hover:not(.active) .tab-count {
+      background: rgba(255,0,0,0.2);
+    }
+
     /* ── فلتر التصنيفات - لسان منسدل ── */
     .media-controls-bar {
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: space-between;
-      gap: 16px;
+      gap: 12px;
       margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    /* مجموعة الفلاتر (التصنيف + الترتيب) */
+    .media-filters-group {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
     .category-filter-wrapper {
       position: relative;
-      min-width: 240px;
+      min-width: 200px;
       flex-shrink: 0;
+      padding-top: 6px; /* مساحة للشارة العلوية */
     }
 
     .category-filter-wrapper .filter-icon {
       position: absolute;
-      right: 14px;
-      top: 50%;
+      right: 12px;
+      top: calc(50% + 3px);
       transform: translateY(-50%);
       color: var(--accent-youtube);
       pointer-events: none;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       z-index: 2;
     }
 
     .category-filter-wrapper .filter-arrow {
       position: absolute;
-      left: 14px;
-      top: 50%;
+      left: 12px;
+      top: calc(50% + 3px);
       transform: translateY(-50%);
-      color: var(--text-muted);
+      color: rgba(255,0,0,0.5);
       pointer-events: none;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       z-index: 2;
       transition: transform 0.3s ease;
     }
 
+    /* ── تصميم لسان التصنيفات المحسّن ── */
     .media-category-select {
       width: 100%;
-      padding: 11px 40px 11px 38px;
+      padding: 10px 36px 10px 36px;
       border-radius: var(--radius-md);
-      border: 2px solid rgba(255, 0, 0, 0.2);
-      background: var(--bg-card);
+      border: 2px solid rgba(255, 0, 0, 0.3);
+      background: linear-gradient(135deg, rgba(255,0,0,0.06) 0%, var(--bg-card) 60%);
       color: var(--text-primary);
       font-family: var(--font-ui);
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size: 0.88rem;
+      font-weight: 700;
       cursor: pointer;
       appearance: none;
       -webkit-appearance: none;
       outline: none;
       transition: all 0.3s ease;
-      box-shadow: var(--shadow-sm);
+      box-shadow: 0 2px 10px rgba(255,0,0,0.1), var(--shadow-sm);
     }
 
     .media-category-select:hover {
-      border-color: rgba(255, 0, 0, 0.4);
-      box-shadow: 0 0 0 3px rgba(255,0,0,0.06);
+      border-color: rgba(255, 0, 0, 0.55);
+      box-shadow: 0 0 0 3px rgba(255,0,0,0.08), 0 4px 14px rgba(255,0,0,0.12);
+      background: linear-gradient(135deg, rgba(255,0,0,0.09) 0%, var(--bg-card) 70%);
     }
 
     .media-category-select:focus {
       border-color: var(--accent-youtube);
-      box-shadow: 0 0 0 4px rgba(255,0,0,0.1);
+      box-shadow: 0 0 0 4px rgba(255,0,0,0.12), 0 4px 16px rgba(255,0,0,0.15);
     }
 
     .media-category-select option {
       background: var(--bg-card);
       color: var(--text-primary);
-      font-weight: 500;
-      padding: 8px;
+      font-weight: 600;
+      padding: 10px 12px;
+    }
+
+    .media-category-select option:first-child {
+      font-weight: 800;
+      color: var(--accent-youtube);
+      background: rgba(255,0,0,0.04);
+    }
+
+    /* شارة التصنيف المختار */
+    .category-filter-wrapper::before {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-youtube), transparent);
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1;
+    }
+
+    .category-filter-wrapper:focus-within::before {
+      opacity: 1;
+    }
+
+    /* عنوان فوق الفلتر */
+    .filter-label-badge {
+      position: absolute;
+      top: -9px;
+      right: 10px;
+      background: var(--accent-youtube);
+      color: white;
+      font-size: 0.6rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      letter-spacing: 0.03em;
+      z-index: 3;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(255,0,0,0.3);
+    }
+
+    .sort-label-badge {
+      position: absolute;
+      top: -9px;
+      right: 10px;
+      background: linear-gradient(135deg, #c00, var(--accent-youtube));
+      color: white;
+      font-size: 0.6rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      letter-spacing: 0.03em;
+      z-index: 3;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(255,0,0,0.3);
+    }
+
+    /* ── زر الترتيب ── */
+    .media-sort-wrapper {
+      position: relative;
+      flex-shrink: 0;
+      padding-top: 6px; /* مساحة للشارة العلوية */
+    }
+
+    .media-sort-wrapper .sort-icon {
+      position: absolute;
+      right: 12px;
+      top: calc(50% + 3px);
+      transform: translateY(-50%);
+      color: var(--accent-youtube);
+      pointer-events: none;
+      font-size: 0.8rem;
+      z-index: 2;
+    }
+
+    .media-sort-wrapper .sort-arrow {
+      position: absolute;
+      left: 12px;
+      top: calc(50% + 3px);
+      transform: translateY(-50%);
+      color: rgba(255,0,0,0.5);
+      pointer-events: none;
+      font-size: 0.65rem;
+      z-index: 2;
+    }
+
+    .media-sort-select {
+      padding: 10px 36px 10px 36px;
+      border-radius: var(--radius-md);
+      border: 2px solid rgba(255, 0, 0, 0.3);
+      background: linear-gradient(135deg, rgba(255,0,0,0.06) 0%, var(--bg-card) 60%);
+      color: var(--text-primary);
+      font-family: var(--font-ui);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      outline: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px rgba(255,0,0,0.1), var(--shadow-sm);
+      min-width: 170px;
+    }
+
+    .media-sort-select:hover {
+      border-color: rgba(255, 0, 0, 0.55);
+      box-shadow: 0 0 0 3px rgba(255,0,0,0.08), 0 4px 14px rgba(255,0,0,0.12);
+    }
+
+    .media-sort-select:focus {
+      border-color: var(--accent-youtube);
+      box-shadow: 0 0 0 4px rgba(255,0,0,0.12);
+    }
+
+    .media-sort-select option {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-weight: 600;
+      padding: 10px 12px;
     }
 
     /* ── شبكة البطاقات ── */
@@ -605,10 +762,17 @@
     @media (max-width: 768px) {
       .media-grid.channels-view { grid-template-columns: repeat(3, 1fr); max-width: 100%; }
       .media-grid.videos-view   { grid-template-columns: repeat(2, 1fr); }
+      .media-controls-bar { flex-direction: column; align-items: flex-start; }
+      .media-filters-group { width: 100%; }
+      .category-filter-wrapper { min-width: 0; flex: 1; }
+      .media-sort-select { min-width: 0; }
     }
     @media (max-width: 480px) {
       .media-grid.channels-view { grid-template-columns: repeat(2, 1fr); }
       .media-grid.videos-view   { grid-template-columns: 1fr; }
+      .media-filters-group { flex-direction: column; }
+      .category-filter-wrapper, .media-sort-wrapper { width: 100%; }
+      .media-sort-select { width: 100%; }
     }
 
     /* ── البطاقة الأساسية ── */
@@ -3878,24 +4042,45 @@
               <button class="media-tab active" data-tab="channels">
                 <i class="fas fa-tv"></i>
                 <span>القنوات</span>
+                <span class="tab-count" id="tabCountChannels">0</span>
               </button>
               <button class="media-tab" data-tab="videos">
                 <i class="fas fa-play-circle"></i>
                 <span>الفيديوهات</span>
+                <span class="tab-count" id="tabCountVideos">0</span>
               </button>
               <button class="media-tab" data-tab="playlists">
                 <i class="fas fa-list"></i>
                 <span>قوائم التشغيل</span>
+                <span class="tab-count" id="tabCountPlaylists">0</span>
               </button>
             </div>
 
-            <!-- فلتر التصنيف - لسان منسدل -->
-            <div class="category-filter-wrapper">
-              <i class="fas fa-tag filter-icon"></i>
-              <select id="mediaCategorySelect" class="media-category-select">
-                <option value="all">جميع التصنيفات</option>
-              </select>
-              <i class="fas fa-chevron-down filter-arrow"></i>
+            <!-- مجموعة الفلاتر (التصنيف + الترتيب) -->
+            <div class="media-filters-group">
+              <!-- فلتر التصنيف - لسان منسدل -->
+              <div class="category-filter-wrapper">
+                <span class="filter-label-badge"><i class="fas fa-tag"></i> تصنيف</span>
+                <i class="fas fa-layer-group filter-icon"></i>
+                <select id="mediaCategorySelect" class="media-category-select">
+                  <option value="all">جميع التصنيفات</option>
+                </select>
+                <i class="fas fa-chevron-down filter-arrow"></i>
+              </div>
+
+              <!-- زر الترتيب -->
+              <div class="media-sort-wrapper">
+                <span class="sort-label-badge"><i class="fas fa-sort"></i> ترتيب</span>
+                <i class="fas fa-sort-amount-down sort-icon"></i>
+                <select id="mediaSortSelect" class="media-sort-select">
+                  <option value="default">الترتيب الافتراضي</option>
+                  <option value="name-asc">الاسم (أ ← ي)</option>
+                  <option value="name-desc">الاسم (ي ← أ)</option>
+                  <option value="date-newest">الأحدث تحميلاً</option>
+                  <option value="date-oldest">الأقدم تحميلاً</option>
+                </select>
+                <i class="fas fa-chevron-down sort-arrow"></i>
+              </div>
             </div>
           </div>
 
@@ -5363,6 +5548,7 @@ ITEMS_PER_PAGE: 30
     let allMediaData   = [];
     let currentCategory = 'all';
     let activeTab       = 'channels';
+    let currentSort     = 'default'; // خيار الترتيب الحالي
 
     // ───────────────────────────────────────────────────────────────────────────
     // تحليل CSV مع دعم الحقول المقتبسة (quoted fields)
@@ -5517,29 +5703,90 @@ ITEMS_PER_PAGE: 30
       const select = document.getElementById('mediaCategorySelect');
       if (!select) return;
 
-      // جمع كل التصنيفات الفريدة
-      const catSet = new Set();
-      allMediaData.forEach(item => item.tags.forEach(t => catSet.add(t)));
-      const cats = [...catSet].sort((a, b) => a.localeCompare(b, 'ar'));
+      // جمع التصنيفات الخاصة بالتبويب النشط فقط
+      const tabItems = allMediaData.filter(item => {
+        if (activeTab === 'channels')  return item.type === 'channel';
+        if (activeTab === 'videos')    return item.type === 'video';
+        if (activeTab === 'playlists') return item.type === 'playlist';
+        return false;
+      });
 
-      select.innerHTML = '<option value="all">جميع التصنيفات</option>';
+      // جمع التصنيفات الفريدة مع عداد كل تصنيف
+      const catCount = {};
+      tabItems.forEach(item => item.tags.forEach(t => {
+        catCount[t] = (catCount[t] || 0) + 1;
+      }));
+      const cats = Object.keys(catCount).sort((a, b) => a.localeCompare(b, 'ar'));
+
+      // تحديد نص الخيار الأول حسب التبويب
+      let allLabel = 'جميع التصنيفات';
+      if (activeTab === 'channels')  allLabel = `جميع القنوات (${tabItems.length})`;
+      if (activeTab === 'videos')    allLabel = `جميع الفيديوهات (${tabItems.length})`;
+      if (activeTab === 'playlists') allLabel = `جميع القوائم (${tabItems.length})`;
+
+      select.innerHTML = `<option value="all">${allLabel}</option>`;
       cats.forEach(cat => {
         const opt = document.createElement('option');
         opt.value = cat;
-        opt.textContent = cat;
+        opt.textContent = `${cat} (${catCount[cat]})`;
         if (cat === currentCategory) opt.selected = true;
         select.appendChild(opt);
       });
+
+      // إعادة تعيين التصنيف إلى الكل إذا كان التصنيف الحالي غير موجود في هذا التبويب
+      if (currentCategory !== 'all' && !catCount[currentCategory]) {
+        currentCategory = 'all';
+        select.value = 'all';
+      }
+
+      // تحديث عدادات التبويبات
+      updateTabCounts();
+    }
+
+    function updateTabCounts() {
+      const channelCount  = allMediaData.filter(i => i.type === 'channel').length;
+      const videoCount    = allMediaData.filter(i => i.type === 'video').length;
+      const playlistCount = allMediaData.filter(i => i.type === 'playlist').length;
+
+      const elC = document.getElementById('tabCountChannels');
+      const elV = document.getElementById('tabCountVideos');
+      const elP = document.getElementById('tabCountPlaylists');
+      if (elC) elC.textContent = channelCount;
+      if (elV) elV.textContent = videoCount;
+      if (elP) elP.textContent = playlistCount;
     }
 
     // ───────────────────────────────────────────────────────────────────────────
     // عرض الشبكة
     // ───────────────────────────────────────────────────────────────────────────
+    function sortMediaItems(items) {
+      const sorted = [...items];
+      switch (currentSort) {
+        case 'name-asc':
+          sorted.sort((a, b) => (a.title || '').localeCompare(b.title || '', 'ar'));
+          break;
+        case 'name-desc':
+          sorted.sort((a, b) => (b.title || '').localeCompare(a.title || '', 'ar'));
+          break;
+        case 'date-newest':
+          // العناصر الأحدث تحميلاً = آخر ما أضيف (عكس الترتيب الافتراضي)
+          sorted.reverse();
+          break;
+        case 'date-oldest':
+          // الأقدم = أول ما أضيف (الترتيب الافتراضي)
+          break;
+        default:
+          // الترتيب الافتراضي - كما ورد في البيانات
+          break;
+      }
+      return sorted;
+    }
+
     function renderMediaGrid() {
       const grid = document.getElementById('mediaGrid');
       if (!grid) return;
 
-      const filtered = allMediaData.filter(item => {
+      let filtered = allMediaData.filter(item => {
         let matchTab = false;
         if (activeTab === 'channels') matchTab = (item.type === 'channel');
         else if (activeTab === 'videos') matchTab = (item.type === 'video');
@@ -5548,6 +5795,9 @@ ITEMS_PER_PAGE: 30
         const matchCat = (currentCategory === 'all') || (item.tags && item.tags.includes(currentCategory));
         return matchTab && matchCat;
       });
+
+      // تطبيق الترتيب
+      filtered = sortMediaItems(filtered);
 
       // تغيير شكل الشبكة بناءً على التبويب
       if (activeTab === 'channels') {
@@ -5896,6 +6146,8 @@ ITEMS_PER_PAGE: 30
           document.querySelectorAll('.media-tab').forEach(t => t.classList.remove('active'));
           tab.classList.add('active');
           activeTab = tab.dataset.tab;
+          currentCategory = 'all'; // إعادة التصنيف عند تغيير التبويب
+          buildCategoryDropdown(); // إعادة بناء التصنيفات للتبويب الجديد
           renderMediaGrid();
         });
       });
@@ -5905,6 +6157,15 @@ ITEMS_PER_PAGE: 30
       if (catSelect) {
         catSelect.addEventListener('change', (e) => {
           currentCategory = e.target.value;
+          renderMediaGrid();
+        });
+      }
+
+      // فلتر الترتيب
+      const sortSelect = document.getElementById('mediaSortSelect');
+      if (sortSelect) {
+        sortSelect.addEventListener('change', (e) => {
+          currentSort = e.target.value;
           renderMediaGrid();
         });
       }
