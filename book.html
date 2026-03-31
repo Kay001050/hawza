@@ -3906,39 +3906,56 @@
 
     .duas-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
-      padding: 0 24px;
+      grid-template-columns: repeat(2, 1fr); /* دعاءين في كل سطر */
+      gap: 16px;
+      padding: 0 20px;
       align-items: start;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 600px) {
+      .duas-grid {
+        grid-template-columns: 1fr; /* سطر واحد في الجوال */
+      }
     }
 
     .duas-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      transition: var(--transition-normal);
+      border-radius: var(--radius-md);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
       box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
+      height: 70px; /* ارتفاع المربع الصغير (العنوان فقط) */
+      z-index: 1;
     }
 
     .duas-card:hover {
       border-color: var(--accent-gold);
       box-shadow: var(--shadow-md);
-      transform: translateY(-4px);
+    }
+
+    .duas-card.active {
+      height: 550px; /* الارتفاع عند التوسع */
+      grid-column: 1 / -1; /* التوسع ليأخذ كامل العرض (مستطيل) */
+      z-index: 10;
+      transform: scale(1.02);
     }
 
     .duas-card-header {
-      padding: 18px 20px;
+      padding: 0 20px;
+      height: 70px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
       background: var(--bg-secondary);
       transition: background 0.3s ease;
-      z-index: 2;
+      flex-shrink: 0;
     }
 
     .duas-card-header:hover {
@@ -3947,25 +3964,22 @@
 
     .duas-card-title {
       font-family: var(--font-heading);
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 700;
       color: var(--accent-gold);
       margin: 0;
       display: flex;
       align-items: center;
       gap: 10px;
-      line-height: 1.3;
-    }
-
-    .duas-card-title i {
-      font-size: 1rem;
-      opacity: 0.8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .duas-card-arrow {
       color: var(--accent-gold);
-      font-size: 0.9rem;
-      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 0.8rem;
+      transition: transform 0.5s ease;
     }
 
     .duas-card.active .duas-card-arrow {
@@ -3973,19 +3987,30 @@
     }
 
     .duas-card-body {
-      max-height: 0;
+      flex-grow: 1;
+      opacity: 0;
+      visibility: hidden;
       overflow: hidden;
-      transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
       background: var(--bg-card);
-      padding: 0 20px;
       display: flex;
       flex-direction: column;
+      padding: 0 20px;
     }
 
     .duas-card.active .duas-card-body {
-      max-height: 450px; /* ارتفاع ثابت ومريح للبطاقة المفتوحة */
+      opacity: 1;
+      visibility: visible;
       padding: 20px;
       border-top: 1px solid var(--border-subtle);
+    }
+
+    .duas-card-text-wrapper {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding-right: 8px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-gold) transparent;
     }
 
     .duas-card-text-wrapper {
