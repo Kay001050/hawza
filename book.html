@@ -3961,6 +3961,51 @@
       flex-grow: 1;
     }
 
+    .duas-card-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .duas-card-btn {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-secondary);
+      color: var(--accent-gold);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: var(--transition-normal);
+      cursor: pointer;
+    }
+
+    .duas-card-btn:hover {
+      background: var(--accent-gold);
+      color: white;
+      border-color: var(--accent-gold);
+    }
+
+    .duas-card-view {
+      border-color: var(--accent-gold);
+    }
+
+    .duas-card-download {
+      border-color: var(--accent-emerald);
+      color: var(--accent-emerald);
+    }
+
+    .duas-card-download:hover {
+      background: var(--accent-emerald);
+      border-color: var(--accent-emerald);
+      color: white;
+    }
+
     .duas-loading {
       grid-column: 1 / -1;
       display: flex;
@@ -6454,7 +6499,8 @@ ITEMS_PER_PAGE: 30
 
       try {
         const folderId = '1_06Vo6UthBtmHCY7KjpywaAZeDbYNIjV';
-        const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&fields=files(id,name,mimeType)&key=AIzaSyDyWJOw5w-1ycj5_xLjjHdUQXV-VfZqLqE`;
+        const apiKey = 'AIzaSyDyWJOw5w-1ycj5_xLjjHdUQXV-VfZqLqE';
+        const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&fields=files(id,name,mimeType)&pageSize=100&key=${apiKey}`;
         
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('Failed to fetch files');
@@ -6463,40 +6509,44 @@ ITEMS_PER_PAGE: 30
         const files = data.files || [];
         
         if (files.length === 0) {
-          grid.innerHTML = '<div class="duas-error">لم يتم العثور على أي أدعية</div>';
+          grid.innerHTML = '<div class="duas-error"><i class="fas fa-inbox"></i> لم يتم العثور على أي أدعية</div>';
           return;
         }
 
         grid.innerHTML = '';
         
-        for (const file of files) {
-          if (file.mimeType === 'application/vnd.google-apps.document') {
-            const docId = file.id;
-            const title = file.name;
-            const docUrl = `https://docs.google.com/document/d/${docId}/export?format=txt`;
-            
-            try {
-              const docResponse = await fetch(docUrl);
-              if (docResponse.ok) {
-                const text = await docResponse.text();
-                const cleanText = text.trim().substring(0, 500);
-                
-                const card = document.createElement('div');
-                card.className = 'duas-card';
-                card.innerHTML = `
-                  <h3 class="duas-card-title">${title}</h3>
-                  <p class="duas-card-text">${cleanText}</p>
-                `;
-                grid.appendChild(card);
-              }
-            } catch (e) {
-              console.error(`Error fetching document ${title}:`, e);
-            }
-          }
+        const docFiles = files.filter(f => f.mimeType === 'application/vnd.google-apps.document');
+        
+        if (docFiles.length === 0) {
+          grid.innerHTML = '<div class="duas-error"><i class="fas fa-file-alt"></i> لا توجد مستندات في المجلد</div>';
+          return;
         }
+        
+        docFiles.forEach((file, index) => {
+          const docId = file.id;
+          const title = file.name;
+          const docViewUrl = `https://docs.google.com/document/d/${docId}/view`;
+          const docExportUrl = `https://docs.google.com/document/d/${docId}/export?format=pdf`;
+          
+          const card = document.createElement('div');
+          card.className = 'duas-card';
+          card.style.animationDelay = `${index * 0.05}s`;
+          card.innerHTML = `
+            <h3 class="duas-card-title">${title}</h3>
+            <div class="duas-card-actions">
+              <a href="${docViewUrl}" target="_blank" class="duas-card-btn duas-card-view">
+                <i class="fas fa-eye"></i> عرض
+              </a>
+              <a href="${docExportUrl}" target="_blank" class="duas-card-btn duas-card-download">
+                <i class="fas fa-download"></i> تحميل
+              </a>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
       } catch (error) {
         console.error('Error loading duas:', error);
-        grid.innerHTML = '<div class="duas-error">حدث خطأ عند تحميل الأدعية</div>';
+        grid.innerHTML = '<div class="duas-error"><i class="fas fa-exclamation-circle"></i> حدث خطأ عند تحميل الأدعية</div>';
       }
     }
 
