@@ -3953,12 +3953,17 @@
 
     .duas-card-text {
       font-family: var(--font-heading);
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       line-height: 1.8;
       color: var(--text-primary);
       margin: 0;
       text-align: justify;
       flex-grow: 1;
+      max-height: 200px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 8;
+      -webkit-box-orient: vertical;
     }
 
     .duas-card-actions {
@@ -4004,6 +4009,75 @@
       background: var(--accent-emerald);
       border-color: var(--accent-emerald);
       color: white;
+    }
+
+    .duas-folder-card {
+      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-light) 100%);
+      border: none;
+      color: white;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 280px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .duas-folder-card::before {
+      opacity: 1;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+    }
+
+    .duas-folder-card:hover {
+      background: linear-gradient(135deg, var(--accent-gold-light) 0%, var(--accent-gold) 100%);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(160, 127, 58, 0.3);
+    }
+
+    .duas-folder-icon {
+      font-size: 3.5rem;
+      color: white;
+      margin-bottom: 16px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .duas-folder-card .duas-card-title {
+      color: white;
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .duas-folder-desc {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.95rem;
+      margin: 0 0 16px 0;
+      line-height: 1.5;
+    }
+
+    .duas-folder-action {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-full);
+      transition: var(--transition-normal);
+    }
+
+    .duas-folder-card:hover .duas-folder-action {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateX(-4px);
     }
 
     .duas-loading {
@@ -6503,50 +6577,47 @@ ITEMS_PER_PAGE: 30
         const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&fields=files(id,name,mimeType)&pageSize=100&key=${apiKey}`;
         
         const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error('Failed to fetch files');
+        if (!response.ok) throw new Error('API Error');
         
         const data = await response.json();
         const files = data.files || [];
+        const docFiles = files.filter(f => f.mimeType === 'application/vnd.google-apps.document');
         
-        if (files.length === 0) {
-          grid.innerHTML = '<div class="duas-error"><i class="fas fa-inbox"></i> لم يتم العثور على أي أدعية</div>';
+        if (docFiles.length === 0) {
+          grid.innerHTML = '<div class="duas-error"><i class="fas fa-inbox"></i> لم يتم العثور على أدعية</div>';
           return;
         }
 
         grid.innerHTML = '';
         
-        const docFiles = files.filter(f => f.mimeType === 'application/vnd.google-apps.document');
-        
-        if (docFiles.length === 0) {
-          grid.innerHTML = '<div class="duas-error"><i class="fas fa-file-alt"></i> لا توجد مستندات في المجلد</div>';
-          return;
-        }
-        
-        docFiles.forEach((file, index) => {
+        for (let i = 0; i < docFiles.length; i++) {
+          const file = docFiles[i];
           const docId = file.id;
           const title = file.name;
-          const docViewUrl = `https://docs.google.com/document/d/${docId}/view`;
-          const docExportUrl = `https://docs.google.com/document/d/${docId}/export?format=pdf`;
           
-          const card = document.createElement('div');
-          card.className = 'duas-card';
-          card.style.animationDelay = `${index * 0.05}s`;
-          card.innerHTML = `
-            <h3 class="duas-card-title">${title}</h3>
-            <div class="duas-card-actions">
-              <a href="${docViewUrl}" target="_blank" class="duas-card-btn duas-card-view">
-                <i class="fas fa-eye"></i> عرض
-              </a>
-              <a href="${docExportUrl}" target="_blank" class="duas-card-btn duas-card-download">
-                <i class="fas fa-download"></i> تحميل
-              </a>
-            </div>
-          `;
-          grid.appendChild(card);
-        });
+          try {
+            const exportUrl = `https://docs.google.com/document/d/${docId}/export?format=txt`;
+            const textResponse = await fetch(exportUrl);
+            
+            if (textResponse.ok) {
+              const text = await textResponse.text();
+              const cleanText = text.trim();
+              
+              const card = document.createElement('div');
+              card.className = 'duas-card';
+              card.innerHTML = `
+                <h3 class="duas-card-title">${title}</h3>
+                <p class="duas-card-text">${cleanText}</p>
+              `;
+              grid.appendChild(card);
+            }
+          } catch (e) {
+            console.error(`Error fetching ${title}:`, e);
+          }
+        }
       } catch (error) {
         console.error('Error loading duas:', error);
-        grid.innerHTML = '<div class="duas-error"><i class="fas fa-exclamation-circle"></i> حدث خطأ عند تحميل الأدعية</div>';
+        grid.innerHTML = '<div class="duas-error"><i class="fas fa-exclamation-circle"></i> خطأ في تحميل الأدعية</div>';
       }
     }
 
