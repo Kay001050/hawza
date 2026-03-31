@@ -760,7 +760,7 @@
     }
 
     @media (max-width: 768px) {
-      .media-grid.channels-view { grid-template-columns: repeat(3, 1fr); max-width: 100%; }
+      .media-grid.channels-view { grid-template-columns: repeat(2, 1fr); max-width: 100%; }
       .media-grid.videos-view   { grid-template-columns: repeat(2, 1fr); }
       .media-controls-bar { flex-direction: column; align-items: flex-start; }
       .media-filters-group { width: 100%; }
@@ -769,10 +769,74 @@
     }
     @media (max-width: 480px) {
       .media-grid.channels-view { grid-template-columns: repeat(2, 1fr); }
-      .media-grid.videos-view   { grid-template-columns: 1fr; }
+      .media-grid.videos-view   { grid-template-columns: repeat(2, 1fr); }
       .media-filters-group { flex-direction: column; }
       .category-filter-wrapper, .media-sort-wrapper { width: 100%; }
       .media-sort-select { width: 100%; }
+    }
+
+    /* ── أنماط العرض البديلة ── */
+    .media-grid.horizontal-view {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .media-grid.horizontal-view .media-card {
+      flex-direction: row;
+      align-items: flex-start;
+      text-align: right;
+      gap: 12px;
+    }
+
+    .media-grid.horizontal-view .media-card.channel-card .media-thumbnail {
+      width: 80px;
+      height: 80px;
+      min-width: 80px;
+      flex-shrink: 0;
+    }
+
+    .media-grid.horizontal-view .media-card.video-card .media-thumbnail {
+      width: 140px;
+      height: 80px;
+      min-width: 140px;
+      aspect-ratio: auto;
+    }
+
+    .media-grid.horizontal-view .media-info {
+      align-items: flex-start;
+      text-align: right;
+      flex: 1;
+    }
+
+    .media-grid.horizontal-view .media-card.channel-card .media-info {
+      align-items: flex-start;
+    }
+
+    /* زر التبديل بين العروض */
+    .view-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--accent-gold);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .view-toggle-btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent-gold);
+    }
+
+    .view-toggle-btn.active {
+      background: var(--accent-gold);
+      color: white;
+      box-shadow: 0 4px 12px rgba(160, 127, 58, 0.25);
     }
 
     /* ── البطاقة الأساسية ── */
@@ -3912,7 +3976,7 @@
       padding: 0 20px;
       align-items: start;
       max-width: 1400px;
-      margin: 0 auto;
+      margin: 20px auto 0; /* إضافة هامش علوي لتجنب تداخل الرؤوس */
     }
 
     /* تحسين عدد الأعمدة للكمبيوتر والشاشات الكبيرة */
@@ -4184,10 +4248,13 @@
     @media (max-width: 768px) {
       .duas-header {
         padding: 0 16px;
+        flex-wrap: wrap;
+        gap: 10px;
       }
       /* تم تعديل شبكة الجوال في الأعلى لتكون 2 في كل سطر */
       .duas-header h2 {
         font-size: 1.4rem;
+        flex: 1 1 100%;
       }
       .duas-card-text {
         font-size: 1.15rem;
@@ -4430,6 +4497,16 @@
                 <span class="tab-count" id="tabCountPlaylists">0</span>
               </button>
             </div>
+
+            <!-- زر التبديل بين العروض -->
+            <button class="view-toggle-btn active" id="gridViewBtn" title="عرض شبكي">
+              <i class="fas fa-th"></i>
+              <span class="view-label">شبكي</span>
+            </button>
+            <button class="view-toggle-btn" id="horizontalViewBtn" title="عرض أفقي">
+              <i class="fas fa-bars"></i>
+              <span class="view-label">أفقي</span>
+            </button>
 
             <!-- مجموعة الفلاتر (التصنيف + الترتيب) -->
             <div class="media-filters-group">
@@ -6198,12 +6275,20 @@ ITEMS_PER_PAGE: 30
       // تطبيق الترتيب
       filtered = sortMediaItems(filtered);
 
-      // تغيير شكل الشبكة بناءً على التبويب
+      // تغيير شكل الشبكة بناءً على التبويب ومود العرض
+      let gridClass = 'media-grid';
       if (activeTab === 'channels') {
-        grid.className = 'media-grid channels-view';
+        gridClass += ' channels-view';
       } else {
-        grid.className = 'media-grid videos-view';
+        gridClass += ' videos-view';
       }
+      
+      // إضافة فئة العرض الأفقي إذا كانه مفعلة
+      if (localStorage.getItem('mediaViewMode') === 'horizontal') {
+        gridClass += ' horizontal-view';
+      }
+      
+      grid.className = gridClass;
 
       if (filtered.length === 0) {
         let typeText = 'قنوات';
@@ -6603,10 +6688,7 @@ ITEMS_PER_PAGE: 30
       const closeBtn = document.getElementById('micCloseBtn');
       const overlay  = document.getElementById('mediaInfoOverlay');
       if (closeBtn) closeBtn.addEventListener('click', closeMediaInfoCard);
-      if (overlay)  overlay.addEventListener('click', closeMediaInfoCard);
-
-      // زر المشاركة
-      const shareBtn = document.getElementById('micShareBtn');
+      if (overlay)  overlay.addEventListener('click', closeMediaInfoCard);ElementById('micShareBtn');
       if (shareBtn) {
         shareBtn.addEventListener('click', () => {
           const openBtn = document.getElementById('micOpenBtn');
@@ -6635,8 +6717,52 @@ ITEMS_PER_PAGE: 30
         }
       });
 
+      // أزرار التبديل بين العروض
+      const gridViewBtn = document.getElementById('gridViewBtn');
+      const horizontalViewBtn = document.getElementById('horizontalViewBtn');
+      
+      if (gridViewBtn) {
+        gridViewBtn.addEventListener('click', () => {
+          localStorage.setItem('mediaViewMode', 'grid');
+          gridViewBtn.classList.add('active');
+          horizontalViewBtn.classList.remove('active');
+          renderMediaGrid();
+        });
+      }
+      
+      if (horizontalViewBtn) {
+        horizontalViewBtn.addEventListener('click', () => {
+          localStorage.setItem('mediaViewMode', 'horizontal');
+          horizontalViewBtn.classList.add('active');
+          gridViewBtn.classList.remove('active');
+          renderMediaGrid();
+        });
+      }
+      
+      // تعيين الزر النشط بناءً على الوضع المحفوظ
+      const viewMode = localStorage.getItem('mediaViewMode') || 'grid';
+      if (viewMode === 'horizontal') {
+        horizontalViewBtn.classList.add('active');
+        gridViewBtn.classList.remove('active');
+      } else {
+        gridViewBtn.classList.add('active');
+        horizontalViewBtn.classList.remove('active');
+      }
+
       // جلب البيانات
       await loadMediaFromSheets();
+      
+      // تعيين مود العرض المحفوظ عند التحميل الأولي
+      const savedViewMode = localStorage.getItem('mediaViewMode') || 'grid';
+      const gridViewBtnInit = document.getElementById('gridViewBtn');
+      const horizontalViewBtnInit = document.getElementById('horizontalViewBtn');
+      if (savedViewMode === 'horizontal') {
+        if (horizontalViewBtnInit) horizontalViewBtnInit.classList.add('active');
+        if (gridViewBtnInit) gridViewBtnInit.classList.remove('active');
+      } else {
+        if (gridViewBtnInit) gridViewBtnInit.classList.add('active');
+        if (horizontalViewBtnInit) horizontalViewBtnInit.classList.remove('active');
+      }
     }
 
     let allDuasData = [];
