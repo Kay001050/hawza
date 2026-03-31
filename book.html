@@ -3960,10 +3960,20 @@
     .duas-card.active {
       height: 600px; /* الارتفاع عند التوسع */
       grid-column: 1 / -1; /* التوسع ليصبح مستطيلاً بعرض الشبكة بالكامل */
-      z-index: 10;
+      z-index: 999; /* قيمة عالية لضمان الظهور فوق العناصر الأخرى */
       transform: scale(1.01);
       box-shadow: var(--shadow-lg);
       border-color: var(--accent-gold);
+      position: relative;
+    }
+
+    /* إصلاح التداخل مع الهيدر الثابت */
+    .duas-card.active .duas-card-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     .duas-card-header {
@@ -6638,7 +6648,7 @@ ITEMS_PER_PAGE: 30
         const results = await Promise.all(fetchPromises);
         
         results.forEach(result => {
-          if (result && result.content) {
+          if (result) {
             const card = document.createElement('div');
             card.className = 'duas-card';
             card.innerHTML = `
@@ -6648,28 +6658,52 @@ ITEMS_PER_PAGE: 30
               </div>
               <div class="duas-card-body">
                 <div class="duas-card-text-wrapper">
-                  <div class="duas-card-text">${result.content}</div>
+                  <div class="duas-card-text" data-loaded="false">اضغط للتحميل...</div>
                 </div>
                 <div class="duas-card-decoration"><i class="fas fa-star"></i></div>
               </div>
             `;
             
             // إضافة وظيفة الفتح والإغلاق للبطاقة
-            card.querySelector('.duas-card-header').addEventListener('click', (e) => {
+            card.querySelector('.duas-card-header').addEventListener('click', async (e) => {
               const isActive = card.classList.contains('active');
+              const body = card.querySelector('.duas-card-body');
+              const textContainer = card.querySelector('.duas-card-text');
               
-              // إغلاق أي بطاقة أخرى مفتوحة لضمان سلاسة العرض
+              // إغلاق أي بطاقة أخرى مفتوحة
               grid.querySelectorAll('.duas-card.active').forEach(c => {
                 if(c !== card) c.classList.remove('active');
               });
               
-              card.classList.toggle('active');
-              
-              // تمرير سلس للبطاقة لتتوسط الشاشة عند الفتح
               if (!isActive) {
+                // التحميل عند الطلب (Lazy Loading)
+                if (textContainer.getAttribute('data-loaded') !== 'true') {
+                  textContainer.innerHTML = '<div class="duas-loading"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</div>';
+                  try {
+                    const response = await fetch(result.url);
+                    const text = await response.text();
+                    textContainer.innerHTML = text;
+                    textContainer.setAttribute('data-loaded', 'true');
+                  } catch (error) {
+                    textContainer.innerHTML = '<div class="duas-error">تعذر تحميل نص الدعاء. يرجى المحاولة لاحقاً.</div>';
+                  }
+                }
+                
+                card.classList.add('active');
+                
+                // تمرير سلس للبطاقة لتتوسط الشاشة مع مراعاة الهيدر
                 setTimeout(() => {
-                  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  const headerOffset = 100; // تعويض ارتفاع الهيدر الثابت
+                  const elementPosition = card.getBoundingClientRect().top;
+                  const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                  });
                 }, 500);
+              } else {
+                card.classList.remove('active');
               }
             });
             
