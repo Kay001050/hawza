@@ -3906,17 +3906,34 @@
 
     .duas-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr); /* دعاءين في كل سطر */
+      /* الوضع الافتراضي للكمبيوتر: 4 أو 6 أعمدة */
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 16px;
       padding: 0 20px;
       align-items: start;
-      max-width: 1000px;
+      max-width: 1400px;
       margin: 0 auto;
     }
 
-    @media (max-width: 600px) {
+    /* تحسين عدد الأعمدة للكمبيوتر والشاشات الكبيرة */
+    @media (min-width: 1200px) {
       .duas-grid {
-        grid-template-columns: 1fr; /* سطر واحد في الجوال */
+        grid-template-columns: repeat(6, 1fr);
+      }
+    }
+
+    @media (max-width: 1199px) and (min-width: 769px) {
+      .duas-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    /* للهاتف: 2 في كل سطر كما طلب المستخدم */
+    @media (max-width: 768px) {
+      .duas-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 0 12px;
       }
     }
 
@@ -3930,20 +3947,23 @@
       box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
-      height: 70px; /* ارتفاع المربع الصغير (العنوان فقط) */
+      height: 80px; /* ارتفاع المربع الصغير */
       z-index: 1;
     }
 
     .duas-card:hover {
       border-color: var(--accent-gold);
       box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
     }
 
     .duas-card.active {
-      height: 550px; /* الارتفاع عند التوسع */
-      grid-column: 1 / -1; /* التوسع ليأخذ كامل العرض (مستطيل) */
+      height: 600px; /* الارتفاع عند التوسع */
+      grid-column: 1 / -1; /* التوسع ليصبح مستطيلاً بعرض الشبكة بالكامل */
       z-index: 10;
-      transform: scale(1.02);
+      transform: scale(1.01);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--accent-gold);
     }
 
     .duas-card-header {
@@ -4106,15 +4126,19 @@
       .duas-header {
         padding: 0 16px;
       }
-      .duas-grid {
-        grid-template-columns: 1fr;
-        padding: 0 16px;
-      }
+      /* تم تعديل شبكة الجوال في الأعلى لتكون 2 في كل سطر */
       .duas-header h2 {
         font-size: 1.4rem;
       }
       .duas-card-text {
-        font-size: 1.1rem;
+        font-size: 1.15rem;
+        line-height: 1.8;
+      }
+      .duas-card-title {
+        font-size: 1rem;
+      }
+      .duas-card.active {
+        height: 500px; /* ارتفاع أقل قليلاً للجوال */
       }
     }
 
@@ -6631,10 +6655,22 @@ ITEMS_PER_PAGE: 30
             `;
             
             // إضافة وظيفة الفتح والإغلاق للبطاقة
-            card.querySelector('.duas-card-header').addEventListener('click', () => {
-              // إغلاق البطاقات الأخرى المفتوحة (اختياري، لجعلها مثل الأكورديون)
-              // grid.querySelectorAll('.duas-card.active').forEach(c => { if(c !== card) c.classList.remove('active'); });
+            card.querySelector('.duas-card-header').addEventListener('click', (e) => {
+              const isActive = card.classList.contains('active');
+              
+              // إغلاق أي بطاقة أخرى مفتوحة لضمان سلاسة العرض
+              grid.querySelectorAll('.duas-card.active').forEach(c => {
+                if(c !== card) c.classList.remove('active');
+              });
+              
               card.classList.toggle('active');
+              
+              // تمرير سلس للبطاقة لتتوسط الشاشة عند الفتح
+              if (!isActive) {
+                setTimeout(() => {
+                  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 500);
+              }
             });
             
             grid.appendChild(card);
