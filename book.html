@@ -3826,6 +3826,182 @@
       .show-all-btn { padding: 10px 14px; font-size: 0.85rem; }
     }
 
+    /* ───────────────────────────────────────────────────────────────────────────
+       مكتبة الأدعية
+       ─────────────────────────────────────────────────────────────────────────── */
+    .duas-section {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 24px 0;
+      margin-bottom: 20px;
+    }
+
+    .duas-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding: 0 24px;
+    }
+
+    .duas-header h2 {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .duas-header h2 i {
+      color: var(--accent-gold);
+    }
+
+    .duas-toggle-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--accent-gold);
+      transition: var(--transition-normal);
+    }
+
+    .duas-toggle-btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-medium);
+    }
+
+    .duas-toggle-btn i {
+      transition: transform 0.3s ease;
+    }
+
+    .duas-toggle-btn.collapsed i {
+      transform: rotate(180deg);
+    }
+
+    .duas-content {
+      max-height: 1000px;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+
+    .duas-content.collapsed {
+      max-height: 0;
+      overflow: hidden;
+    }
+
+    .duas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 0 24px;
+    }
+
+    .duas-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      transition: var(--transition-normal);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .duas-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--accent-gold), var(--accent-gold-light));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .duas-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-medium);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-4px);
+    }
+
+    .duas-card:hover::before {
+      opacity: 1;
+    }
+
+    .duas-card-title {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .duas-card-text {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text-primary);
+      margin: 0;
+      text-align: justify;
+      flex-grow: 1;
+    }
+
+    .duas-loading {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 40px 24px;
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    .duas-loading i {
+      animation: spin 1s linear infinite;
+      color: var(--accent-gold);
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .duas-error {
+      grid-column: 1 / -1;
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 768px) {
+      .duas-header {
+        padding: 0 16px;
+      }
+      .duas-grid {
+        grid-template-columns: 1fr;
+        padding: 0 16px;
+      }
+      .duas-header h2 {
+        font-size: 1.4rem;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -4312,6 +4488,23 @@
 
   <!-- Toast -->
   <div class="toast-container" id="toastContainer"></div>
+
+  <!-- مكتبة الأدعية -->
+  <section class="duas-section">
+    <div class="container">
+      <div class="duas-header">
+        <h2><i class="fas fa-book-open"></i> مكتبة الأدعية</h2>
+        <button class="duas-toggle-btn" id="duasToggleBtn">
+          <i class="fas fa-chevron-down"></i>
+        </button>
+      </div>
+      <div class="duas-content" id="duasContent">
+        <div class="duas-grid" id="duasGrid">
+          <div class="duas-loading"><i class="fas fa-spinner"></i><span>جاري تحميل الأدعية...</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Footer -->
   <footer class="footer">
@@ -5676,7 +5869,8 @@ ITEMS_PER_PAGE: 30
             vId, handle,
             bio, audience, notes,
             nameProvided: !!nameRaw,
-            author: ''
+            author: '',
+            publishedDate: null
           });
         }
 
@@ -5769,14 +5963,20 @@ ITEMS_PER_PAGE: 30
           sorted.sort((a, b) => (b.title || '').localeCompare(a.title || '', 'ar'));
           break;
         case 'date-newest':
-          // العناصر الأحدث تحميلاً = آخر ما أضيف (عكس الترتيب الافتراضي)
-          sorted.reverse();
+          sorted.sort((a, b) => {
+            const dateA = a.publishedDate ? new Date(a.publishedDate).getTime() : 0;
+            const dateB = b.publishedDate ? new Date(b.publishedDate).getTime() : 0;
+            return dateB - dateA;
+          });
           break;
         case 'date-oldest':
-          // الأقدم = أول ما أضيف (الترتيب الافتراضي)
+          sorted.sort((a, b) => {
+            const dateA = a.publishedDate ? new Date(a.publishedDate).getTime() : 0;
+            const dateB = b.publishedDate ? new Date(b.publishedDate).getTime() : 0;
+            return dateA - dateB;
+          });
           break;
         default:
-          // الترتيب الافتراضي - كما ورد في البيانات
           break;
       }
       return sorted;
@@ -5940,6 +6140,7 @@ ITEMS_PER_PAGE: 30
           item.title  = d.title       || item.title;
           item.author = d.author_name || '';
           if (isPlaylist && d.thumbnail_url) item.thumbnail = d.thumbnail_url;
+          await fetchPublishedDate(item);
           return;
         }
       } catch (e) {}
@@ -5950,11 +6151,13 @@ ITEMS_PER_PAGE: 30
           item.title  = d.title       || item.title;
           item.author = d.author_name || '';
           if (isPlaylist && d.thumbnail_url) item.thumbnail = d.thumbnail_url;
+          await fetchPublishedDate(item);
           return;
         }
       } catch (e) {}
       if (!item.title || item.title === 'جاري التحميل...')
         item.title = (isPlaylist ? `قائمة - ` : `فيديو - `) + item.vId.substring(0, 8);
+      await fetchPublishedDate(item);
     }
 
     async function fetchChannelData(item) {
@@ -5972,6 +6175,33 @@ ITEMS_PER_PAGE: 30
       } catch (e) {}
       item.title  = item.title || item.handle;
       item.author = item.handle;
+    }
+
+    // جلب تاريخ النشر الفعلي من يوتيوب
+    async function fetchPublishedDate(item) {
+      try {
+        const isPlaylist = item.type === 'playlist' || item.url.includes('list=');
+        
+        if (isPlaylist) {
+          const res = await fetch(`https://www.youtube.com/playlist?list=${item.vId}`);
+          if (res.ok) {
+            const html = await res.text();
+            const dateMatch = html.match(/"dateText":{"simpleText":"([^"]+)"}/);
+            if (dateMatch && dateMatch[1]) {
+              item.publishedDate = new Date(dateMatch[1]);
+            }
+          }
+        } else {
+          const res = await fetch(`https://www.youtube.com/watch?v=${item.vId}`);
+          if (res.ok) {
+            const html = await res.text();
+            const dateMatch = html.match(/"uploadDate":"([^"]+)"/);
+            if (dateMatch && dateMatch[1]) {
+              item.publishedDate = new Date(dateMatch[1]);
+            }
+          }
+        }
+      } catch (e) {}
     }
 
     // ───────────────────────────────────────────────────────────────────────────
@@ -6210,12 +6440,73 @@ ITEMS_PER_PAGE: 30
       await loadMediaFromSheets();
     }
 
+    async function initDuasSection() {
+      const grid = document.getElementById('duasGrid');
+      const toggleBtn = document.getElementById('duasToggleBtn');
+      const content = document.getElementById('duasContent');
+      
+      if (!toggleBtn) return;
+
+      toggleBtn.addEventListener('click', () => {
+        toggleBtn.classList.toggle('collapsed');
+        content.classList.toggle('collapsed');
+      });
+
+      try {
+        const folderId = '1_06Vo6UthBtmHCY7KjpywaAZeDbYNIjV';
+        const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&fields=files(id,name,mimeType)&key=AIzaSyDyWJOw5w-1ycj5_xLjjHdUQXV-VfZqLqE`;
+        
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('Failed to fetch files');
+        
+        const data = await response.json();
+        const files = data.files || [];
+        
+        if (files.length === 0) {
+          grid.innerHTML = '<div class="duas-error">لم يتم العثور على أي أدعية</div>';
+          return;
+        }
+
+        grid.innerHTML = '';
+        
+        for (const file of files) {
+          if (file.mimeType === 'application/vnd.google-apps.document') {
+            const docId = file.id;
+            const title = file.name;
+            const docUrl = `https://docs.google.com/document/d/${docId}/export?format=txt`;
+            
+            try {
+              const docResponse = await fetch(docUrl);
+              if (docResponse.ok) {
+                const text = await docResponse.text();
+                const cleanText = text.trim().substring(0, 500);
+                
+                const card = document.createElement('div');
+                card.className = 'duas-card';
+                card.innerHTML = `
+                  <h3 class="duas-card-title">${title}</h3>
+                  <p class="duas-card-text">${cleanText}</p>
+                `;
+                grid.appendChild(card);
+              }
+            } catch (e) {
+              console.error(`Error fetching document ${title}:`, e);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error loading duas:', error);
+        grid.innerHTML = '<div class="duas-error">حدث خطأ عند تحميل الأدعية</div>';
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       initTheme();
       initEventListeners();
       initLibraryTypeTabs();
       initLibrary();
       initMediaSection();
+      initDuasSection();
     });
   </script>
 </body>
