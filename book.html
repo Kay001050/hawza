@@ -804,7 +804,7 @@
       box-shadow: 0 4px 16px rgba(255,0,0,0.22);
       transition: box-shadow 0.3s ease, transform 0.3s ease;
       flex-shrink: 0;
-      background: var(--bg-tertiary);
+      background: transparent;
     }
 
     .media-card.channel-card:hover .media-thumbnail {
@@ -2634,6 +2634,41 @@
       gap: 12px;
     }
 
+    /* ── العرض الشبكي المضغوط ── */
+    .books-grid.compact-grid-view {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .books-grid.compact-grid-view .folder-card {
+      padding: 24px 16px;
+    }
+
+    .books-grid.compact-grid-view .folder-icon {
+      width: 52px;
+      height: 52px;
+      font-size: 1.5rem;
+    }
+
+    .books-grid.compact-grid-view .folder-name {
+      font-size: 0.88rem;
+    }
+
+    .books-grid.compact-grid-view .book-card {
+      flex-direction: column;
+    }
+
+    .books-grid.compact-grid-view .book-cover-wrapper {
+      width: 100%;
+      height: 140px;
+    }
+
+    @media (max-width: 480px) {
+      .books-grid.compact-grid-view {
+        gap: 10px;
+      }
+    }
+
     /* Folder Card */
     .folder-card {
       background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-card-hover) 100%);
@@ -3882,11 +3917,21 @@
       z-index: 0;
     }
 
-    .youtube-theme { background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; }
+    .youtube-theme { background: linear-gradient(160deg, #0f0f0f 0%, #1a1a1a 40%, #2d1a1a 100%); color: white; }
     .youtube-theme::before { background: #ff0000; }
+    .youtube-theme .hero-banner-icon-wrapper {
+      background: rgba(255,0,0,0.15);
+      border-color: rgba(255,0,0,0.35);
+      box-shadow: 0 0 30px rgba(255,0,0,0.25), 0 10px 25px rgba(0,0,0,0.3);
+    }
     
-    .haqiba-theme { background: linear-gradient(135deg, #064e3b 0%, #065f46 100%); color: white; }
+    .haqiba-theme { background: linear-gradient(160deg, #042f2e 0%, #065f46 100%); color: white; }
     .haqiba-theme::before { background: #10b981; }
+    .haqiba-theme .hero-banner-icon-wrapper {
+      background: rgba(16,185,129,0.15);
+      border-color: rgba(16,185,129,0.35);
+      box-shadow: 0 0 30px rgba(16,185,129,0.25), 0 10px 25px rgba(0,0,0,0.3);
+    }
     
     .summaries-theme { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); color: white; }
     .summaries-theme::before { background: #3b82f6; }
@@ -3966,83 +4011,6 @@
       flex-wrap: wrap;
     }
 
-    .standalone-tabs {
-      display: flex;
-      gap: 12px;
-      background: var(--bg-card);
-      padding: 6px;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-subtle);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .standalone-tab {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 20px;
-      border-radius: var(--radius-md);
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      transition: all 0.3s ease;
-      cursor: pointer;
-      border: none;
-      background: transparent;
-    }
-
-    .standalone-tab.active {
-      background: var(--accent-gold);
-      color: white;
-      box-shadow: 0 4px 12px rgba(160, 127, 58, 0.3);
-    }
-
-    .tab-badge {
-      background: rgba(0,0,0,0.1);
-      padding: 2px 8px;
-      border-radius: var(--radius-full);
-      font-size: 0.75rem;
-    }
-
-    .standalone-tab.active .tab-badge { background: rgba(255,255,255,0.2); }
-
-    .standalone-filters {
-      display: flex;
-      gap: 15px;
-    }
-
-    .filter-select-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    .standalone-select {
-      padding: 12px 45px 12px 20px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      color: var(--text-primary);
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      appearance: none;
-      transition: all 0.3s ease;
-    }
-
-    .standalone-select:focus {
-      border-color: var(--accent-gold);
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(160, 127, 58, 0.1);
-    }
-
-    .filter-icon-main, .sort-icon-main {
-      position: absolute;
-      right: 15px;
-      color: var(--accent-gold);
-      pointer-events: none;
-    }
-
     /* شبكة المحتوى المستقلة */
     .standalone-grid {
       display: grid;
@@ -4050,11 +4018,71 @@
     }
 
     .media-grid-layout {
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+
+    /* شبكة القنوات: 150px لكل عمود */
+    .standalone-grid.channels-view {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 16px;
+    }
+
+    /* شبكة الفيديو: aspect-ratio 16/9 */
+    .standalone-grid.videos-view .media-card.video-card .media-thumbnail {
+      aspect-ratio: 16/9;
+    }
+
+    /* صورة القناة: دائرية 100px */
+    .standalone-grid.channels-view .media-card.channel-card .media-thumbnail {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    }
+
+    .standalone-grid.channels-view .media-card.channel-card .media-thumbnail img {
+      border-radius: 50%;
+    }
+
+    /* أيقونة تشغيل 38px */
+    .standalone-grid.videos-view .media-play-icon i {
+      font-size: 38px;
+    }
+
+    /* اقتطاع العنوان سطرين */
+    .standalone-grid.videos-view .media-title {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* عداد النتائج */
+    .yt-results-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 16px;
+    }
+
+    .yt-results-count {
+      font-weight: 700;
+      color: var(--accent-youtube);
+      font-size: 1rem;
     }
 
     .folders-grid-layout {
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+
+    @media (max-width: 768px) {
+      .haqiba-theme .folders-grid-layout {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
     }
 
     /* بطاقات المجلدات الجديدة */
@@ -4079,6 +4107,12 @@
       box-shadow: 0 15px 35px rgba(0,0,0,0.1);
     }
 
+    .haqiba-theme .folder-card-modern:hover {
+      transform: translateY(-6px);
+      border-color: rgba(16,185,129,0.5);
+      box-shadow: 0 12px 30px rgba(16,185,129,0.18), 0 4px 12px rgba(0,0,0,0.08);
+    }
+
     .folder-icon-box {
       width: 64px;
       height: 64px;
@@ -4086,20 +4120,59 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.8rem;
+      font-size: 2rem;
       margin-bottom: 5px;
-      transition: all 0.3s ease;
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .haqiba-theme .folder-icon-box { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+    .haqiba-theme .folder-icon-box { background: rgba(16, 185, 129, 0.12); color: #10b981; }
     .summaries-theme .folder-icon-box { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
 
     .folder-card-modern:hover .folder-icon-box {
-      transform: scale(1.1) rotate(5deg);
+      transform: scale(1.1) rotate(-3deg);
+    }
+
+    /* شارات نوعية سفلية لبطاقات حقيبة المؤمن */
+    .folder-card-modern {
+      position: relative;
+    }
+
+    .haqiba-type-badge {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 9px;
+      border-radius: var(--radius-full);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      pointer-events: none;
+    }
+
+    .haqiba-badge-folder {
+      background: rgba(16,185,129,0.12);
+      color: #059669;
+      border: 1px solid rgba(16,185,129,0.25);
+    }
+
+    .haqiba-badge-dua {
+      background: rgba(245,158,11,0.12);
+      color: #d97706;
+      border: 1px solid rgba(245,158,11,0.25);
+    }
+
+    .haqiba-badge-quran {
+      background: rgba(139,92,246,0.12);
+      color: #7c3aed;
+      border: 1px solid rgba(139,92,246,0.25);
     }
 
     .folder-name-modern {
-      font-weight: 800;
+      font-family: var(--font-heading);
+      font-weight: 700;
       font-size: 1.05rem;
       color: var(--text-primary);
       line-height: 1.4;
@@ -4434,6 +4507,74 @@
       padding-right: 13px;
     }
 
+    /* ═══════════════════════════════════════════════════════════════════════
+       مسار تنقل حقيبة المؤمن
+       ═══════════════════════════════════════════════════════════════════════ */
+    #haqibaBreadcrumbs {
+      display: none;
+      padding: 10px 0;
+      margin-bottom: 4px;
+      background: linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(100,116,139,0.05) 100%);
+      border-bottom: 1px solid rgba(16,185,129,0.15);
+      animation: haqibaBreadcrumbSlide 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes haqibaBreadcrumbSlide {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    #haqibaBreadcrumbs.visible {
+      display: block;
+    }
+
+    .haqiba-breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding: 2px 0;
+    }
+
+    .haqiba-breadcrumb-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      color: #10b981;
+      background: rgba(16,185,129,0.08);
+    }
+
+    .haqiba-breadcrumb-item:hover:not(.haqiba-bc-current) {
+      background: rgba(16,185,129,0.15);
+      border-color: rgba(16,185,129,0.3);
+    }
+
+    .haqiba-breadcrumb-item.haqiba-bc-root {
+      background: rgba(16,185,129,0.12);
+      border-color: rgba(16,185,129,0.25);
+      font-weight: 700;
+    }
+
+    .haqiba-breadcrumb-item.haqiba-bc-current {
+      background: rgba(16,185,129,0.18);
+      border-color: rgba(16,185,129,0.35);
+      color: #059669;
+      font-weight: 700;
+      cursor: default;
+    }
+
+    .haqiba-breadcrumb-separator {
+      color: rgba(16,185,129,0.5);
+      font-size: 0.7rem;
+    }
+
     /* صفحة حقيبة المؤمن */
     #page-haqiba, #page-youtube, #page-summaries {
       display: none;
@@ -4556,98 +4697,235 @@
       border: 1px solid var(--border-subtle);
     }
 
+    /* ── التبويبات المستقلة - سطر أفقي Pill ── */
     .standalone-tabs {
       display: flex;
-      flex-direction: column;
-      gap: 10px;
+      flex-direction: row;
+      gap: 8px;
       width: 100%;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding-bottom: 2px;
+    }
+
+    .standalone-tabs::-webkit-scrollbar {
+      display: none;
     }
 
     .standalone-tab {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      justify-content: flex-start;
-      gap: 12px;
-      padding: 12px 16px;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 18px;
       background: var(--bg-tertiary);
-      border: 1px solid var(--border-medium);
-      border-radius: var(--radius-md);
+      border: 1.5px solid rgba(255,0,0,0.2);
+      border-radius: var(--radius-full);
       color: var(--text-secondary);
-      font-weight: 600;
-      font-size: 0.95rem;
+      font-weight: 700;
+      font-size: 0.88rem;
       cursor: pointer;
       transition: var(--transition-fast);
-      width: 100%;
-    }
-
-    .standalone-tab.active {
-      background: var(--accent-gold);
-      color: white;
-      border-color: var(--accent-gold);
-    }
-
-    .standalone-tab:hover {
-      border-color: var(--accent-gold);
-      background: var(--bg-card-hover);
-    }
-
-    .tab-badge {
-      margin-left: auto;
-      background: rgba(255,255,255,0.2);
-      padding: 2px 8px;
-      border-radius: var(--radius-full);
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-
-    .standalone-filters {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 100%;
-    }
-
-    .filter-select-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      background: var(--bg-tertiary);
-      border: 1px solid var(--border-medium);
-      border-radius: var(--radius-md);
-      width: 100%;
-    }
-
-    .filter-icon-main, .sort-icon-main {
-      color: var(--text-muted);
-      font-size: 0.9rem;
+      white-space: nowrap;
       flex-shrink: 0;
     }
 
-    .standalone-select {
-      flex: 1;
+    .standalone-tab.active {
+      background: linear-gradient(135deg, var(--accent-youtube) 0%, #cc0000 100%);
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(255,0,0,0.3);
+    }
+
+    .standalone-tab:hover:not(.active) {
+      border-color: rgba(255,0,0,0.4);
+      background: rgba(255,0,0,0.06);
+      color: var(--accent-youtube);
+    }
+
+    .tab-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
+      background: rgba(255,255,255,0.25);
+      border-radius: var(--radius-full);
+      font-size: 0.68rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .standalone-tab:not(.active) .tab-badge {
+      background: rgba(255,0,0,0.12);
+      color: var(--accent-youtube);
+    }
+
+    /* ── الفلاتر المستقلة - سطر أفقي Pill ── */
+    .standalone-filters {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      width: 100%;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .standalone-filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-select-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 0;
       background: transparent;
       border: none;
-      color: var(--text-secondary);
-      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .filter-select-wrapper .filter-icon-main {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent-youtube);
+      font-size: 0.8rem;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .filter-select-wrapper .sort-icon-main {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent-youtube);
+      font-size: 0.8rem;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .filter-arrow-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,0,0,0.5);
+      font-size: 0.65rem;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .standalone-select {
+      appearance: none;
+      -webkit-appearance: none;
+      background: transparent;
+      border: 1.5px solid rgba(255,0,0,0.3);
+      border-radius: var(--radius-full);
+      color: var(--text-primary);
+      font-family: var(--font-ui);
+      font-size: 0.85rem;
+      font-weight: 700;
       cursor: pointer;
       outline: none;
+      padding: 8px 36px 8px 36px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(255,0,0,0.08);
+      min-width: 160px;
+    }
+
+    .standalone-select:hover {
+      border-color: rgba(255,0,0,0.5);
+      box-shadow: 0 0 0 3px rgba(255,0,0,0.07), 0 4px 12px rgba(255,0,0,0.1);
+    }
+
+    .standalone-select:focus {
+      border-color: var(--accent-youtube);
+      box-shadow: 0 0 0 4px rgba(255,0,0,0.1);
     }
 
     .standalone-select option {
       background: var(--bg-card);
       color: var(--text-primary);
+      font-weight: 600;
     }
 
+    .standalone-select option:first-child {
+      font-weight: 800;
+      color: #cc0000;
+    }
+
+    /* شارات absolute فوق الفلاتر */
+    .filter-label-abs {
+      position: absolute;
+      top: -9px;
+      right: 10px;
+      background: var(--accent-youtube);
+      color: white;
+      font-size: 0.58rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      z-index: 3;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(255,0,0,0.3);
+      pointer-events: none;
+    }
+
+    .sort-label-abs {
+      position: absolute;
+      top: -9px;
+      right: 10px;
+      background: linear-gradient(135deg, #c00, var(--accent-youtube));
+      color: white;
+      font-size: 0.58rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      z-index: 3;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(255,0,0,0.3);
+      pointer-events: none;
+    }
+
+    /* الحاوية مع padding-top للشارة */
+    .filter-wrapper-with-badge {
+      position: relative;
+      padding-top: 10px;
+      flex-shrink: 0;
+    }
+
+    /* تجاوب الهاتف: التبويبات بسطر والفلاتر بسطر تحته */
     @media (max-width: 768px) {
       .standalone-controls-bar {
-        padding: 16px;
-        gap: 12px;
+        padding: 14px;
+        gap: 10px;
+        flex-direction: column;
+      }
+
+      .standalone-tabs {
+        flex-direction: row;
+        width: 100%;
+      }
+
+      .standalone-filters {
+        flex-direction: row;
+        width: 100%;
       }
 
       .standalone-tab {
-        padding: 10px 12px;
-        font-size: 0.9rem;
+        padding: 8px 14px;
+        font-size: 0.82rem;
+      }
+
+      .standalone-select {
+        min-width: 130px;
+        font-size: 0.8rem;
       }
     }
 
@@ -4711,7 +4989,7 @@
     .media-thumbnail {
       width: 100%;
       aspect-ratio: 1;
-      background: var(--bg-tertiary);
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -4724,6 +5002,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block;
     }
 
     .video-thumb::after {
@@ -5342,10 +5621,12 @@
     }
 
     .dua-popup-title {
-      font-family: var(--font-heading);
+      font-family: 'Amiri', serif;
       font-size: 1.4rem;
+      font-weight: 700;
       color: var(--accent-gold);
       margin: 0;
+      text-shadow: 0 1px 4px rgba(160,127,58,0.15);
     }
 
     .dua-popup-close {
@@ -5374,13 +5655,21 @@
 
     .dua-popup-text {
       font-family: 'Amiri', serif;
-      font-size: var(--dua-font-size, 1.4rem);
-      line-height: 2.2;
+      font-size: var(--dua-font-size, 1.6rem);
+      line-height: 2.4;
       color: var(--text-primary);
       text-align: center;
       white-space: pre-wrap;
       margin: 0;
       transition: font-size 0.2s ease;
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(160,127,58,0.03) 50%,
+        transparent 100%
+      );
+      border-radius: var(--radius-md);
+      padding: 12px;
     }
 
     /* شريط التحكم بحجم الخط */
@@ -6098,8 +6387,11 @@
     <div class="container controls-container">
       <div class="controls-left">
         <div class="view-toggles">
-          <button class="view-btn active" data-view="grid" title="عرض شبكي">
+          <button class="view-btn" data-view="grid" title="عرض شبكي">
             <i class="fas fa-th-large"></i>
+          </button>
+          <button class="view-btn active" data-view="compact-grid" title="عرض مضغوط">
+            <i class="fas fa-th"></i>
           </button>
           <button class="view-btn" data-view="list" title="عرض قائمة">
             <i class="fas fa-list"></i>
@@ -6205,7 +6497,7 @@
           </div>
           <div class="hero-banner-text">
             <h1 class="hero-banner-title">قنوات ومقاطع</h1>
-            <p class="hero-banner-subtitle">مكتبة يوتيوب التعليمية لنور الحوزة</p>
+            <p class="hero-banner-subtitle">مكتبة يوتيوب نور الحوزة للمقاطع والقنوات المقترحة</p>
           </div>
         </div>
       </div>
@@ -6232,21 +6524,35 @@
         </div>
 
         <div class="standalone-filters">
-          <div class="filter-select-wrapper">
-            <i class="fas fa-filter filter-icon-main"></i>
-            <select id="ytCategorySelect" class="standalone-select">
-              <option value="all">جميع التصنيفات</option>
-            </select>
+          <div class="filter-wrapper-with-badge">
+            <span class="filter-label-abs">تصنيف</span>
+            <div class="filter-select-wrapper">
+              <i class="fas fa-filter filter-icon-main"></i>
+              <select id="ytCategorySelect" class="standalone-select">
+                <option value="all">جميع التصنيفات</option>
+              </select>
+              <i class="fas fa-chevron-down filter-arrow-icon"></i>
+            </div>
           </div>
-          <div class="filter-select-wrapper">
-            <i class="fas fa-sort-amount-down sort-icon-main"></i>
-            <select id="ytSortSelect" class="standalone-select">
-              <option value="default">الترتيب الافتراضي</option>
-              <option value="name-asc">الاسم (أ ← ي)</option>
-              <option value="name-desc">الاسم (ي ← أ)</option>
-            </select>
+          <div class="filter-wrapper-with-badge">
+            <span class="sort-label-abs">ترتيب</span>
+            <div class="filter-select-wrapper">
+              <i class="fas fa-sort-amount-down sort-icon-main"></i>
+              <select id="ytSortSelect" class="standalone-select">
+                <option value="default">الترتيب الافتراضي</option>
+                <option value="name-asc">الاسم (أ ← ي)</option>
+                <option value="name-desc">الاسم (ي ← أ)</option>
+              </select>
+              <i class="fas fa-chevron-down filter-arrow-icon"></i>
+            </div>
           </div>
         </div>
+      </div>
+
+      <div class="yt-results-info" id="ytResultsInfo" style="display:none;">
+        <i class="fab fa-youtube" style="color:var(--accent-youtube);"></i>
+        <span>عدد النتائج:</span>
+        <span class="yt-results-count" id="ytResultsCount">0</span>
       </div>
 
       <div id="ytPageGrid" class="standalone-grid media-grid-layout">
@@ -6280,6 +6586,11 @@
       </div>
     </div>
 
+    <div id="haqibaBreadcrumbs">
+      <div class="container">
+        <div class="haqiba-breadcrumbs" id="haqibaBreadcrumbsList"></div>
+      </div>
+    </div>
     <div class="container page-content-area">
       <div class="standalone-grid folders-grid-layout" id="haqibaGrid">
         <div class="media-loading">
@@ -6440,7 +6751,7 @@ ITEMS_PER_PAGE: 30
       showingAllBooks: false,
       searchQuery: '',
       currentSort: 'name-asc',
-      currentView: 'grid',
+      currentView: 'compact-grid',
       currentPage: 1,
       isLoading: true,
       totalSize: 0,
@@ -7030,6 +7341,13 @@ ITEMS_PER_PAGE: 30
         state.selectedCategory = null;
         state.showingAllBooks = false;
         DOM.searchInput.value = '';
+        // تعيين العرض المضغوط افتراضياً عند فتح أي مجلد فرعي
+        if (state.currentView !== 'list') {
+          state.currentView = 'compact-grid';
+          document.querySelectorAll('.view-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.view === 'compact-grid');
+          });
+        }
 
         DOM.sectionTitleText.textContent = folderName;
         updateBreadcrumbs();
@@ -7208,7 +7526,10 @@ ITEMS_PER_PAGE: 30
         return;
       }
       
-      DOM.booksGrid.className = `books-grid ${state.currentView === 'list' ? 'list-view' : ''}`;
+      let viewClass = '';
+      if (state.currentView === 'list') viewClass = 'list-view';
+      else if (state.currentView === 'compact-grid') viewClass = 'compact-grid-view';
+      DOM.booksGrid.className = `books-grid ${viewClass}`;
       const isMobile = window.innerWidth <= 480;
       
       let html = '';
@@ -7724,7 +8045,7 @@ ITEMS_PER_PAGE: 30
             if (!vId) continue;
             const isPlaylist = type === 'playlist' || urlRaw.includes('list=');
             thumbnail = isPlaylist 
-              ? `https://i.ytimg.com/vi/placeholder/hqdefault.jpg`
+              ? `https://img.youtube.com/vi/${vId}/hqdefault.jpg`
               : `https://img.youtube.com/vi/${vId}/hqdefault.jpg`;
             title = nameRaw || (isPlaylist ? 'قائمة تشغيل جاري التحميل...' : 'جاري التحميل...');
           } else {
@@ -7926,11 +8247,20 @@ ITEMS_PER_PAGE: 30
         grid.className = 'standalone-grid media-grid-layout videos-view';
       }
 
+      // تحديث عداد النتائج
+      const ytResultsInfo = document.getElementById('ytResultsInfo');
+      const ytResultsCount = document.getElementById('ytResultsCount');
+      if (ytResultsInfo) ytResultsInfo.style.display = 'flex';
+      if (ytResultsCount) ytResultsCount.textContent = filtered.length;
+
       if (filtered.length === 0) {
         let typeText = 'قنوات';
         if (activeTab === 'videos') typeText = 'فيديوهات';
         else if (activeTab === 'playlists') typeText = 'قوائم تشغيل';
-        grid.innerHTML = `<div class="media-empty"><i class="fas fa-search"></i><p>لا يوجد ${typeText} في هذا التصنيف</p></div>`;
+        grid.innerHTML = `<div class="media-empty" style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:16px;padding:60px 0;color:var(--text-muted);">
+          <i class="fab fa-youtube" style="font-size:3.5rem;color:rgba(255,0,0,0.3);"></i>
+          <p style="font-size:1rem;font-weight:600;">لا يوجد ${typeText} في هذا التصنيف</p>
+        </div>`;
         return;
       }
 
@@ -8001,7 +8331,7 @@ ITEMS_PER_PAGE: 30
            </div>`
         : `<div class="media-thumbnail">
              <img src="${imgSrc}" alt="${item.title}" loading="lazy"
-               onerror="this.src='https://img.youtube.com/vi/${item.vId}/mqdefault.jpg'">
+               onerror="if(this.src.includes('hqdefault')){this.src='https://img.youtube.com/vi/${item.vId}/mqdefault.jpg';}else{this.style.display='none';this.parentElement.style.background='#000';this.parentElement.insertAdjacentHTML('beforeend','<div style=\'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;\'><i class=\'fab fa-youtube\' style=\'font-size:2.5rem;color:#ff0000;\'></i></div>');this.onerror=null;}">
              <div class="media-overlay"></div>
              <div class="media-play-icon"><i class="fas ${isPlaylist ? 'fa-list' : 'fa-play'}"></i></div>
            </div>`;
@@ -8532,7 +8862,8 @@ ITEMS_PER_PAGE: 30
       window.scrollTo({ top: 0, behavior: 'smooth' });
       closeSidebar();
       if (!haqibaLoaded) {
-        loadHaqibaFolders();
+        haqibaHistory = [];
+        loadHaqibaFolders(HAQIBA_ROOT_ID, 'حقيبة المؤمن');
         haqibaLoaded = true;
       }
     }
@@ -8558,10 +8889,75 @@ ITEMS_PER_PAGE: 30
       });
     }
 
+    // تاريخ تنقل حقيبة المؤمن
+    let haqibaHistory = [];
+    const HAQIBA_ROOT_ID = '1_06Vo6UthBtmHCY7KjpywaAZeDbYNIjV';
+
+    function updateHaqibaBreadcrumbs() {
+      const bcContainer = document.getElementById('haqibaBreadcrumbs');
+      const bcList = document.getElementById('haqibaBreadcrumbsList');
+      if (!bcContainer || !bcList) return;
+
+      if (haqibaHistory.length <= 1) {
+        bcContainer.classList.remove('visible');
+        return;
+      }
+
+      bcContainer.classList.add('visible');
+      let html = '';
+      haqibaHistory.forEach((item, index) => {
+        const isLast = index === haqibaHistory.length - 1;
+        let iconClass, itemClass;
+        if (index === 0) {
+          iconClass = 'fa-scroll';
+          itemClass = 'haqiba-bc-root';
+        } else if (isLast) {
+          iconClass = 'fa-folder-open';
+          itemClass = 'haqiba-bc-current';
+        } else {
+          iconClass = 'fa-folder';
+          itemClass = '';
+        }
+        const label = item.name.length > 22 ? item.name.substring(0, 20) + '…' : item.name;
+        html += `<span class="haqiba-breadcrumb-item ${itemClass}" data-hbc-index="${index}" title="${item.name}"><i class="fas ${iconClass}"></i>${label}</span>`;
+        if (!isLast) html += '<span class="haqiba-breadcrumb-separator"><i class="fas fa-chevron-left"></i></span>';
+      });
+      bcList.innerHTML = html;
+
+      // مستمعو النقر على الحبات غير الحالية
+      bcList.querySelectorAll('.haqiba-breadcrumb-item:not(.haqiba-bc-current)').forEach(el => {
+        el.addEventListener('click', () => {
+          const idx = parseInt(el.dataset.hbcIndex);
+          if (idx === 0) {
+            haqibaHistory = [];
+            loadHaqibaFolders(HAQIBA_ROOT_ID, 'حقيبة المؤمن', true);
+          } else {
+            const target = haqibaHistory[idx];
+            haqibaHistory = haqibaHistory.slice(0, idx);
+            loadHaqibaFolders(target.id, target.name, true);
+          }
+        });
+      });
+    }
+
     // تحميل مجلدات حقيبة المؤمن (مطور ليدعم الأدعية والملفات)
-    async function loadHaqibaFolders(folderId = '1_06Vo6UthBtmHCY7KjpywaAZeDbYNIjV') {
+    async function loadHaqibaFolders(folderId = HAQIBA_ROOT_ID, folderName = 'حقيبة المؤمن', isBack = false) {
       const grid = document.getElementById('haqibaGrid');
       grid.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري تحميل المحتوى...</span></div>';
+
+      // تحديث التاريخ إذا لم يكن رجوعاً
+      if (!isBack) {
+        if (folderId === HAQIBA_ROOT_ID) {
+          haqibaHistory = [{ id: HAQIBA_ROOT_ID, name: 'حقيبة المؤمن' }];
+        } else {
+          haqibaHistory.push({ id: folderId, name: folderName });
+        }
+      } else {
+        // عند الرجوع: أضف العنصر الحالي
+        haqibaHistory.push({ id: folderId, name: folderName });
+      }
+
+      updateHaqibaBreadcrumbs();
       
       const apiKey = CONFIG.API_KEY;
       const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType)&pageSize=100&orderBy=name&key=${apiKey}`;
@@ -8578,20 +8974,34 @@ ITEMS_PER_PAGE: 30
         }
 
         grid.innerHTML = '';
-        
-        // إذا لم نكن في المجلد الرئيسي، أضف زر العودة للخلف
-        if (folderId !== '1_06Vo6UthBtmHCY7KjpywaAZeDbYNIjV') {
-          const backCard = document.createElement('div');
-          backCard.className = 'folder-card-modern';
-          backCard.innerHTML = `
-            <div class="folder-icon-box" style="background:rgba(160,127,58,0.1); color:var(--accent-gold);"><i class="fas fa-arrow-right"></i></div>
-            <div class="folder-name-modern">رجوع للخلف</div>
-          `;
-          backCard.onclick = () => loadHaqibaFolders('1_06Vo6UthBtmHCY7KjpywaAZeDbYNIjV');
-          grid.appendChild(backCard);
-        }
 
         const folderIcons = ['fas fa-book-open', 'fas fa-hands-praying', 'fas fa-quran', 'fas fa-moon', 'fas fa-star-and-crescent', 'fas fa-scroll', 'fas fa-heart'];
+
+        // اختيار الأيقونة بذكاء حسب اسم العنصر
+        function getSmartHaqibaIcon(name, isFolder, isDoc) {
+          if (!isFolder) return isDoc ? 'fas fa-file-alt' : 'fas fa-file-pdf';
+          const n = name.toLowerCase();
+          if (n.includes('دعاء') || n.includes('دعا') || n.includes('أدعية')) return 'fas fa-hands-praying';
+          if (n.includes('قرآن') || n.includes('سورة') || n.includes('تلاوة')) return 'fas fa-quran';
+          if (n.includes('صلاة') || n.includes('صلات')) return 'fas fa-mosque';
+          if (n.includes('زيارة') || n.includes('زيارات')) return 'fas fa-star-and-crescent';
+          if (n.includes('مناجاة') || n.includes('تسبيح')) return 'fas fa-moon';
+          if (n.includes('كتاب') || n.includes('كتب')) return 'fas fa-book-open';
+          if (n.includes('حديث') || n.includes('روايات')) return 'fas fa-scroll';
+          return folderIcons[Math.floor(Math.random() * folderIcons.length)];
+        }
+
+        // تحديد نوع الشارة
+        function getHaqibaBadge(name, isFolder, isDoc) {
+          if (!isFolder) {
+            if (isDoc) return '<span class="haqiba-type-badge haqiba-badge-dua"><i class="fas fa-hands-praying"></i> دعاء</span>';
+            return '<span class="haqiba-type-badge haqiba-badge-folder"><i class="fas fa-file-pdf"></i> ملف</span>';
+          }
+          const n = name.toLowerCase();
+          if (n.includes('قرآن') || n.includes('سورة')) return '<span class="haqiba-type-badge haqiba-badge-quran"><i class="fas fa-quran"></i> قرآن</span>';
+          if (n.includes('دعاء') || n.includes('دعا') || n.includes('أدعية')) return '<span class="haqiba-type-badge haqiba-badge-dua"><i class="fas fa-hands-praying"></i> دعاء</span>';
+          return '<span class="haqiba-type-badge haqiba-badge-folder"><i class="fas fa-folder"></i> مجلد</span>';
+        }
         
         items.forEach((item, idx) => {
           const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
@@ -8599,19 +9009,19 @@ ITEMS_PER_PAGE: 30
           const card = document.createElement('div');
           card.className = 'folder-card-modern';
           
-          let iconClass = folderIcons[idx % folderIcons.length];
-          if (!isFolder) iconClass = isDoc ? 'fas fa-file-alt' : 'fas fa-file-pdf';
+          const iconClass = getSmartHaqibaIcon(item.name, isFolder, isDoc);
+          const badgeHtml = getHaqibaBadge(item.name, isFolder, isDoc);
           
           card.innerHTML = `
             <div class="folder-icon-box"><i class="${iconClass}"></i></div>
             <div class="folder-name-modern">${item.name}</div>
+            ${badgeHtml}
           `;
           
           card.addEventListener('click', async () => {
             if (isFolder) {
-              loadHaqibaFolders(item.id);
+              loadHaqibaFolders(item.id, item.name);
             } else if (isDoc) {
-              // فتح الدعاء في Popup كما في الكود القديم
               openDuaInPopup(item.id, item.name);
             } else {
               window.open(`https://drive.google.com/file/d/${item.id}/view`, '_blank');
@@ -8824,7 +9234,17 @@ ITEMS_PER_PAGE: 30
       if (ytBackBtn) ytBackBtn.addEventListener('click', showLibraryPage);
 
       const haqibaBackBtn = document.getElementById('haqibaBackBtn');
-      if (haqibaBackBtn) haqibaBackBtn.addEventListener('click', showLibraryPage);
+      if (haqibaBackBtn) haqibaBackBtn.addEventListener('click', () => {
+        // إذا كان التاريخ فيه أكثر من عنصر واحد ارجع خطوة
+        if (haqibaHistory.length > 1) {
+          haqibaHistory.pop(); // إزالة الحالي
+          const prev = haqibaHistory[haqibaHistory.length - 1];
+          haqibaHistory.pop(); // سيتم إضافته مجدداً في loadHaqibaFolders
+          loadHaqibaFolders(prev.id, prev.name, true);
+        } else {
+          showLibraryPage();
+        }
+      });
 
       const summariesBackBtn = document.getElementById('summariesBackBtn');
       if (summariesBackBtn) summariesBackBtn.addEventListener('click', showLibraryPage);
