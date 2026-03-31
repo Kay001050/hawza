@@ -3759,6 +3759,100 @@
        CSS التصميم المتطور للصفحات المستقلة (يوتيوب، حقيبة، تلخيصات)
        ═══════════════════════════════════════════════════════════════════════════ */
     
+    /* نافذة الدعاء المنبثقة */
+    .dua-popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      padding: 20px;
+    }
+    .dua-popup-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .dua-popup-content {
+      background: var(--bg-card);
+      width: 100%;
+      max-width: 800px;
+      max-height: 90vh;
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-subtle);
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+    .dua-popup-overlay.active .dua-popup-content {
+      transform: scale(1);
+    }
+    .dua-popup-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .dua-popup-title {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      color: var(--accent-gold);
+      margin: 0;
+    }
+    .dua-popup-close {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .dua-popup-close:hover {
+      background: #ff4444;
+      color: white;
+    }
+    .dua-popup-body {
+      padding: 30px;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+    .dua-popup-text {
+      font-family: 'Amiri', serif;
+      font-size: var(--dua-font-size, 1.4rem);
+      line-height: 2;
+      text-align: center;
+      white-space: pre-wrap;
+      color: var(--text-primary);
+    }
+    .dua-font-controls {
+      padding: 15px 24px;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-tertiary);
+      border-radius: 0 0 24px 24px;
+    }
+    .font-slider-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+    .font-slider {
+      flex-grow: 1;
+      accent-color: var(--accent-gold);
+    }
+    
     .standalone-page-wrapper {
       display: none;
       min-height: 100vh;
@@ -3768,7 +3862,7 @@
 
     /* هيرو بانر عصري */
     .page-hero-banner {
-      padding: 60px 0 40px;
+      padding: calc(var(--header-height) + 40px) 0 40px;
       margin-bottom: 30px;
       border-bottom: 1px solid var(--border-subtle);
       position: relative;
@@ -3817,6 +3911,8 @@
       transition: all 0.3s ease;
       margin-bottom: 24px;
       backdrop-filter: blur(4px);
+      position: relative;
+      z-index: 100;
     }
 
     .page-back-btn-modern:hover {
@@ -4011,8 +4107,9 @@
 
     /* تحسين التجاوب للهواتف */
     @media (max-width: 768px) {
-      .page-hero-banner { padding: 40px 0 30px; }
+      .page-hero-banner { padding: calc(var(--header-height-mobile) + 40px) 0 30px; }
       .hero-banner-content { flex-direction: column; text-align: center; gap: 15px; }
+      .page-back-btn-modern { position: relative; z-index: 1001; margin-top: 10px; }
       .hero-banner-title { font-size: 1.8rem; }
       .hero-banner-icon-wrapper { width: 60px; height: 60px; font-size: 1.8rem; }
       
@@ -6225,6 +6322,26 @@
     </div>
   </div>
 
+  <!-- نافذة الدعاء المنبثقة المحسنة -->
+  <div class="dua-popup-overlay" id="duaPopup">
+    <div class="dua-popup-content">
+      <div class="dua-popup-header">
+        <h3 class="dua-popup-title" id="duaPopupTitle"><span>اسم الدعاء</span></h3>
+        <div class="dua-popup-close" id="duaPopupClose"><i class="fas fa-times"></i></div>
+      </div>
+      <div class="dua-popup-body">
+        <div class="dua-popup-text" id="duaPopupText">جاري تحميل كلمات الدعاء...</div>
+      </div>
+      <div class="dua-font-controls">
+        <div class="font-slider-container">
+          <i class="fas fa-font" style="font-size: 0.8rem;"></i>
+          <input type="range" min="1" max="3" step="0.1" value="1.4" class="font-slider" id="duaFontSlider">
+          <i class="fas fa-font" style="font-size: 1.2rem;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
@@ -7477,8 +7594,34 @@ ITEMS_PER_PAGE: 30
     }
 
     function parseCSV(text) {
-      const lines = text.split(/\r?\n/);
-      return lines.map(l => parseCSVRow(l));
+      const result = [];
+      let row = [];
+      let current = '';
+      let inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        const next = text[i + 1];
+        if (ch === '"') {
+          if (inQuotes && next === '"') { current += '"'; i++; }
+          else inQuotes = !inQuotes;
+        } else if (ch === ',' && !inQuotes) {
+          row.push(current.trim());
+          current = '';
+        } else if ((ch === '\n' || (ch === '\r' && next === '\n')) && !inQuotes) {
+          if (ch === '\r') i++;
+          row.push(current.trim());
+          result.push(row);
+          row = [];
+          current = '';
+        } else {
+          current += ch;
+        }
+      }
+      if (current || row.length > 0) {
+        row.push(current.trim());
+        result.push(row);
+      }
+      return result;
     }
 
     // ───────────────────────────────────────────────────────────────────────────
@@ -7530,9 +7673,10 @@ ITEMS_PER_PAGE: 30
         }
         
         const rows = parseCSV(csvText);
+        console.log('Parsed rows count:', rows.length);
 
         // تجاهل السطر الأول (الرأس)
-        const dataRows = rows.slice(1).filter(r => r[1] && r[1].trim());
+        const dataRows = rows.slice(1).filter(r => r && r.length >= 2 && r[1] && r[1].trim());
         
         // إذا لم توجد بيانات، استخدم البيانات الاحتياطية
         if (dataRows.length === 0) {
@@ -7983,8 +8127,9 @@ ITEMS_PER_PAGE: 30
     // ───────────────────────────────────────────────────────────────────────────
     function formatNotes(text) {
       if (!text) return '';
+      let formatted = text.replace(/\n/g, '<br>');
       // تحويل Markdown [text](url) إلى رابط HTML
-      let formatted = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" style="color:#3498db; text-decoration:underline; font-weight:600;">$1</a>');
+      formatted = formatted.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" style="color:#3498db; text-decoration:underline; font-weight:600;">$1</a>');
       // تحويل الروابط العادية المتبقية إلى روابط قابلة للنقر
       formatted = formatted.replace(/(?<!=")(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#3498db; text-decoration:underline; font-weight:600;">$1</a>');
       return formatted;
@@ -8102,6 +8247,30 @@ ITEMS_PER_PAGE: 30
     // تهيئة قسم الميديا (محدث للصفحة المستقلة)
     // ───────────────────────────────────────────────────────────────────────────
     async function initMediaSection() {
+      // تهيئة نافذة الدعاء المنبثقة
+      const duaPopup = document.getElementById('duaPopup');
+      const duaClose = document.getElementById('duaPopupClose');
+      const duaSlider = document.getElementById('duaFontSlider');
+      const duaText = document.getElementById('duaPopupText');
+
+      if (duaClose && duaPopup) {
+        duaClose.onclick = () => {
+          duaPopup.classList.remove('active');
+          document.body.style.overflow = '';
+        };
+        duaPopup.onclick = (e) => {
+          if (e.target === duaPopup) {
+            duaPopup.classList.remove('active');
+            document.body.style.overflow = '';
+          }
+        };
+      }
+      if (duaSlider && duaText) {
+        duaSlider.oninput = (e) => {
+          duaText.style.setProperty('--dua-font-size', e.target.value + 'rem');
+        };
+      }
+
       // بطاقة المعلومات - زر الإغلاق
       const closeBtn = document.getElementById('micCloseBtn');
       const overlay  = document.getElementById('mediaInfoOverlay');
@@ -8306,29 +8475,6 @@ ITEMS_PER_PAGE: 30
       if (MAIN_PAGES.summaries) MAIN_PAGES.summaries.style.display = 'none';
     }
 
-    // عرض صفحة المكتبة
-    function showLibraryPage() {
-      hideAllPages();
-      MAIN_PAGES.library.forEach(el => { if (el) el.style.display = ''; });
-      // إعادة عرض قسم التصفح بشكل صحيح
-      const breadcrumbs = document.getElementById('breadcrumbsSection');
-      if (breadcrumbs && state.folderHistory.length > 0) breadcrumbs.style.display = '';
-      currentPage = 'library';
-      updateSidebarActive('navLibrary');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // عرض صفحة يوتيوب
-    function showYoutubePage() {
-      hideAllPages();
-      if (MAIN_PAGES.youtube) MAIN_PAGES.youtube.style.display = 'block';
-      currentPage = 'youtube';
-      updateSidebarActive('navYoutube');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      closeSidebar();
-      initYtPage();
-    }
-
     function closeSidebar() {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('sidebarOverlay');
@@ -8339,13 +8485,34 @@ ITEMS_PER_PAGE: 30
       document.body.style.overflow = '';
     }
 
+    // عرض صفحة المكتبة
     function showLibraryPage() {
       hideAllPages();
-      MAIN_PAGES.library.forEach(el => { if (el) el.style.display = 'block'; });
+      MAIN_PAGES.library.forEach(el => { if (el) el.style.display = ''; });
+      // إعادة عرض قسم التصفح بشكل صحيح
+      const breadcrumbs = document.getElementById('breadcrumbsSection');
+      if (breadcrumbs && state.folderHistory.length > 0) breadcrumbs.style.display = '';
       currentPage = 'library';
       updateSidebarActive('navLibrary');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       closeSidebar();
+    }
+
+    // عرض صفحة يوتيوب
+    function showYoutubePage() {
+      hideAllPages();
+      if (MAIN_PAGES.youtube) MAIN_PAGES.youtube.style.display = 'block';
+      currentPage = 'youtube';
+      updateSidebarActive('navYoutube');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      closeSidebar();
+      if (!ytPageLoaded) {
+        ytPageLoaded = true;
+        initYtPage();
+      } else {
+        updateYtTabCounts();
+        renderYtPageGrid();
+      }
     }
 
     // عرض صفحة حقيبة المؤمن
@@ -8383,12 +8550,13 @@ ITEMS_PER_PAGE: 30
       });
     }
 
-    // تحميل مجلدات حقيبة المؤمن
-    async function loadHaqibaFolders() {
+    // تحميل مجلدات حقيبة المؤمن (مطور ليدعم الأدعية والملفات)
+    async function loadHaqibaFolders(folderId = '1_06Vo6UthBtmHCY7KjpywaAZeDbYNIjV') {
       const grid = document.getElementById('haqibaGrid');
-      const folderId = '1_06Vo6UthBtmHCY7KjpywaAZeDbYNIjV';
+      grid.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري تحميل المحتوى...</span></div>';
+      
       const apiKey = CONFIG.API_KEY;
-      const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType)&pageSize=50&orderBy=name&key=${apiKey}`;
+      const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType)&pageSize=100&orderBy=name&key=${apiKey}`;
       
       try {
         const response = await fetch(apiUrl);
@@ -8397,33 +8565,84 @@ ITEMS_PER_PAGE: 30
         const items = data.files || [];
         
         if (items.length === 0) {
-          grid.innerHTML = '<div class="media-loading"><i class="fas fa-inbox"></i><span>لا توجد مجلدات</span></div>';
+          grid.innerHTML = '<div class="media-loading"><i class="fas fa-inbox"></i><span>المجلد فارغ</span></div>';
           return;
         }
 
         grid.innerHTML = '';
+        
+        // إذا لم نكن في المجلد الرئيسي، أضف زر العودة للخلف
+        if (folderId !== '1_06Vo6UthBtmHCY7KjpywaAZeDbYNIjV') {
+          const backCard = document.createElement('div');
+          backCard.className = 'folder-card-modern';
+          backCard.innerHTML = `
+            <div class="folder-icon-box" style="background:rgba(160,127,58,0.1); color:var(--accent-gold);"><i class="fas fa-arrow-right"></i></div>
+            <div class="folder-name-modern">رجوع للخلف</div>
+          `;
+          backCard.onclick = () => loadHaqibaFolders('1_06Vo6UthBtmHCY7KjpywaAZeDbYNIjV');
+          grid.appendChild(backCard);
+        }
+
         const folderIcons = ['fas fa-book-open', 'fas fa-hands-praying', 'fas fa-quran', 'fas fa-moon', 'fas fa-star-and-crescent', 'fas fa-scroll', 'fas fa-heart'];
         
         items.forEach((item, idx) => {
           const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
+          const isDoc = item.mimeType === 'application/vnd.google-apps.document';
           const card = document.createElement('div');
           card.className = 'folder-card-modern';
-          const icon = folderIcons[idx % folderIcons.length];
+          
+          let iconClass = folderIcons[idx % folderIcons.length];
+          if (!isFolder) iconClass = isDoc ? 'fas fa-file-alt' : 'fas fa-file-pdf';
+          
           card.innerHTML = `
-            <div class="folder-icon-box"><i class="${icon}"></i></div>
+            <div class="folder-icon-box"><i class="${iconClass}"></i></div>
             <div class="folder-name-modern">${item.name}</div>
           `;
-          card.addEventListener('click', () => {
-            const url = isFolder 
-              ? `https://drive.google.com/drive/folders/${item.id}`
-              : `https://drive.google.com/file/d/${item.id}/view`;
-            window.open(url, '_blank');
+          
+          card.addEventListener('click', async () => {
+            if (isFolder) {
+              loadHaqibaFolders(item.id);
+            } else if (isDoc) {
+              // فتح الدعاء في Popup كما في الكود القديم
+              openDuaInPopup(item.id, item.name);
+            } else {
+              window.open(`https://drive.google.com/file/d/${item.id}/view`, '_blank');
+            }
           });
           grid.appendChild(card);
         });
       } catch (error) {
         console.error('Error loading haqiba folders:', error);
         grid.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>خطأ في التحميل</span></div>';
+      }
+    }
+
+    async function openDuaInPopup(docId, title) {
+      const popup = document.getElementById('duaPopup');
+      const popupTitle = document.getElementById('duaPopupTitle').querySelector('span');
+      const popupText = document.getElementById('duaPopupText');
+      const slider = document.getElementById('duaFontSlider');
+      
+      if (!popup || !popupText) return;
+
+      popupTitle.textContent = title;
+      popupText.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري تحميل الدعاء...</span></div>';
+      
+      if(slider) {
+        popupText.style.setProperty('--dua-font-size', slider.value + 'rem');
+      }
+
+      popup.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      try {
+        const apiKey = CONFIG.API_KEY;
+        const url = `https://docs.google.com/document/d/${docId}/export?format=txt&key=${apiKey}`;
+        const res = await fetch(url);
+        const text = await res.text();
+        popupText.innerHTML = text.replace(/\uFEFF/g, '').trim();
+      } catch (e) {
+        popupText.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>تعذر تحميل نص الدعاء</span></div>';
       }
     }
 
@@ -8479,23 +8698,23 @@ ITEMS_PER_PAGE: 30
         tab.addEventListener('click', () => {
           document.querySelectorAll('.standalone-tab').forEach(t => t.classList.remove('active'));
           tab.classList.add('active');
-          ytActiveTab = tab.dataset.tabYt;
-          ytCurrentCategory = 'all';
-          buildYtCategoryDropdown();
-          renderYtPageGrid();
+          activeTab = tab.dataset.tabYt; // استخدام activeTab الأصلي
+          currentCategory = 'all';
+          buildCategoryDropdown(); // استخدام الدالة الأصلية
+          renderMediaGrid(); // استخدام الدالة الأصلية
         });
       });
 
       const catSel = document.getElementById('ytCategorySelect');
-      if (catSel) catSel.addEventListener('change', (e) => { ytCurrentCategory = e.target.value; renderYtPageGrid(); });
+      if (catSel) catSel.addEventListener('change', (e) => { currentCategory = e.target.value; renderMediaGrid(); });
 
       const sortSel = document.getElementById('ytSortSelect');
-      if (sortSel) sortSel.addEventListener('change', (e) => { ytCurrentSort = e.target.value; renderYtPageGrid(); });
+      if (sortSel) sortSel.addEventListener('change', (e) => { currentSort = e.target.value; renderMediaGrid(); });
 
       // تحديث البيانات
       updateYtTabCounts();
-      buildYtCategoryDropdown();
-      renderYtPageGrid();
+      buildCategoryDropdown();
+      renderMediaGrid();
     }
 
     function updateYtTabCounts() {
@@ -8507,70 +8726,7 @@ ITEMS_PER_PAGE: 30
       if (el3) el3.textContent = allMediaData.filter(i => i.type === 'playlist').length;
     }
 
-    function buildYtCategoryDropdown() {
-      const sel = document.getElementById('ytCategorySelect');
-      if (!sel) return;
-      const typeMap = { channels: 'channel', videos: 'video', playlists: 'playlist' };
-      const items = allMediaData.filter(i => i.type === typeMap[ytActiveTab]);
-      const cats = ['all', ...new Set(items.map(i => i.category).filter(Boolean))];
-      sel.innerHTML = cats.map(c => `<option value="${c}">${c === 'all' ? 'جميع التصنيفات' : c}</option>`).join('');
-      sel.value = ytCurrentCategory;
-    }
 
-    function renderYtPageGrid() {
-      const grid = document.getElementById('ytPageGrid');
-      if (!grid) return;
-      
-      if (!allMediaData || allMediaData.length === 0) {
-        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px 20px;"><i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--text-muted); margin-bottom: 10px; display: block;"></i><span style="color: var(--text-muted);">جاري تحميل البيانات...</span></div>';
-        return;
-      }
-      
-      const typeMap = { channels: 'channel', videos: 'video', playlists: 'playlist' };
-      let items = allMediaData.filter(i => i.type === typeMap[ytActiveTab]);
-      if (ytCurrentCategory !== 'all') items = items.filter(i => i.category === ytCurrentCategory);
-      if (ytCurrentSort === 'name-asc') items.sort((a,b) => (a.title||'').localeCompare(b.title||''));
-      if (ytCurrentSort === 'name-desc') items.sort((a,b) => (b.title||'').localeCompare(a.title||''));
-      
-      if (items.length === 0) {
-        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px 20px;"><i class="fas fa-inbox" style="font-size: 2rem; color: var(--text-muted); margin-bottom: 10px; display: block;"></i><span style="color: var(--text-muted);">لا توجد نتائج</span></div>';
-        return;
-      }
-
-      grid.className = `standalone-grid ${ytActiveTab === 'channels' ? 'channels-view' : 'videos-view'}`;
-      grid.innerHTML = '';
-
-      items.forEach(item => {
-        const card = document.createElement('a');
-        card.href = item.url || '#';
-        card.target = '_blank';
-        card.rel = 'noopener noreferrer';
-        card.className = 'media-card';
-        
-        const thumb = item.thumbnail || '';
-        const name = item.title || item.handle || (ytActiveTab === 'channels' ? 'قناة' : 'مقطع');
-        
-        if (ytActiveTab === 'channels') {
-          card.innerHTML = `
-            <div class="media-thumbnail">
-              ${thumb ? `<img src="${thumb}" alt="${name}" loading="lazy">` : '<i class="fab fa-youtube" style="font-size: 2.5rem; color: var(--accent-youtube);"></i>'}
-            </div>
-            <div class="media-name">${name}</div>
-            ${item.category ? `<div class="media-category">${item.category}</div>` : ''}
-          `;
-        } else {
-          card.innerHTML = `
-            <div class="media-thumbnail video-thumb">
-              ${thumb ? `<img src="${thumb}" alt="${name}" loading="lazy">` : '<div style="width: 100%; height: 100%; background: var(--bg-tertiary);"></div>'}
-              <div class="video-duration-badge"><i class="fas fa-play"></i></div>
-            </div>
-            <div class="media-name">${name}</div>
-            ${item.category ? `<div class="media-category">${item.category}</div>` : ''}
-          `;
-        }
-        grid.appendChild(card);
-      });
-    }
 
     // تهيئة القائمة الجانبية الجديدة
     function initNewSidebar() {
@@ -8606,7 +8762,6 @@ ITEMS_PER_PAGE: 30
       if (navYoutube) {
         navYoutube.addEventListener('click', () => {
           showYoutubePage();
-          toggleSidebar(false);
         });
       }
 
