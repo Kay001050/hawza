@@ -991,12 +991,13 @@
     }
 
     /* ── Quran Memorization Page Styles ── */
-    .surah-card {
+    .surah-card, .surah-accordion-item {
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-md);
-      padding: 15px;
+      padding: 0;
       margin-bottom: 15px;
       transition: var(--transition-normal);
+      background: var(--bg-card);
     }
     .surah-card:hover { border-color: var(--accent-gold); }
     
@@ -5810,25 +5811,25 @@
 
     @media (max-width: 480px) {
       .books-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         gap: 12px;
       }
       
       .book-card {
-        flex-direction: row;
-        min-height: 110px;
+        flex-direction: column;
+        min-height: auto;
       }
       
       .book-cover-wrapper {
-        width: 85px;
-        padding-top: 0;
-        height: 110px;
+        width: 100%;
+        padding-top: 140%;
+        height: 0;
         flex-shrink: 0;
       }
       
       .book-overlay { display: none; }
-      .book-info { justify-content: center; }
-      .book-title { font-size: 0.9rem; -webkit-line-clamp: 2; }
+      .book-info { padding: 10px; }
+      .book-title { font-size: 0.85rem; -webkit-line-clamp: 2; }
       
       .library-tab { padding: 8px 10px; }
       .library-tab-icon { font-size: 1rem; }
@@ -5940,18 +5941,76 @@
     }
     
     /* ── Banner Card: في رحاب الذكر ── */
+    
     .dhikr-banner {
       width: 100%;
-      background: #ffffff;
-      border: 1px solid #eeeeee;
-      border-radius: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
       padding: 20px;
       display: flex;
       align-items: center;
       gap: 20px;
       margin-bottom: 30px;
       box-shadow: none !important;
+      transition: var(--transition-normal);
     }
+    [data-theme="dark"] .dhikr-banner {
+      background: var(--bg-card);
+      border-color: var(--border-medium);
+    }
+    .dhikr-banner-icon {
+      width: 60px;
+      height: 60px;
+      background: var(--accent-gold);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+    .dhikr-banner-info {
+      flex: 1;
+    }
+    .dhikr-banner-title {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .dhikr-banner-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    .dhikr-banner-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .banner-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .banner-btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent-gold);
+    }
+    @media (max-width: 600px) {
+      .dhikr-banner { flex-direction: column; text-align: center; padding: 25px 15px; }
+      .dhikr-banner-actions { justify-content: center; width: 100%; }
+      .banner-btn { flex: 1; justify-content: center; }
+    }
+
     .dhikr-banner-icon {
       width: 60px;
       height: 60px;
@@ -6969,25 +7028,7 @@
       </div>
 
       <div class="memorization-layout" style="display: grid; grid-template-columns: 1fr 350px; gap: 30px;">
-        <!-- قائمة السور (يمين على الديسكتوب) -->
-        <div class="surahs-column" style="order: 1; margin-top: 30px;">
-          <div class="card-flat" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px;">
-            <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--text-primary);">
-              <i class="fas fa-list-ol" style="color: var(--accent-gold);"></i>
-              خطة حفظ السور
-            </h3>
-            <div id="surahs-list-container" class="surahs-list">
-            <div style="margin-bottom: 20px;">
-              <input type="text" id="memorization-search" placeholder="ابحث عن سورة..." 
-                     style="width: 100%; padding: 10px 15px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem;"
-                     onkeyup="renderSurahsList()">
-            </div>
-              <!-- سيتم توليدها بواسطة JS -->
-            </div>
-          </div>
-        </div>
-
-        <!-- التقويم التفاعلي (يسار على الديسكتوب) -->
+        <!-- التقويم التفاعلي (يظهر أولاً في الموبايل) -->
         <div class="calendar-column" style="order: 2;">
           <div class="card-flat" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; position: sticky; top: 100px;">
             <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--text-primary);">
@@ -6997,9 +7038,42 @@
             <div id="memorization-calendar" class="interactive-calendar">
               <!-- سيتم توليده بواسطة JS -->
             </div>
+            
+            <!-- السورة النشطة تحت التقويم -->
+            <div id="active-surah-display" style="margin-top: 20px; padding: 15px; background: var(--bg-secondary); border: 1px solid var(--accent-gold); border-radius: var(--radius-md);">
+              <!-- سيتم توليدها بواسطة JS -->
+            </div>
+
             <div class="calendar-legend" style="margin-top: 20px; font-size: 0.8rem; color: var(--text-muted); display: flex; gap: 15px; justify-content: center;">
               <span style="display: flex; align-items: center; gap: 5px;"><i class="fas fa-circle" style="color: var(--accent-emerald);"></i> منجز</span>
               <span style="display: flex; align-items: center; gap: 5px;"><i class="fas fa-circle" style="color: var(--bg-tertiary);"></i> اليوم</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- قائمة السور (يمين على الديسكتوب) -->
+        <div class="surahs-column" style="order: 1; margin-top: 30px;">
+          <div class="card-flat" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px;">
+            <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--text-primary);">
+              <i class="fas fa-list-ol" style="color: var(--accent-gold);"></i>
+              خطة حفظ السور
+            </h3>
+            
+            <div class="controls-row" style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+              <div class="search-box" style="flex: 1; min-width: 200px;">
+                <input type="text" id="memorization-search" placeholder="ابحث عن سورة..." 
+                       style="width: 100%; padding: 10px 15px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem;"
+                       onkeyup="renderSurahsList()">
+              </div>
+              <select id="surah-sort-select" onchange="renderSurahsList()" style="padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem;">
+                <option value="default">الترتيب الافتراضي</option>
+                <option value="alphabetical">أبجدي</option>
+                <option value="completion">حسب الإنجاز</option>
+              </select>
+            </div>
+            
+            <div id="surahs-list-container" class="surahs-list">
+              <!-- سيتم توليدها بواسطة JS -->
             </div>
           </div>
         </div>
@@ -7244,7 +7318,7 @@
         <div class="dua-popup-close" id="duaPopupClose"><i class="fas fa-times"></i></div>
       </div>
       <div class="dua-popup-body">
-        <div class="dua-popup-text" id="duaPopupText">جاري تحميل كلمات الدعاء...</div>
+        <div class="dua-popup-text" id="duaPopupText">جاري تحميل الكلمات...</div>
       </div>
       <div class="dua-font-controls">
         <div class="font-slider-container">
@@ -8162,22 +8236,20 @@ ITEMS_PER_PAGE: 30
         card.addEventListener('click', () => openFolder(card.dataset.id, card.dataset.name));
       });
       
-      if (!isMobile) {
-        document.querySelectorAll('.book-card').forEach(card => {
-          card.addEventListener('click', (e) => {
-            if (e.target.closest('.action-btn')) {
-              const btn = e.target.closest('.action-btn');
-              if (btn.dataset.action === 'share') {
-                e.preventDefault();
-                e.stopPropagation();
-                shareBook(btn.dataset.id, btn.dataset.name);
-              }
-              return;
+      document.querySelectorAll('.book-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('.action-btn')) {
+            const btn = e.target.closest('.action-btn');
+            if (btn.dataset.action === 'share') {
+              e.preventDefault();
+              e.stopPropagation();
+              shareBook(btn.dataset.id, btn.dataset.name);
             }
-            openModal(card.dataset.id);
-          });
+            return;
+          }
+          openModal(card.dataset.id || card.getAttribute('onclick')?.match(/'([^']+)'/)?.[1]);
         });
-      }
+      });
     }
 
     function renderFolderCard(folder) {
@@ -8195,7 +8267,7 @@ ITEMS_PER_PAGE: 30
     }
 
     function renderBookCard(book, isMobile) {
-      const cleanName = book.name.replace(/\.[^/.]+$/, '');
+      const cleanName = book.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '');
       const thumbnailUrl = getThumbnailUrl(book.id, book.thumbnailLink);
       const previewUrl = book.webViewLink || getPreviewUrl(book.id);
       const downloadUrl = getDownloadUrl(book.id);
@@ -8207,7 +8279,7 @@ ITEMS_PER_PAGE: 30
       const coverHtml = `<img src="${thumbnailUrl}" alt="${cleanName}" class="book-cover" loading="lazy" ${imgOnError}><div class="book-no-cover" style="display:none;"><i class="fas ${fileIcon}"></i><span>${cleanName.substring(0, 25)}...</span></div>`;
       
       if (isMobile) {
-        return `<a href="${previewUrl}" target="_blank" class="book-card"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3><div class="book-meta"><span class="book-format"><i class="fas ${fileIcon}"></i>${fileFormat}</span><span>${formatFileSize(book.size)}</span></div></div></a>`;
+        return `<div class="book-card" onclick="openModal('${book.id}')"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3><div class="book-meta"><span class="book-format"><i class="fas ${fileIcon}"></i>${fileFormat}</span><span>${formatFileSize(book.size)}</span></div></div></div>`;
       }
       
       return `<div class="book-card" data-id="${book.id}"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay"><a href="${previewUrl}" target="_blank" class="action-btn" title="معاينة" onclick="event.stopPropagation()"><i class="fas fa-eye"></i></a><a href="${downloadUrl}" class="action-btn" title="تحميل" onclick="event.stopPropagation()"><i class="fas fa-download"></i></a><button class="action-btn" title="مشاركة" data-action="share" data-id="${book.id}" data-name="${cleanName}"><i class="fas fa-share-alt"></i></button></div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3><div class="book-meta"><span class="book-format"><i class="fas ${fileIcon}"></i>${fileFormat}</span><span>${formatFileSize(book.size)}</span></div></div></div>`;
@@ -8251,7 +8323,7 @@ ITEMS_PER_PAGE: 30
       const book = state.allBooks.find(b => b.id === bookId);
       if (!book) return;
       
-      const cleanName = book.name.replace(/\.[^/.]+$/, '');
+      const cleanName = book.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '');
       const thumbnailUrl = getThumbnailUrl(book.id, book.thumbnailLink);
       
       DOM.modalCoverImg.src = thumbnailUrl;
@@ -8277,22 +8349,22 @@ ITEMS_PER_PAGE: 30
       const driveViewLink = book.webViewLink || getPreviewUrl(book.id);
       actions.innerHTML = `
         <div style="width:100%; display:flex; flex-direction:column; gap:12px;">
-          <iframe src="${drivePreview}" 
-                  style="width:100%; height:52vh; min-height:320px; border:none; border-radius:var(--radius-md); background:#fff;"
-                  allow="autoplay"></iframe>
+          <div class="modal-preview-container" style="width:100%; height:52vh; min-height:320px; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border-subtle); background:#fff;">
+            <iframe src="${drivePreview}" style="width:100%; height:100%; border:none;" allow="autoplay"></iframe>
+          </div>
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
             <a href="${driveViewLink}" class="modal-btn primary" target="_blank" 
-               style="justify-content:center; background:linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold)); color:white; border:none; box-shadow:none !important; text-decoration:none;">
+               style="justify-content:center; background:linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold)); color:white; border:none; box-shadow:none !important; text-decoration:none; padding:12px; border-radius:var(--radius-md); display:flex; align-items:center; gap:8px; font-weight:700;">
               <i class="fab fa-google-drive"></i>
               <span>فتح في درايف</span>
             </a>
             <a href="${getDownloadUrl(book.id)}" class="modal-btn secondary" target="_blank" 
-               style="justify-content:center; border:1px solid var(--border-medium); box-shadow:none !important; background:transparent; text-decoration:none;">
+               style="justify-content:center; border:1px solid var(--border-medium); box-shadow:none !important; background:var(--bg-secondary); color:var(--text-primary); text-decoration:none; padding:12px; border-radius:var(--radius-md); display:flex; align-items:center; gap:8px; font-weight:700;">
               <i class="fas fa-download"></i>
               <span>تحميل مباشر</span>
             </a>
           </div>
-          <button class="modal-btn secondary" id="modalShareBtn" style="justify-content:center; border:1px solid var(--border-medium); box-shadow:none !important; background:transparent;">
+          <button class="modal-btn secondary" id="modalShareBtn" style="justify-content:center; border:1px solid var(--border-medium); box-shadow:none !important; background:var(--bg-secondary); color:var(--text-primary); padding:12px; border-radius:var(--radius-md); display:flex; align-items:center; gap:8px; font-weight:700; width:100%;">
             <i class="fas fa-share-alt"></i>
             <span>مشاركة الرابط</span>
           </button>
@@ -9305,7 +9377,7 @@ ITEMS_PER_PAGE: 30
         
         const data = await response.json();
         const files = data.files || [];
-        allDuasData = files.filter(f => f.mimeType === 'application/vnd.google-apps.document').map(f => ({
+        allDuasData = files.filter(f => f.mimeType === 'application/vnd.google-apps.document' || f.mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document').map(f => ({
           id: f.id,
           title: f.name,
           url: `https://docs.google.com/document/d/${f.id}/export?format=txt&key=${apiKey}`
@@ -9559,6 +9631,19 @@ ITEMS_PER_PAGE: 30
     }
 
     // ── منطق صفحة حفظ القرآن ──
+    
+      // ربط السور بملفات جوجل درايف
+      const QURAN_FOLDER_ID = '15cRmsfYeg4u0yKTe5Ly6owNJy9ox8-bt';
+      
+      function getSurahReadButton(surahName) {
+          return `<button onclick="openQuranSurahByName('${surahName}')" style="font-size:0.75rem; color:var(--accent-emerald); border:1px solid var(--accent-emerald); padding:2px 8px; border-radius:4px; margin-right:5px;"><i class="fas fa-book-open"></i> قراءة</button>`;
+      }
+
+      async function openQuranSurahByName(name) {
+          const cleanName = name.replace('سورة ', '').trim();
+          await openQuranSurah(null, cleanName);
+      }
+
     const SURAHS_DATA = [
       { id: 1, name: "الفاتحة", pages: 1 }, { id: 2, name: "البقرة", pages: 48 }, { id: 3, name: "آل عمران", pages: 28 }, { id: 4, name: "النساء", pages: 30 }, { id: 5, name: "المائدة", pages: 22 }, { id: 6, name: "الأنعام", pages: 23 }, { id: 7, name: "الأعراف", pages: 26 }, { id: 8, name: "الأنفال", pages: 10 }, { id: 9, name: "التوبة", pages: 21 }, { id: 10, name: "يونس", pages: 13 }, { id: 11, name: "هود", pages: 13 }, { id: 12, name: "يوسف", pages: 13 }, { id: 13, name: "الرعد", pages: 11 }, { id: 14, name: "إبراهيم", pages: 9 }, { id: 15, name: "الحجر", pages: 7 }, { id: 16, name: "النحل", pages: 18 }, { id: 17, name: "الإسراء", pages: 12 }, { id: 18, name: "الكهف", pages: 12 }, { id: 19, name: "مريم", pages: 7 }, { id: 20, name: "طه", pages: 10 }, { id: 21, name: "الأنبياء", pages: 11 }, { id: 22, name: "الحج", pages: 9 }, { id: 23, name: "المؤمنون", pages: 9 }, { id: 24, name: "النور", pages: 9 }, { id: 25, name: "الفرقان", pages: 8 }, { id: 26, name: "الشعراء", pages: 11 }, { id: 27, name: "النمل", pages: 9 }, { id: 28, name: "القصص", pages: 9 }, { id: 29, name: "العنكبوت", pages: 9 }, { id: 30, name: "الروم", pages: 8 }, { id: 31, name: "لقمان", pages: 6 }, { id: 32, name: "السجدة", pages: 5 }, { id: 33, name: "الأحزاب", pages: 9 }, { id: 34, name: "سبأ", pages: 9 }, { id: 35, name: "فاطر", pages: 8 }, { id: 36, name: "يس", pages: 5 }, { id: 37, name: "الصافات", pages: 10 }, { id: 38, name: "ص", pages: 8 }, { id: 39, name: "الزمر", pages: 8 }, { id: 40, name: "غافر", pages: 9 }, { id: 41, name: "فصلت", pages: 8 }, { id: 42, name: "الشورى", pages: 8 }, { id: 43, name: "الزخرف", pages: 7 }, { id: 44, name: "الدخان", pages: 5 }, { id: 45, name: "الجاثية", pages: 5 }, { id: 46, name: "الأحقاف", pages: 6 }, { id: 47, name: "محمد", pages: 6 }, { id: 48, name: "الفتح", pages: 5 }, { id: 49, name: "الحجرات", pages: 4 }, { id: 50, name: "ق", pages: 5 }, { id: 51, name: "الذاريات", pages: 6 }, { id: 52, name: "الطور", pages: 5 }, { id: 53, name: "النجم", pages: 4 }, { id: 54, name: "القمر", pages: 5 }, { id: 55, name: "الرحمن", pages: 3 }, { id: 56, name: "الواقعة", pages: 3 }, { id: 57, name: "الحديد", pages: 6 }, { id: 58, name: "المجادلة", pages: 4 }, { id: 59, name: "الحشر", pages: 6 }, { id: 60, name: "الممتحنة", pages: 4 }, { id: 61, name: "الصف", pages: 3 }, { id: 62, name: "الجمعة", pages: 3 }, { id: 63, name: "المنافقون", pages: 3 }, { id: 64, name: "التغابن", pages: 3 }, { id: 65, name: "الطلاق", pages: 3 }, { id: 66, name: "التحريم", pages: 3 }, { id: 67, name: "الملك", pages: 2 }, { id: 68, name: "القلم", pages: 3 }, { id: 69, name: "الحاقة", pages: 3 }, { id: 70, name: "المعارج", pages: 3 }, { id: 71, name: "نوح", pages: 2 }, { id: 72, name: "الجن", pages: 3 }, { id: 73, name: "المزمل", pages: 2 }, { id: 74, name: "المدثر", pages: 2 }, { id: 75, name: "القيامة", pages: 2 }, { id: 76, name: "الإنسان", pages: 2 }, { id: 77, name: "المرسلات", pages: 2 }, { id: 78, name: "النبأ", pages: 2 }, { id: 79, name: "النازعات", pages: 2 }, { id: 80, name: "عبس", pages: 2 }, { id: 81, name: "التكوير", pages: 2 }, { id: 82, name: "الانفطار", pages: 2 }, { id: 83, name: "المطففين", pages: 2 }, { id: 84, name: "الانشقاق", pages: 2 }, { id: 85, name: "البروج", pages: 2 }, { id: 86, name: "الطارق", pages: 2 }, { id: 87, name: "الأعلى", pages: 2 }, { id: 88, name: "الغاشية", pages: 2 }, { id: 89, name: "الفجر", pages: 2 }, { id: 90, name: "البلد", pages: 2 }, { id: 91, name: "الشمس", pages: 1 }, { id: 92, name: "الليل", pages: 1 }, { id: 93, name: "الضحى", pages: 1 }, { id: 94, name: "الشرح", pages: 1 }, { id: 95, name: "التين", pages: 1 }, { id: 96, name: "العلق", pages: 1 }, { id: 97, name: "القدر", pages: 1 }, { id: 98, name: "البينة", pages: 1 }, { id: 99, name: "الزلزلة", pages: 1 }, { id: 100, name: "العاديات", pages: 1 }, { id: 101, name: "القارعة", pages: 1 }, { id: 102, name: "التكاثر", pages: 1 }, { id: 103, name: "العصر", pages: 1 }, { id: 104, name: "الهمزة", pages: 1 }, { id: 105, name: "الفيل", pages: 1 }, { id: 106, name: "قريش", pages: 1 }, { id: 107, name: "الماعون", pages: 1 }, { id: 108, name: "الكوثر", pages: 1 }, { id: 109, name: "الكافرون", pages: 1 }, { id: 110, name: "النصر", pages: 1 }, { id: 111, name: "المسد", pages: 1 }, { id: 112, name: "الإخلاص", pages: 1 }, { id: 113, name: "الفلق", pages: 1 }, { id: 114, name: "الناس", pages: 1 }
     ];
@@ -9572,12 +9657,50 @@ ITEMS_PER_PAGE: 30
 
     function renderSurahsList() {
       const container = document.getElementById('surahs-list-container');
+      const activeDisplay = document.getElementById('active-surah-display');
       if(!container) return;
-      const searchTerm = document.getElementById('memorization-search')?.value.toLowerCase() || '';
-      const filteredSurahs = SURAHS_DATA.filter(s => s.name.includes(searchTerm));
       
-      container.innerHTML = filteredSurahs.map(surah => {
+      const searchTerm = document.getElementById('memorization-search')?.value.toLowerCase() || '';
+      const sortType = document.getElementById('surah-sort-select')?.value || 'default';
+      
+      let surahs = [...SURAHS_DATA];
+      if (searchTerm) surahs = surahs.filter(s => s.name.includes(searchTerm));
+      
+      if (sortType === 'alphabetical') surahs.sort((a,b) => a.name.localeCompare(b.name));
+      else if (sortType === 'completion') {
+        surahs.sort((a,b) => {
+          const ca = (memorizationState[a.id]?.checks.length || 0) / a.pages;
+          const cb = (memorizationState[b.id]?.checks.length || 0) / b.pages;
+          return cb - ca;
+        });
+      }
+
+      // تحديد السورة النشطة (أول سورة فيها تقدم ولم تكتمل، أو آخر سورة تم التفاعل معها)
+      const activeId = memorizationState.lastActiveSurahId || (surahs.find(s => {
+        const d = memorizationState[s.id];
+        return d && d.checks.length > 0 && d.checks.length < d.days;
+      })?.id) || surahs[0].id;
+
+      // عرض السورة النشطة تحت التقويم
+      if (activeDisplay) {
+        const activeSurah = SURAHS_DATA.find(s => s.id === activeId);
+        const data = memorizationState[activeId] || { days: activeSurah.pages, checks: [], dedication: '' };
+        let checkboxes = '';
+        for (let i = 1; i <= data.days; i++) {
+          const isChecked = data.checks.includes(i);
+          checkboxes += `<div class="day-checkbox ${isChecked ? 'checked' : ''}" onclick="toggleDayCheck(${activeId}, ${i})">${i}</div>`;
+        }
+        activeDisplay.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <span style="font-weight:bold; color:var(--accent-gold);">${activeSurah.name} (نشطة حالياً)</span>
+          </div>
+          <div class="checkboxes-grid">${checkboxes}</div>
+        `;
+      }
+
+      container.innerHTML = surahs.map(surah => {
         const data = memorizationState[surah.id] || { days: surah.pages, checks: [], dedication: '' };
+        const isActive = surah.id === activeId;
         let checkboxes = '';
         for (let i = 1; i <= data.days; i++) {
           const isChecked = data.checks.includes(i);
@@ -9585,18 +9708,24 @@ ITEMS_PER_PAGE: 30
         }
         
         return `
-          <div class="surah-card">
-            <div class="surah-header">
-              <span class="surah-name" onclick="openQuranSurah(${surah.id}, '${surah.name}')">${surah.name}</span>
-              <div class="days-counter">
-                <button class="counter-btn" onclick="updateSurahDays(${surah.id}, -1)"><i class="fas fa-minus"></i></button>
-                <span style="font-size: 0.9rem; font-weight: bold;">${data.days} يوم</span>
-                <button class="counter-btn" onclick="updateSurahDays(${surah.id}, 1)"><i class="fas fa-plus"></i></button>
-              </div>
+          <div class="surah-accordion-item" style="border: 1px solid var(--border-subtle); border-radius: var(--radius-md); margin-bottom: 10px; overflow: hidden;">
+            <div class="surah-header" style="padding: 12px 15px; background: ${isActive ? 'rgba(160, 127, 58, 0.05)' : 'var(--bg-secondary)'}; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'">
+              <span class="surah-name" style="font-weight:bold;">${surah.name} ${isActive ? '<small>(نشطة)</small>' : ''}</span>
+              <i class="fas fa-chevron-down" style="font-size:0.8rem; color:var(--text-muted);"></i>
             </div>
-            <input type="text" class="surah-dedication" placeholder="إهداء لـ الشهيد أو المعصوم................ 🤍" 
-                   value="${data.dedication || ''}" onchange="updateDedication(${surah.id}, this.value)">
-            <div class="checkboxes-grid">${checkboxes}</div>
+            <div class="surah-content" style="display: ${isActive ? 'block' : 'none'}; padding: 15px; border-top: 1px solid var(--border-subtle);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                ` + getSurahReadButton(surah.name) + ` <button onclick="memorizationState.lastActiveSurahId = ${surah.id}; saveMemorization(); renderSurahsList();" style="font-size:0.75rem; color:var(--accent-gold); border:1px solid var(--accent-gold); padding:2px 8px; border-radius:4px;">اجعلها نشطة</button>
+                <div class="days-counter">
+                  <button class="counter-btn" onclick="updateSurahDays(${surah.id}, -1)"><i class="fas fa-minus"></i></button>
+                  <span style="font-size: 0.9rem; font-weight: bold;">${data.days} يوم</span>
+                  <button class="counter-btn" onclick="updateSurahDays(${surah.id}, 1)"><i class="fas fa-plus"></i></button>
+                </div>
+              </div>
+              <input type="text" class="surah-dedication" placeholder="إهداء لـ الشهيد أو المعصوم................ 🤍" 
+                     value="${data.dedication || ''}" onchange="updateDedication(${surah.id}, this.value)">
+              <div class="checkboxes-grid">${checkboxes}</div>
+            </div>
           </div>
         `;
       }).join('');
@@ -9919,7 +10048,10 @@ ITEMS_PER_PAGE: 30
         // تحديد نوع الشارة
         function getHaqibaBadge(name, isFolder, isDoc) {
           if (!isFolder) {
-            if (isDoc) return '<span class="haqiba-type-badge haqiba-badge-dua"><i class="fas fa-hands-praying"></i> دعاء</span>';
+            if (isDoc) {
+              if (item.name.includes('سورة')) return '<span class="haqiba-type-badge haqiba-badge-quran"><i class="fas fa-quran"></i> قرآن</span>';
+              return '<span class="haqiba-type-badge haqiba-badge-dua"><i class="fas fa-hands-praying"></i> دعاء</span>';
+            }
             return '<span class="haqiba-type-badge haqiba-badge-folder"><i class="fas fa-file-pdf"></i> ملف</span>';
           }
           const n = name.toLowerCase();
@@ -9930,20 +10062,21 @@ ITEMS_PER_PAGE: 30
         
         items.forEach((item, idx) => {
           const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
-          const isDoc = item.mimeType === 'application/vnd.google-apps.document';
+          const isDoc = item.mimeType === 'application/vnd.google-apps.document' || item.mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
           const card = document.createElement('div');
           card.className = 'folder-card-modern';
           
-          const iconClass = getSmartHaqibaIcon(item.name, isFolder, isDoc);
-          const badgeHtml = getHaqibaBadge(item.name, isFolder, isDoc);
+          let icon = isFolder ? 'fas fa-folder' : (isDoc ? 'fas fa-file-alt' : 'fas fa-file-pdf');
+          let badge = isFolder ? 'مجلد' : (isDoc ? 'دعاء' : 'ملف');
+          let badgeClass = isFolder ? 'haqiba-badge-folder' : 'haqiba-badge-dua';
           
           card.innerHTML = `
-            <div class="folder-icon-box"><i class="${iconClass}"></i></div>
-            <div class="folder-name-modern">${item.name}</div>
-            ${badgeHtml}
+            <div class="folder-icon-box"><i class="${icon}"></i></div>
+            <div class="folder-name-modern">${item.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, "")}</div>
+            <span class="haqiba-type-badge ${badgeClass}">${badge}</span>
           `;
           
-          card.addEventListener('click', async () => {
+          card.addEventListener('click', () => {
             if (isFolder) {
               loadHaqibaFolders(item.id, item.name);
             } else if (isDoc) {
@@ -9969,7 +10102,7 @@ ITEMS_PER_PAGE: 30
       if (!popup || !popupText) return;
 
       popupTitle.textContent = title;
-      popupText.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري تحميل الدعاء...</span></div>';
+      popupText.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري التحميل...</span></div>';
       
       if(slider) {
         popupText.style.setProperty('--dua-font-size', slider.value + 'rem');
@@ -9985,7 +10118,7 @@ ITEMS_PER_PAGE: 30
         const text = await res.text();
         popupText.innerHTML = text.replace(/\uFEFF/g, '').trim();
       } catch (e) {
-        popupText.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>تعذر تحميل نص الدعاء</span></div>';
+        popupText.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>تعذر تحميل النص</span></div>';
       }
     }
 
@@ -10050,7 +10183,7 @@ ITEMS_PER_PAGE: 30
         grid.innerHTML = '';
         items.forEach((item) => {
           const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
-          const isDoc = item.mimeType === 'application/vnd.google-apps.document';
+          const isDoc = item.mimeType === 'application/vnd.google-apps.document' || item.mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
           const card = document.createElement('div');
           card.className = 'folder-card-modern';
           
@@ -10060,7 +10193,7 @@ ITEMS_PER_PAGE: 30
 
           card.innerHTML = `
             <div class="folder-icon-box"><i class="${icon}"></i></div>
-            <div class="folder-name-modern">${item.name}</div>
+            <div class="folder-name-modern">${item.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, "")}</div>
             <span class="haqiba-type-badge ${badgeClass}">${badge}</span>
           `;
           
