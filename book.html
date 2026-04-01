@@ -47,9 +47,9 @@
       --glass-bg: rgba(255, 254, 250, 0.95);
       --glass-border: rgba(160, 127, 58, 0.15);
       
-      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
-      --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.15);
+      --shadow-sm: none !important;
+      --shadow-md: none !important;
+      --shadow-lg: none !important;
       
       --skeleton-base: #e8e6e1;
       --skeleton-shine: #f5f3ef;
@@ -98,9 +98,9 @@
       --glass-bg: rgba(13, 28, 29, 0.95);
       --glass-border: rgba(201, 160, 80, 0.12);
       
-      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
-      --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
+      --shadow-sm: none !important;
+      --shadow-md: none !important;
+      --shadow-lg: none !important;
       
       --skeleton-base: #1a2d2f;
       --skeleton-shine: #243d40;
@@ -172,7 +172,7 @@
     
     .categories-progress-wrapper {
       padding: 16px;
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       border-radius: var(--radius-md);
       margin-bottom: 12px;
       display: none;
@@ -388,7 +388,7 @@
     .media-toggle-btn .toggle-arrow {
       width: 32px;
       height: 32px;
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
@@ -793,24 +793,11 @@
     .media-card:hover { transform: translateY(-7px); }
 
     /* ── بطاقة القناة ── */
-    .media-card.channel-card {
-      gap: 12px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: 20px 16px;
-      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
-    }
-
-    .media-card.channel-card:hover {
-      transform: translateY(-6px) scale(1.01);
-      border-color: rgba(255,0,0,0.4);
-      box-shadow: 0 12px 32px rgba(255,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08);
-    }
+    .media-card.channel-card { gap: 10px; }
 
     .media-card.channel-card .media-thumbnail {
-      width: 110px;
-      height: 110px;
+      width: 130px;
+      height: 130px;
       border-radius: 50%;
       overflow: hidden;
       border: 3px solid var(--accent-youtube);
@@ -837,26 +824,25 @@
       flex-direction: column;
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
+      border-radius: var(--radius-md);
       overflow: hidden;
-      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
       height: 100%;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      box-shadow: none !important;
       position: relative;
     }
 
     .media-card.video-card:hover {
-      transform: translateY(-6px) scale(1.01);
+      transform: translateY(-5px);
       background: var(--bg-card-hover);
-      border-color: rgba(255,0,0,0.4);
-      box-shadow: 0 12px 32px rgba(255,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08);
+      border-color: var(--accent-youtube);
     }
 
     .media-card.video-card .media-thumbnail {
       position: relative;
       width: 100%;
       aspect-ratio: 16 / 9;
-      background: transparent !important;
+      background: #111 !important;
       overflow: hidden;
       border: none;
       box-shadow: none !important;
@@ -872,6 +858,24 @@
 
     .media-card.video-card:hover .media-thumbnail img {
       transform: scale(1.05);
+    }
+
+    /* ── إزالة الظل الرمادي نهائياً ── */
+    .media-play-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent !important;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 5;
+    }
+
+    .media-card.video-card:hover .media-play-overlay {
+      opacity: 1;
+      background: rgba(0,0,0,0.18) !important;
     }
 
     /* ── شارات المعلومات فوق الصورة ── */
@@ -890,22 +894,6 @@
       display: flex;
       align-items: center;
       gap: 4px;
-    }
-
-    .media-play-overlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.2);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: 5;
-    }
-
-    .media-card.video-card:hover .media-play-overlay {
-      opacity: 1;
     }
 
     .media-play-overlay i {
@@ -1047,7 +1035,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       padding: 5px 10px;
       border-radius: var(--radius-full);
     }
@@ -1058,7 +1046,7 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 0.8rem;
       color: var(--text-primary);
-      box-shadow: var(--shadow-sm);
+      box-shadow: none; border: 1px solid var(--border-medium);
     }
     
     .checkboxes-grid {
@@ -1087,7 +1075,10 @@
     .interactive-calendar {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 5px;
+      gap: 10px;
+      border: 1px solid var(--border-medium);
+      padding: 10px;
+      border-radius: var(--radius-md);
       text-align: center;
     }
     .calendar-day-head { font-weight: bold; font-size: 0.75rem; color: var(--text-muted); padding: 5px 0; }
@@ -1296,8 +1287,32 @@
 
     .media-card.video-card,
     .media-card.video-card .media-thumbnail,
-    .media-card.video-card .tag-badge-main {
+    .media-card.video-card .tag-badge-main,
+    .media-thumbnail img,
+    .folder-card-modern,
+    .folder-card,
+    .book-card,
+    .surah-card,
+    .calendar-card,
+    .dhikr-banner,
+    .modal-content {
       box-shadow: none !important;
+      border: 1px solid var(--border-subtle);
+    }
+    
+    .media-thumbnail,
+    .folder-icon-large,
+    .book-cover,
+    .surah-icon,
+    .dhikr-icon-box {
+      filter: none !important;
+      box-shadow: none !important;
+      background: transparent !important;
+    }
+
+    .page-section {
+      position: relative;
+      z-index: 1;
     }
 
     .media-card .tag-badge-main .tag-more-indicator {
@@ -1563,7 +1578,7 @@
       left: 14px;
       width: 32px; height: 32px;
       border-radius: 50%;
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       border: 1px solid var(--border-subtle);
       display: flex; align-items: center; justify-content: center;
       color: var(--text-muted);
@@ -1640,7 +1655,7 @@
       display: flex;
       gap: 10px;
       align-items: center;
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
     }
 
     .mic-open-btn {
@@ -1781,7 +1796,7 @@
     .suggested-toggle-btn .toggle-arrow {
       width: 32px;
       height: 32px;
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
@@ -1907,7 +1922,7 @@
       background: var(--bg-card-hover);
       border-color: var(--border-medium);
       transform: translateY(-2px);
-      box-shadow: var(--shadow-sm);
+      box-shadow: none; border: 1px solid var(--border-medium);
     }
 
     .library-card-icon {
@@ -1996,7 +2011,7 @@
 
     .header.scrolled {
       background: var(--glass-bg);
-      box-shadow: var(--shadow-md);
+      box-shadow: none; border: 1px solid var(--border-strong);
     }
 
     .nav-container {
@@ -2024,7 +2039,7 @@
       justify-content: center;
       color: white;
       font-size: 1.3rem;
-      box-shadow: var(--shadow-sm);
+      box-shadow: none; border: 1px solid var(--border-medium);
     }
 
     .brand-text {
@@ -2113,13 +2128,13 @@
       border-radius: var(--radius-full);
       font-weight: 700;
       font-size: 0.9rem;
-      box-shadow: var(--shadow-sm);
+      box-shadow: none; border: 1px solid var(--border-medium);
       transition: var(--transition-smooth);
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+      box-shadow: none; border: 1px solid var(--border-strong);
     }
 
     /* Hero */
@@ -2252,12 +2267,12 @@
       align-items: center;
       gap: 12px;
       transition: var(--transition-smooth);
-      box-shadow: var(--shadow-md);
+      box-shadow: none; border: 1px solid var(--border-strong);
     }
 
     .search-box:focus-within {
       border-color: var(--accent-gold);
-      box-shadow: var(--shadow-lg);
+      box-shadow: none; border: 1px solid var(--border-strong);
     }
 
     .search-icon {
@@ -2306,7 +2321,7 @@
       position: relative;
       z-index: 100;
       padding: 24px 0;
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       border-bottom: 1px solid var(--border-subtle);
     }
 
@@ -2349,7 +2364,7 @@
       border-radius: var(--radius-full);
       cursor: pointer;
       transition: var(--transition-smooth);
-      box-shadow: var(--shadow-sm);
+      box-shadow: none; border: 1px solid var(--border-medium);
       margin: 10px;
       height: 48px;
     }
@@ -2358,7 +2373,7 @@
       background: var(--accent-gold);
       color: white;
       transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+      box-shadow: none; border: 1px solid var(--border-strong);
     }
     
     .refresh-icon-circle {
@@ -2418,7 +2433,7 @@
       background: linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-emerald-light) 100%);
       border-color: transparent;
       color: white;
-      box-shadow: var(--shadow-md);
+      box-shadow: none; border: 1px solid var(--border-strong);
     }
 
     .library-tab.loading {
@@ -2511,7 +2526,7 @@
 
     .show-all-btn:hover {
       transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+      box-shadow: none; border: 1px solid var(--border-strong);
     }
 
     .categories-panel {
@@ -2534,7 +2549,7 @@
     }
 
     .categories-panel::-webkit-scrollbar-track {
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       border-radius: 3px;
     }
 
@@ -2635,7 +2650,7 @@
       padding: 14px 0;
       background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-tertiary) 100%);
       border-bottom: 1px solid var(--border-subtle);
-      box-shadow: var(--shadow-sm);
+      box-shadow: none; border: 1px solid var(--border-medium);
       animation: breadcrumbSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -2750,7 +2765,7 @@
     .folder-card:hover {
       border-color: var(--accent-gold);
       transform: translateY(-8px) scale(1.02);
-      box-shadow: var(--shadow-md);
+      box-shadow: none; border: 1px solid var(--border-strong);
     }
 
     [data-theme="dark"] .folder-card {
@@ -3163,7 +3178,7 @@
     .book-card:hover {
       transform: translateY(-4px);
       border-color: var(--border-medium);
-      box-shadow: var(--shadow-lg);
+      box-shadow: none; border: 1px solid var(--border-strong);
     }
 
     .book-cover-wrapper {
@@ -3180,7 +3195,7 @@
       height: 100%;
       object-fit: cover;
       transition: transform 0.5s ease;
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
     }
 
     .book-card:hover .book-cover {
@@ -3461,7 +3476,7 @@
       transform: scale(0.92);
       transition: var(--transition-smooth);
       border: 1px solid var(--border-medium);
-      box-shadow: var(--shadow-lg);
+      box-shadow: none; border: 1px solid var(--border-strong);
     }
 
     .modal-overlay.active .modal-content {
@@ -3736,7 +3751,7 @@
       padding: 14px 18px;
       background: var(--bg-card);
       border-radius: var(--radius-md);
-      box-shadow: var(--shadow-lg);
+      box-shadow: none; border: 1px solid var(--border-strong);
       animation: slideIn 0.4s ease;
       max-width: 340px;
       border: 1px solid var(--border-medium);
@@ -3806,7 +3821,7 @@
       height: 100vh;
       background: var(--bg-card);
       z-index: 2001;
-      box-shadow: var(--shadow-lg);
+      box-shadow: none; border: 1px solid var(--border-strong);
       transition: right var(--transition-smooth);
       display: flex;
       flex-direction: column;
@@ -3856,7 +3871,7 @@
       width: 38px;
       height: 38px;
       border-radius: 50%;
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -3913,7 +3928,7 @@
     }
     
     .menu-item:hover {
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       color: var(--accent-gold);
       border-color: var(--border-subtle);
       transform: translateX(-5px);
@@ -4053,7 +4068,7 @@
     }
 
     .sidebar-fixed-item:hover {
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       border-color: var(--border-subtle);
       color: var(--text-primary);
       transform: translateX(-3px);
@@ -4163,7 +4178,7 @@
       border-radius: 24px;
       display: flex;
       flex-direction: column;
-      box-shadow: var(--shadow-lg);
+      box-shadow: none; border: 1px solid var(--border-strong);
       border: 1px solid var(--border-subtle);
       transform: scale(0.9);
       transition: transform 0.3s ease;
@@ -4188,7 +4203,7 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -4215,7 +4230,7 @@
     .dua-font-controls {
       padding: 15px 24px;
       border-top: 1px solid var(--border-subtle);
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       border-radius: 0 0 24px 24px;
     }
     .font-slider-container {
@@ -4235,161 +4250,6 @@
       min-height: 100vh;
       background: var(--bg-secondary);
       padding-bottom: 60px;
-    }
-
-    /* ═══ نافذة التلخيص المنبثقة ═══ */
-    .summary-popup-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.72);
-      backdrop-filter: blur(10px);
-      z-index: 2100;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-      padding: 20px;
-    }
-    .summary-popup-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    .summary-popup-content {
-      background: var(--bg-card);
-      width: 100%;
-      max-width: 860px;
-      max-height: 92vh;
-      border-radius: 24px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.35);
-      border: 1px solid var(--border-subtle);
-      transform: scale(0.9) translateY(20px);
-      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
-      overflow: hidden;
-    }
-    .summary-popup-overlay.active .summary-popup-content {
-      transform: scale(1) translateY(0);
-    }
-    .summary-popup-header {
-      padding: 18px 22px;
-      border-bottom: 1px solid var(--border-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(30,64,175,0.05));
-      flex-shrink: 0;
-    }
-    .summary-popup-title-area {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex: 1;
-      min-width: 0;
-    }
-    .summary-popup-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: rgba(59,130,246,0.12);
-      border: 1px solid rgba(59,130,246,0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #3b82f6;
-      font-size: 1.1rem;
-      flex-shrink: 0;
-    }
-    .summary-popup-title {
-      font-family: var(--font-heading);
-      font-size: 1.25rem;
-      color: var(--text-primary);
-      margin: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .summary-popup-title span {
-      color: #3b82f6;
-    }
-    .summary-popup-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-    .summary-open-drive-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: rgba(66,133,244,0.1);
-      border: 1px solid rgba(66,133,244,0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #4285f4;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-      text-decoration: none;
-    }
-    .summary-open-drive-btn:hover {
-      background: #4285f4;
-      color: white;
-      transform: scale(1.1);
-    }
-    .summary-popup-close {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: var(--bg-tertiary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      color: var(--text-muted);
-    }
-    .summary-popup-close:hover {
-      background: #ef4444;
-      color: white;
-      transform: rotate(90deg);
-    }
-    .summary-font-controls {
-      padding: 10px 22px;
-      border-bottom: 1px solid var(--border-subtle);
-      background: var(--bg-secondary);
-      flex-shrink: 0;
-    }
-    .summary-popup-body {
-      padding: 28px 32px;
-      overflow-y: auto;
-      flex-grow: 1;
-    }
-    .summary-popup-text {
-      font-family: var(--font-heading);
-      font-size: var(--summary-font-size, 1.2rem);
-      line-height: 2;
-      color: var(--text-primary);
-      white-space: pre-wrap;
-      direction: rtl;
-      text-align: right;
-    }
-
-    /* ═══ مسار تلخيصات (breadcrumbs) ═══ */
-    #summariesBreadcrumbsWrapper {
-      background: var(--bg-secondary);
-      border-bottom: 1px solid var(--border-subtle);
-      padding: 0;
-      display: none;
-    }
-    #summariesBreadcrumbsWrapper.visible {
-      display: block;
-    }
-    #summariesBreadcrumbsWrapper .container {
-      padding-top: 12px;
-      padding-bottom: 12px;
     }
 
     /* هيرو بانر عصري */
@@ -4414,50 +4274,24 @@
       z-index: 0;
     }
 
-    .youtube-theme {
-      background: linear-gradient(160deg, #0a0a0a 0%, #1a0505 40%, #2d0a0a 100%);
-      color: white;
-      position: relative;
-    }
-    .youtube-theme::before { background: radial-gradient(circle, #ff0000, #cc0000); }
-    .youtube-theme::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff0000' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-    }
+    .youtube-theme { background: linear-gradient(160deg, #0f0f0f 0%, #1a1a1a 40%, #2d1a1a 100%); color: white; }
+    .youtube-theme::before { background: #ff0000; }
     .youtube-theme .hero-banner-icon-wrapper {
-      background: rgba(255,0,0,0.18);
-      border-color: rgba(255,0,0,0.4);
-      box-shadow: 0 0 40px rgba(255,0,0,0.3), 0 10px 30px rgba(0,0,0,0.4);
+      background: rgba(255,0,0,0.15);
+      border-color: rgba(255,0,0,0.35);
+      box-shadow: 0 0 30px rgba(255,0,0,0.25), 0 10px 25px rgba(0,0,0,0.3);
     }
-    .youtube-theme .hero-banner-title { text-shadow: 0 2px 20px rgba(255,0,0,0.3); }
-
-    .haqiba-theme {
-      background: linear-gradient(160deg, #022c22 0%, #064e3b 50%, #065f46 100%);
-      color: white;
-    }
-    .haqiba-theme::before { background: radial-gradient(circle, #10b981, #059669); }
+    
+    .haqiba-theme { background: linear-gradient(160deg, #042f2e 0%, #065f46 100%); color: white; }
+    .haqiba-theme::before { background: #10b981; }
     .haqiba-theme .hero-banner-icon-wrapper {
-      background: rgba(16,185,129,0.18);
-      border-color: rgba(16,185,129,0.4);
-      box-shadow: 0 0 40px rgba(16,185,129,0.3), 0 10px 30px rgba(0,0,0,0.4);
+      background: rgba(16,185,129,0.15);
+      border-color: rgba(16,185,129,0.35);
+      box-shadow: 0 0 30px rgba(16,185,129,0.25), 0 10px 25px rgba(0,0,0,0.3);
     }
-    .haqiba-theme .hero-banner-title { text-shadow: 0 2px 20px rgba(16,185,129,0.3); }
-
-    .summaries-theme {
-      background: linear-gradient(160deg, #0f172a 0%, #1e3a8a 50%, #1e40af 100%);
-      color: white;
-    }
-    .summaries-theme::before { background: radial-gradient(circle, #3b82f6, #2563eb); }
-    .summaries-theme .hero-banner-icon-wrapper {
-      background: rgba(59,130,246,0.18);
-      border-color: rgba(59,130,246,0.4);
-      box-shadow: 0 0 40px rgba(59,130,246,0.3), 0 10px 30px rgba(0,0,0,0.4);
-    }
-    .summaries-theme .hero-banner-title { text-shadow: 0 2px 20px rgba(59,130,246,0.3); }
+    
+    .summaries-theme { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); color: white; }
+    .summaries-theme::before { background: #3b82f6; }
 
     .hero-banner-container {
       position: relative;
@@ -4526,6 +4360,15 @@
 
     /* شريط التحكم المستقل */
     .standalone-controls-bar {
+        <div class="filter-wrapper-with-badge" style="flex: 1; max-width: 400px;">
+          <span class="filter-label-abs">بحث</span>
+          <div class="filter-select-wrapper" style="position: relative;">
+            <i class="fas fa-search filter-icon-main"></i>
+            <input type="text" id="yt-search" placeholder="ابحث عن قناة أو فيديو..." 
+                   style="width: 100%; padding: 10px 15px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem; font-family: var(--font-ui);"
+                   onkeyup="filterContentBySearch(this.value.toLowerCase())">
+          </div>
+        </div>
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -4621,25 +4464,19 @@
       flex-direction: column;
       align-items: center;
       gap: 15px;
-      box-shadow: var(--shadow-sm);
+      box-shadow: none; border: 1px solid var(--border-medium);
     }
 
     .folder-card-modern:hover {
-      transform: translateY(-8px) scale(1.02);
+      transform: translateY(-10px);
       border-color: var(--accent-gold);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(160,127,58,0.15);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
     }
 
     .haqiba-theme .folder-card-modern:hover {
-      transform: translateY(-8px) scale(1.02);
-      border-color: rgba(16,185,129,0.55);
-      box-shadow: 0 16px 40px rgba(16,185,129,0.2), 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    #page-summaries .folder-card-modern:hover {
-      transform: translateY(-8px) scale(1.02);
-      border-color: rgba(59,130,246,0.55);
-      box-shadow: 0 16px 40px rgba(59,130,246,0.2), 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateY(-6px);
+      border-color: rgba(16,185,129,0.5);
+      box-shadow: 0 12px 30px rgba(16,185,129,0.18), 0 4px 12px rgba(0,0,0,0.08);
     }
 
     .folder-icon-box {
@@ -4654,9 +4491,8 @@
       transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .haqiba-theme .folder-icon-box { background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
-    .summaries-theme .folder-icon-box { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59,130,246,0.2); }
-    #page-summaries .folder-icon-box { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59,130,246,0.2); }
+    .haqiba-theme .folder-icon-box { background: rgba(16, 185, 129, 0.12); color: #10b981; }
+    .summaries-theme .folder-icon-box { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
 
     .folder-card-modern:hover .folder-icon-box {
       transform: scale(1.1) rotate(-3deg);
@@ -4717,6 +4553,15 @@
       .hero-banner-icon-wrapper { width: 60px; height: 60px; font-size: 1.8rem; }
       
       .standalone-controls-bar { flex-direction: column; align-items: stretch; }
+        <div class="filter-wrapper-with-badge" style="flex: 1; max-width: 400px;">
+          <span class="filter-label-abs">بحث</span>
+          <div class="filter-select-wrapper" style="position: relative;">
+            <i class="fas fa-search filter-icon-main"></i>
+            <input type="text" id="yt-search" placeholder="ابحث عن قناة أو فيديو..." 
+                   style="width: 100%; padding: 10px 15px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem; font-family: var(--font-ui);"
+                   onkeyup="filterContentBySearch(this.value.toLowerCase())">
+          </div>
+        </div>
       .standalone-tabs { overflow-x: auto; padding: 4px; }
       .standalone-tab { white-space: nowrap; padding: 8px 15px; }
       
@@ -4783,7 +4628,7 @@
       border: 1.5px solid var(--border-subtle);
       transition: var(--transition-smooth);
       font-size: 1.3rem;
-      box-shadow: var(--shadow-sm);
+      box-shadow: none; border: 1px solid var(--border-medium);
     }
     
     .social-btn:hover {
@@ -4791,14 +4636,14 @@
       background: var(--accent-gold);
       color: white;
       border-color: var(--accent-gold);
-      box-shadow: var(--shadow-md);
+      box-shadow: none; border: 1px solid var(--border-strong);
     }
 
     .menu-toggle {
       width: 42px;
       height: 42px;
       border-radius: var(--radius-md);
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -5019,7 +4864,7 @@
     }
 
     .sidebar-fixed-item:hover {
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       border-color: var(--border-subtle);
       transform: translateX(-4px);
     }
@@ -5210,13 +5055,22 @@
     }
 
     .page-back-btn:hover {
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       color: var(--accent-gold);
       border-color: var(--accent-gold);
     }
 
     /* صفحة اليوتيوب - شريط التحكم عمودي */
     .standalone-controls-bar {
+        <div class="filter-wrapper-with-badge" style="flex: 1; max-width: 400px;">
+          <span class="filter-label-abs">بحث</span>
+          <div class="filter-select-wrapper" style="position: relative;">
+            <i class="fas fa-search filter-icon-main"></i>
+            <input type="text" id="yt-search" placeholder="ابحث عن قناة أو فيديو..." 
+                   style="width: 100%; padding: 10px 15px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem; font-family: var(--font-ui);"
+                   onkeyup="filterContentBySearch(this.value.toLowerCase())">
+          </div>
+        </div>
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -5249,7 +5103,7 @@
       justify-content: center;
       gap: 8px;
       padding: 9px 18px;
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       border: 1.5px solid rgba(255,0,0,0.2);
       border-radius: var(--radius-full);
       color: var(--text-secondary);
@@ -5434,6 +5288,15 @@
     /* تجاوب الهاتف: التبويبات بسطر والفلاتر بسطر تحته */
     @media (max-width: 768px) {
       .standalone-controls-bar {
+        <div class="filter-wrapper-with-badge" style="flex: 1; max-width: 400px;">
+          <span class="filter-label-abs">بحث</span>
+          <div class="filter-select-wrapper" style="position: relative;">
+            <i class="fas fa-search filter-icon-main"></i>
+            <input type="text" id="yt-search" placeholder="ابحث عن قناة أو فيديو..." 
+                   style="width: 100%; padding: 10px 15px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem; font-family: var(--font-ui);"
+                   onkeyup="filterContentBySearch(this.value.toLowerCase())">
+          </div>
+        </div>
         padding: 14px;
         gap: 10px;
         flex-direction: column;
@@ -5653,7 +5516,7 @@
       border-color: var(--accent-gold);
       background: var(--bg-card-hover);
       transform: translateY(-4px);
-      box-shadow: var(--shadow-md);
+      box-shadow: none; border: 1px solid var(--border-strong);
     }
 
     .haqiba-folder-icon {
@@ -5678,7 +5541,7 @@
     .haqiba-folder-count {
       font-size: 0.78rem;
       color: var(--text-muted);
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       padding: 3px 10px;
       border-radius: var(--radius-full);
     }
@@ -5695,14 +5558,14 @@
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 16px;
       padding: 30px 0;
-    }
-
-    .summary-folder-card {
+        .surah-card {
       background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: 24px 16px;
-      text-align: center;
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: none !important;
+    }nter;
       cursor: pointer;
       transition: var(--transition-smooth);
       display: flex;
@@ -5715,7 +5578,7 @@
       border-color: var(--accent-blue);
       background: var(--bg-card-hover);
       transform: translateY(-4px);
-      box-shadow: var(--shadow-md);
+      box-shadow: none; border: 1px solid var(--border-strong);
     }
 
     .summary-folder-icon {
@@ -5990,7 +5853,7 @@
       margin-bottom: 20px;
       overflow: hidden;
       border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-sm);
+      box-shadow: none; border: 1px solid var(--border-medium);
     }
 
     .duas-header {
@@ -6025,7 +5888,7 @@
     }
 
     .duas-toggle-btn {
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       border: 1px solid var(--border-subtle);
       border-radius: 50%;
       width: 36px;
@@ -6068,29 +5931,128 @@
         padding: 0 10px;
       }
     }
-
-    .duas-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 15px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+       .card-flat {
+      background: transparent !important;
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: none !important;
+    }
+    
+    /* ── Banner Card: في رحاب الذكر ── */
+    .dhikr-banner {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid #eeeeee;
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      box-shadow: none !important;
+    }
+    .dhikr-banner-icon {
+      width: 60px;
+      height: 60px;
+      background: var(--accent-gold);
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 80px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-      position: relative;
-      overflow: hidden;
+      color: white;
+      font-size: 1.8rem;
+      flex-shrink: 0;
     }
-
-    .duas-card:hover {
-      border-color: var(--accent-gold);
+    .dhikr-banner-info {
+      flex: 1;
+    }
+    .dhikr-banner-title {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      color: #333333;
+      margin-bottom: 4px;
+    }
+    .dhikr-banner-desc {
+      font-size: 0.9rem;
+      color: #777777;
+    }
+    .dhikr-banner-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .banner-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: #f5f5f5;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      color: #555555;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .banner-btn:hover {
+      background: #eeeeee;
+    }
+    
+    /* ── Calendar Fix ── */
+    .calendar-header {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 0 5px;
+    }
+    .calendar-nav-btn {
+      width: 32px;
+      height: 32px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-primary);
+    }
+    .calendar-month-year {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--accent-gold);
+    }
+    .calendar-day {
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: transparent;
+      border: 1px solid transparent;
+      position: relative;
+      margin: 2px;
+    }
+    .calendar-day.today {
+      background: rgba(0, 0, 0, 0.05);
+      color: var(--text-primary);
+    }
+    [data-theme="dark"] .calendar-day.today {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .calendar-day.has-achievement {
+      background: var(--accent-emerald) !important;
+      color: white !important;
+      font-weight: bold;
+    }  border-color: var(--accent-gold);
       background: var(--bg-card-hover);
       transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+      box-shadow: none; border: 1px solid var(--border-strong);
     }
 
     .duas-card-title {
@@ -6131,7 +6093,7 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      box-shadow: var(--shadow-lg);
+      box-shadow: none; border: 1px solid var(--border-strong);
       border: 1px solid var(--border-medium);
       transform: scale(0.9);
       transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -6164,7 +6126,7 @@
       width: 35px;
       height: 35px;
       border-radius: 50%;
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -6206,7 +6168,7 @@
     /* شريط التحكم بحجم الخط */
     .dua-font-controls {
       padding: 15px 25px;
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       border-top: 1px solid var(--border-subtle);
       display: flex;
       align-items: center;
@@ -6278,7 +6240,7 @@
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       color: var(--text-muted);
       transition: all 0.3s ease;
       margin-right: 15px;
@@ -6488,7 +6450,7 @@
       font-size: 0.9rem;
       font-weight: 700;
       color: var(--text-secondary);
-      background: var(--bg-tertiary);
+      background: var(--bg-secondary);
       padding: 8px 16px;
       border-radius: var(--radius-full);
     }
@@ -6972,30 +6934,54 @@
   </section>
 
   <!-- ═══ صفحة متابعة حفظ القرآن ═══ -->
-  <section id="page-memorization" class="page-section" style="display: none; padding: 40px 0;">
+  <section id="page-memorization" class="page-section" style="display: none; padding: 80px 0 40px 0;">
     <div class="container">
-      <div class="memorization-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;">
-        <div class="header-right">
-          <h2 style="font-family: var(--font-heading); font-size: 2.2rem; color: var(--accent-gold);">متابعة حفظ القرآن الكريم</h2>
+      <div class="memorization-header" style="margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 15px;">
+        <div>
+          <h2 style="font-family: var(--font-heading); font-size: 2.2rem; color: var(--accent-gold); margin-bottom: 5px;">متابعة حفظ القرآن الكريم</h2>
           <p style="color: var(--text-secondary); font-size: 0.95rem;">نظّم جدول حفظك اليومي وتابع تقدمك بكل سهولة</p>
         </div>
-        <div class="header-left">
-          <a href="#" class="print-plan-btn" style="display: flex; align-items: center; gap: 10px; background: var(--accent-gold); color: white; padding: 12px 24px; border-radius: var(--radius-md); font-weight: 600; transition: var(--transition-normal);">
-            <i class="fas fa-print"></i>
-            <span>تحميل خطة الحفظ PDF</span>
+        <button id="memorizationBackBtn" class="banner-btn" style="background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 10px 20px; border-radius: var(--radius-md); font-weight: 600; display: flex; align-items: center; gap: 8px;">
+          <i class="fas fa-arrow-right"></i>
+          <span>العودة للمكتبة</span>
+        </button>
+      </div>
+
+      <!-- بطاقة في رحاب الذكر (Banner Style) -->
+      <div class="dhikr-banner">
+        <div class="dhikr-banner-icon">
+          <i class="fas fa-book-quran"></i>
+        </div>
+        <div class="dhikr-banner-info">
+          <h3 class="dhikr-banner-title">في رحاب الذكر</h3>
+          <p class="dhikr-banner-desc">دليل شامل لمتابعة حفظ القرآن الكريم وتدبر آياته المباركة</p>
+        </div>
+        <div class="dhikr-banner-actions">
+          <button class="banner-btn" onclick="openDhikrFile()">
+            <i class="fas fa-eye"></i>
+            <span>مطالعة</span>
+          </button>
+          <a href="https://drive.google.com/file/d/1qJQEMGe_S1OwGXkVDvdbe59xsrj1wuFp/view?usp=drive_link" target="_blank" class="banner-btn">
+            <i class="fas fa-file-pdf"></i>
+            <span>PDF</span>
           </a>
         </div>
       </div>
 
       <div class="memorization-layout" style="display: grid; grid-template-columns: 1fr 350px; gap: 30px;">
         <!-- قائمة السور (يمين على الديسكتوب) -->
-        <div class="surahs-column" style="order: 1;">
+        <div class="surahs-column" style="order: 1; margin-top: 30px;">
           <div class="card-flat" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px;">
             <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--text-primary);">
               <i class="fas fa-list-ol" style="color: var(--accent-gold);"></i>
               خطة حفظ السور
             </h3>
             <div id="surahs-list-container" class="surahs-list">
+            <div style="margin-bottom: 20px;">
+              <input type="text" id="memorization-search" placeholder="ابحث عن سورة..." 
+                     style="width: 100%; padding: 10px 15px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem;"
+                     onkeyup="renderSurahsList()">
+            </div>
               <!-- سيتم توليدها بواسطة JS -->
             </div>
           </div>
@@ -7028,12 +7014,8 @@
         <h3 id="quran-surah-name" style="font-family: var(--font-heading); font-size: 1.8rem; color: var(--accent-gold);">اسم السورة</h3>
         <button onclick="closeQuranModal()" style="font-size: 1.5rem; color: var(--text-muted);"><i class="fas fa-times"></i></button>
       </div>
-      <div id="quran-text-container" class="quran-text-content" style="padding: 30px; overflow-y: auto; text-align: center; font-family: 'Amiri', serif; font-size: 1.6rem; line-height: 2.5; direction: rtl; background: var(--bg-card);">
-        <!-- سيتم جلب النص من API -->
-        <div class="loading-quran" style="text-align: center; padding: 40px;">
-          <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--accent-gold);"></i>
-          <p style="margin-top: 15px; font-family: var(--font-ui); font-size: 1rem;">جاري جلب آيات الله العظيمة...</p>
-        </div>
+      <div id="quran-text-container" class="quran-text-content" style="padding: 0; overflow: hidden; height: 70vh; direction: rtl; background: var(--bg-card);">
+        <iframe id="quran-iframe" src="" style="width: 100%; height: 100%; border: none;"></iframe>
       </div>
     </div>
   </div>
@@ -7105,7 +7087,7 @@
           </div>
           <div class="hero-banner-text">
             <h1 class="hero-banner-title">قنوات ومقاطع</h1>
-            <p class="hero-banner-subtitle">مكتبة يوتيوب التعليمية لنور الحوزة</p>
+            <p class="hero-banner-subtitle">مكتبة القنوات والمقاطع المقترحة من نور الحوزة</p>
           </div>
         </div>
       </div>
@@ -7113,6 +7095,15 @@
 
     <div class="container page-content-area">
       <div class="standalone-controls-bar">
+        <div class="filter-wrapper-with-badge" style="flex: 1; max-width: 400px;">
+          <span class="filter-label-abs">بحث</span>
+          <div class="filter-select-wrapper" style="position: relative;">
+            <i class="fas fa-search filter-icon-main"></i>
+            <input type="text" id="yt-search" placeholder="ابحث عن قناة أو فيديو..." 
+                   style="width: 100%; padding: 10px 15px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem; font-family: var(--font-ui);"
+                   onkeyup="filterContentBySearch(this.value.toLowerCase())">
+          </div>
+        </div>
         <div class="standalone-tabs" id="ytPageTabs">
           <button class="standalone-tab active" data-tab-yt="channels">
             <i class="fas fa-tv"></i>
@@ -7231,14 +7222,11 @@
       </div>
     </div>
 
-    <!-- مسار التنقل للتلخيصات (مطابق لحقيبة المؤمن) -->
-    <div id="summariesBreadcrumbsWrapper">
-      <div class="container">
-        <div class="haqiba-breadcrumbs" id="summariesBreadcrumbsList"></div>
-      </div>
-    </div>
-
     <div class="container page-content-area">
+      <!-- مسار التنقل للتلخيصات -->
+      <div class="haqiba-breadcrumbs-wrapper" style="margin-bottom: 20px;">
+        <div class="haqiba-breadcrumbs" id="summariesBreadcrumbs"></div>
+      </div>
       <div class="standalone-grid folders-grid-layout" id="summariesGrid">
         <div class="media-loading">
           <div class="loading-spinner"></div>
@@ -7264,34 +7252,6 @@
           <input type="range" min="1" max="3" step="0.1" value="1.4" class="font-slider" id="duaFontSlider">
           <i class="fas fa-font" style="font-size: 1.2rem;"></i>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ نافذة التلخيص المنبثقة ═══ -->
-  <div class="summary-popup-overlay" id="summaryPopup">
-    <div class="summary-popup-content">
-      <div class="summary-popup-header">
-        <div class="summary-popup-title-area">
-          <div class="summary-popup-icon"><i class="fas fa-file-alt"></i></div>
-          <h3 class="summary-popup-title" id="summaryPopupTitle"><span>عنوان التلخيص</span></h3>
-        </div>
-        <div class="summary-popup-actions">
-          <a href="#" target="_blank" class="summary-open-drive-btn" id="summaryOpenDriveBtn" title="فتح في Drive">
-            <i class="fab fa-google-drive"></i>
-          </a>
-          <div class="summary-popup-close" id="summaryPopupClose"><i class="fas fa-times"></i></div>
-        </div>
-      </div>
-      <div class="summary-font-controls">
-        <div class="font-slider-container">
-          <i class="fas fa-font" style="font-size: 0.8rem;"></i>
-          <input type="range" min="0.9" max="2.5" step="0.1" value="1.2" class="font-slider" id="summaryFontSlider">
-          <i class="fas fa-font" style="font-size: 1.2rem;"></i>
-        </div>
-      </div>
-      <div class="summary-popup-body">
-        <div class="summary-popup-text" id="summaryPopupText">جاري تحميل التلخيص...</div>
       </div>
     </div>
   </div>
@@ -8308,12 +8268,47 @@ ITEMS_PER_PAGE: 30
       DOM.modalTitle.textContent = cleanName;
       DOM.modalFormat.textContent = getFileFormat(book.mimeType);
       DOM.modalSize.textContent = formatFileSize(book.size);
-      DOM.modalDownload.href = getDownloadUrl(book.id);
-      DOM.modalPreview.href = book.webViewLink || getPreviewUrl(book.id);
-      DOM.modalShare.onclick = () => shareBook(book.id, cleanName);
+      
+      const actions = document.querySelector('.modal-actions');
+      const originalActions = actions.innerHTML;
+      
+      // عرض إطار المطالعة مباشرة مع زر الدرايف والتحميل
+      const drivePreview = `https://drive.google.com/file/d/${book.id}/preview`;
+      const driveViewLink = book.webViewLink || getPreviewUrl(book.id);
+      actions.innerHTML = `
+        <div style="width:100%; display:flex; flex-direction:column; gap:12px;">
+          <iframe src="${drivePreview}" 
+                  style="width:100%; height:52vh; min-height:320px; border:none; border-radius:var(--radius-md); background:#fff;"
+                  allow="autoplay"></iframe>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <a href="${driveViewLink}" class="modal-btn primary" target="_blank" 
+               style="justify-content:center; background:linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold)); color:white; border:none; box-shadow:none !important; text-decoration:none;">
+              <i class="fab fa-google-drive"></i>
+              <span>فتح في درايف</span>
+            </a>
+            <a href="${getDownloadUrl(book.id)}" class="modal-btn secondary" target="_blank" 
+               style="justify-content:center; border:1px solid var(--border-medium); box-shadow:none !important; background:transparent; text-decoration:none;">
+              <i class="fas fa-download"></i>
+              <span>تحميل مباشر</span>
+            </a>
+          </div>
+          <button class="modal-btn secondary" id="modalShareBtn" style="justify-content:center; border:1px solid var(--border-medium); box-shadow:none !important; background:transparent;">
+            <i class="fas fa-share-alt"></i>
+            <span>مشاركة الرابط</span>
+          </button>
+        </div>
+      `;
+
+      document.getElementById('modalShareBtn').onclick = () => shareBook(book.id, cleanName);
       
       DOM.bookModal.classList.add('active');
       document.body.style.overflow = 'hidden';
+
+      const resetModal = () => {
+        actions.innerHTML = originalActions;
+        DOM.modalClose.removeEventListener('click', resetModal);
+      };
+      DOM.modalClose.addEventListener('click', resetModal);
     }
 
     function closeModal() {
@@ -9259,8 +9254,6 @@ ITEMS_PER_PAGE: 30
         if (e.key === 'Escape') {
           const card = document.getElementById('mediaInfoCard');
           if (card && card.classList.contains('active')) closeMediaInfoCard();
-          const summaryPop = document.getElementById('summaryPopup');
-          if (summaryPop && summaryPop.classList.contains('active')) closeSummaryPopup();
         }
       });
 
@@ -9402,6 +9395,41 @@ ITEMS_PER_PAGE: 30
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
+    // نظام البحث الذكي
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    function initSmartSearch() {
+      const searchInputs = document.querySelectorAll('[id*="search"]');
+      searchInputs.forEach(input => {
+        if (input) {
+          input.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            filterContentBySearch(searchTerm);
+          });
+        }
+      });
+    }
+    
+    function filterContentBySearch(term) {
+      // فلترة بطاقات يوتيوب
+      const ytCards = document.querySelectorAll('.media-card');
+      ytCards.forEach(card => {
+        const title = card.querySelector('.media-title')?.textContent.toLowerCase() || '';
+        const tags = card.querySelector('.tags-container')?.textContent.toLowerCase() || '';
+        const matches = title.includes(term) || tags.includes(term);
+        card.style.display = matches || term === '' ? '' : 'none';
+      });
+      
+      // فلترة بطاقات المجلدات
+      const folderCards = document.querySelectorAll('.folder-card-modern');
+      folderCards.forEach(card => {
+        const name = card.querySelector('.folder-name-modern')?.textContent.toLowerCase() || '';
+        const matches = name.includes(term);
+        card.style.display = matches || term === '' ? '' : 'none';
+      });
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════
     // نظام التنقل بين الصفحات
     // ═══════════════════════════════════════════════════════════════════════════
 
@@ -9436,6 +9464,16 @@ ITEMS_PER_PAGE: 30
       if (MAIN_PAGES.haqiba) MAIN_PAGES.haqiba.style.display = 'none';
       // إخفاء صفحة التلخيصات
       if (MAIN_PAGES.summaries) MAIN_PAGES.summaries.style.display = 'none';
+      // إخفاء صفحة الحفظ
+      const memorizationPage = document.getElementById('page-memorization');
+      if (memorizationPage) memorizationPage.style.display = 'none';
+      
+      // إغلاق المودالات عند التنقل
+      if (typeof closeQuranModal === 'function') closeQuranModal();
+      if (typeof closeMediaInfoCard === 'function') closeMediaInfoCard();
+      
+      // العودة للأعلى
+      window.scrollTo(0, 0);
     }
 
     function closeSidebar() {
@@ -9503,11 +9541,8 @@ ITEMS_PER_PAGE: 30
       updateSidebarActive('navSummaries');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       closeSidebar();
-      if (!summariesLoaded) {
-        summariesHistory = [];
-        loadSummariesFolders(SUMMARIES_ROOT_ID, 'تلخيصاتنا');
-        summariesLoaded = true;
-      }
+      // إصلاح: جلب المجلد الرئيسي للتلخيصات عند الفتح
+      loadSummariesFolders('1IwsqRD7Z5GVn2c3jScx7h5pBmo1RZ28e', 'تلخيصاتنا');
     }
 
     function showMemorizationPage() {
@@ -9525,13 +9560,7 @@ ITEMS_PER_PAGE: 30
 
     // ── منطق صفحة حفظ القرآن ──
     const SURAHS_DATA = [
-      { id: 1, name: "الفاتحة", pages: 1 }, { id: 2, name: "البقرة", pages: 48 }, { id: 3, name: "آل عمران", pages: 27 },
-      { id: 4, name: "النساء", pages: 29 }, { id: 5, name: "المائدة", pages: 22 }, { id: 6, name: "الأنعام", pages: 23 },
-      { id: 7, name: "الأعراف", pages: 26 }, { id: 8, name: "الأنفال", pages: 10 }, { id: 9, name: "التوبة", pages: 21 },
-      { id: 10, name: "يونس", pages: 13 }, { id: 11, name: "هود", pages: 13 }, { id: 12, name: "يوسف", pages: 13 },
-      { id: 18, name: "الكهف", pages: 12 }, { id: 19, name: "مريم", pages: 7 }, { id: 20, name: "طه", pages: 10 },
-      { id: 36, name: "يس", pages: 6 }, { id: 55, name: "الرحمن", pages: 3 }, { id: 56, name: "الواقعة", pages: 3 },
-      { id: 67, name: "الملك", pages: 2 }, { id: 114, name: "الناس", pages: 1 }
+      { id: 1, name: "الفاتحة", pages: 1 }, { id: 2, name: "البقرة", pages: 48 }, { id: 3, name: "آل عمران", pages: 28 }, { id: 4, name: "النساء", pages: 30 }, { id: 5, name: "المائدة", pages: 22 }, { id: 6, name: "الأنعام", pages: 23 }, { id: 7, name: "الأعراف", pages: 26 }, { id: 8, name: "الأنفال", pages: 10 }, { id: 9, name: "التوبة", pages: 21 }, { id: 10, name: "يونس", pages: 13 }, { id: 11, name: "هود", pages: 13 }, { id: 12, name: "يوسف", pages: 13 }, { id: 13, name: "الرعد", pages: 11 }, { id: 14, name: "إبراهيم", pages: 9 }, { id: 15, name: "الحجر", pages: 7 }, { id: 16, name: "النحل", pages: 18 }, { id: 17, name: "الإسراء", pages: 12 }, { id: 18, name: "الكهف", pages: 12 }, { id: 19, name: "مريم", pages: 7 }, { id: 20, name: "طه", pages: 10 }, { id: 21, name: "الأنبياء", pages: 11 }, { id: 22, name: "الحج", pages: 9 }, { id: 23, name: "المؤمنون", pages: 9 }, { id: 24, name: "النور", pages: 9 }, { id: 25, name: "الفرقان", pages: 8 }, { id: 26, name: "الشعراء", pages: 11 }, { id: 27, name: "النمل", pages: 9 }, { id: 28, name: "القصص", pages: 9 }, { id: 29, name: "العنكبوت", pages: 9 }, { id: 30, name: "الروم", pages: 8 }, { id: 31, name: "لقمان", pages: 6 }, { id: 32, name: "السجدة", pages: 5 }, { id: 33, name: "الأحزاب", pages: 9 }, { id: 34, name: "سبأ", pages: 9 }, { id: 35, name: "فاطر", pages: 8 }, { id: 36, name: "يس", pages: 5 }, { id: 37, name: "الصافات", pages: 10 }, { id: 38, name: "ص", pages: 8 }, { id: 39, name: "الزمر", pages: 8 }, { id: 40, name: "غافر", pages: 9 }, { id: 41, name: "فصلت", pages: 8 }, { id: 42, name: "الشورى", pages: 8 }, { id: 43, name: "الزخرف", pages: 7 }, { id: 44, name: "الدخان", pages: 5 }, { id: 45, name: "الجاثية", pages: 5 }, { id: 46, name: "الأحقاف", pages: 6 }, { id: 47, name: "محمد", pages: 6 }, { id: 48, name: "الفتح", pages: 5 }, { id: 49, name: "الحجرات", pages: 4 }, { id: 50, name: "ق", pages: 5 }, { id: 51, name: "الذاريات", pages: 6 }, { id: 52, name: "الطور", pages: 5 }, { id: 53, name: "النجم", pages: 4 }, { id: 54, name: "القمر", pages: 5 }, { id: 55, name: "الرحمن", pages: 3 }, { id: 56, name: "الواقعة", pages: 3 }, { id: 57, name: "الحديد", pages: 6 }, { id: 58, name: "المجادلة", pages: 4 }, { id: 59, name: "الحشر", pages: 6 }, { id: 60, name: "الممتحنة", pages: 4 }, { id: 61, name: "الصف", pages: 3 }, { id: 62, name: "الجمعة", pages: 3 }, { id: 63, name: "المنافقون", pages: 3 }, { id: 64, name: "التغابن", pages: 3 }, { id: 65, name: "الطلاق", pages: 3 }, { id: 66, name: "التحريم", pages: 3 }, { id: 67, name: "الملك", pages: 2 }, { id: 68, name: "القلم", pages: 3 }, { id: 69, name: "الحاقة", pages: 3 }, { id: 70, name: "المعارج", pages: 3 }, { id: 71, name: "نوح", pages: 2 }, { id: 72, name: "الجن", pages: 3 }, { id: 73, name: "المزمل", pages: 2 }, { id: 74, name: "المدثر", pages: 2 }, { id: 75, name: "القيامة", pages: 2 }, { id: 76, name: "الإنسان", pages: 2 }, { id: 77, name: "المرسلات", pages: 2 }, { id: 78, name: "النبأ", pages: 2 }, { id: 79, name: "النازعات", pages: 2 }, { id: 80, name: "عبس", pages: 2 }, { id: 81, name: "التكوير", pages: 2 }, { id: 82, name: "الانفطار", pages: 2 }, { id: 83, name: "المطففين", pages: 2 }, { id: 84, name: "الانشقاق", pages: 2 }, { id: 85, name: "البروج", pages: 2 }, { id: 86, name: "الطارق", pages: 2 }, { id: 87, name: "الأعلى", pages: 2 }, { id: 88, name: "الغاشية", pages: 2 }, { id: 89, name: "الفجر", pages: 2 }, { id: 90, name: "البلد", pages: 2 }, { id: 91, name: "الشمس", pages: 1 }, { id: 92, name: "الليل", pages: 1 }, { id: 93, name: "الضحى", pages: 1 }, { id: 94, name: "الشرح", pages: 1 }, { id: 95, name: "التين", pages: 1 }, { id: 96, name: "العلق", pages: 1 }, { id: 97, name: "القدر", pages: 1 }, { id: 98, name: "البينة", pages: 1 }, { id: 99, name: "الزلزلة", pages: 1 }, { id: 100, name: "العاديات", pages: 1 }, { id: 101, name: "القارعة", pages: 1 }, { id: 102, name: "التكاثر", pages: 1 }, { id: 103, name: "العصر", pages: 1 }, { id: 104, name: "الهمزة", pages: 1 }, { id: 105, name: "الفيل", pages: 1 }, { id: 106, name: "قريش", pages: 1 }, { id: 107, name: "الماعون", pages: 1 }, { id: 108, name: "الكوثر", pages: 1 }, { id: 109, name: "الكافرون", pages: 1 }, { id: 110, name: "النصر", pages: 1 }, { id: 111, name: "المسد", pages: 1 }, { id: 112, name: "الإخلاص", pages: 1 }, { id: 113, name: "الفلق", pages: 1 }, { id: 114, name: "الناس", pages: 1 }
     ];
 
     let memorizationState = JSON.parse(localStorage.getItem('quran_memorization_v1')) || {};
@@ -9539,38 +9568,33 @@ ITEMS_PER_PAGE: 30
     function initMemorizationPage() {
       renderSurahsList();
       renderCalendar();
-      // تحميل مستندات Drive في الخلفية وتحديث القائمة بعد التحميل
-      loadQuranDriveFiles().then(() => renderSurahsList());
     }
 
     function renderSurahsList() {
       const container = document.getElementById('surahs-list-container');
       if(!container) return;
-      container.innerHTML = SURAHS_DATA.map(surah => {
+      const searchTerm = document.getElementById('memorization-search')?.value.toLowerCase() || '';
+      const filteredSurahs = SURAHS_DATA.filter(s => s.name.includes(searchTerm));
+      
+      container.innerHTML = filteredSurahs.map(surah => {
         const data = memorizationState[surah.id] || { days: surah.pages, checks: [], dedication: '' };
         let checkboxes = '';
         for (let i = 1; i <= data.days; i++) {
           const isChecked = data.checks.includes(i);
           checkboxes += `<div class="day-checkbox ${isChecked ? 'checked' : ''}" onclick="toggleDayCheck(${surah.id}, ${i})">${i}</div>`;
         }
-
-        // تحقق من وجود مستند Drive
-        const hasDriveDoc = quranDriveFiles && findQuranDocByName(surah.name, quranDriveFiles);
-        const driveIndicator = hasDriveDoc
-          ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.65rem;padding:2px 8px;border-radius:20px;background:rgba(66,133,244,0.1);color:#4285f4;border:1px solid rgba(66,133,244,0.2);margin-right:8px;" title="يوجد مستند في مكتبتنا"><i class="fab fa-google-drive"></i>مستند</span>`
-          : '';
-
+        
         return `
           <div class="surah-card">
             <div class="surah-header">
-              <span class="surah-name" onclick="openQuranSurah(${surah.id}, '${surah.name}')">${surah.name}${driveIndicator}</span>
+              <span class="surah-name" onclick="openQuranSurah(${surah.id}, '${surah.name}')">${surah.name}</span>
               <div class="days-counter">
                 <button class="counter-btn" onclick="updateSurahDays(${surah.id}, -1)"><i class="fas fa-minus"></i></button>
                 <span style="font-size: 0.9rem; font-weight: bold;">${data.days} يوم</span>
                 <button class="counter-btn" onclick="updateSurahDays(${surah.id}, 1)"><i class="fas fa-plus"></i></button>
               </div>
             </div>
-            <input type="text" class="surah-dedication" placeholder="إهداء الثواب لـ (اسم الشهيد/المعصوم)..." 
+            <input type="text" class="surah-dedication" placeholder="إهداء لـ الشهيد أو المعصوم................ 🤍" 
                    value="${data.dedication || ''}" onchange="updateDedication(${surah.id}, this.value)">
             <div class="checkboxes-grid">${checkboxes}</div>
           </div>
@@ -9579,11 +9603,13 @@ ITEMS_PER_PAGE: 30
     }
 
     function updateSurahDays(id, delta) {
+      const s = SURAHS_DATA.find(x => x.id === id);
       if (!memorizationState[id]) {
-        const s = SURAHS_DATA.find(x => x.id === id);
         memorizationState[id] = { days: s.pages, checks: [], dedication: '' };
       }
-      memorizationState[id].days = Math.max(1, memorizationState[id].days + delta);
+      // لا يقل عن عدد الصفحات القرآنية
+      const minPages = s.pages;
+      memorizationState[id].days = Math.max(minPages, memorizationState[id].days + delta);
       saveMemorization();
       renderSurahsList();
     }
@@ -9595,7 +9621,8 @@ ITEMS_PER_PAGE: 30
     }
 
     function toggleDayCheck(surahId, day) {
-      if (!memorizationState[surahId]) memorizationState[surahId] = { days: 1, checks: [], dedication: '' };
+      const surah = SURAHS_DATA.find(s => s.id === surahId);
+      if (!memorizationState[surahId]) memorizationState[surahId] = { days: surah.pages, checks: [], dedication: '' };
       const index = memorizationState[surahId].checks.indexOf(day);
       const todayStr = new Date().toISOString().split('T')[0];
       
@@ -9607,7 +9634,12 @@ ITEMS_PER_PAGE: 30
       } else {
         memorizationState[surahId].checks.push(day);
         if (!memorizationState.calendarLog) memorizationState.calendarLog = [];
-        memorizationState.calendarLog.push({ date: todayStr, surahId, surahName: SURAHS_DATA.find(s => s.id === surahId).name, day });
+        memorizationState.calendarLog.push({ 
+          date: todayStr, 
+          surahId, 
+          surahName: surah.name, 
+          day 
+        });
       }
       saveMemorization();
       renderSurahsList();
@@ -9618,115 +9650,161 @@ ITEMS_PER_PAGE: 30
       localStorage.setItem('quran_memorization_v1', JSON.stringify(memorizationState));
     }
 
+    let calendarCurrentMonth = new Date().getMonth();
+    let calendarCurrentYear = new Date().getFullYear();
+    
     function renderCalendar() {
       const container = document.getElementById('memorization-calendar');
       if(!container) return;
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = now.getMonth();
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
-      const firstDay = new Date(year, month, 1).getDay();
       
+      const daysInMonth = new Date(calendarCurrentYear, calendarCurrentMonth + 1, 0).getDate();
+      const firstDay = new Date(calendarCurrentYear, calendarCurrentMonth, 1).getDay();
+      
+      const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
       const dayHeads = ['ح', 'ن', 'ث', 'ر', 'خ', 'ج', 'س'];
-      let html = dayHeads.map(d => `<div class="calendar-day-head">${d}</div>`).join('');
       
-      for (let i = 0; i < (firstDay + 6) % 7; i++) html += '<div></div>';
+      let html = `<div class="calendar-header">
+        <button class="calendar-nav-btn" onclick="prevMonth()"><i class="fas fa-chevron-right"></i></button>
+        <span class="calendar-month-year">${monthNames[calendarCurrentMonth]} ${calendarCurrentYear}</span>
+        <button class="calendar-nav-btn" onclick="nextMonth()"><i class="fas fa-chevron-left"></i></button>
+      </div>`;
       
+      html += dayHeads.map(d => `<div class="calendar-day-head">${d}</div>`).join('');
+      
+      // ملء الفراغات قبل بداية الشهر
+      const emptyCells = (firstDay + 6) % 7;
+      for (let i = 0; i < emptyCells; i++) html += '<div></div>';
+      
+      const now = new Date();
       for (let d = 1; d <= daysInMonth; d++) {
-        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-        const isToday = d === now.getDate();
+        const dateStr = `${calendarCurrentYear}-${String(calendarCurrentMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const isToday = d === now.getDate() && calendarCurrentMonth === now.getMonth() && calendarCurrentYear === now.getFullYear();
         const logs = (memorizationState.calendarLog || []).filter(l => l.date === dateStr);
         const hasAchievement = logs.length > 0;
+        const achievementNames = logs.map(l => l.surahName).join(', ');
         
         html += `
-          <div class="calendar-day ${isToday ? 'today' : ''} ${hasAchievement ? 'has-achievement' : ''}">
+          <div class="calendar-day ${isToday ? 'today' : ''} ${hasAchievement ? 'has-achievement' : ''}" title="${achievementNames}">
             ${d}
-            ${hasAchievement ? `<div class="achievement-badge" title="${logs.map(l => l.surahName).join(', ')}">${logs[0].surahName}</div>` : ''}
           </div>
         `;
       }
       container.innerHTML = html;
     }
-
-    // معرف مجلد القرآن في Drive
-    const QURAN_DRIVE_FOLDER_ID = '15cRmsfYeg4u0yKTe5Ly6owNJy9ox8-bt';
-    let quranDriveFiles = null; // كاش لملفات Drive
-
-    async function loadQuranDriveFiles() {
-      if (quranDriveFiles !== null) return quranDriveFiles;
-      try {
-        const apiKey = CONFIG.API_KEY;
-        const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${QURAN_DRIVE_FOLDER_ID}'+in+parents+and+trashed=false&fields=files(id,name,mimeType)&pageSize=200&key=${apiKey}`;
-        const res = await fetch(apiUrl);
-        if (!res.ok) throw new Error('Drive API error');
-        const data = await res.json();
-        quranDriveFiles = (data.files || []).filter(f => f.mimeType === 'application/vnd.google-apps.document');
-      } catch (e) {
-        console.warn('Could not load Quran Drive files:', e);
-        quranDriveFiles = [];
-      }
-      return quranDriveFiles;
+    
+    function prevMonth() {
+      calendarCurrentMonth--;
+      if (calendarCurrentMonth < 0) { calendarCurrentMonth = 11; calendarCurrentYear--; }
+      renderCalendar();
     }
-
-    // بحث عن مستند سورة في Drive بالمطابقة الجزئية
-    function findQuranDocByName(surahName, files) {
-      if (!files || files.length === 0) return null;
-      // بحث مطابق تام أولاً
-      const exact = files.find(f => f.name.trim() === surahName.trim());
-      if (exact) return exact;
-      // بحث جزئي باسم السورة
-      const partial = files.find(f => f.name.includes(surahName) || surahName.includes(f.name.replace(/سورةs*/i, '').trim()));
-      return partial || null;
+    
+    function nextMonth() {
+      calendarCurrentMonth++;
+      if (calendarCurrentMonth > 11) { calendarCurrentMonth = 0; calendarCurrentYear++; }
+      renderCalendar();
     }
 
     async function openQuranSurah(id, name) {
-      const modal = document.getElementById('quran-read-modal');
-      const textContainer = document.getElementById('quran-text-container');
-      const surahNameEl = document.getElementById('quran-surah-name');
-      surahNameEl.textContent = name;
-      modal.style.display = 'flex';
-      textContainer.innerHTML = '<div class="loading-quran"><i class="fas fa-spinner fa-spin"></i><p>جاري جلب آيات الله...</p></div>';
+      // فتح نافذة الدعاء المنبثقة وجلب النص مباشرة كنص (مثل openDuaInPopup تماماً)
+      const popup = document.getElementById('duaPopup');
+      const popupTitleEl = document.getElementById('duaPopupTitle');
+      const popupText = document.getElementById('duaPopupText');
+      const slider = document.getElementById('duaFontSlider');
+      if (!popup || !popupText) return;
 
-      // أولاً: ابحث عن مستند في Drive باسم السورة
-      try {
-        const driveFiles = await loadQuranDriveFiles();
-        const matchedDoc = findQuranDocByName(name, driveFiles);
+      // العنوان
+      const titleSpan = popupTitleEl ? popupTitleEl.querySelector('span') : null;
+      if (titleSpan) titleSpan.textContent = name;
+      else if (popupTitleEl) popupTitleEl.textContent = name;
 
-        if (matchedDoc) {
-          // فتح المستند من Drive
-          const apiKey = CONFIG.API_KEY;
-          const url = `https://docs.google.com/document/d/${matchedDoc.id}/export?format=txt&key=${apiKey}`;
-          const res = await fetch(url);
-          const text = await res.text();
-          const cleanText = text.replace(/\uFEFF/g, '').trim();
-          textContainer.innerHTML = `
-            <div style="text-align:center; margin-bottom: 20px; padding: 10px; background: rgba(160,127,58,0.08); border-radius: 12px; border: 1px solid rgba(160,127,58,0.2);">
-              <i class="fab fa-google-drive" style="color: #4285f4; margin-left: 8px;"></i>
-              <span style="font-size: 0.85rem; color: var(--text-muted); ">تم جلب النص من مستنداتنا</span>
-              <a href="https://docs.google.com/document/d/${matchedDoc.id}/view" target="_blank" style="margin-right: 10px; color: #4285f4; font-size: 0.8rem;">فتح في Drive</a>
-            </div>
-            <pre style="font-family: 'Amiri', serif; font-size: 1.5rem; line-height: 2.2; text-align: center; white-space: pre-wrap; direction: rtl;">${cleanText}</pre>
-          `;
-          return;
-        }
-      } catch (e) {
-        console.warn('Drive lookup failed, falling back to API:', e);
+      // شاشة التحميل
+      popupText.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري جلب السورة المباركة...</span></div>';
+
+      // ضبط الـ Slider من localStorage
+      const savedFontSize = localStorage.getItem('quran_font_size') || '1.4';
+      if (slider) {
+        slider.value = savedFontSize;
+        popupText.style.setProperty('--dua-font-size', savedFontSize + 'rem');
+        slider.oninput = (e) => {
+          popupText.style.setProperty('--dua-font-size', e.target.value + 'rem');
+          localStorage.setItem('quran_font_size', e.target.value);
+        };
       }
 
-      // ثانياً: استخدام المصدر الاحتياطي (API القرآن)
+      popup.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
       try {
-        const res = await fetch(`https://api.alquran.cloud/v1/surah/${id}`);
-        const data = await res.json();
-        if (data.code === 200) {
-          textContainer.innerHTML = data.data.ayahs.map(a => `<span class="ayah">${a.text} <span style="color: var(--accent-gold); font-size: 1.2rem;">(${a.numberInSurah})</span></span>`).join(' ');
+        const folderId = '15cRmsfYeg4u0yKTe5Ly6owNJy9ox8-bt';
+        const apiKey = CONFIG.API_KEY;
+        // البحث عن المستند بالاسم الدقيق
+        const searchUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+name='${name}'+and+mimeType='application/vnd.google-apps.document'+and+trashed=false&fields=files(id,name)&key=${apiKey}`;
+        const searchRes = await fetch(searchUrl);
+        const searchData = await searchRes.json();
+
+        let fileId = '19uwQBjVnNI72-v-W6kzJsynHHHpr7IPVh4UsQidbg6o'; // بديل: القرآن الشامل
+        if (searchData.files && searchData.files.length > 0) {
+          fileId = searchData.files[0].id;
+        }
+
+        // جلب النص مباشرة (export as txt) - نفس أسلوب حقيبة المؤمن
+        const exportUrl = `https://docs.google.com/document/d/${fileId}/export?format=txt&key=${apiKey}`;
+        const textRes = await fetch(exportUrl);
+        const rawText = await textRes.text();
+        const cleanText = rawText.replace(/\uFEFF/g, '').trim();
+
+        if (cleanText) {
+          popupText.innerHTML = cleanText;
+        } else {
+          // إذا كان فارغاً، اعرض iframe كبديل
+          popupText.innerHTML = `<iframe src="https://docs.google.com/document/d/${fileId}/preview" style="width:100%;height:65vh;border:none;border-radius:var(--radius-md);background:#fff;"></iframe>`;
         }
       } catch (e) {
-        textContainer.innerHTML = '<p style="color: red;">عذراً، تعذر جلب النص حالياً. يرجى المحاولة لاحقاً.</p>';
+        popupText.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle" style="color:var(--accent-youtube);"></i><span>تعذر جلب السورة. يرجى المحاولة لاحقاً.</span></div>';
       }
     }
 
+    function openDhikrFile() {
+      const popup = document.getElementById('duaPopup');
+      const popupTitleEl = document.getElementById('duaPopupTitle');
+      const popupText = document.getElementById('duaPopupText');
+      const slider = document.getElementById('duaFontSlider');
+      const fileId = '1qJQEMGe_S1OwGXkVDvdbe59xsrj1wuFp';
+
+      if (!popup) return;
+
+      const titleSpan = popupTitleEl ? popupTitleEl.querySelector('span') : null;
+      if (titleSpan) titleSpan.textContent = 'في رحاب الذكر';
+      else if (popupTitleEl) popupTitleEl.textContent = 'في رحاب الذكر';
+
+      popupText.innerHTML = `
+        <iframe src="https://drive.google.com/file/d/${fileId}/preview" 
+                style="width:100%; height:62vh; min-height:350px; border:none; border-radius:var(--radius-md); background:#fff;"
+                allow="autoplay"></iframe>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px;">
+          <a href="https://drive.google.com/file/d/${fileId}/view" target="_blank"
+             style="display:flex; align-items:center; justify-content:center; gap:8px; padding:11px 16px; border-radius:var(--radius-md); background:linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold)); color:white; font-weight:700; font-size:0.88rem; text-decoration:none;">
+            <i class="fab fa-google-drive"></i> فتح في درايف
+          </a>
+          <a href="https://drive.google.com/uc?export=download&id=${fileId}" target="_blank"
+             style="display:flex; align-items:center; justify-content:center; gap:8px; padding:11px 16px; border-radius:var(--radius-md); border:1px solid var(--border-medium); background:transparent; color:var(--text-primary); font-weight:700; font-size:0.88rem; text-decoration:none;">
+            <i class="fas fa-download"></i> تحميل PDF
+          </a>
+        </div>
+      `;
+
+      if (slider) slider.value = localStorage.getItem('quran_font_size') || '1.2';
+      popup.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
     function closeQuranModal() {
-      document.getElementById('quran-read-modal').style.display = 'none';
+      // إغلاق نافذة القرآن (dua popup)
+      const popup = document.getElementById('duaPopup');
+      if (popup) {
+        popup.classList.remove('active');
+        document.body.style.overflow = '';
+      }
     }
 
     // تحديث حالة العنصر النشط في القائمة
@@ -9915,182 +9993,85 @@ ITEMS_PER_PAGE: 30
     const SUMMARIES_ROOT_ID = '1IwsqRD7Z5GVn2c3jScx7h5pBmo1RZ28e';
 
     function updateSummariesBreadcrumbs() {
-      const bcWrapper = document.getElementById('summariesBreadcrumbsWrapper');
-      const bcList = document.getElementById('summariesBreadcrumbsList');
-      if (!bcWrapper || !bcList) return;
-
-      if (summariesHistory.length <= 1) {
-        bcWrapper.classList.remove('visible');
-        return;
-      }
-
-      bcWrapper.classList.add('visible');
+      const bcList = document.getElementById('summariesBreadcrumbs');
+      if (!bcList) return;
       let html = '';
       summariesHistory.forEach((item, index) => {
         const isLast = index === summariesHistory.length - 1;
-        let iconClass, itemClass;
+        let iconClass = 'fa-folder';
+        let itemClass = '';
         if (index === 0) {
-          iconClass = 'fa-file-alt';
+          iconClass = 'fa-home';
           itemClass = 'haqiba-bc-root';
         } else if (isLast) {
           iconClass = 'fa-folder-open';
           itemClass = 'haqiba-bc-current';
-        } else {
-          iconClass = 'fa-folder';
-          itemClass = '';
         }
         const label = item.name.length > 22 ? item.name.substring(0, 20) + '…' : item.name;
-        html += `<span class="haqiba-breadcrumb-item ${itemClass}" data-sbc-index="${index}" title="${item.name}"><i class="fas ${iconClass}"></i>${label}</span>`;
+        html += `<span class="haqiba-breadcrumb-item ${itemClass}" onclick="navigateToSummary(${index})" title="${item.name}"><i class="fas ${iconClass}"></i>${label}</span>`;
         if (!isLast) html += '<span class="haqiba-breadcrumb-separator"><i class="fas fa-chevron-left"></i></span>';
       });
       bcList.innerHTML = html;
-
-      // مستمعو النقر على الحبات غير الحالية
-      bcList.querySelectorAll('.haqiba-breadcrumb-item:not(.haqiba-bc-current)').forEach(el => {
-        el.addEventListener('click', () => {
-          const idx = parseInt(el.dataset.sbcIndex);
-          if (idx === 0) {
-            summariesHistory = [];
-            loadSummariesFolders(SUMMARIES_ROOT_ID, 'تلخيصاتنا', true);
-          } else {
-            const target = summariesHistory[idx];
-            summariesHistory = summariesHistory.slice(0, idx);
-            loadSummariesFolders(target.id, target.name, true);
-          }
-        });
-      });
     }
 
-    // دالة فتح التلخيص في نافذة منبثقة خاصة بالتلخيصات
-    async function openSummaryInPopup(docId, title) {
-      const popup = document.getElementById('summaryPopup');
-      const popupTitle = document.getElementById('summaryPopupTitle').querySelector('span');
-      const popupText = document.getElementById('summaryPopupText');
-      const slider = document.getElementById('summaryFontSlider');
-      const driveBtn = document.getElementById('summaryOpenDriveBtn');
-
-      if (!popup || !popupText) return;
-
-      popupTitle.textContent = title;
-      popupText.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري تحميل التلخيص...</span></div>';
-
-      if (slider) {
-        popupText.style.setProperty('--summary-font-size', slider.value + 'rem');
-      }
-
-      // تحديث رابط فتح في Drive
-      if (driveBtn) {
-        driveBtn.href = `https://docs.google.com/document/d/${docId}/view`;
-      }
-
-      popup.classList.add('active');
-      document.body.style.overflow = 'hidden';
-
-      try {
-        const apiKey = CONFIG.API_KEY;
-        const url = `https://docs.google.com/document/d/${docId}/export?format=txt&key=${apiKey}`;
-        const res = await fetch(url);
-        const text = await res.text();
-        popupText.innerHTML = text.replace(/\uFEFF/g, '').trim();
-      } catch (e) {
-        popupText.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>تعذر تحميل نص التلخيص</span></div>';
-      }
-    }
-
-    function closeSummaryPopup() {
-      const popup = document.getElementById('summaryPopup');
-      if (popup) {
-        popup.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-    }
-
-    // دالة تحديد أيقونة ذكية للتلخيص
-    function getSmartSummaryIcon(name, isFolder, isDoc) {
-      if (!isFolder) return isDoc ? 'fas fa-file-alt' : 'fas fa-file-pdf';
-      const n = name.toLowerCase();
-      if (n.includes('عقيدة') || n.includes('عقائد')) return 'fas fa-star-and-crescent';
-      if (n.includes('فقه') || n.includes('فقهية')) return 'fas fa-balance-scale';
-      if (n.includes('تفسير') || n.includes('قرآن')) return 'fas fa-quran';
-      if (n.includes('تاريخ') || n.includes('سيرة')) return 'fas fa-scroll';
-      if (n.includes('أخلاق') || n.includes('تزكية')) return 'fas fa-heart';
-      if (n.includes('أصول') || n.includes('منطق')) return 'fas fa-brain';
-      if (n.includes('كتاب') || n.includes('كتب')) return 'fas fa-book-open';
-      return 'fas fa-folder';
-    }
-
-    // دالة تحديد شارة التلخيص
-    function getSummaryBadge(name, isFolder, isDoc) {
-      if (!isFolder) {
-        if (isDoc) return '<span class="haqiba-type-badge haqiba-badge-dua"><i class="fas fa-file-alt"></i> تلخيص</span>';
-        return '<span class="haqiba-type-badge haqiba-badge-folder"><i class="fas fa-file-pdf"></i> ملف</span>';
-      }
-      const n = name.toLowerCase();
-      if (n.includes('عقيدة') || n.includes('فقه') || n.includes('أصول')) return '<span class="haqiba-type-badge haqiba-badge-quran"><i class="fas fa-folder"></i> مجلد</span>';
-      return '<span class="haqiba-type-badge haqiba-badge-folder"><i class="fas fa-folder"></i> مجلد</span>';
-    }
+    window.navigateToSummary = function(index) {
+      const target = summariesHistory[index];
+      summariesHistory = summariesHistory.slice(0, index);
+      loadSummariesFolders(target.id, target.name, true);
+    };
 
     async function loadSummariesFolders(folderId = SUMMARIES_ROOT_ID, folderName = 'تلخيصاتنا', isBack = false) {
       const grid = document.getElementById('summariesGrid');
       if (!grid) return;
       grid.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري تحميل التلخيصات...</span></div>';
 
-      // تحديث التاريخ (مطابق لحقيبة المؤمن)
       if (!isBack) {
-        if (folderId === SUMMARIES_ROOT_ID) {
-          summariesHistory = [{ id: SUMMARIES_ROOT_ID, name: 'تلخيصاتنا' }];
-        } else {
-          summariesHistory.push({ id: folderId, name: folderName });
-        }
+        if (folderId === SUMMARIES_ROOT_ID) summariesHistory = [{ id: SUMMARIES_ROOT_ID, name: 'تلخيصاتنا' }];
+        else summariesHistory.push({ id: folderId, name: folderName });
       } else {
         summariesHistory.push({ id: folderId, name: folderName });
       }
 
       updateSummariesBreadcrumbs();
-
+      
       const apiKey = CONFIG.API_KEY;
       const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType)&pageSize=100&orderBy=name&key=${apiKey}`;
-
+      
       try {
         const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error('API Error');
         const data = await response.json();
         const items = data.files || [];
-
+        
         if (items.length === 0) {
           grid.innerHTML = '<div class="media-loading"><i class="fas fa-inbox"></i><span>المجلد فارغ</span></div>';
           return;
         }
 
         grid.innerHTML = '';
-        items.forEach((item, idx) => {
+        items.forEach((item) => {
           const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
           const isDoc = item.mimeType === 'application/vnd.google-apps.document';
           const card = document.createElement('div');
           card.className = 'folder-card-modern';
-
-          const iconClass = getSmartSummaryIcon(item.name, isFolder, isDoc);
-          const badgeHtml = getSummaryBadge(item.name, isFolder, isDoc);
+          
+          let icon = isFolder ? 'fas fa-folder' : (isDoc ? 'fas fa-file-alt' : 'fas fa-file-pdf');
+          let badge = isFolder ? 'مجلد' : (isDoc ? 'تلخيص' : 'ملف');
+          let badgeClass = isFolder ? 'haqiba-badge-folder' : 'haqiba-badge-dua';
 
           card.innerHTML = `
-            <div class="folder-icon-box"><i class="${iconClass}"></i></div>
+            <div class="folder-icon-box"><i class="${icon}"></i></div>
             <div class="folder-name-modern">${item.name}</div>
-            ${badgeHtml}
+            <span class="haqiba-type-badge ${badgeClass}">${badge}</span>
           `;
-
+          
           card.addEventListener('click', () => {
-            if (isFolder) {
-              loadSummariesFolders(item.id, item.name);
-            } else if (isDoc) {
-              openSummaryInPopup(item.id, item.name);
-            } else {
-              window.open(`https://drive.google.com/file/d/${item.id}/view`, '_blank');
-            }
+            if (isFolder) loadSummariesFolders(item.id, item.name);
+            else if (isDoc) openDuaInPopup(item.id, item.name);
+            else window.open(`https://drive.google.com/file/d/${item.id}/view`, '_blank');
           });
           grid.appendChild(card);
         });
       } catch (error) {
-        console.error('Error loading summaries:', error);
         grid.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>خطأ في التحميل</span></div>';
       }
     }
@@ -10246,34 +10227,16 @@ ITEMS_PER_PAGE: 30
       });
 
       const summariesBackBtn = document.getElementById('summariesBackBtn');
-      if (summariesBackBtn) summariesBackBtn.addEventListener('click', () => {
-        // إذا كان التاريخ فيه أكثر من عنصر واحد ارجع خطوة
-        if (summariesHistory.length > 1) {
-          summariesHistory.pop();
-          const prev = summariesHistory[summariesHistory.length - 1];
-          summariesHistory.pop();
-          loadSummariesFolders(prev.id, prev.name, true);
-        } else {
-          showLibraryPage();
-        }
-      });
+      if (summariesBackBtn) summariesBackBtn.addEventListener('click', showLibraryPage);
 
-      // تهيئة نافذة التلخيص المنبثقة
-      const summaryPopup = document.getElementById('summaryPopup');
-      const summaryPopupClose = document.getElementById('summaryPopupClose');
-      const summaryFontSlider = document.getElementById('summaryFontSlider');
-      const summaryPopupText = document.getElementById('summaryPopupText');
+      const memorizationBackBtn = document.getElementById('memorizationBackBtn');
+      if (memorizationBackBtn) memorizationBackBtn.addEventListener('click', showLibraryPage);
+    }
 
-      if (summaryPopupClose && summaryPopup) {
-        summaryPopupClose.onclick = closeSummaryPopup;
-        summaryPopup.onclick = (e) => {
-          if (e.target === summaryPopup) closeSummaryPopup();
-        };
-      }
-      if (summaryFontSlider && summaryPopupText) {
-        summaryFontSlider.oninput = (e) => {
-          summaryPopupText.style.setProperty('--summary-font-size', e.target.value + 'rem');
-        };
+    function initMemorizationEvents() {
+      const searchInput = document.getElementById('memorization-search');
+      if (searchInput) {
+        searchInput.addEventListener('input', renderSurahsList);
       }
     }
 
@@ -10283,7 +10246,9 @@ ITEMS_PER_PAGE: 30
       initLibraryTypeTabs();
       initLibrary();
       initMediaSection();
+      initSmartSearch();
       initNewSidebar();
+      initMemorizationEvents();
     });
   </script>
 </body>
