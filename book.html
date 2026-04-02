@@ -1507,12 +1507,12 @@
     [data-theme="dark"] .media-info-card { box-shadow:0 32px 80px rgba(0,0,0,0.7); }
     .media-info-card.active { opacity:1; visibility:visible; transform:translate(-50%,-50%) scale(1); }
 
-    .mic-hero { position:relative; width:100%; overflow:hidden; flex-shrink:0; }
+    .mic-hero { position:relative; width:100%; overflow:visible; flex-shrink:0; }
     .mic-hero-video { aspect-ratio:16/9; }
-    .mic-hero-channel { height:160px; }
+    .mic-hero-channel { height:200px; }
+    .mic-hero-img-clip { position:absolute; inset:0; overflow:hidden; border-radius: 28px 28px 0 0; }
     .mic-hero-img { width:100%; height:100%; object-fit:cover; display:block; transition:transform 6s ease; }
     .media-info-card.active .mic-hero-img { transform:scale(1.06); }
-    .mic-hero-gradient { position:absolute; inset:0; background:linear-gradient(to top,var(--bg-card) 0%,rgba(0,0,0,0.3) 50%,transparent 100%); }
 
     .mic-close-btn { position:absolute; top:14px; left:14px; width:36px; height:36px; border-radius:50%; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.15); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.9rem; cursor:pointer; transition:all 0.3s ease; z-index:10; }
     .mic-close-btn:hover { background:var(--accent-youtube); border-color:var(--accent-youtube); transform:rotate(90deg) scale(1.1); }
@@ -1525,8 +1525,8 @@
     .mic-play-icon { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) scale(0.7); width:56px; height:56px; background:rgba(255,0,0,0.85); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.4rem; padding-right:4px; box-shadow:0 6px 24px rgba(255,0,0,0.5); opacity:0; transition:all 0.5s cubic-bezier(0.175,0.885,0.32,1.275); z-index:5; pointer-events:none; }
     .media-info-card.active .mic-hero-video .mic-play-icon { opacity:1; transform:translate(-50%,-50%) scale(1); }
 
-    .mic-channel-avatar { position:absolute; bottom:-30px; left:50%; transform:translateX(-50%); width:76px; height:76px; border-radius:50%; border:4px solid var(--bg-card); box-shadow:0 8px 24px rgba(0,0,0,0.25); overflow:hidden; z-index:5; }
-    .mic-channel-avatar img { width:100%; height:100%; object-fit:cover; }
+    .mic-channel-avatar { position:absolute; bottom:-38px; left:50%; transform:translateX(-50%); width:80px; height:80px; border-radius:50%; border:4px solid var(--bg-card); box-shadow:0 8px 24px rgba(0,0,0,0.3); overflow:hidden; z-index:20; }
+    .mic-channel-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
 
     .mic-header { padding:14px 22px; text-align:center; flex-shrink:0; }
     .mic-header.has-avatar { padding-top:42px; }
@@ -2879,8 +2879,35 @@
 
     @media (max-width: 480px) {
       .books-grid.compact-grid-view {
+        gap: 8px;
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .books-grid.compact-grid-view .book-cover-wrapper {
+        height: 110px;
+      }
+      .books-grid.compact-grid-view .book-info {
+        padding: 7px 6px;
+      }
+      .books-grid.compact-grid-view .book-title {
+        font-size: 0.72rem;
+        -webkit-line-clamp: 2;
+      }
+      .books-grid.compact-grid-view .book-meta {
+        display: none;
+      }
+      .books-grid.compact-grid-view .book-category {
+        font-size: 0.6rem;
+        margin-bottom: 2px;
+      }
+      .books-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         gap: 10px;
       }
+      .folder-card {
+        padding: 16px 10px;
+      }
+      .folder-icon { width: 44px !important; height: 44px !important; font-size: 1.2rem !important; }
+      .folder-name { font-size: 0.78rem !important; }
     }
 
     /* Folder Card */
@@ -6546,7 +6573,7 @@
             <i class="fas fa-quran" style="color: #14b8a6;"></i>
           </div>
           <div class="item-text">
-            <span class="item-name">متابعة الحفظ</span>
+            <span class="item-name">في رحاب الذكر</span>
           </div>
         </button>
 
@@ -6711,8 +6738,10 @@
   <div class="media-info-overlay" id="mediaInfoOverlay"></div>
   <div class="media-info-card" id="mediaInfoCard" role="dialog" aria-modal="true">
     <div class="mic-hero" id="micHero">
-      <img id="micThumbImg" src="" alt="" class="mic-hero-img">
-      <div class="mic-hero-gradient"></div>
+      <div class="mic-hero-img-clip">
+        <img id="micThumbImg" src="" alt="" class="mic-hero-img">
+        <div class="mic-hero-gradient"></div>
+      </div>
       <button class="mic-close-btn" id="micCloseBtn" aria-label="إغلاق"><i class="fas fa-times"></i></button>
       <span class="mic-type-pill" id="micTypePill"></span>
       <div class="mic-play-icon" id="micPlayIcon"><i class="fas fa-play"></i></div>
@@ -6938,27 +6967,44 @@
               خطة حفظ السور
             </h3>
             
-            <div class="controls-row" style="display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;">
-              <div class="search-box" style="flex: 1; min-width: 0;">
-                <input type="text" id="memorization-search" placeholder="ابحث عن سورة..." 
-                       style="width: 100%; padding: 10px 15px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem; box-sizing: border-box;"
-                       onkeyup="renderSurahsList()">
-              </div>
-              <select id="surah-sort-select" onchange="renderSurahsList()" style="padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem; min-width: 0;">
-                <option value="default">الترتيب الافتراضي</option>
-                <option value="custom">ترتيب مخصص</option>
-                <option value="alphabetical">أبجدي</option>
-                <option value="completion">حسب الإنجاز</option>
-              </select>
+            <!-- تبويب: سور / أجزاء -->
+            <div style="display:flex; gap:8px; margin-bottom:14px;">
+              <button id="viewBySurah" onclick="setMemorizationView('surah')"
+                style="flex:1; padding:8px; border-radius:var(--radius-full); border:1.5px solid var(--accent-gold); background:var(--accent-gold); color:var(--bg-primary); font-weight:700; font-size:0.85rem; cursor:pointer;">
+                <i class="fas fa-quran"></i> السور
+              </button>
+              <button id="viewByJuz" onclick="setMemorizationView('juz')"
+                style="flex:1; padding:8px; border-radius:var(--radius-full); border:1.5px solid var(--border-medium); background:var(--bg-secondary); color:var(--text-secondary); font-weight:700; font-size:0.85rem; cursor:pointer;">
+                <i class="fas fa-layer-group"></i> الأجزاء الثلاثون
+              </button>
             </div>
 
-            <div class="drag-sort-hint" id="drag-sort-hint">
-              <i class="fas fa-grip-vertical"></i>
-              اسحب السور لإعادة ترتيبها يدوياً
+            <div id="surah-view-panel">
+              <div class="controls-row" style="display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;">
+                <div class="search-box" style="flex: 1; min-width: 0;">
+                  <input type="text" id="memorization-search" placeholder="ابحث عن سورة..." 
+                         style="width: 100%; padding: 10px 15px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem; box-sizing: border-box;"
+                         onkeyup="renderSurahsList()">
+                </div>
+                <select id="surah-sort-select" onchange="renderSurahsList()" style="padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem; min-width: 0;">
+                  <option value="default">الترتيب الافتراضي</option>
+                  <option value="custom">ترتيب مخصص</option>
+                  <option value="alphabetical">أبجدي</option>
+                  <option value="completion">حسب الإنجاز</option>
+                </select>
+              </div>
+              <div class="drag-sort-hint" id="drag-sort-hint">
+                <i class="fas fa-grip-vertical"></i>
+                اسحب السور لإعادة ترتيبها يدوياً
+              </div>
+              <div id="surahs-list-container" class="surahs-list">
+                <!-- سيتم توليدها بواسطة JS -->
+              </div>
             </div>
-            
-            <div id="surahs-list-container" class="surahs-list">
-              <!-- سيتم توليدها بواسطة JS -->
+
+            <!-- لوحة الأجزاء الثلاثين -->
+            <div id="juz-view-panel" style="display:none;">
+              <div id="juz-list-container"></div>
             </div>
           </div>
         </div>
@@ -7150,6 +7196,13 @@
       </div>
     </div>
     <div class="container page-content-area">
+      <!-- شريط البحث في حقيبة المؤمن -->
+      <div class="haqiba-search-bar" style="margin-bottom:16px; position:relative;">
+        <i class="fas fa-search" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); color:var(--accent-emerald); font-size:0.9rem;"></i>
+        <input type="text" id="haqibaSearchInput" placeholder="ابحث في حقيبة المؤمن..." 
+               style="width:100%; padding:11px 42px 11px 16px; border:1.5px solid var(--border-medium); border-radius:var(--radius-full); background:var(--bg-card); color:var(--text-primary); font-size:0.9rem; font-family:var(--font-ui); transition:border-color 0.2s;"
+               oninput="filterHaqibaSearch(this.value)">
+      </div>
       <div class="standalone-grid folders-grid-layout" id="haqibaGrid">
         <div class="media-loading">
           <div class="loading-spinner"></div>
@@ -7185,6 +7238,13 @@
       <!-- مسار التنقل للتلخيصات -->
       <div class="haqiba-breadcrumbs-wrapper" style="margin-bottom: 20px;">
         <div class="haqiba-breadcrumbs" id="summariesBreadcrumbs"></div>
+      </div>
+      <!-- شريط البحث في تلخيصاتنا -->
+      <div style="margin-bottom:16px; position:relative;">
+        <i class="fas fa-search" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); color:var(--accent-blue); font-size:0.9rem;"></i>
+        <input type="text" id="summariesSearchInput" placeholder="ابحث في التلخيصات..." 
+               style="width:100%; padding:11px 42px 11px 16px; border:1.5px solid var(--border-medium); border-radius:var(--radius-full); background:var(--bg-card); color:var(--text-primary); font-size:0.9rem; font-family:var(--font-ui); transition:border-color 0.2s;"
+               oninput="filterSummariesSearch(this.value)">
       </div>
       <div class="standalone-grid folders-grid-layout" id="summariesGrid">
         <div class="media-loading">
@@ -8158,16 +8218,20 @@ ITEMS_PER_PAGE: 30
       const downloadUrl = getDownloadUrl(book.id);
       const fileFormat = getFileFormat(book.mimeType);
       const fileIcon = getFileIcon(book.mimeType);
+      const favIcon = isFavorite(book.id) ? 'fas fa-bookmark' : 'far fa-bookmark';
+      const favColor = isFavorite(book.id) ? 'color:var(--accent-gold)' : '';
       
       const imgOnError = `onerror="this.onerror=null;this.src='https://drive.google.com/thumbnail?sz=w400&id=${book.id}';if(this.naturalWidth===0){this.style.display='none';this.nextElementSibling.style.display='flex';}"`;
       
       const coverHtml = `<img src="${thumbnailUrl}" alt="${cleanName}" class="book-cover" loading="lazy" ${imgOnError}><div class="book-no-cover" style="display:none;"><i class="fas ${fileIcon}"></i><span>${cleanName.substring(0, 25)}...</span></div>`;
       
+      const favBtn = `<button class="action-btn" title="مفضلة" data-fav-id="${book.id}" onclick="event.stopPropagation();toggleFavorite('${book.id}','${cleanName.replace(/'/g,"\\'")}','book','${previewUrl}');updateFavButtons();"><i class="${favIcon}" style="${favColor}"></i></button>`;
+
       if (isMobile) {
-        return `<div class="book-card" onclick="openModal('${book.id}')"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3><div class="book-meta"><span class="book-format"><i class="fas ${fileIcon}"></i>${fileFormat}</span><span>${formatFileSize(book.size)}</span></div></div></div>`;
+        return `<div class="book-card" onclick="openModal('${book.id}')"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay">${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3></div></div>`;
       }
       
-      return `<div class="book-card" data-id="${book.id}"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay"><a href="${previewUrl}" target="_blank" class="action-btn" title="معاينة" onclick="event.stopPropagation()"><i class="fas fa-eye"></i></a><a href="${downloadUrl}" class="action-btn" title="تحميل" onclick="event.stopPropagation()"><i class="fas fa-download"></i></a><button class="action-btn" title="مشاركة" data-action="share" data-id="${book.id}" data-name="${cleanName}"><i class="fas fa-share-alt"></i></button></div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3><div class="book-meta"><span class="book-format"><i class="fas ${fileIcon}"></i>${fileFormat}</span><span>${formatFileSize(book.size)}</span></div></div></div>`;
+      return `<div class="book-card" data-id="${book.id}"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay"><a href="${previewUrl}" target="_blank" class="action-btn" title="معاينة" onclick="event.stopPropagation()"><i class="fas fa-eye"></i></a><a href="${downloadUrl}" class="action-btn" title="تحميل" onclick="event.stopPropagation()"><i class="fas fa-download"></i></a><button class="action-btn" title="مشاركة" data-action="share" data-id="${book.id}" data-name="${cleanName}"><i class="fas fa-share-alt"></i></button>${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3><div class="book-meta"><span class="book-format"><i class="fas ${fileIcon}"></i>${fileFormat}</span><span>${formatFileSize(book.size)}</span></div></div></div>`;
     }
 
     function renderPagination(totalItems) {
@@ -9416,11 +9480,11 @@ ITEMS_PER_PAGE: 30
     function showLibraryPage() {
       hideAllPages();
       MAIN_PAGES.library.forEach(el => { if (el) el.style.display = ''; });
-      // إعادة عرض قسم التصفح بشكل صحيح
       const breadcrumbs = document.getElementById('breadcrumbsSection');
       if (breadcrumbs && state.folderHistory.length > 0) breadcrumbs.style.display = '';
       currentPage = 'library';
       updateSidebarActive('navLibrary');
+      localStorage.setItem('noor_last_page', 'library');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       closeSidebar();
     }
@@ -9431,13 +9495,13 @@ ITEMS_PER_PAGE: 30
       if (MAIN_PAGES.youtube) MAIN_PAGES.youtube.style.display = 'block';
       currentPage = 'youtube';
       updateSidebarActive('navYoutube');
+      localStorage.setItem('noor_last_page', 'youtube');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       closeSidebar();
       if (!ytPageLoaded) {
         ytPageLoaded = true;
         initYtPage();
       } else {
-        // الصفحة سبق تحميلها - فقط أعد العرض
         updateTabCounts();
         buildCategoryDropdown();
         renderMediaGrid();
@@ -9450,6 +9514,7 @@ ITEMS_PER_PAGE: 30
       if (MAIN_PAGES.haqiba) MAIN_PAGES.haqiba.style.display = 'block';
       currentPage = 'haqiba';
       updateSidebarActive('navHaqiba');
+      localStorage.setItem('noor_last_page', 'haqiba');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       closeSidebar();
       if (!haqibaLoaded) {
@@ -9465,9 +9530,9 @@ ITEMS_PER_PAGE: 30
       if (MAIN_PAGES.summaries) MAIN_PAGES.summaries.style.display = 'block';
       currentPage = 'summaries';
       updateSidebarActive('navSummaries');
+      localStorage.setItem('noor_last_page', 'summaries');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       closeSidebar();
-      // إصلاح: جلب المجلد الرئيسي للتلخيصات عند الفتح
       loadSummariesFolders('1IwsqRD7Z5GVn2c3jScx7h5pBmo1RZ28e', 'تلخيصاتنا');
     }
 
@@ -9478,6 +9543,7 @@ ITEMS_PER_PAGE: 30
         memorizationPage.style.display = 'block';
         currentPage = 'memorization';
         updateSidebarActive('navMemorization');
+        localStorage.setItem('noor_last_page', 'memorization');
         window.scrollTo({ top: 0, behavior: 'smooth' });
         closeSidebar();
         initMemorizationPage();
@@ -10094,7 +10160,21 @@ ITEMS_PER_PAGE: 30
 
         grid.innerHTML = '';
 
-        const folderIcons = ['fas fa-book-open', 'fas fa-hands-praying', 'fas fa-quran', 'fas fa-moon', 'fas fa-star-and-crescent', 'fas fa-scroll', 'fas fa-heart'];
+        // ترتيب السور بترتيب المصحف إذا كنا في مجلد القرآن
+        const QURAN_FOLDER_ID_HAQIBA = '15cRmsfYeg4u0yKTe5Ly6owNJy9ox8-bt';
+        if (folderId === QURAN_FOLDER_ID_HAQIBA) {
+          const quranOrder = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
+          items.sort((a, b) => {
+            const cleanA = a.name.replace(/^سورة\s*/,'').trim();
+            const cleanB = b.name.replace(/^سورة\s*/,'').trim();
+            const ia = quranOrder.findIndex(s => cleanA.includes(s) || s.includes(cleanA));
+            const ib = quranOrder.findIndex(s => cleanB.includes(s) || s.includes(cleanB));
+            if (ia === -1 && ib === -1) return a.name.localeCompare(b.name, 'ar');
+            if (ia === -1) return 1;
+            if (ib === -1) return -1;
+            return ia - ib;
+          });
+        }
 
         // اختيار الأيقونة بذكاء حسب اسم العنصر
         function getSmartHaqibaIcon(name, isFolder, isDoc) {
@@ -10131,9 +10211,37 @@ ITEMS_PER_PAGE: 30
           const card = document.createElement('div');
           card.className = 'folder-card-modern';
           
-          let icon = isFolder ? 'fas fa-folder' : (isDoc ? 'fas fa-file-alt' : 'fas fa-file-pdf');
-          let badge = isFolder ? 'مجلد' : (isDoc ? 'دعاء' : 'ملف');
-          let badgeClass = isFolder ? 'haqiba-badge-folder' : 'haqiba-badge-dua';
+          // أيقونة ذكية حسب اسم العنصر
+          let icon = getSmartHaqibaIcon(item.name, isFolder, isDoc);
+          
+          // شارة ذكية حسب النوع
+          let badge, badgeClass;
+          const nameLower = item.name.toLowerCase();
+          if (!isFolder) {
+            if (isDoc) {
+              if (nameLower.includes('سورة') || nameLower.includes('قرآن')) {
+                badge = '<i class="fas fa-quran"></i> قرآن';
+                badgeClass = 'haqiba-badge-quran';
+              } else {
+                badge = '<i class="fas fa-hands-praying"></i> دعاء';
+                badgeClass = 'haqiba-badge-dua';
+              }
+            } else {
+              badge = '<i class="fas fa-file-pdf"></i> ملف';
+              badgeClass = 'haqiba-badge-folder';
+            }
+          } else {
+            if (nameLower.includes('قرآن') || nameLower.includes('سورة') || nameLower.includes('تلاوة')) {
+              badge = '<i class="fas fa-quran"></i> قرآن';
+              badgeClass = 'haqiba-badge-quran';
+            } else if (nameLower.includes('دعاء') || nameLower.includes('دعا') || nameLower.includes('أدعية')) {
+              badge = '<i class="fas fa-hands-praying"></i> دعاء';
+              badgeClass = 'haqiba-badge-dua';
+            } else {
+              badge = '<i class="fas fa-folder"></i> مجلد';
+              badgeClass = 'haqiba-badge-folder';
+            }
+          }
           
           card.innerHTML = `
             <div class="folder-icon-box"><i class="${icon}"></i></div>
@@ -10142,13 +10250,9 @@ ITEMS_PER_PAGE: 30
           `;
           
           card.addEventListener('click', () => {
-            if (isFolder) {
-              loadHaqibaFolders(item.id, item.name);
-            } else if (isDoc) {
-              openDuaInPopup(item.id, item.name);
-            } else {
-              window.open(`https://drive.google.com/file/d/${item.id}/view`, '_blank');
-            }
+            if (isFolder) loadHaqibaFolders(item.id, item.name);
+            else if (isDoc) openDuaInPopup(item.id, item.name);
+            else window.open(`https://drive.google.com/file/d/${item.id}/view`, '_blank');
           });
           grid.appendChild(card);
         });
@@ -10438,6 +10542,193 @@ ITEMS_PER_PAGE: 30
       }
     }
 
+    // ═══════════════════════════════════════════════════════════════════
+    // الأجزاء القرآنية الثلاثون
+    // ═══════════════════════════════════════════════════════════════════
+    const JUZZ_DATA = [
+      { juz: 1,  surahs: [{id:1,name:"الفاتحة"},{id:2,name:"البقرة",range:"1-141"}] },
+      { juz: 2,  surahs: [{id:2,name:"البقرة",range:"142-252"}] },
+      { juz: 3,  surahs: [{id:2,name:"البقرة",range:"253-286"},{id:3,name:"آل عمران",range:"1-92"}] },
+      { juz: 4,  surahs: [{id:3,name:"آل عمران",range:"93-200"},{id:4,name:"النساء",range:"1-23"}] },
+      { juz: 5,  surahs: [{id:4,name:"النساء",range:"24-147"}] },
+      { juz: 6,  surahs: [{id:4,name:"النساء",range:"148-176"},{id:5,name:"المائدة",range:"1-81"}] },
+      { juz: 7,  surahs: [{id:5,name:"المائدة",range:"82-120"},{id:6,name:"الأنعام",range:"1-110"}] },
+      { juz: 8,  surahs: [{id:6,name:"الأنعام",range:"111-165"},{id:7,name:"الأعراف",range:"1-87"}] },
+      { juz: 9,  surahs: [{id:7,name:"الأعراف",range:"88-206"},{id:8,name:"الأنفال",range:"1-40"}] },
+      { juz: 10, surahs: [{id:8,name:"الأنفال",range:"41-75"},{id:9,name:"التوبة",range:"1-92"}] },
+      { juz: 11, surahs: [{id:9,name:"التوبة",range:"93-129"},{id:10,name:"يونس"},{id:11,name:"هود",range:"1-5"}] },
+      { juz: 12, surahs: [{id:11,name:"هود",range:"6-123"},{id:12,name:"يوسف"},{id:13,name:"الرعد",range:"1-18"}] },
+      { juz: 13, surahs: [{id:13,name:"الرعد",range:"19-43"},{id:14,name:"إبراهيم"},{id:15,name:"الحجر"},{id:16,name:"النحل",range:"1-128"}] },
+      { juz: 14, surahs: [{id:16,name:"النحل",range:"129"},{id:17,name:"الإسراء"},{id:18,name:"الكهف",range:"1-74"}] },
+      { juz: 15, surahs: [{id:18,name:"الكهف",range:"75-110"},{id:19,name:"مريم"},{id:20,name:"طه",range:"1-135"}] },
+      { juz: 16, surahs: [{id:20,name:"طه",range:"136"},{id:21,name:"الأنبياء"},{id:22,name:"الحج",range:"1-78"}] },
+      { juz: 17, surahs: [{id:22,name:"الحج",range:"79"},{id:23,name:"المؤمنون"},{id:24,name:"النور"},{id:25,name:"الفرقان",range:"1-20"}] },
+      { juz: 18, surahs: [{id:25,name:"الفرقان",range:"21"},{id:26,name:"الشعراء"},{id:27,name:"النمل",range:"1-55"}] },
+      { juz: 19, surahs: [{id:27,name:"النمل",range:"56"},{id:28,name:"القصص"},{id:29,name:"العنكبوت",range:"1-44"}] },
+      { juz: 20, surahs: [{id:29,name:"العنكبوت",range:"45"},{id:30,name:"الروم"},{id:31,name:"لقمان"},{id:32,name:"السجدة"},{id:33,name:"الأحزاب",range:"1-30"}] },
+      { juz: 21, surahs: [{id:33,name:"الأحزاب",range:"31"},{id:34,name:"سبأ"},{id:35,name:"فاطر"},{id:36,name:"يس",range:"1-27"}] },
+      { juz: 22, surahs: [{id:36,name:"يس",range:"28"},{id:37,name:"الصافات"},{id:38,name:"ص"},{id:39,name:"الزمر",range:"1-31"}] },
+      { juz: 23, surahs: [{id:39,name:"الزمر",range:"32"},{id:40,name:"غافر"},{id:41,name:"فصلت",range:"1-46"}] },
+      { juz: 24, surahs: [{id:41,name:"فصلت",range:"47"},{id:42,name:"الشورى"},{id:43,name:"الزخرف"},{id:44,name:"الدخان"},{id:45,name:"الجاثية"},{id:46,name:"الأحقاف",range:"1-35"}] },
+      { juz: 25, surahs: [{id:46,name:"الأحقاف",range:"36"},{id:47,name:"محمد"},{id:48,name:"الفتح"},{id:49,name:"الحجرات"},{id:50,name:"ق"},{id:51,name:"الذاريات",range:"1-30"}] },
+      { juz: 26, surahs: [{id:51,name:"الذاريات",range:"31"},{id:52,name:"الطور"},{id:53,name:"النجم"},{id:54,name:"القمر"},{id:55,name:"الرحمن"},{id:56,name:"الواقعة"},{id:57,name:"الحديد",range:"1-29"}] },
+      { juz: 27, surahs: [{id:57,name:"الحديد",range:"30"},{id:58,name:"المجادلة"},{id:59,name:"الحشر"},{id:60,name:"الممتحنة"},{id:61,name:"الصف"},{id:62,name:"الجمعة"},{id:63,name:"المنافقون"},{id:64,name:"التغابن"},{id:65,name:"الطلاق"},{id:66,name:"التحريم"}] },
+      { juz: 28, surahs: [{id:67,name:"الملك"},{id:68,name:"القلم"},{id:69,name:"الحاقة"},{id:70,name:"المعارج"},{id:71,name:"نوح"},{id:72,name:"الجن"},{id:73,name:"المزمل"},{id:74,name:"المدثر"},{id:75,name:"القيامة"},{id:76,name:"الإنسان"},{id:77,name:"المرسلات"}] },
+      { juz: 29, surahs: [{id:78,name:"النبأ"},{id:79,name:"النازعات"},{id:80,name:"عبس"},{id:81,name:"التكوير"},{id:82,name:"الانفطار"},{id:83,name:"المطففين"},{id:84,name:"الانشقاق"},{id:85,name:"البروج"},{id:86,name:"الطارق"},{id:87,name:"الأعلى"},{id:88,name:"الغاشية"},{id:89,name:"الفجر"},{id:90,name:"البلد"},{id:91,name:"الشمس"},{id:92,name:"الليل"},{id:93,name:"الضحى"},{id:94,name:"الشرح"},{id:95,name:"التين"},{id:96,name:"العلق"}] },
+      { juz: 30, surahs: [{id:97,name:"القدر"},{id:98,name:"البينة"},{id:99,name:"الزلزلة"},{id:100,name:"العاديات"},{id:101,name:"القارعة"},{id:102,name:"التكاثر"},{id:103,name:"العصر"},{id:104,name:"الهمزة"},{id:105,name:"الفيل"},{id:106,name:"قريش"},{id:107,name:"الماعون"},{id:108,name:"الكوثر"},{id:109,name:"الكافرون"},{id:110,name:"النصر"},{id:111,name:"المسد"},{id:112,name:"الإخلاص"},{id:113,name:"الفلق"},{id:114,name:"الناس"}] }
+    ];
+
+    let memorizationViewMode = 'surah'; // 'surah' | 'juz'
+
+    function setMemorizationView(mode) {
+      memorizationViewMode = mode;
+      const surahPanel = document.getElementById('surah-view-panel');
+      const juzPanel = document.getElementById('juz-view-panel');
+      const surahBtn = document.getElementById('viewBySurah');
+      const juzBtn = document.getElementById('viewByJuz');
+      if (!surahPanel || !juzPanel) return;
+      if (mode === 'surah') {
+        surahPanel.style.display = '';
+        juzPanel.style.display = 'none';
+        if (surahBtn) { surahBtn.style.background = 'var(--accent-gold)'; surahBtn.style.color = 'var(--bg-primary)'; surahBtn.style.borderColor = 'var(--accent-gold)'; }
+        if (juzBtn) { juzBtn.style.background = 'var(--bg-secondary)'; juzBtn.style.color = 'var(--text-secondary)'; juzBtn.style.borderColor = 'var(--border-medium)'; }
+      } else {
+        surahPanel.style.display = 'none';
+        juzPanel.style.display = '';
+        if (juzBtn) { juzBtn.style.background = 'var(--accent-gold)'; juzBtn.style.color = 'var(--bg-primary)'; juzBtn.style.borderColor = 'var(--accent-gold)'; }
+        if (surahBtn) { surahBtn.style.background = 'var(--bg-secondary)'; surahBtn.style.color = 'var(--text-secondary)'; surahBtn.style.borderColor = 'var(--border-medium)'; }
+        renderJuzList();
+      }
+    }
+    window.setMemorizationView = setMemorizationView;
+
+    function renderJuzList() {
+      const container = document.getElementById('juz-list-container');
+      if (!container) return;
+      container.innerHTML = JUZZ_DATA.map(juzItem => {
+        // حساب إجمالي نسبة الحفظ في الجزء
+        const surahIds = juzItem.surahs.map(s => s.id);
+        const uniqueIds = [...new Set(surahIds)];
+        let totalChecks = 0, totalDays = 0;
+        uniqueIds.forEach(id => {
+          const surah = SURAHS_DATA.find(s => s.id === id);
+          const data = memorizationState[id] || { days: surah?.pages || 1, checks: [] };
+          totalChecks += data.checks.length;
+          totalDays += data.days;
+        });
+        const pct = totalDays > 0 ? Math.round((totalChecks / totalDays) * 100) : 0;
+        const surahNames = juzItem.surahs.map(s => s.name + (s.range ? ` (${s.range})` : '')).join(' ، ');
+
+        return `
+          <div style="border:1px solid var(--border-subtle); border-radius:var(--radius-md); margin-bottom:10px; overflow:hidden; background:var(--bg-card);">
+            <div style="padding:12px 14px; background:var(--bg-secondary); display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer;"
+                 onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? '' : 'none'; this.querySelector('.juz-arrow').style.transform = this.nextElementSibling.style.display === 'none' ? '' : 'rotate(180deg)';">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--accent-gold-dark),var(--accent-gold)); color:white; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.85rem; flex-shrink:0;">${juzItem.juz}</div>
+                <span style="font-weight:700; color:var(--text-primary);">الجزء ${juzItem.juz}</span>
+                <span style="font-size:0.72rem; color:var(--text-muted);">${pct}%</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div style="width:80px; height:6px; background:var(--bg-tertiary); border-radius:3px; overflow:hidden;">
+                  <div style="width:${pct}%; height:100%; background:var(--accent-emerald); border-radius:3px;"></div>
+                </div>
+                <i class="fas fa-chevron-down juz-arrow" style="font-size:0.75rem; color:var(--text-muted); transition:transform 0.2s;"></i>
+              </div>
+            </div>
+            <div style="padding:12px 14px; display:none;">
+              <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">${surahNames}</p>
+              <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                ${uniqueIds.map(id => {
+                  const s = SURAHS_DATA.find(s => s.id === id);
+                  if (!s) return '';
+                  const d = memorizationState[id] || { days: s.pages, checks: [] };
+                  const p = d.days > 0 ? Math.round((d.checks.length/d.days)*100) : 0;
+                  return `<button onclick="openQuranSurahByName('${s.name}')" style="padding:5px 12px; border:1px solid var(--border-subtle); border-radius:var(--radius-full); background:var(--bg-secondary); color:var(--text-primary); font-size:0.78rem; font-weight:600; cursor:pointer;">${s.name} <span style="color:var(--accent-emerald);font-size:0.7rem;">${p}%</span></button>`;
+                }).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    window.renderJuzList = renderJuzList;
+
+    // ═══════════════════════════════════════════════════════════════════
+    // بحث حقيبة المؤمن وتلخيصاتنا
+    // ═══════════════════════════════════════════════════════════════════
+    function filterHaqibaSearch(term) {
+      const cards = document.querySelectorAll('#haqibaGrid .folder-card-modern');
+      const t = term.trim().toLowerCase();
+      cards.forEach(card => {
+        const name = card.querySelector('.folder-name-modern')?.textContent.toLowerCase() || '';
+        card.style.display = (!t || name.includes(t)) ? '' : 'none';
+      });
+    }
+
+    function filterSummariesSearch(term) {
+      const cards = document.querySelectorAll('#summariesGrid .folder-card-modern');
+      const t = term.trim().toLowerCase();
+      cards.forEach(card => {
+        const name = card.querySelector('.folder-name-modern')?.textContent.toLowerCase() || '';
+        card.style.display = (!t || name.includes(t)) ? '' : 'none';
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // نظام المفضلة
+    // ═══════════════════════════════════════════════════════════════════
+    function loadFavorites() {
+      try { return JSON.parse(localStorage.getItem('noor_favorites_v1') || '[]'); } catch { return []; }
+    }
+    function saveFavorites(favs) {
+      localStorage.setItem('noor_favorites_v1', JSON.stringify(favs));
+    }
+    function toggleFavorite(id, name, type, url) {
+      let favs = loadFavorites();
+      const idx = favs.findIndex(f => f.id === id);
+      if (idx > -1) {
+        favs.splice(idx, 1);
+        showToast('تمت الإزالة', `تم حذف "${name}" من المفضلة`, 'info');
+      } else {
+        favs.push({ id, name, type, url, addedAt: Date.now() });
+        showToast('تمت الإضافة', `تمت إضافة "${name}" للمفضلة`, 'success');
+      }
+      saveFavorites(favs);
+      updateFavButtons();
+    }
+    function isFavorite(id) {
+      return loadFavorites().some(f => f.id === id);
+    }
+    function updateFavButtons() {
+      const favs = loadFavorites();
+      document.querySelectorAll('[data-fav-id]').forEach(btn => {
+        const isFav = favs.some(f => f.id === btn.dataset.favId);
+        btn.style.color = isFav ? 'var(--accent-gold)' : '';
+        btn.title = isFav ? 'إزالة من المفضلة' : 'أضف للمفضلة';
+        const icon = btn.querySelector('i');
+        if (icon) icon.className = isFav ? 'fas fa-bookmark' : 'far fa-bookmark';
+      });
+    }
+    window.toggleFavorite = toggleFavorite;
+
+    // ═══════════════════════════════════════════════════════════════════
+    // حفظ الصفحة الحالية عند التحديث (Fix 6)
+    // ═══════════════════════════════════════════════════════════════════
+    function saveCurrentPageState() {
+      localStorage.setItem('noor_last_page', currentPage);
+    }
+    function restoreLastPage() {
+      const last = localStorage.getItem('noor_last_page');
+      if (last && last !== 'library') {
+        setTimeout(() => {
+          if (last === 'youtube') showYoutubePage();
+          else if (last === 'haqiba') showHaqibaPage();
+          else if (last === 'summaries') showSummariesPage();
+          else if (last === 'memorization') showMemorizationPage();
+        }, 300);
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       initTheme();
       initEventListeners();
@@ -10447,6 +10738,9 @@ ITEMS_PER_PAGE: 30
       initSmartSearch();
       initNewSidebar();
       initMemorizationEvents();
+      restoreLastPage();
+      // حفظ الصفحة الحالية عند كل تغيير
+      window.addEventListener('beforeunload', saveCurrentPageState);
     });
   </script>
 </body>
