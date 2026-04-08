@@ -490,7 +490,9 @@
     }
 
     function initTheme() {
-      const savedTheme = localStorage.getItem(LS_THEME) || 'light';
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlTheme = urlParams.get('theme');
+      const savedTheme = urlTheme || localStorage.getItem('noor_library_theme') || localStorage.getItem('bento-theme') || localStorage.getItem(LS_THEME) || 'light';
       document.body.setAttribute('data-theme', savedTheme);
       document.getElementById('theme-icon').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     }
@@ -500,6 +502,8 @@
       const nextTheme = isDark ? 'light' : 'dark';
       document.body.setAttribute('data-theme', nextTheme);
       localStorage.setItem(LS_THEME, nextTheme);
+      localStorage.setItem('noor_library_theme', nextTheme);
+      localStorage.setItem('bento-theme', nextTheme);
       document.getElementById('theme-icon').className = nextTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     }
 
