@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <meta name="description" content="المكتبة الرقمية لنور الحوزة - مكتبة محدثة تلقائياً للكتب الحوزوية والإسلامية">
   <meta name="theme-color" content="#f8f6f3">
   <meta property="og:title" content="المكتبة الرقمية | نور الحوزة">
@@ -3685,11 +3685,15 @@
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(4px);
       z-index: 2000;
       opacity: 0;
       visibility: hidden;
+      pointer-events: none;
       transition: var(--transition-normal);
+    }
+    
+    .sidebar-overlay.active {
+      pointer-events: auto;
     }
     
     .sidebar-overlay.active {
@@ -3704,7 +3708,7 @@
       width: 300px;
       height: 100vh;
       background: var(--bg-card);
-      z-index: 2001;
+      z-index: 3000;
       box-shadow: none; border: 1px solid var(--border-strong);
       transition: right var(--transition-smooth);
       display: flex;
@@ -6453,6 +6457,680 @@
       }
       html { scroll-behavior: auto; }
     }
+  
+    /* ════════════════════════════════════════════════════════════════════════
+       NEW PREMIUM DESIGNS - Updated Modal, Haqiba & Summaries
+    ════════════════════════════════════════════════════════════════════════ */
+
+    /* ── Premium Book Modal (Glassmorphism) ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border-radius: 24px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      transform: scale(0.9) translateY(20px);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: 1px solid var(--border-medium);
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-cover {
+      position: relative;
+      background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-primary) 100%);
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .modal-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .modal-cover:hover img {
+      transform: scale(1.05);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 44px;
+      height: 44px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      z-index: 10;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+    }
+
+    .modal-close:hover {
+      background: #e74c3c;
+      transform: rotate(90deg) scale(1.1);
+    }
+
+    .modal-details {
+      padding: 32px;
+      overflow-y: auto;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-category {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(160, 127, 58, 0.12);
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin-bottom: 16px;
+      width: fit-content;
+    }
+
+    .modal-title {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .modal-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      padding: 8px 14px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+    }
+
+    .meta-item i {
+      color: var(--accent-gold);
+      width: 18px;
+    }
+
+    .modal-preview-container {
+      width: 100%;
+      height: 300px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-secondary);
+      margin-bottom: 20px;
+    }
+
+    .modal-preview-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: auto;
+    }
+
+    .modal-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 24px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .modal-btn.primary {
+      background: linear-gradient(135deg, var(--accent-gold-dark) 0%, var(--accent-gold) 100%);
+      color: var(--bg-primary);
+      border: none;
+    }
+
+    .modal-btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(160, 127, 58, 0.35);
+    }
+
+    .modal-btn.secondary {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-medium);
+    }
+
+    .modal-btn.secondary:hover {
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+      background: var(--bg-card);
+    }
+
+    /* ── Bento Box Design for Haqiba Page ── */
+    .haqiba-bento-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      padding: 24px 0;
+    }
+
+    @media (min-width: 768px) {
+      .haqiba-bento-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      }
+    }
+
+    .haqiba-bento-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .haqiba-bento-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .haqiba-bento-card:hover::before {
+      opacity: 1;
+    }
+
+    .haqiba-bento-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(16, 185, 129, 0.4);
+      box-shadow: 0 16px 40px rgba(16, 185, 129, 0.15);
+    }
+
+    .haqiba-bento-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      z-index: 1;
+    }
+
+    .haqiba-bento-card:hover .haqiba-bento-icon {
+      transform: scale(1.15) rotate(-5deg);
+    }
+
+    .haqiba-bento-icon.folder {
+      background: rgba(16, 185, 129, 0.12);
+      color: #10b981;
+    }
+
+    .haqiba-bento-icon.dua {
+      background: rgba(245, 158, 11, 0.12);
+      color: #f59e0b;
+    }
+
+    .haqiba-bento-icon.quran {
+      background: rgba(139, 92, 246, 0.12);
+      color: #8b5cf6;
+    }
+
+    .haqiba-bento-icon.file {
+      background: rgba(59, 130, 246, 0.12);
+      color: #3b82f6;
+    }
+
+    .haqiba-bento-name {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-primary);
+      line-height: 1.4;
+      position: relative;
+      z-index: 1;
+    }
+
+    .haqiba-bento-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .haqiba-bento-badge.folder {
+      background: rgba(16, 185, 129, 0.12);
+      color: #059669;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .haqiba-bento-badge.dua {
+      background: rgba(245, 158, 11, 0.12);
+      color: #d97706;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    .haqiba-bento-badge.quran {
+      background: rgba(139, 92, 246, 0.12);
+      color: #7c3aed;
+      border: 1px solid rgba(139, 92, 246, 0.25);
+    }
+
+    .haqiba-bento-badge.file {
+      background: rgba(59, 130, 246, 0.12);
+      color: #2563eb;
+      border: 1px solid rgba(59, 130, 246, 0.25);
+    }
+
+    /* ── Notebook Style for Summaries Page ── */
+    .summaries-notebook-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 24px 0;
+    }
+
+    @media (min-width: 768px) {
+      .summaries-notebook-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+    }
+
+    .summaries-notebook-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px 24px 24px 12px;
+      padding: 0;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .summaries-notebook-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 8px;
+      background: linear-gradient(180deg, #3b82f6 0%, #1e40af 100%);
+      border-radius: 12px 0 0 12px;
+    }
+
+    .summaries-notebook-card:hover {
+      transform: translateY(-6px) rotate(-1deg);
+      border-color: rgba(59, 130, 246, 0.4);
+      box-shadow: 4px 12px 32px rgba(59, 130, 246, 0.15);
+    }
+
+    .summaries-notebook-header {
+      padding: 20px 20px 12px 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px dashed var(--border-subtle);
+    }
+
+    .summaries-notebook-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      transition: all 0.35s ease;
+    }
+
+    .summaries-notebook-icon.folder {
+      background: rgba(59, 130, 246, 0.12);
+      color: #3b82f6;
+    }
+
+    .summaries-notebook-icon.doc {
+      background: rgba(245, 158, 11, 0.12);
+      color: #f59e0b;
+    }
+
+    .summaries-notebook-icon.pdf {
+      background: rgba(239, 68, 68, 0.12);
+      color: #ef4444;
+    }
+
+    .summaries-notebook-card:hover .summaries-notebook-icon {
+      transform: scale(1.1);
+    }
+
+    .summaries-notebook-body {
+      padding: 16px 20px 20px 28px;
+      flex: 1;
+    }
+
+    .summaries-notebook-name {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    .summaries-notebook-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .summaries-notebook-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+
+    .summaries-notebook-badge.folder {
+      background: rgba(59, 130, 246, 0.12);
+      color: #3b82f6;
+    }
+
+    .summaries-notebook-badge.doc {
+      background: rgba(245, 158, 11, 0.12);
+      color: #d97706;
+    }
+
+    .summaries-notebook-badge.pdf {
+      background: rgba(239, 68, 68, 0.12);
+      color: #dc2626;
+    }
+
+    /* ── Optimized Image Loading ── */
+    .book-cover {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+      background: var(--bg-secondary);
+      /* Use smaller thumbnail size for faster loading */
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+
+    .book-cover-wrapper {
+      position: relative;
+      padding-top: 140%;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+    }
+
+    /* Skeleton loading for images */
+    .book-cover-wrapper.loading::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-shine) 50%, var(--skeleton-base) 75%);
+      background-size: 200% 100%;
+      animation: skeleton-shimmer 1.5s infinite;
+    }
+
+    /* ── Responsive Modal ── */
+    @media (max-width: 768px) {
+      .modal-content {
+        grid-template-columns: 1fr;
+        max-height: 95vh;
+        border-radius: 20px;
+      }
+
+      .modal-cover {
+        min-height: 200px;
+        max-height: 250px;
+      }
+
+      .modal-details {
+        padding: 20px;
+      }
+
+      .modal-title {
+        font-size: 1.3rem;
+      }
+
+      .modal-preview-container {
+        height: 200px;
+      }
+
+      .modal-actions {
+        flex-direction: column;
+      }
+
+      .modal-btn {
+        width: 100%;
+      }
+
+      .haqiba-bento-grid,
+      .summaries-notebook-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .haqiba-bento-card,
+      .summaries-notebook-card {
+        padding: 16px 12px;
+      }
+
+      .haqiba-bento-icon,
+      .summaries-notebook-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 1.3rem;
+      }
+
+      .haqiba-bento-name,
+      .summaries-notebook-name {
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .haqiba-bento-grid,
+      .summaries-notebook-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .modal-preview-container {
+        height: 180px;
+      }
+    }
+
+    /* Iframe Container Styles */
+    
+    .iframe-container {
+      display: none;
+      width: 100%;
+      height: calc(100vh - 72px); /* ارتفاع الهيدر */
+      padding: 0;
+      margin: 0;
+      margin-top: 72px;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 10;
+      overflow: hidden;
+    }
+    .iframe-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: transparent;
+    }
+    /* إخفاء الهيرو عند عرض الـ iframe لجعله يبدو أساسياً */
+    body.showing-external .hero, 
+    body.showing-external .library-switcher,
+    body.showing-external .suggested-libraries-section,
+    body.showing-external .categories-section,
+    body.showing-external .controls-section,
+    body.showing-external .library-section {
+        display: none !important;
+    }
+
+    .old-iframe-container {
+      display: none;
+      width: 100%;
+      height: calc(100vh - 80px);
+      padding: 0;
+      margin-top: 20px;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 10;
+    }
+    .iframe-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      background: #fff;
+    }
+
+  
+    /* Mobile Responsive Improvements for iframe */
+    @media (max-width: 768px) {
+        .iframe-container {
+            height: calc(100vh - 64px) !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            margin-top: 64px !important;
+        }
+        
+        .iframe-container iframe {
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+        
+        body.showing-external {
+            overflow: hidden;
+        }
+        
+        body.showing-external .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        body.showing-external .sidebar {
+            z-index: 3000;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .iframe-container {
+            height: calc(100vh - 56px) !important;
+            margin-top: 56px !important;
+        }
+    }
+    
+    .iframe-container iframe {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+
+  
+    @supports (padding: max(0px)) {
+        .header {
+            padding-top: max(0px, env(safe-area-inset-top));
+        }
+        .iframe-container {
+            padding-bottom: max(0px, env(safe-area-inset-bottom));
+        }
+    }
+
   </style>
 </head>
 <body>
@@ -6490,31 +7168,31 @@
 
         <div class="sidebar-home-dropdown" id="sidebarHomeDropdown">
           <div class="sidebar-home-dropdown-inner">
-            <a href="https://hawza.netlify.app" class="sidebar-sub-item" target="_blank">
+            <a href="javascript:void(0)" onclick="loadExternalPage('https://hawza.netlify.app/book/', 'navLibrary')" class="sidebar-sub-item">
               <i class="fas fa-chevron-left"></i>
               <span>الرئيسية</span>
             </a>
-            <a href="https://hawza.netlify.app/about" class="sidebar-sub-item" target="_blank">
+            <a href="https://hawza.netlify.app/about" class="sidebar-sub-item">
               <i class="fas fa-chevron-left"></i>
               <span>من نحن</span>
             </a>
-            <a href="https://hawza.netlify.app/sources" class="sidebar-sub-item" target="_blank">
+            <a href="https://hawza.netlify.app/sources" class="sidebar-sub-item">
               <i class="fas fa-chevron-left"></i>
               <span>مصادرنا</span>
             </a>
-            <a href="https://hawza.netlify.app/faq" class="sidebar-sub-item" target="_blank">
+            <a href="https://hawza.netlify.app/faq" class="sidebar-sub-item">
               <i class="fas fa-chevron-left"></i>
               <span>الأسئلة</span>
             </a>
-            <a href="https://hawza.netlify.app/publications" class="sidebar-sub-item" target="_blank">
+            <a href="https://hawza.netlify.app/publications" class="sidebar-sub-item">
               <i class="fas fa-chevron-left"></i>
               <span>إصداراتنا</span>
             </a>
-            <a href="https://hawza.netlify.app/about" class="sidebar-sub-item" target="_blank">
+            <a href="https://hawza.netlify.app/about" class="sidebar-sub-item">
               <i class="fas fa-chevron-left"></i>
               <span>من نحن</span>
             </a>
-            <a href="https://hawza.netlify.app/channels" class="sidebar-sub-item" target="_blank">
+            <a href="https://hawza.netlify.app/channels" class="sidebar-sub-item">
               <i class="fas fa-chevron-left"></i>
               <span>قنواتنا</span>
             </a>
@@ -6567,13 +7245,23 @@
           </div>
         </button>
 
-        <!-- متابعة الحفظ -->
-        <button class="sidebar-fixed-item" id="navMemorization">
+        <!-- القرآن -->
+        <button class="sidebar-fixed-item" id="navDhikr">
           <div class="item-icon teal" style="background: rgba(20, 184, 166, 0.15);">
             <i class="fas fa-quran" style="color: #14b8a6;"></i>
           </div>
           <div class="item-text">
             <span class="item-name">في رحاب الذكر</span>
+          </div>
+        </button>
+
+        <!-- زاد المتقين -->
+        <button class="sidebar-fixed-item" id="navZad">
+          <div class="item-icon gold">
+            <i class="fas fa-mosque"></i>
+          </div>
+          <div class="item-text">
+            <span class="item-name">زاد المتقين</span>
           </div>
         </button>
 
@@ -6609,7 +7297,7 @@
 
   <header class="header" id="header">
     <div class="container nav-container">
-      <a href="https://hawza.netlify.app" class="brand">
+      <a href="javascript:void(0)" onclick="loadExternalPage('https://hawza.netlify.app/book/', 'navLibrary')" class="brand">
         <div class="brand-icon">
           <i class="fas fa-book-open"></i>
         </div>
@@ -6620,7 +7308,7 @@
       </a>
 
       <nav class="nav-actions">
-        <a href="https://hawza.netlify.app" class="nav-link">
+        <a href="javascript:void(0)" onclick="loadExternalPage('https://hawza.netlify.app/book/', 'navLibrary')" class="nav-link">
           <i class="fas fa-home"></i>
           <span>الرئيسية</span>
         </a>
@@ -6883,6 +7571,12 @@
         <span>عنصر</span>
       </div>
     </div>
+  </section>
+
+
+  <!-- External Content Iframe -->
+  <section id="page-external" class="iframe-container">
+    <iframe id="externalIframe" src=""></iframe>
   </section>
 
   <!-- Library Section -->
@@ -7169,50 +7863,6 @@
   </div>
 
   <!-- ═══════════════════════════════════════════════════════════════════════
-       صفحة حقيبة المؤمن - تصميم متطور
-       ═══════════════════════════════════════════════════════════════════════ -->
-  <div id="page-haqiba" class="standalone-page-wrapper">
-    <div class="page-hero-banner haqiba-theme">
-      <div class="container hero-banner-container">
-        <button class="page-back-btn-modern" id="haqibaBackBtn">
-          <i class="fas fa-chevron-right"></i>
-          <span>العودة للمكتبة</span>
-        </button>
-        <div class="hero-banner-content">
-          <div class="hero-banner-icon-wrapper">
-            <i class="fas fa-scroll"></i>
-          </div>
-          <div class="hero-banner-text">
-            <h1 class="hero-banner-title">حقيبة المؤمن</h1>
-            <p class="hero-banner-subtitle">مكتبة الأدعية والمناجاة والقرآن الكريم</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="haqibaBreadcrumbs">
-      <div class="container">
-        <div class="haqiba-breadcrumbs" id="haqibaBreadcrumbsList"></div>
-      </div>
-    </div>
-    <div class="container page-content-area">
-      <!-- شريط البحث في حقيبة المؤمن -->
-      <div class="haqiba-search-bar" style="margin-bottom:16px; position:relative;">
-        <i class="fas fa-search" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); color:var(--accent-emerald); font-size:0.9rem;"></i>
-        <input type="text" id="haqibaSearchInput" placeholder="ابحث في حقيبة المؤمن..." 
-               style="width:100%; padding:11px 42px 11px 16px; border:1.5px solid var(--border-medium); border-radius:var(--radius-full); background:var(--bg-card); color:var(--text-primary); font-size:0.9rem; font-family:var(--font-ui); transition:border-color 0.2s;"
-               oninput="filterHaqibaSearch(this.value)">
-      </div>
-      <div class="standalone-grid folders-grid-layout" id="haqibaGrid">
-        <div class="media-loading">
-          <div class="loading-spinner"></div>
-          <span>جاري تحميل حقيبة المؤمن...</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════════════════════
        صفحة تلخيصاتنا - تصميم متطور
        ═══════════════════════════════════════════════════════════════════════ -->
   <div id="page-summaries" class="standalone-page-wrapper">
@@ -7286,7 +7936,7 @@
         <div class="footer-column">
           <h4>روابط مهمة</h4>
           <ul class="footer-links">
-            <li><a href="https://hawza.netlify.app"><i class="fas fa-globe"></i> الموقع الرسمي</a></li>
+            <li><a href="javascript:void(0)" onclick="loadExternalPage('https://hawza.netlify.app/book/', 'navLibrary')"><i class="fas fa-globe"></i> الموقع الرسمي</a></li>
             <li><a href="https://hawza.netlify.app/r-1447"><i class="fas fa-star"></i> المفكرة الرمضانية</a></li>
           </ul>
         </div>
@@ -7306,6 +7956,33 @@
   </footer>
 
   <script>
+
+    // دالة تنظيف شاملة للـ Overlay والـ Sidebar
+    function cleanupSidebarState() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const toggle = document.getElementById('sidebarToggle');
+        
+        if (sidebar) {
+            sidebar.classList.remove('active');
+            sidebar.style.pointerEvents = '';
+        }
+        if (overlay) {
+            overlay.classList.remove('active');
+            overlay.style.pointerEvents = '';
+            overlay.style.opacity = '';
+            overlay.style.visibility = '';
+        }
+        if (toggle) {
+            toggle.classList.remove('active');
+        }
+        document.body.style.overflow = '';
+    }
+    
+    // تنظيف الحالة عند تحميل الصفحة
+    window.addEventListener('load', cleanupSidebarState);
+    document.addEventListener('DOMContentLoaded', cleanupSidebarState);
+
     // ═══════════════════════════════════════════════════════════════════════════
     // Configuration
     // ═══════════════════════════════════════════════════════════════════════════
@@ -8213,24 +8890,26 @@ ITEMS_PER_PAGE: 30
 
     function renderBookCard(book, isMobile) {
       const cleanName = book.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '');
-      const thumbnailUrl = getThumbnailUrl(book.id, book.thumbnailLink);
+      // Use smaller thumbnail for faster loading
+      const thumbnailUrl = `https://drive.google.com/thumbnail?sz=w200&id=${book.id}`;
       const previewUrl = book.webViewLink || getPreviewUrl(book.id);
       const downloadUrl = getDownloadUrl(book.id);
       const fileFormat = getFileFormat(book.mimeType);
       const fileIcon = getFileIcon(book.mimeType);
       const favIcon = isFavorite(book.id) ? 'fas fa-bookmark' : 'far fa-bookmark';
       const favColor = isFavorite(book.id) ? 'color:var(--accent-gold)' : '';
-      
-      const imgOnError = `onerror="this.onerror=null;this.src='https://drive.google.com/thumbnail?sz=w400&id=${book.id}';if(this.naturalWidth===0){this.style.display='none';this.nextElementSibling.style.display='flex';}"`;
-      
+
+      // Optimized image loading with lazy loading and fallback
+      const imgOnError = `onerror="this.onerror=null;this.src='https://drive.google.com/thumbnail?sz=w200&id=${book.id}';if(this.naturalWidth===0){this.style.display='none';this.nextElementSibling.style.display='flex';}"`;
+
       const coverHtml = `<img src="${thumbnailUrl}" alt="${cleanName}" class="book-cover" loading="lazy" ${imgOnError}><div class="book-no-cover" style="display:none;"><i class="fas ${fileIcon}"></i><span>${cleanName.substring(0, 25)}...</span></div>`;
-      
+
       const favBtn = `<button class="action-btn" title="مفضلة" data-fav-id="${book.id}" onclick="event.stopPropagation();toggleFavorite('${book.id}','${cleanName.replace(/'/g,"\\'")}','book','${previewUrl}');updateFavButtons();"><i class="${favIcon}" style="${favColor}"></i></button>`;
 
       if (isMobile) {
         return `<div class="book-card" onclick="openModal('${book.id}')"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay">${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3></div></div>`;
       }
-      
+
       return `<div class="book-card" data-id="${book.id}"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay"><a href="${previewUrl}" target="_blank" class="action-btn" title="معاينة" onclick="event.stopPropagation()"><i class="fas fa-eye"></i></a><a href="${downloadUrl}" class="action-btn" title="تحميل" onclick="event.stopPropagation()"><i class="fas fa-download"></i></a><button class="action-btn" title="مشاركة" data-action="share" data-id="${book.id}" data-name="${cleanName}"><i class="fas fa-share-alt"></i></button>${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3><div class="book-meta"><span class="book-format"><i class="fas ${fileIcon}"></i>${fileFormat}</span><span>${formatFileSize(book.size)}</span></div></div></div>`;
     }
 
@@ -8271,49 +8950,53 @@ ITEMS_PER_PAGE: 30
     function openModal(bookId) {
       const book = state.allBooks.find(b => b.id === bookId);
       if (!book) return;
-      
+
       const cleanName = book.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '');
-      const thumbnailUrl = getThumbnailUrl(book.id, book.thumbnailLink);
-      
-      DOM.modalCoverImg.src = thumbnailUrl;
+      const fileFormat = getFileFormat(book.mimeType);
+      const fileIcon = getFileIcon(book.mimeType);
+
+      // Use smaller thumbnail for faster loading
+      const optimizedThumbnail = `https://drive.google.com/thumbnail?sz=w400&id=${book.id}`;
+      const previewUrl = book.webViewLink || getPreviewUrl(book.id);
+      const downloadUrl = getDownloadUrl(book.id);
+
+      DOM.modalCoverImg.src = optimizedThumbnail;
       DOM.modalCoverImg.style.display = 'block';
       DOM.modalNoCover.style.display = 'none';
       DOM.modalCoverImg.onerror = () => {
         DOM.modalCoverImg.style.display = 'none';
         DOM.modalNoCover.style.display = 'flex';
-        DOM.modalNoCover.querySelector('i').className = `fas ${getFileIcon(book.mimeType)}`;
+        DOM.modalNoCover.querySelector('i').className = `fas ${fileIcon}`;
         DOM.modalNoCoverTitle.textContent = cleanName.substring(0, 40);
       };
-      
-      DOM.modalCategory.textContent = book.folderName || 'غير مصنف';
+
+      DOM.modalCategory.innerHTML = `<i class="fas fa-folder-open"></i><span>${book.folderName || 'غير مصنف'}</span>`;
       DOM.modalTitle.textContent = cleanName;
-      DOM.modalFormat.textContent = getFileFormat(book.mimeType);
+      DOM.modalFormat.textContent = fileFormat;
       DOM.modalSize.textContent = formatFileSize(book.size);
-      
-      const actions = document.querySelector('.modal-actions');
-      const originalActions = actions.innerHTML;
-      
-      // عرض إطار المطالعة مباشرة مع زر الدرايف والتحميل
+
+      const actions = document.getElementById('modalActions');
+
+      // Drive preview iframe with optimized loading
       const drivePreview = `https://drive.google.com/file/d/${book.id}/preview`;
       const driveViewLink = book.webViewLink || getPreviewUrl(book.id);
+
       actions.innerHTML = `
         <div style="width:100%; display:flex; flex-direction:column; gap:12px;">
-          <div class="modal-preview-container" style="width:100%; height:52vh; min-height:320px; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border-subtle); background:#fff;">
-            <iframe src="${drivePreview}" style="width:100%; height:100%; border:none;" allow="autoplay"></iframe>
+          <div class="modal-preview-container">
+            <iframe src="${drivePreview}" loading="lazy" allow="autoplay"></iframe>
           </div>
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <a href="${driveViewLink}" class="modal-btn primary" target="_blank" 
-               style="justify-content:center; background:linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold)); color:white; border:none; box-shadow:none !important; text-decoration:none; padding:12px; border-radius:var(--radius-md); display:flex; align-items:center; gap:8px; font-weight:700;">
+            <a href="${driveViewLink}" class="modal-btn primary" target="_blank">
               <i class="fab fa-google-drive"></i>
               <span>فتح في درايف</span>
             </a>
-            <a href="${getDownloadUrl(book.id)}" class="modal-btn secondary" target="_blank" 
-               style="justify-content:center; border:1px solid var(--border-medium); box-shadow:none !important; background:var(--bg-secondary); color:var(--text-primary); text-decoration:none; padding:12px; border-radius:var(--radius-md); display:flex; align-items:center; gap:8px; font-weight:700;">
+            <a href="${downloadUrl}" class="modal-btn secondary" target="_blank">
               <i class="fas fa-download"></i>
               <span>تحميل مباشر</span>
             </a>
           </div>
-          <button class="modal-btn secondary" id="modalShareBtn" style="justify-content:center; border:1px solid var(--border-medium); box-shadow:none !important; background:var(--bg-secondary); color:var(--text-primary); padding:12px; border-radius:var(--radius-md); display:flex; align-items:center; gap:8px; font-weight:700; width:100%;">
+          <button class="modal-btn secondary" id="modalShareBtn" style="width:100%;">
             <i class="fas fa-share-alt"></i>
             <span>مشاركة الرابط</span>
           </button>
@@ -8321,15 +9004,9 @@ ITEMS_PER_PAGE: 30
       `;
 
       document.getElementById('modalShareBtn').onclick = () => shareBook(book.id, cleanName);
-      
+
       DOM.bookModal.classList.add('active');
       document.body.style.overflow = 'hidden';
-
-      const resetModal = () => {
-        actions.innerHTML = originalActions;
-        DOM.modalClose.removeEventListener('click', resetModal);
-      };
-      DOM.modalClose.addEventListener('click', resetModal);
     }
 
     function closeModal() {
@@ -8477,9 +9154,16 @@ ITEMS_PER_PAGE: 30
         document.body.style.overflow = show ? 'hidden' : '';
       };
 
+
       sidebarToggle.addEventListener('click', () => toggleSidebar(true));
-      sidebarClose.addEventListener('click', () => toggleSidebar(false));
-      sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+      sidebarClose.addEventListener('click', () => {
+        toggleSidebar(false);
+        cleanupSidebarState();
+      });
+      sidebarOverlay.addEventListener('click', () => {
+        toggleSidebar(false);
+        cleanupSidebarState();
+      });
 
       const refreshBtn = document.getElementById('refreshCache');
       if (refreshBtn) {
@@ -9435,7 +10119,6 @@ ITEMS_PER_PAGE: 30
         document.querySelector('.library-section')
       ],
       youtube: document.getElementById('page-youtube'),
-      haqiba: document.getElementById('page-haqiba'),
       summaries: document.getElementById('page-summaries')
     };
 
@@ -9450,8 +10133,7 @@ ITEMS_PER_PAGE: 30
       MAIN_PAGES.library.forEach(el => { if (el) el.style.display = 'none'; });
       // إخفاء صفحة يوتيوب
       if (MAIN_PAGES.youtube) MAIN_PAGES.youtube.style.display = 'none';
-      // إخفاء صفحة حقيبة المؤمن
-      if (MAIN_PAGES.haqiba) MAIN_PAGES.haqiba.style.display = 'none';
+
       // إخفاء صفحة التلخيصات
       if (MAIN_PAGES.summaries) MAIN_PAGES.summaries.style.display = 'none';
       // إخفاء صفحة الحفظ
@@ -9467,13 +10149,7 @@ ITEMS_PER_PAGE: 30
     }
 
     function closeSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebarOverlay');
-      const toggle = document.getElementById('sidebarToggle');
-      if (sidebar) sidebar.classList.remove('active');
-      if (overlay) overlay.classList.remove('active');
-      if (toggle) toggle.classList.remove('active');
-      document.body.style.overflow = '';
+      cleanupSidebarState();
     }
 
     // عرض صفحة المكتبة
@@ -9508,20 +10184,9 @@ ITEMS_PER_PAGE: 30
       }
     }
 
-    // عرض صفحة حقيبة المؤمن
+    // عرض صفحة حقيبة المؤمن - رابط خارجي
     function showHaqibaPage() {
-      hideAllPages();
-      if (MAIN_PAGES.haqiba) MAIN_PAGES.haqiba.style.display = 'block';
-      currentPage = 'haqiba';
-      updateSidebarActive('navHaqiba');
-      localStorage.setItem('noor_last_page', 'haqiba');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      closeSidebar();
-      if (!haqibaLoaded) {
-        haqibaHistory = [];
-        loadHaqibaFolders(HAQIBA_ROOT_ID, 'حقيبة المؤمن');
-        haqibaLoaded = true;
-      }
+      loadExternalPage('https://hawza.netlify.app/book/bag/', 'navHaqiba');
     }
 
     // عرض صفحة التلخيصات
@@ -10128,9 +10793,11 @@ ITEMS_PER_PAGE: 30
     // تحميل مجلدات حقيبة المؤمن (مطور ليدعم الأدعية والملفات)
     async function loadHaqibaFolders(folderId = HAQIBA_ROOT_ID, folderName = 'حقيبة المؤمن', isBack = false) {
       const grid = document.getElementById('haqibaGrid');
+      if (!grid) return;
+
       grid.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري تحميل المحتوى...</span></div>';
 
-      // تحديث التاريخ إذا لم يكن رجوعاً
+      // Update breadcrumbs
       if (!isBack) {
         if (folderId === HAQIBA_ROOT_ID) {
           haqibaHistory = [{ id: HAQIBA_ROOT_ID, name: 'حقيبة المؤمن' }];
@@ -10138,29 +10805,27 @@ ITEMS_PER_PAGE: 30
           haqibaHistory.push({ id: folderId, name: folderName });
         }
       } else {
-        // عند الرجوع: أضف العنصر الحالي
         haqibaHistory.push({ id: folderId, name: folderName });
       }
 
       updateHaqibaBreadcrumbs();
-      
+
       const apiKey = CONFIG.API_KEY;
-      const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType)&pageSize=100&orderBy=name&key=${apiKey}`;
-      
+      // FIX: Use correct API endpoint with proper fields
+      const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType,thumbnailLink,webViewLink,size)&pageSize=100&orderBy=name&key=${apiKey}`;
+
       try {
         const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error('API Error');
+        if (!response.ok) throw new Error('API Error: ' + response.status);
         const data = await response.json();
         const items = data.files || [];
-        
+
         if (items.length === 0) {
           grid.innerHTML = '<div class="media-loading"><i class="fas fa-inbox"></i><span>المجلد فارغ</span></div>';
           return;
         }
 
-        grid.innerHTML = '';
-
-        // ترتيب السور بترتيب المصحف إذا كنا في مجلد القرآن
+        // Sort Quran folder items
         const QURAN_FOLDER_ID_HAQIBA = '15cRmsfYeg4u0yKTe5Ly6owNJy9ox8-bt';
         if (folderId === QURAN_FOLDER_ID_HAQIBA) {
           const quranOrder = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
@@ -10176,89 +10841,78 @@ ITEMS_PER_PAGE: 30
           });
         }
 
-        // اختيار الأيقونة بذكاء حسب اسم العنصر
-        function getSmartHaqibaIcon(name, isFolder, isDoc) {
-          if (!isFolder) return isDoc ? 'fas fa-file-alt' : 'fas fa-file-pdf';
-          const n = name.toLowerCase();
-          if (n.includes('دعاء') || n.includes('دعا') || n.includes('أدعية')) return 'fas fa-hands-praying';
-          if (n.includes('قرآن') || n.includes('سورة') || n.includes('تلاوة')) return 'fas fa-quran';
-          if (n.includes('صلاة') || n.includes('صلات')) return 'fas fa-mosque';
-          if (n.includes('زيارة') || n.includes('زيارات')) return 'fas fa-star-and-crescent';
-          if (n.includes('مناجاة') || n.includes('تسبيح')) return 'fas fa-moon';
-          if (n.includes('كتاب') || n.includes('كتب')) return 'fas fa-book-open';
-          if (n.includes('حديث') || n.includes('روايات')) return 'fas fa-scroll';
-          return folderIcons[Math.floor(Math.random() * folderIcons.length)];
-        }
+        // Render Bento Grid
+        grid.innerHTML = '';
+        grid.className = 'haqiba-bento-grid';
 
-        // تحديد نوع الشارة
-        function getHaqibaBadge(name, isFolder, isDoc) {
-          if (!isFolder) {
-            if (isDoc) {
-              if (item.name.includes('سورة')) return '<span class="haqiba-type-badge haqiba-badge-quran"><i class="fas fa-quran"></i> قرآن</span>';
-              return '<span class="haqiba-type-badge haqiba-badge-dua"><i class="fas fa-hands-praying"></i> دعاء</span>';
-            }
-            return '<span class="haqiba-type-badge haqiba-badge-folder"><i class="fas fa-file-pdf"></i> ملف</span>';
-          }
-          const n = name.toLowerCase();
-          if (n.includes('قرآن') || n.includes('سورة')) return '<span class="haqiba-type-badge haqiba-badge-quran"><i class="fas fa-quran"></i> قرآن</span>';
-          if (n.includes('دعاء') || n.includes('دعا') || n.includes('أدعية')) return '<span class="haqiba-type-badge haqiba-badge-dua"><i class="fas fa-hands-praying"></i> دعاء</span>';
-          return '<span class="haqiba-type-badge haqiba-badge-folder"><i class="fas fa-folder"></i> مجلد</span>';
-        }
-        
         items.forEach((item, idx) => {
           const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
-          const isDoc = item.mimeType === 'application/vnd.google-apps.document' || item.mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+          const isDoc = item.mimeType === 'application/vnd.google-apps.document' || 
+                       item.mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+          const isQuran = item.name.toLowerCase().includes('سورة') || item.name.toLowerCase().includes('قرآن');
+
           const card = document.createElement('div');
-          card.className = 'folder-card-modern';
-          
-          // أيقونة ذكية حسب اسم العنصر
-          let icon = getSmartHaqibaIcon(item.name, isFolder, isDoc);
-          
-          // شارة ذكية حسب النوع
-          let badge, badgeClass;
-          const nameLower = item.name.toLowerCase();
-          if (!isFolder) {
-            if (isDoc) {
-              if (nameLower.includes('سورة') || nameLower.includes('قرآن')) {
-                badge = '<i class="fas fa-quran"></i> قرآن';
-                badgeClass = 'haqiba-badge-quran';
-              } else {
-                badge = '<i class="fas fa-hands-praying"></i> دعاء';
-                badgeClass = 'haqiba-badge-dua';
-              }
+          card.className = 'haqiba-bento-card';
+          card.style.animationDelay = `${idx * 0.05}s`;
+
+          // Determine icon and badge type
+          let iconClass = 'folder';
+          let badgeClass = 'folder';
+          let badgeText = 'مجلد';
+          let icon = 'fa-folder';
+
+          if (isFolder) {
+            const nameLower = item.name.toLowerCase();
+            if (nameLower.includes('قرآن') || nameLower.includes('سورة')) {
+              iconClass = 'quran';
+              badgeClass = 'quran';
+              badgeText = 'قرآن';
+              icon = 'fa-quran';
+            } else if (nameLower.includes('دعاء') || nameLower.includes('دعا') || nameLower.includes('أدعية')) {
+              iconClass = 'dua';
+              badgeClass = 'dua';
+              badgeText = 'دعاء';
+              icon = 'fa-hands-praying';
+            }
+          } else if (isDoc) {
+            if (isQuran) {
+              iconClass = 'quran';
+              badgeClass = 'quran';
+              badgeText = 'قرآن';
+              icon = 'fa-quran';
             } else {
-              badge = '<i class="fas fa-file-pdf"></i> ملف';
-              badgeClass = 'haqiba-badge-folder';
+              iconClass = 'dua';
+              badgeClass = 'dua';
+              badgeText = 'دعاء';
+              icon = 'fa-file-alt';
             }
           } else {
-            if (nameLower.includes('قرآن') || nameLower.includes('سورة') || nameLower.includes('تلاوة')) {
-              badge = '<i class="fas fa-quran"></i> قرآن';
-              badgeClass = 'haqiba-badge-quran';
-            } else if (nameLower.includes('دعاء') || nameLower.includes('دعا') || nameLower.includes('أدعية')) {
-              badge = '<i class="fas fa-hands-praying"></i> دعاء';
-              badgeClass = 'haqiba-badge-dua';
-            } else {
-              badge = '<i class="fas fa-folder"></i> مجلد';
-              badgeClass = 'haqiba-badge-folder';
-            }
+            iconClass = 'file';
+            badgeClass = 'file';
+            badgeText = 'ملف';
+            icon = 'fa-file-pdf';
           }
-          
+
           card.innerHTML = `
-            <div class="folder-icon-box"><i class="${icon}"></i></div>
-            <div class="folder-name-modern">${item.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, "")}</div>
-            <span class="haqiba-type-badge ${badgeClass}">${badge}</span>
+            <span class="haqiba-bento-badge ${badgeClass}">${badgeText}</span>
+            <div class="haqiba-bento-icon ${iconClass}">
+              <i class="fas ${icon}"></i>
+            </div>
+            <div class="haqiba-bento-name">${item.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, "")}</div>
           `;
-          
+
           card.addEventListener('click', () => {
             if (isFolder) loadHaqibaFolders(item.id, item.name);
             else if (isDoc) openDuaInPopup(item.id, item.name);
             else window.open(`https://drive.google.com/file/d/${item.id}/view`, '_blank');
           });
+
           grid.appendChild(card);
         });
+
       } catch (error) {
         console.error('Error loading haqiba folders:', error);
-        grid.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>خطأ في التحميل</span></div>';
+        grid.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>خطأ في التحميل. يرجى المحاولة مرة أخرى.</span></div>';
       }
     }
 
@@ -10325,6 +10979,7 @@ ITEMS_PER_PAGE: 30
     async function loadSummariesFolders(folderId = SUMMARIES_ROOT_ID, folderName = 'تلخيصاتنا', isBack = false) {
       const grid = document.getElementById('summariesGrid');
       if (!grid) return;
+
       grid.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري تحميل التلخيصات...</span></div>';
 
       if (!isBack) {
@@ -10335,46 +10990,84 @@ ITEMS_PER_PAGE: 30
       }
 
       updateSummariesBreadcrumbs();
-      
+
       const apiKey = CONFIG.API_KEY;
-      const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType)&pageSize=100&orderBy=name&key=${apiKey}`;
-      
+      // FIX: Use correct API endpoint with proper fields
+      const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType,thumbnailLink,webViewLink,size)&pageSize=100&orderBy=name&key=${apiKey}`;
+
       try {
         const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('API Error: ' + response.status);
         const data = await response.json();
         const items = data.files || [];
-        
+
         if (items.length === 0) {
           grid.innerHTML = '<div class="media-loading"><i class="fas fa-inbox"></i><span>المجلد فارغ</span></div>';
           return;
         }
 
+        // Render Notebook Grid
         grid.innerHTML = '';
-        items.forEach((item) => {
+        grid.className = 'summaries-notebook-grid';
+
+        items.forEach((item, idx) => {
           const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
-          const isDoc = item.mimeType === 'application/vnd.google-apps.document' || item.mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+          const isDoc = item.mimeType === 'application/vnd.google-apps.document' || 
+                       item.mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+
           const card = document.createElement('div');
-          card.className = 'folder-card-modern';
-          
-          let icon = isFolder ? 'fas fa-folder' : (isDoc ? 'fas fa-file-alt' : 'fas fa-file-pdf');
-          let badge = isFolder ? 'مجلد' : (isDoc ? 'تلخيص' : 'ملف');
-          let badgeClass = isFolder ? 'haqiba-badge-folder' : 'haqiba-badge-dua';
+          card.className = 'summaries-notebook-card';
+          card.style.animationDelay = `${idx * 0.05}s`;
+
+          // Determine icon and badge type
+          let iconClass = 'folder';
+          let badgeClass = 'folder';
+          let badgeText = 'مجلد';
+          let icon = 'fa-folder';
+
+          if (isFolder) {
+            iconClass = 'folder';
+            badgeClass = 'folder';
+            badgeText = 'مجلد';
+            icon = 'fa-folder';
+          } else if (isDoc) {
+            iconClass = 'doc';
+            badgeClass = 'doc';
+            badgeText = 'تلخيص';
+            icon = 'fa-file-alt';
+          } else {
+            iconClass = 'pdf';
+            badgeClass = 'pdf';
+            badgeText = 'PDF';
+            icon = 'fa-file-pdf';
+          }
 
           card.innerHTML = `
-            <div class="folder-icon-box"><i class="${icon}"></i></div>
-            <div class="folder-name-modern">${item.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, "")}</div>
-            <span class="haqiba-type-badge ${badgeClass}">${badge}</span>
+            <div class="summaries-notebook-header">
+              <div class="summaries-notebook-icon ${iconClass}">
+                <i class="fas ${icon}"></i>
+              </div>
+            </div>
+            <div class="summaries-notebook-body">
+              <div class="summaries-notebook-name">${item.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, "")}</div>
+              <div class="summaries-notebook-meta">
+                <span class="summaries-notebook-badge ${badgeClass}">${badgeText}</span>
+              </div>
+            </div>
           `;
-          
+
           card.addEventListener('click', () => {
             if (isFolder) loadSummariesFolders(item.id, item.name);
             else if (isDoc) openDuaInPopup(item.id, item.name);
             else window.open(`https://drive.google.com/file/d/${item.id}/view`, '_blank');
           });
+
           grid.appendChild(card);
         });
+
       } catch (error) {
-        grid.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>خطأ في التحميل</span></div>';
+        console.error('Error loading summaries:', error);
+        grid.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>خطأ في التحميل. يرجى المحاولة مرة أخرى.</span></div>';
       }
     }
 
@@ -10439,14 +11132,70 @@ ITEMS_PER_PAGE: 30
 
 
     // تهيئة القائمة الجانبية الجديدة
+    
+    // دالة تحميل الصفحات الخارجية في iframe
+    
+
+    function loadExternalPage(url, navId) {
+        cleanupSidebarState();
+        hideAllPages();
+        const iframeContainer = document.getElementById('page-external');
+        const iframe = document.getElementById('externalIframe');
+        if (iframeContainer && iframe) {
+            // إضافة كلاس للجسم لإخفاء العناصر الأخرى
+            document.body.classList.add('showing-external');
+            
+            // مزامنة الوضع الليلي مع الرابط (إضافة بارامتر الثيم)
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const separator = url.includes('?') ? '&' : '?';
+            const themedUrl = `${url}${separator}theme=${currentTheme}`;
+            
+            // حفظ الصفحة الخارجية في localStorage للاستعادة عند التحديث
+            localStorage.setItem('noor_external_page', JSON.stringify({ url: url, navId: navId }));
+            
+            iframe.src = themedUrl;
+            iframeContainer.style.display = 'block';
+            updateSidebarActive(navId);
+            closeSidebar();
+            window.scrollTo(0, 0);
+        }
+    }
+
+    // تحديث مزامنة الوضع الليلي عند تغييره والـ iframe مفتوح
+    const originalToggleTheme = typeof toggleTheme === 'function' ? toggleTheme : null;
+    window.addEventListener('click', (e) => {
+        if (e.target.closest('#themeToggle')) {
+            setTimeout(() => {
+                const iframe = document.getElementById('externalIframe');
+                if (iframe && iframe.src) {
+                    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+                    // إرسال رسالة للـ iframe إذا كان يدعم postMessage أو إعادة تحميله بالثيم الجديد
+                    try {
+                        const url = new URL(iframe.src);
+                        url.searchParams.set('theme', currentTheme);
+                        iframe.src = url.toString();
+                    } catch(err) {}
+                }
+            }, 100);
+        }
+    });
+
+    const originalHideAllPages_v2 = hideAllPages;
+    hideAllPages = function() {
+        originalHideAllPages_v2();
+        document.body.classList.remove('showing-external');
+        const iframeContainer = document.getElementById('page-external');
+        if (iframeContainer) iframeContainer.style.display = 'none';
+        const iframe = document.getElementById('externalIframe');
+        if (iframe) iframe.src = '';
+        // مسح الصفحة الخارجية المحفوظة عند الخروج اليدوي
+        localStorage.removeItem('noor_external_page');
+    };
+
+
+    
     function initNewSidebar() {
       const sidebar = document.getElementById('sidebar');
-      const toggleSidebar = (show) => {
-        sidebar.classList.toggle('active', show);
-        const overlay = document.getElementById('sidebarOverlay');
-        if (overlay) overlay.classList.toggle('active', show);
-        document.body.style.overflow = show ? 'hidden' : '';
-      };
 
       // زر الصفحة الرئيسية المنسدل
       const homeToggle = document.getElementById('sidebarHomeToggle');
@@ -10458,12 +11207,12 @@ ITEMS_PER_PAGE: 30
         });
       }
 
-      // زر مكتبتنا
+      
+      // زر مكتبتنا - يعرض صفحة المكتبة الداخلية
       const navLibrary = document.getElementById('navLibrary');
       if (navLibrary) {
         navLibrary.addEventListener('click', () => {
           showLibraryPage();
-          toggleSidebar(false);
         });
       }
 
@@ -10475,21 +11224,11 @@ ITEMS_PER_PAGE: 30
         });
       }
 
-      // زر حقيبة المؤمن
-      const navHaqiba = document.getElementById('navHaqiba');
-      if (navHaqiba) {
-        navHaqiba.addEventListener('click', () => {
-          showHaqibaPage();
-          toggleSidebar(false);
-        });
-      }
-
       // زر تلخيصاتنا
       const navSummaries = document.getElementById('navSummaries');
       if (navSummaries) {
         navSummaries.addEventListener('click', () => {
           showSummariesPage();
-          toggleSidebar(false);
         });
       }
 
@@ -10498,7 +11237,30 @@ ITEMS_PER_PAGE: 30
       if (navMemorization) {
         navMemorization.addEventListener('click', () => {
           showMemorizationPage();
-          toggleSidebar(false);
+        });
+      }
+
+      // زر حقيبة المؤمن
+      const navHaqiba = document.getElementById('navHaqiba');
+      if (navHaqiba) {
+        navHaqiba.addEventListener('click', () => {
+          loadExternalPage('https://hawza.netlify.app/book/bag/', 'navHaqiba');
+        });
+      }
+
+      // زر القرآن (في رحاب الذكر)
+      const navQuran = document.getElementById('navDhikr');
+      if (navQuran) {
+        navQuran.addEventListener('click', () => {
+          loadExternalPage('https://hawza.netlify.app/book/quran/', 'navDhikr');
+        });
+      }
+
+      // زر زاد المتقين
+      const navZad = document.getElementById('navZad');
+      if (navZad) {
+        navZad.addEventListener('click', () => {
+          loadExternalPage('https://hawza.netlify.app/book/zad/', 'navZad');
         });
       }
 
@@ -10507,7 +11269,7 @@ ITEMS_PER_PAGE: 30
       if (navKids) {
         navKids.addEventListener('click', () => {
           showToast('قريباً', 'سيتم إضافة صفحة الأطفال قريباً', 'info');
-          toggleSidebar(false);
+          closeSidebar();
         });
       }
 
@@ -10718,6 +11480,18 @@ ITEMS_PER_PAGE: 30
       localStorage.setItem('noor_last_page', currentPage);
     }
     function restoreLastPage() {
+      // أولاً: التحقق من وجود صفحة خارجية محفوظة (حقيبة / زاد / قرآن)
+      try {
+        const externalData = localStorage.getItem('noor_external_page');
+        if (externalData) {
+          const { url, navId } = JSON.parse(externalData);
+          if (url) {
+            setTimeout(() => loadExternalPage(url, navId), 300);
+            return;
+          }
+        }
+      } catch(e) {}
+      // ثانياً: استعادة الصفحات الداخلية
       const last = localStorage.getItem('noor_last_page');
       if (last && last !== 'library') {
         setTimeout(() => {
@@ -10742,6 +11516,364 @@ ITEMS_PER_PAGE: 30
       // حفظ الصفحة الحالية عند كل تغيير
       window.addEventListener('beforeunload', saveCurrentPageState);
     });
+  
+    // ═══════════════════════════════════════════════════════════════════════════
+    // UPDATED FUNCTIONS - Premium Modal, Haqiba Bento, Summaries Notebook
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // Updated Modal Function with Drive Preview
+    function openModal(bookId) {
+      const book = state.allBooks.find(b => b.id === bookId);
+      if (!book) return;
+
+      const cleanName = book.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '');
+      const thumbnailUrl = getThumbnailUrl(book.id, book.thumbnailLink);
+      const previewUrl = book.webViewLink || getPreviewUrl(book.id);
+      const downloadUrl = getDownloadUrl(book.id);
+      const fileFormat = getFileFormat(book.mimeType);
+      const fileIcon = getFileIcon(book.mimeType);
+
+      // Use smaller thumbnail for faster loading
+      const optimizedThumbnail = `https://drive.google.com/thumbnail?sz=w400&id=${book.id}`;
+
+      DOM.modalCoverImg.src = optimizedThumbnail;
+      DOM.modalCoverImg.style.display = 'block';
+      DOM.modalNoCover.style.display = 'none';
+      DOM.modalCoverImg.onerror = () => {
+        DOM.modalCoverImg.style.display = 'none';
+        DOM.modalNoCover.style.display = 'flex';
+        DOM.modalNoCover.querySelector('i').className = `fas ${fileIcon}`;
+        DOM.modalNoCoverTitle.textContent = cleanName.substring(0, 40);
+      };
+
+      DOM.modalCategory.textContent = book.folderName || 'غير مصنف';
+      DOM.modalTitle.textContent = cleanName;
+      DOM.modalFormat.textContent = fileFormat;
+      DOM.modalSize.textContent = formatFileSize(book.size);
+
+      const actions = document.querySelector('.modal-actions');
+
+      // Drive preview iframe with optimized loading
+      const drivePreview = `https://drive.google.com/file/d/${book.id}/preview`;
+      const driveViewLink = book.webViewLink || getPreviewUrl(book.id);
+
+      actions.innerHTML = `
+        <div style="width:100%; display:flex; flex-direction:column; gap:12px;">
+          <div class="modal-preview-container">
+            <iframe src="${drivePreview}" loading="lazy" allow="autoplay"></iframe>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <a href="${driveViewLink}" class="modal-btn primary" target="_blank">
+              <i class="fab fa-google-drive"></i>
+              <span>فتح في درايف</span>
+            </a>
+            <a href="${downloadUrl}" class="modal-btn secondary" target="_blank">
+              <i class="fas fa-download"></i>
+              <span>تحميل مباشر</span>
+            </a>
+          </div>
+          <button class="modal-btn secondary" id="modalShareBtn" style="width:100%;">
+            <i class="fas fa-share-alt"></i>
+            <span>مشاركة الرابط</span>
+          </button>
+        </div>
+      `;
+
+      document.getElementById('modalShareBtn').onclick = () => shareBook(book.id, cleanName);
+
+      DOM.bookModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Updated Haqiba Loader with Bento Design
+    async function loadHaqibaFolders(folderId = HAQIBA_ROOT_ID, folderName = 'حقيبة المؤمن', isBack = false) {
+      const grid = document.getElementById('haqibaGrid');
+      if (!grid) return;
+
+      grid.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري تحميل المحتوى...</span></div>';
+
+      // Update breadcrumbs
+      if (!isBack) {
+        if (folderId === HAQIBA_ROOT_ID) {
+          haqibaHistory = [{ id: HAQIBA_ROOT_ID, name: 'حقيبة المؤمن' }];
+        } else {
+          haqibaHistory.push({ id: folderId, name: folderName });
+        }
+      } else {
+        haqibaHistory.push({ id: folderId, name: folderName });
+      }
+
+      updateHaqibaBreadcrumbs();
+
+      const apiKey = CONFIG.API_KEY;
+      // FIX: Use correct API endpoint with proper fields
+      const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType,thumbnailLink,webViewLink,size)&pageSize=100&orderBy=name&key=${apiKey}`;
+
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('API Error: ' + response.status);
+        const data = await response.json();
+        const items = data.files || [];
+
+        if (items.length === 0) {
+          grid.innerHTML = '<div class="media-loading"><i class="fas fa-inbox"></i><span>المجلد فارغ</span></div>';
+          return;
+        }
+
+        // Sort Quran folder items
+        const QURAN_FOLDER_ID_HAQIBA = '15cRmsfYeg4u0yKTe5Ly6owNJy9ox8-bt';
+        if (folderId === QURAN_FOLDER_ID_HAQIBA) {
+          const quranOrder = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
+          items.sort((a, b) => {
+            const cleanA = a.name.replace(/^سورة\s*/,'').trim();
+            const cleanB = b.name.replace(/^سورة\s*/,'').trim();
+            const ia = quranOrder.findIndex(s => cleanA.includes(s) || s.includes(cleanA));
+            const ib = quranOrder.findIndex(s => cleanB.includes(s) || s.includes(cleanB));
+            if (ia === -1 && ib === -1) return a.name.localeCompare(b.name, 'ar');
+            if (ia === -1) return 1;
+            if (ib === -1) return -1;
+            return ia - ib;
+          });
+        }
+
+        // Render Bento Grid
+        grid.innerHTML = '';
+        grid.className = 'haqiba-bento-grid';
+
+        items.forEach((item, idx) => {
+          const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
+          const isDoc = item.mimeType === 'application/vnd.google-apps.document' || 
+                       item.mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+          const isQuran = item.name.toLowerCase().includes('سورة') || item.name.toLowerCase().includes('قرآن');
+
+          const card = document.createElement('div');
+          card.className = 'haqiba-bento-card';
+          card.style.animationDelay = `${idx * 0.05}s`;
+
+          // Determine icon and badge type
+          let iconClass = 'folder';
+          let badgeClass = 'folder';
+          let badgeText = 'مجلد';
+          let icon = 'fa-folder';
+
+          if (isFolder) {
+            const nameLower = item.name.toLowerCase();
+            if (nameLower.includes('قرآن') || nameLower.includes('سورة')) {
+              iconClass = 'quran';
+              badgeClass = 'quran';
+              badgeText = 'قرآن';
+              icon = 'fa-quran';
+            } else if (nameLower.includes('دعاء') || nameLower.includes('دعا') || nameLower.includes('أدعية')) {
+              iconClass = 'dua';
+              badgeClass = 'dua';
+              badgeText = 'دعاء';
+              icon = 'fa-hands-praying';
+            }
+          } else if (isDoc) {
+            if (isQuran) {
+              iconClass = 'quran';
+              badgeClass = 'quran';
+              badgeText = 'قرآن';
+              icon = 'fa-quran';
+            } else {
+              iconClass = 'dua';
+              badgeClass = 'dua';
+              badgeText = 'دعاء';
+              icon = 'fa-file-alt';
+            }
+          } else {
+            iconClass = 'file';
+            badgeClass = 'file';
+            badgeText = 'ملف';
+            icon = 'fa-file-pdf';
+          }
+
+          card.innerHTML = `
+            <span class="haqiba-bento-badge ${badgeClass}">${badgeText}</span>
+            <div class="haqiba-bento-icon ${iconClass}">
+              <i class="fas ${icon}"></i>
+            </div>
+            <div class="haqiba-bento-name">${item.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, "")}</div>
+          `;
+
+          card.addEventListener('click', () => {
+            if (isFolder) loadHaqibaFolders(item.id, item.name);
+            else if (isDoc) openDuaInPopup(item.id, item.name);
+            else window.open(`https://drive.google.com/file/d/${item.id}/view`, '_blank');
+          });
+
+          grid.appendChild(card);
+        });
+
+      } catch (error) {
+        console.error('Error loading haqiba folders:', error);
+        grid.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>خطأ في التحميل. يرجى المحاولة مرة أخرى.</span></div>';
+      }
+    }
+
+    // Updated Summaries Loader with Notebook Design
+    async function loadSummariesFolders(folderId = SUMMARIES_ROOT_ID, folderName = 'تلخيصاتنا', isBack = false) {
+      const grid = document.getElementById('summariesGrid');
+      if (!grid) return;
+
+      grid.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري تحميل التلخيصات...</span></div>';
+
+      if (!isBack) {
+        if (folderId === SUMMARIES_ROOT_ID) summariesHistory = [{ id: SUMMARIES_ROOT_ID, name: 'تلخيصاتنا' }];
+        else summariesHistory.push({ id: folderId, name: folderName });
+      } else {
+        summariesHistory.push({ id: folderId, name: folderName });
+      }
+
+      updateSummariesBreadcrumbs();
+
+      const apiKey = CONFIG.API_KEY;
+      // FIX: Use correct API endpoint with proper fields
+      const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType,thumbnailLink,webViewLink,size)&pageSize=100&orderBy=name&key=${apiKey}`;
+
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('API Error: ' + response.status);
+        const data = await response.json();
+        const items = data.files || [];
+
+        if (items.length === 0) {
+          grid.innerHTML = '<div class="media-loading"><i class="fas fa-inbox"></i><span>المجلد فارغ</span></div>';
+          return;
+        }
+
+        // Render Notebook Grid
+        grid.innerHTML = '';
+        grid.className = 'summaries-notebook-grid';
+
+        items.forEach((item, idx) => {
+          const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
+          const isDoc = item.mimeType === 'application/vnd.google-apps.document' || 
+                       item.mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+
+          const card = document.createElement('div');
+          card.className = 'summaries-notebook-card';
+          card.style.animationDelay = `${idx * 0.05}s`;
+
+          // Determine icon and badge type
+          let iconClass = 'folder';
+          let badgeClass = 'folder';
+          let badgeText = 'مجلد';
+          let icon = 'fa-folder';
+
+          if (isFolder) {
+            iconClass = 'folder';
+            badgeClass = 'folder';
+            badgeText = 'مجلد';
+            icon = 'fa-folder';
+          } else if (isDoc) {
+            iconClass = 'doc';
+            badgeClass = 'doc';
+            badgeText = 'تلخيص';
+            icon = 'fa-file-alt';
+          } else {
+            iconClass = 'pdf';
+            badgeClass = 'pdf';
+            badgeText = 'PDF';
+            icon = 'fa-file-pdf';
+          }
+
+          card.innerHTML = `
+            <div class="summaries-notebook-header">
+              <div class="summaries-notebook-icon ${iconClass}">
+                <i class="fas ${icon}"></i>
+              </div>
+            </div>
+            <div class="summaries-notebook-body">
+              <div class="summaries-notebook-name">${item.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, "")}</div>
+              <div class="summaries-notebook-meta">
+                <span class="summaries-notebook-badge ${badgeClass}">${badgeText}</span>
+              </div>
+            </div>
+          `;
+
+          card.addEventListener('click', () => {
+            if (isFolder) loadSummariesFolders(item.id, item.name);
+            else if (isDoc) openDuaInPopup(item.id, item.name);
+            else window.open(`https://drive.google.com/file/d/${item.id}/view`, '_blank');
+          });
+
+          grid.appendChild(card);
+        });
+
+      } catch (error) {
+        console.error('Error loading summaries:', error);
+        grid.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>خطأ في التحميل. يرجى المحاولة مرة أخرى.</span></div>';
+      }
+    }
+
+    // Optimized Thumbnail URL - Use smaller size for faster loading
+    function getThumbnailUrl(fileId, thumbnailLink) {
+      if (thumbnailLink) {
+        // Use smaller thumbnail size
+        return thumbnailLink.replace('=s220', '=w400');
+      }
+      return `https://drive.google.com/thumbnail?sz=w400&id=${fileId}`;
+    }
+
+    // Updated Book Card Render with Optimized Images
+    function renderBookCard(book, isMobile) {
+      const cleanName = book.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '');
+      // Use smaller thumbnail for faster loading
+      const thumbnailUrl = `https://drive.google.com/thumbnail?sz=w200&id=${book.id}`;
+      const previewUrl = book.webViewLink || getPreviewUrl(book.id);
+      const downloadUrl = getDownloadUrl(book.id);
+      const fileFormat = getFileFormat(book.mimeType);
+      const fileIcon = getFileIcon(book.mimeType);
+      const favIcon = isFavorite(book.id) ? 'fas fa-bookmark' : 'far fa-bookmark';
+      const favColor = isFavorite(book.id) ? 'color:var(--accent-gold)' : '';
+
+      // Optimized image loading with lazy loading
+      const imgOnError = `onerror="this.onerror=null;this.src='https://drive.google.com/thumbnail?sz=w200&id=${book.id}';if(this.naturalWidth===0){this.style.display='none';this.nextElementSibling.style.display='flex';}"`;
+
+      const coverHtml = `<img src="${thumbnailUrl}" alt="${cleanName}" class="book-cover" loading="lazy" ${imgOnError}><div class="book-no-cover" style="display:none;"><i class="fas ${fileIcon}"></i><span>${cleanName.substring(0, 25)}...</span></div>`;
+
+      const favBtn = `<button class="action-btn" title="مفضلة" data-fav-id="${book.id}" onclick="event.stopPropagation();toggleFavorite('${book.id}','${cleanName.replace(/'/g,"\\'")}','book','${previewUrl}');updateFavButtons();"><i class="${favIcon}" style="${favColor}"></i></button>`;
+
+      if (isMobile) {
+        return `<div class="book-card" onclick="openModal('${book.id}')"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay">${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3></div></div>`;
+      }
+
+      return `<div class="book-card" data-id="${book.id}"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay"><a href="${previewUrl}" target="_blank" class="action-btn" title="معاينة" onclick="event.stopPropagation()"><i class="fas fa-eye"></i></a><a href="${downloadUrl}" class="action-btn" title="تحميل" onclick="event.stopPropagation()"><i class="fas fa-download"></i></a><button class="action-btn" title="مشاركة" data-action="share" data-id="${book.id}" data-name="${cleanName}"><i class="fas fa-share-alt"></i></button>${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3><div class="book-meta"><span class="book-format"><i class="fas ${fileIcon}"></i>${fileFormat}</span><span>${formatFileSize(book.size)}</span></div></div></div>`;
+    }
+
+    // Mobile Optimization for iframe
+    function optimizeForMobile() {
+        const iframeContainer = document.getElementById('page-external');
+        const iframe = document.getElementById('externalIframe');
+        
+        if (!iframeContainer || !iframe) return;
+        
+        // حساب الارتفاع الصحيح بناءً على حجم الشاشة
+        function updateIframeHeight() {
+            const headerHeight = window.innerWidth <= 768 ? 64 : 72;
+            const newHeight = window.innerHeight - headerHeight;
+            iframeContainer.style.height = newHeight + 'px';
+            iframe.style.height = '100%';
+        }
+        
+        // تحديث الارتفاع عند تغيير حجم النافذة
+        window.addEventListener('resize', updateIframeHeight);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(updateIframeHeight, 100);
+        });
+        
+        // تحديث أولي
+        updateIframeHeight();
+    }
+    
+    // استدعاء التحسينات عند تحميل الصفحة
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', optimizeForMobile);
+    } else {
+        optimizeForMobile();
+    }
+
   </script>
 </body>
 </html>
