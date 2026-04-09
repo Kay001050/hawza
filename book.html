@@ -5622,7 +5622,7 @@
       
       .controls-container { flex-direction: column; align-items: stretch; }
       .controls-left { justify-content: center; }
-      .view-toggles { display: none; }
+      .view-toggles { display: flex; }
       
       .books-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -7499,7 +7499,7 @@
   <section class="categories-section" id="categoriesSection">
     <div class="container">
       <div class="categories-header">
-        <button class="categories-toggle" id="categoriesToggle">
+        <button class="categories-toggle collapsed" id="categoriesToggle">
           <i class="fas fa-layer-group"></i>
           <span>التصنيفات</span>
           <i class="fas fa-chevron-down"></i>
@@ -7529,7 +7529,7 @@
         </div>
       </div>
       
-      <div class="categories-panel" id="categoriesPanel">
+      <div class="categories-panel collapsed" id="categoriesPanel">
         <div class="categories-grid" id="categoriesGrid"></div>
       </div>
     </div>
@@ -8128,6 +8128,16 @@ ITEMS_PER_PAGE: 30
         document.documentElement.setAttribute('data-theme', 'dark');
       }
       updateThemeIcon(savedTheme);
+
+      // تحميل تفضيل العرض المحفوظ (compact-grid افتراضي للتاب والكمبيوتر)
+      const isMobile = window.innerWidth <= 480;
+      const savedView = !isMobile
+        ? (localStorage.getItem('noor_view_pref') || 'compact-grid')
+        : (localStorage.getItem('noor_view_pref') || 'compact-grid');
+      state.currentView = savedView;
+      document.querySelectorAll('.view-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.view === savedView);
+      });
     }
 
     function toggleTheme() {
@@ -9353,6 +9363,7 @@ ITEMS_PER_PAGE: 30
           document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           state.currentView = btn.dataset.view;
+          localStorage.setItem('noor_view_pref', btn.dataset.view);
           filterAndRender();
         });
       });
