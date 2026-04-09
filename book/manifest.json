@@ -3,7 +3,7 @@
   "short_name": "نور الحوزة",
   "description": "المكتبة الرقمية لنور الحوزة — مكتبة شاملة للكتب الحوزوية والإسلامية والثقافية، تضم المكتبة الرئيسية ومكتبة الطفل الموالي ومكتبة نون والقلم وإصدارات نور الحوزة",
   "id": "nwr_lhwz",
-  "start_url": "/book/",
+  "start_url": "/book/?source=pwa",
   "scope": "/book/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "minimal-ui", "browser"],
@@ -14,6 +14,9 @@
   "dir": "rtl",
   "categories": ["education", "books", "reference", "religion"],
   "prefer_related_applications": false,
+
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+
   "icons": [
     { "src": "/book/icons/icon-16.png",           "sizes": "16x16",   "type": "image/png", "purpose": "any" },
     { "src": "/book/icons/icon-32.png",           "sizes": "32x32",   "type": "image/png", "purpose": "any" },
@@ -28,16 +31,96 @@
     { "src": "/book/icons/icon-384.png",          "sizes": "384x384", "type": "image/png", "purpose": "any" },
     { "src": "/book/icons/icon-512.png",          "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "/book/icons/icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "/book/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
-    { "src": "https://hawza.netlify.app/favicon.ico", "type": "image/x-icon" }
+    { "src": "/book/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
+
   "screenshots": [
     { "src": "/book/icons/screenshot-wide.png",   "sizes": "1280x720", "type": "image/png", "form_factor": "wide",   "label": "المكتبة الرقمية — نور الحوزة" },
     { "src": "/book/icons/screenshot-narrow.png", "sizes": "390x844",  "type": "image/png", "form_factor": "narrow", "label": "المكتبة الرقمية — نور الحوزة" }
   ],
+
   "shortcuts": [
-    { "name": "المكتبة الرئيسية",    "url": "/book/?lib=main",         "icons": [{ "src": "/book/icons/icon-96.png", "sizes": "96x96" }] },
-    { "name": "مكتبة الطفل الموالي", "url": "/book/?lib=child",        "icons": [{ "src": "/book/icons/icon-96.png", "sizes": "96x96" }] },
-    { "name": "المفضلة",             "url": "/book/?section=favorites", "icons": [{ "src": "/book/icons/icon-96.png", "sizes": "96x96" }] }
-  ]
+    { "name": "المكتبة الرئيسية",    "short_name": "الرئيسية", "url": "/book/?lib=main&source=shortcut",         "description": "تصفح المكتبة الرئيسية للكتب الحوزوية", "icons": [{ "src": "/book/icons/icon-96.png", "sizes": "96x96", "type": "image/png" }] },
+    { "name": "مكتبة الطفل الموالي", "short_name": "الطفل",    "url": "/book/?lib=child&source=shortcut",        "description": "مكتبة خاصة بالطفل الموالي",             "icons": [{ "src": "/book/icons/icon-96.png", "sizes": "96x96", "type": "image/png" }] },
+    { "name": "المفضلة",             "short_name": "المفضلة",  "url": "/book/?section=favorites&source=shortcut", "description": "الكتب المحفوظة في المفضلة",             "icons": [{ "src": "/book/icons/icon-96.png", "sizes": "96x96", "type": "image/png" }] }
+  ],
+
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://hawza.netlify.app/book/manifest.json"
+    }
+  ],
+
+  "scope_extensions": [
+    { "origin": "https://hawza.netlify.app" }
+  ],
+
+  "launch_handler": {
+    "client_mode": ["focus-existing", "auto"]
+  },
+
+  "share_target": {
+    "action": "/book/?action=share",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text":  "text",
+      "url":   "url"
+    }
+  },
+
+  "file_handlers": [
+    {
+      "action": "/book/?action=open-file",
+      "accept": {
+        "application/pdf": [".pdf"],
+        "application/epub+zip": [".epub"],
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"]
+      }
+    }
+  ],
+
+  "protocol_handlers": [
+    {
+      "protocol": "web+hawza",
+      "url": "/book/?protocol=%s"
+    }
+  ],
+
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+
+  "widgets": [
+    {
+      "name": "نور الحوزة",
+      "short_name": "آخر الكتب",
+      "description": "أحدث الكتب في المكتبة الرقمية لنور الحوزة",
+      "tag": "latest-books",
+      "template": "generic-template",
+      "ms_ac_template": "/book/widgets/books-widget.json",
+      "data": "/book/widgets/books-data.json",
+      "type": "application/json",
+      "screenshots": [
+        { "src": "/book/icons/screenshot-narrow.png", "sizes": "390x844", "label": "واجهة الكتب" }
+      ],
+      "icons": [
+        { "src": "/book/icons/icon-96.png",  "sizes": "96x96",   "type": "image/png" },
+        { "src": "/book/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }
+      ],
+      "auth": false,
+      "update": 3600
+    }
+  ],
+
+  "handle_links": "preferred",
+
+  "note_taking": {
+    "new_note_url": "/book/?action=new-note"
+  },
+
+  "periodic_sync": {
+    "minimum_interval": 86400
+  }
 }
