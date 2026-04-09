@@ -14,6 +14,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <!-- Fuse.js - مكتبة البحث الضبابي للبحث الذكي -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
 
   <style>
     :root {
@@ -8779,22 +8781,256 @@ ITEMS_PER_PAGE: 30
       });
     }
 
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ✨ محرك البحث الذكي — Smart Hybrid Search Engine
+    //    (Arabizi Transliteration + Fuse.js Fuzzy Search)
+    //    يعمل بالكامل على جهة العميل — Client-Side Only
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /**
+     * قاموس شامل لتحويل الحروف العربية إلى مقابلاتها في العربيزي (فرانكو)
+     * لكل حرف: المرادف الأكثر شيوعاً أولاً
+     */
+    const ARABIZI_MAP = {
+      'ا': ['a', 'e', 'i', 'aa', '2'],
+      'أ': ['a', 'e', '2'],
+      'إ': ['i', 'e', '2'],
+      'آ': ['aa', 'a', '2'],
+      'ء': ['a', "'", '2'],
+      'ؤ': ['o', 'u', '2'],
+      'ئ': ['y', 'i', '2'],
+      'ب': ['b'],
+      'ت': ['t'],
+      'ث': ['th', 's', 't'],
+      'ج': ['j', 'g'],
+      'ح': ['h', '7'],
+      'خ': ['kh', 'k', 'x', '5'],
+      'د': ['d'],
+      'ذ': ['th', 'z', 'd', '3z'],
+      'ر': ['r'],
+      'ز': ['z'],
+      'س': ['s'],
+      'ش': ['sh', 'ch', '3s'],
+      'ص': ['s', 'ss', 'S', '9'],
+      'ض': ['d', 'dh', '9', 'z'],
+      'ط': ['t', 'tt', '6', 'T'],
+      'ظ': ['z', 'dh', '6'],
+      'ع': ['a', 'aa', 'e', 'i', '3', "'"],
+      'غ': ['gh', 'g', '3'],
+      'ف': ['f'],
+      'ق': ['q', 'g', 'k', '8'],
+      'ك': ['k', 'c'],
+      'ل': ['l'],
+      'م': ['m'],
+      'ن': ['n'],
+      'ه': ['h', 'a', 'e'],
+      'ة': ['a', 'h', 'e', 'at'],
+      'و': ['w', 'o', 'u', 'oo', 'ou'],
+      'ي': ['y', 'i', 'ee', 'e'],
+      'ى': ['a', 'y', 'i'],
+      'ال': ['al', 'el'],
+      'لا': ['la'],
+    };
+
+    /** تطبيع النص العربي: توحيد أشكال الألف، تاء مربوطة، ياء */
+    function normalizeArabic(text) {
+      return text
+        .replace(/[أإآ]/g, 'ا')
+        .replace(/ة/g, 'ه')
+        .replace(/ى/g, 'ي')
+        .replace(/ؤ/g, 'و')
+        .replace(/ئ/g, 'ي')
+        .replace(/[\u064B-\u065F\u0670]/g, '') // إزالة التشكيل
+        .trim()
+        .replace(/\s+/g, ' ');
+    }
+
+    /** هل النص يحتوي على عربي؟ */
+    function isArabicText(text) {
+      return /[\u0600-\u06FF]/.test(text);
+    }
+
+    /**
+     * تحويل كلمة عربية إلى مصفوفة من النسخ الصوتية المحتملة (عربيزي)
+     * تولّد حتى 3 متغيرات مختلفة بناءً على أولويات القاموس
+     */
+    function arabicToArabiziVariants(arabicWord) {
+      const normalized = normalizeArabic(arabicWord);
+      const variants = new Set();
+
+      const buildVariant = (priority) => {
+        let result = '';
+        // معالجة "ال" التعريف كوحدة
+        let i = 0;
+        while (i < normalized.length) {
+          const twoChar = normalized.slice(i, i + 2);
+          if (ARABIZI_MAP[twoChar]) {
+            const opts = ARABIZI_MAP[twoChar];
+            result += opts[Math.min(priority, opts.length - 1)];
+            i += 2;
+          } else {
+            const ch = normalized[i];
+            if (ch === ' ') { result += ' '; i++; continue; }
+            const opts = ARABIZI_MAP[ch];
+            if (opts) {
+              result += opts[Math.min(priority, opts.length - 1)];
+            } else {
+              result += ch;
+            }
+            i++;
+          }
+        }
+        return result;
+      };
+
+      for (let p = 0; p < 4; p++) {
+        const v = buildVariant(p);
+        if (v) variants.add(v.toLowerCase());
+      }
+
+      return [...variants];
+    }
+
+    /**
+     * البحث الهجين الذكي (Hybrid Smart Search)
+     * يجمع بين: التطبيع العربي + التحويل الصوتي + Fuse.js الضبابي
+     *
+     * @param {string} query   - نص البحث الذي أدخله المستخدم
+     * @param {Array}  items   - العناصر الحالية المراد البحث فيها
+     * @returns {Array}        - نتائج مرتّبة حسب الأولوية
+     */
+    function hybridSearch(query, items) {
+      if (!query || !query.trim() || !items.length) return items;
+
+      // التحقق من وجود مكتبة Fuse
+      if (typeof Fuse === 'undefined') {
+        // Fallback بسيط مع التطبيع فقط
+        const q = normalizeArabic(query).toLowerCase();
+        return items.filter(it =>
+          normalizeArabic(it.name).toLowerCase().includes(q) ||
+          (it.folderName && normalizeArabic(it.folderName).toLowerCase().includes(q))
+        );
+      }
+
+      const raw = query.trim();
+      const isArabic = isArabicText(raw);
+      const normalizedQuery = isArabic ? normalizeArabic(raw) : raw.toLowerCase();
+
+      // إعدادات Fuse.js المثلى
+      const fuseOptions = {
+        threshold: 0.38,
+        ignoreLocation: true,
+        includeScore: true,
+        minMatchCharLength: 2,
+        shouldSort: true,
+        keys: [
+          { name: 'name',       weight: 0.75 },
+          { name: 'folderName', weight: 0.25 }
+        ]
+      };
+
+      // تطبيع أسماء العناصر للبحث المحسّن
+      const normalizedItems = items.map(it => ({
+        ...it,
+        _normName: normalizeArabic(it.name).toLowerCase(),
+        _normFolder: it.folderName ? normalizeArabic(it.folderName).toLowerCase() : ''
+      }));
+
+      const fuseNorm = new Fuse(normalizedItems, {
+        ...fuseOptions,
+        keys: [
+          { name: '_normName',   weight: 0.75 },
+          { name: '_normFolder', weight: 0.25 }
+        ]
+      });
+
+      const fuse = new Fuse(normalizedItems, {
+        ...fuseOptions,
+        keys: [
+          { name: 'name',       weight: 0.75 },
+          { name: 'folderName', weight: 0.25 }
+        ]
+      });
+
+      // خريطة: id → أفضل score (الأقل = أفضل)
+      const scores = new Map();
+
+      const addResults = (results, bonusPriority = 0) => {
+        results.forEach(r => {
+          const id = r.item.id;
+          const sc = (r.score || 0) - bonusPriority; // إعطاء أولوية أعلى
+          if (!scores.has(id) || scores.get(id) > sc) {
+            scores.set(id, sc);
+          }
+        });
+      };
+
+      if (isArabic) {
+        // 1. بحث بالنص العربي المطبّع (أعلى أولوية)
+        addResults(fuseNorm.search(normalizedQuery), 0.1);
+        // 2. بحث بالنص العربي الأصلي
+        if (normalizedQuery !== raw) addResults(fuse.search(raw));
+        // 3. تحويل كل كلمة إلى عربيزي والبحث
+        const words = normalizedQuery.split(' ').filter(w => w.length >= 2);
+        words.forEach(word => {
+          const variants = arabicToArabiziVariants(word);
+          variants.forEach(v => { if (v.length >= 2) addResults(fuse.search(v)); });
+        });
+        // 4. تحويل العبارة كاملة إلى عربيزي
+        if (words.length > 1) {
+          const fullVariants = arabicToArabiziVariants(normalizedQuery);
+          fullVariants.forEach(v => { if (v.length >= 3) addResults(fuse.search(v)); });
+        }
+      } else {
+        // بحث بالإنجليزي / العربيزي مباشرة
+        addResults(fuse.search(raw), 0.05);
+        addResults(fuse.search(raw.toLowerCase()));
+      }
+
+      if (scores.size === 0) return [];
+
+      // ترتيب: الأقل score أولاً
+      const sorted = [...scores.entries()].sort((a, b) => a[1] - b[1]);
+      const idOrder = new Map(sorted.map(([id], idx) => [id, idx]));
+
+      return items
+        .filter(it => idOrder.has(it.id))
+        .sort((a, b) => (idOrder.get(a.id) || 0) - (idOrder.get(b.id) || 0));
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // filterAndRender
     function filterAndRender() {
       let items = [];
       
-      if (state.showingAllBooks) {
+      // إذا كان هناك بحث نشط → ابحث في كامل المكتبة (كل الكتب والمجلدات)
+      if (state.searchQuery.trim()) {
+        const allFolderItems = state.allFolders.map(f => ({
+          id: f.id, name: f.name,
+          mimeType: 'application/vnd.google-apps.folder',
+          folderName: f.parentName || ''
+        }));
+        const allBookItems = state.allBooks.map(b => ({ ...b, mimeType: b.mimeType || 'application/octet-stream' }));
+        items = [...allFolderItems, ...allBookItems];
+
+        // ✨ البحث الذكي الهجين على كامل المحتوى
+        items = hybridSearch(state.searchQuery, items);
+
+        // تحديث عنوان القسم ليعكس البحث
+        if (DOM.sectionTitleText) DOM.sectionTitleText.textContent = `نتائج البحث: "${state.searchQuery}"`;
+
+        // الانتقال إلى قسم المكتبة وعرض النتائج
+        const libSection = document.getElementById('page-library');
+        if (libSection) {
+          libSection.style.display = 'block';
+          setTimeout(() => libSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+        }
+
+      } else if (state.showingAllBooks) {
         items = state.allBooks.map(book => ({ ...book, mimeType: book.mimeType || 'application/octet-stream' }));
         if (state.selectedCategory) items = items.filter(item => item.folderId === state.selectedCategory);
       } else {
         items = [...state.currentItems];
-      }
-      
-      if (state.searchQuery.trim()) {
-        const query = state.searchQuery.toLowerCase().trim();
-        items = items.filter(item => 
-          item.name.toLowerCase().includes(query) ||
-          (item.folderName && item.folderName.toLowerCase().includes(query))
-        );
       }
       
       const folders = items.filter(item => item.mimeType === 'application/vnd.google-apps.folder');
@@ -9085,15 +9321,24 @@ ITEMS_PER_PAGE: 30
       
       const debouncedSearch = debounce((value) => { 
         state.searchQuery = value; 
-        state.currentPage = 1; 
+        state.currentPage = 1;
+        if (value.trim()) {
+          // تأكد أن صفحة المكتبة ظاهرة قبل البحث
+          const libPage = document.getElementById('page-library');
+          if (libPage && libPage.style.display === 'none') showLibraryPage && showLibraryPage();
+        }
         filterAndRender(); 
       }, 300);
       
       DOM.searchInput.addEventListener('input', (e) => debouncedSearch(e.target.value));
       DOM.searchBtn.addEventListener('click', () => { 
-        state.searchQuery = DOM.searchInput.value; 
-        state.currentPage = 1; 
-        filterAndRender(); 
+        state.searchQuery = DOM.searchInput.value;
+        state.currentPage = 1;
+        if (state.searchQuery.trim()) {
+          const libPage = document.getElementById('page-library');
+          if (libPage && libPage.style.display === 'none') showLibraryPage && showLibraryPage();
+        }
+        filterAndRender();
       });
       
       DOM.sortSelect.addEventListener('change', (e) => { 
