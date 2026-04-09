@@ -9019,12 +9019,9 @@ ITEMS_PER_PAGE: 30
         // تحديث عنوان القسم ليعكس البحث
         if (DOM.sectionTitleText) DOM.sectionTitleText.textContent = `نتائج البحث: "${state.searchQuery}"`;
 
-        // الانتقال إلى قسم المكتبة وعرض النتائج
+        // تأكد أن صفحة المكتبة ظاهرة
         const libSection = document.getElementById('page-library');
-        if (libSection) {
-          libSection.style.display = 'block';
-          setTimeout(() => libSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
-        }
+        if (libSection) libSection.style.display = 'block';
 
       } else if (state.showingAllBooks) {
         items = state.allBooks.map(book => ({ ...book, mimeType: book.mimeType || 'application/octet-stream' }));
@@ -9323,7 +9320,6 @@ ITEMS_PER_PAGE: 30
         state.searchQuery = value; 
         state.currentPage = 1;
         if (value.trim()) {
-          // تأكد أن صفحة المكتبة ظاهرة قبل البحث
           const libPage = document.getElementById('page-library');
           if (libPage && libPage.style.display === 'none') showLibraryPage && showLibraryPage();
         }
@@ -9339,6 +9335,11 @@ ITEMS_PER_PAGE: 30
           if (libPage && libPage.style.display === 'none') showLibraryPage && showLibraryPage();
         }
         filterAndRender();
+        // الانتقال لقسم المكتبة مرة واحدة عند الضغط على الزر فقط
+        if (state.searchQuery.trim()) {
+          const libSection = document.getElementById('page-library');
+          if (libSection) setTimeout(() => libSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+        }
       });
       
       DOM.sortSelect.addEventListener('change', (e) => { 
