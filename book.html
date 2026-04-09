@@ -3619,6 +3619,153 @@
       font-size: 0.85rem;
     }
 
+    .footer-dev-qr {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 14px 18px;
+      border: 1px solid var(--border-medium);
+      border-bottom: 3px solid var(--accent-gold);
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      transition: var(--transition-normal);
+    }
+
+    .footer-dev-qr:hover {
+      border-color: var(--accent-gold);
+      background: var(--bg-card-hover);
+    }
+
+    .footer-dev-qr img {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      display: block;
+    }
+
+    .footer-dev-qr span {
+      font-size: 0.8rem;
+      color: var(--accent-gold);
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    /* Support Modal */
+    .support-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(6px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .support-modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .support-modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-bottom: 3px solid var(--accent-gold);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px 24px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      transform: translateY(24px) scale(0.97);
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      position: relative;
+    }
+    .support-modal-overlay.active .support-modal {
+      transform: translateY(0) scale(1);
+    }
+    .support-modal-close {
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    .support-modal-close:hover { color: var(--accent-gold); }
+    .support-modal-title {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      color: var(--accent-gold);
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+    .support-modal-msg {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
+      text-align: right;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      border-right: 3px solid var(--accent-gold);
+    }
+    .support-modal-qr-wrap {
+      display: inline-block;
+      padding: 10px;
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      background: var(--bg-secondary);
+      margin-bottom: 16px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .support-modal-qr-wrap:hover {
+      border-color: var(--accent-gold);
+      transform: scale(1.03);
+    }
+    .support-modal-qr-wrap img {
+      width: 140px;
+      height: 140px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      display: block;
+    }
+    .support-modal-qr-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+    .support-modal-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent-gold);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-full);
+      padding: 10px 24px;
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .support-modal-btn:hover {
+      background: var(--accent-gold-dark);
+      transform: scale(1.03);
+    }
+
     /* Toast */
     .toast-container {
       position: fixed;
@@ -7954,13 +8101,59 @@
       </div>
       <div class="footer-bottom">
         جميع الحقوق محفوظة © <span id="currentYear"></span> نور الحوزة
+        <br>
+        <div class="footer-dev-qr" onclick="openSupportModal()" style="cursor:pointer;">
+          <img src="QRDev.jpg" alt="QR Code لدعم المطور">
+          <span>لدعم المطور</span>
+        </div>
       </div>
     </div>
   </footer>
 
-  <script>
+  <!-- Support Modal -->
+  <div class="support-modal-overlay" id="supportModalOverlay" onclick="closeSupportModalOutside(event)">
+    <div class="support-modal" role="dialog" aria-modal="true">
+      <button class="support-modal-close" onclick="closeSupportModal()" aria-label="إغلاق">✕</button>
+      <div class="support-modal-title">📌 دعم المطور</div>
+      <div class="support-modal-msg">
+        عزيزي الداعم نحيطكم علماً<br>
+        هذا الدعم يشمل:<br><br>
+        • المساهمة في المشاريع القادمة...<br>
+        • دعم معنوي طيب للمطورين...<br>
+        • مساندة عامة للمطورين في شؤونهم...<br><br>
+        وإنا كخدامكم في نور الحوزة حتى وإن لم يصلنا فإنا بإذن الله مستمرون في مشاريعنا فلا تنسونا من دعائكم 🤲🏻
+      </div>
+      <a href="https://app.binance.com/uni-qr/RiRrzMBH" target="_blank" class="support-modal-qr-wrap" title="اضغط للذهاب لصفحة الدعم في بينانس">
+        <img src="QRDev.jpg" alt="QR Code لدعم المطور">
+      </a>
+      <div class="support-modal-qr-hint">اضغط على الكود للانتقال إلى صفحة الدعم في بينانس</div>
+      <br>
+      <a href="https://app.binance.com/uni-qr/RiRrzMBH" target="_blank" class="support-modal-btn" onclick="closeSupportModal()">
+        <i class="fas fa-external-link-alt"></i> الذهاب لصفحة الدعم
+      </a>
+    </div>
+  </div>
 
-    // دالة تنظيف شاملة للـ Overlay والـ Sidebar
+
+  <script>
+    // دوال مودال دعم المطور
+    function openSupportModal() {
+      document.getElementById('supportModalOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSupportModal() {
+      document.getElementById('supportModalOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    function closeSupportModalOutside(e) {
+      if (e.target === document.getElementById('supportModalOverlay')) closeSupportModal();
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeSupportModal();
+    });
+  </script>
+
+  <script>
     function cleanupSidebarState() {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
