@@ -4329,6 +4329,183 @@
     
     .summaries-theme { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); color: white; }
     .summaries-theme::before { background: #3b82f6; }
+    
+    .goals-theme { background: linear-gradient(160deg, #a07f3a 0%, #1e6b54 100%); color: white; }
+    .goals-theme::before { background: var(--accent-gold); }
+    .goals-theme .hero-banner-icon-wrapper {
+      background: rgba(160, 127, 58, 0.15);
+      border-color: rgba(160, 127, 58, 0.35);
+      box-shadow: 0 0 30px rgba(160, 127, 58, 0.25), 0 10px 25px rgba(0,0,0,0.3);
+    }
+    
+    .goals-content-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: 24px;
+      padding: 40px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      line-height: 1.8;
+      position: relative;
+      overflow: hidden;
+    }
+    .goals-content-card::after {
+      content: '📜';
+      position: absolute;
+      bottom: -20px;
+      left: -20px;
+      font-size: 120px;
+      opacity: 0.03;
+      transform: rotate(-15deg);
+      pointer-events: none;
+    }
+    .goals-text {
+      font-family: 'Amiri', serif;
+      font-size: 1.3rem;
+      color: var(--text-primary);
+      text-align: justify;
+    }
+    .goals-heading {
+      color: var(--accent-gold);
+      font-family: 'Amiri', serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      margin: 40px 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      position: relative;
+      padding-bottom: 10px;
+    }
+    .goals-heading::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(to left, var(--accent-gold), transparent);
+      border-radius: var(--radius-full);
+    }
+    .goals-heading i { 
+      font-size: 1.5rem;
+      background: var(--bg-tertiary);
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      color: var(--accent-gold);
+      box-shadow: 0 4px 10px rgba(160, 127, 58, 0.1);
+    }
+    .goals-intro {
+      font-size: 1.6rem;
+      text-align: center;
+      margin-bottom: 35px;
+      color: var(--accent-emerald);
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      margin: 30px 0;
+    }
+    .goals-card-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 25px;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      position: relative;
+      overflow: hidden;
+    }
+    .goals-card-item:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-gold);
+      box-shadow: 0 15px 35px rgba(160, 127, 58, 0.08);
+    }
+    .goals-card-item::before {
+      content: attr(data-number);
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      font-size: 80px;
+      font-weight: 900;
+      color: var(--accent-gold);
+      opacity: 0.05;
+      font-family: var(--font-ui);
+    }
+    .goals-card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .goals-card-desc {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      text-align: justify;
+    }
+    .goals-quote {
+      background: var(--bg-tertiary);
+      border-right: 5px solid var(--accent-gold);
+      padding: 25px;
+      margin: 25px 0;
+      border-radius: 12px 24px 24px 12px;
+      font-style: italic;
+      position: relative;
+    }
+    .goals-footer {
+      text-align: center;
+      margin-top: 50px;
+      padding: 30px;
+      background: var(--bg-tertiary);
+      border-radius: 20px;
+      color: var(--text-muted);
+      border: 1px dashed var(--border-medium);
+    }
+    
+    @media (max-width: 768px) {
+      .goals-content-card {
+        padding: 25px 20px;
+        border-radius: 16px;
+      }
+      .goals-text {
+        font-size: 1.15rem;
+      }
+      .goals-heading {
+        font-size: 1.5rem;
+        margin: 30px 0 15px;
+      }
+      .goals-heading i {
+        width: 35px;
+        height: 35px;
+        font-size: 1.2rem;
+      }
+      .goals-intro {
+        font-size: 1.3rem;
+      }
+      .goals-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+      .goals-card-item {
+        padding: 20px;
+      }
+      .goals-footer {
+        padding: 20px;
+        margin-top: 30px;
+      }
+    }
 
     .hero-banner-container {
       position: relative;
@@ -7364,6 +7541,16 @@
           </div>
         </button>
 
+        <!-- أهدافنا -->
+        <button class="sidebar-fixed-item" id="navGoals">
+          <div class="item-icon gold">
+            <i class="fas fa-bullseye"></i>
+          </div>
+          <div class="item-text">
+            <span class="item-name">أهدافنا</span>
+          </div>
+        </button>
+
         <!-- قنوات ومقاطع -->
         <button class="sidebar-fixed-item" id="navYoutube">
           <div class="item-icon youtube">
@@ -7641,6 +7828,120 @@
       </div>
     </div>
   </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       صفحة أهدافنا وتطلعاتنا
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <div id="page-goals" class="standalone-page-wrapper">
+    <div class="page-hero-banner goals-theme">
+      <div class="container hero-banner-container">
+        <button class="page-back-btn-modern" id="goalsBackBtn">
+          <i class="fas fa-chevron-right"></i>
+          <span>العودة للمكتبة</span>
+        </button>
+        <div class="hero-banner-content">
+          <div class="hero-banner-icon-wrapper">
+            <i class="fas fa-bullseye"></i>
+          </div>
+          <div class="hero-banner-text">
+            <h1 class="hero-banner-title">أهدافنا وتطلعاتنا</h1>
+            <p class="hero-banner-subtitle">غيثٌ للقلوبِ، ونورٌ للدروب</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container page-content-area">
+      <div class="goals-content-card">
+        <div class="goals-text">
+          <div class="goals-intro">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+          
+          <p style="text-align: center; font-size: 1.1rem; margin-bottom: 25px;">
+            الحمدُ للهِ الذي أسرجَ بالعلمِ بصائرَ العباد، والصلاةُ والسلامُ على الهادي للرشاد، محمّدٍ وآلِهِ ساداتِ الميعاد، وبعد..
+          </p>
+
+          <p>
+            بقلوبٍ يملؤُها الرجاءُ بخدمتِكم، ونفوسٍ تتوقُ إلى نيلِ رضاكم ورضا المولى (جلّ وعلا)، نضعُ بين أيديكم "المكتبة الرقمية لنور الحوزة"؛ مشروعاً نبتَ من بذرةِ زادنا القليل، وأثمرَ بفضلِ اللهِ وتوفيقهِ، ليكونَ زاداً مطوياً في كفِّ كلِّ مؤمنٍ ومؤمنة.
+          </p>
+
+          <p>
+            لم نُشيّد هذا الصرحَ الرقميَّ ليكونَ حِكراً على طَلَبَةِ العُلومِ الدينيّةِ وأروقةِ بحثها فحسب، بل أردناهُ واحةً غنّاء، تفتحُ أبوابَها لكلِّ ظمآنٍ للثقافة، وكلِّ باحثٍ عن مكارمِ الأخلاق، لنتشارك معاً في بناءِ وعيٍ مجتمعيٍّ رصين، مصداقاً لقوله تعالى: <span style="color: var(--accent-emerald);">﴿فَبَشِّرْ عِبَادِ.. الَّذِينَ يَستَمِعُونَ الْقَوْلَ فَيَتَّبِعُونَ أَحْسَنَهُ﴾</span>.
+          </p>
+
+          <h2 class="goals-heading"><i class="fas fa-lightbulb"></i> رُؤيَتُنا: شُعاعٌ يُبدِّدُ الظلمات، ومَنهلٌ يروي المَكرمات</h2>
+          <p>
+            أنْ تغدوَ هذهِ المكتبةُ الرقميّةُ، بفضلِ اللهِ ومَنّتهِ، منارةً مُضيئةً في فضاءِ المعرفةِ الإسلاميّةِ والثقافية. نجمعُ فيها بينَ أصالةِ المضمونِ الموروثِ عن مُحمّدٍ وآلِ مُحمّد (صلواتُ اللهِ عليهم أجمعين)، وبينَ حداثةِ العرضِ ويُسرِ الوصول، لتكونَ جسراً مُمَهّداً يربطُ القلوبَ المُشتاقةَ، والعقولَ التوّاقةَ، بينابيعِ الحكمةِ والهُدى.
+          </p>
+
+          <h2 class="goals-heading"><i class="fas fa-paper-plane"></i> رِسالتُنا: خُطىً واثقةٌ على طريقِ الخدمة</h2>
+          <p>
+            نسعى جاهدين، مُستمدّين العونَ منَ اللهِ الأحد، إلى تقديمِ بيئةٍ رقميّةٍ تحتضنُ الباحثَ والقارئَ والعابد. نهدفُ، بكلِّ تواضعٍ وانكسارٍ أمامَ عظمةِ العلمِ الربّاني، إلى تيسيرِ سُبُلِ الطاعة، وتذليلِ عقباتِ المعرفة، ليكونَ "نورُ الحوزةِ" خادماً أميناً، وجنديّاً مُخلصاً في ميدانِ الوعيِ والبصيرة.
+          </p>
+
+          <h2 class="goals-heading"><i class="fas fa-star"></i> غَايَاتُنا وَأَهْدَافُنا</h2>
+          <p>
+            لقد صُمِّمت أروقةُ هذه المكتبةِ، لتُلبي حوائجَ أرواحكم وعقولكم، وتتجلى أهدافنا في القطوفِ التالية:
+          </p>
+
+          <div class="goals-grid">
+            <div class="goals-card-item" data-number="01">
+              <div class="goals-card-title">
+                <i class="fas fa-book-open"></i>
+                <span>نشرُ الوعي الإسلاميّ</span>
+              </div>
+              <div class="goals-card-desc">
+                من خلالِ رفدِ "المكتبة الرئيسية" بمئاتِ الكتبِ والمصادر، وتوفير زاوية "تلخيصاتنا" لتسهيلِ اقتطافِ الثمارِ المعرفيّة. ليكونَ العلمُ نوراً نستضيءُ بهِ تلبيةً للنداء الإلهي الأول <span style="color: var(--accent-emerald);">﴿اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ﴾</span>.
+              </div>
+            </div>
+
+            <div class="goals-card-item" data-number="02">
+              <div class="goals-card-title">
+                <i class="fas fa-kaaba"></i>
+                <span>توثيقُ العهدِ معَ الثقلين</span>
+              </div>
+              <div class="goals-card-desc">
+                ويتجسّدُ ذلك في ربطِ الأرواحِ بكتابِ اللهِ المجيدِ عبرَ قسمِ "في رحاب الذكر"، لمتابعةِ الحفظِ والتلاوة. وإحياءِ أمرِ العترةِ الطاهرةِ عبرَ "حقيبة المؤمن" التي تحتضنُ جُلَّ الأدعيةِ والمناجاةِ والزيارات، عملاً بقوله تعالى: <span style="color: var(--accent-emerald);">﴿وَقَالَ رَبُّكُمُ ادْعُونِي أَسْتَجِبْ لَكُمْ﴾</span>.
+              </div>
+            </div>
+
+            <div class="goals-card-item" data-number="03">
+              <div class="goals-card-title">
+                <i class="fas fa-heart"></i>
+                <span>صناعةُ البيئةِ الإيمانيّةِ التفاعليّة</span>
+              </div>
+              <div class="goals-card-desc">
+                لم نكتفِ بتقديمِ المقروء، بل أردنا إعانةَ المؤمنِ على محاسبةِ نفسهِ وتهذيبها، فابتكرنا لوحة "زاد المتقين"، لتكون رفيقاً يومياً يضمُّ مواقيتَ الصلوات، والمسبحةَ الإلكترونية، ومتابعةَ الأهدافِ والمهام، تذكيراً بقوله تعالى <span style="color: var(--accent-emerald);">﴿أَقِمِ الصَّلَاةَ لِذِكْرِي﴾</span>.
+              </div>
+            </div>
+
+            <div class="goals-card-item" data-number="04">
+              <div class="goals-card-title">
+                <i class="fas fa-tv"></i>
+                <span>الارتقاءُ بالبصيرةِ عبرَ الإعلامِ الهادف</span>
+              </div>
+              <div class="goals-card-desc">
+                إيماناً منّا بتأثيرِ الكلمةِ والصورة، خصّصنا قسم "قنوات ومقاطع"، لننتقيَ لكم زبدةَ المحتوى المرئيِّ الذي يُهذّبُ النفسَ، ويزرعُ الموعظةَ الحسنة، مصداقاً لقوله جلّ وعلا: <span style="color: var(--accent-emerald);">﴿وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ﴾</span>.
+              </div>
+            </div>
+          </div>
+
+          <p style="margin-top: 30px; font-weight: 700; text-align: center;">خِتَاماً..</p>
+          <p>
+            نحنُ في "نور الحوزة"، لا ندّعي الكمال، فالكمالُ للهِ وحدَهُ، وإنما هيَ مُحاولةُ المقلِّ، وجهدُ المُقَصِّر، نسألُ اللهَ تعالى أن يتفضّلَ علينا وعليكم بقبولها. ندعوكم للتجوّلِ في بساتينِ هذه المكتبة، والاستظلالِ بفيئها.
+          </p>
+
+          <p>
+            ولأنّكم شركاءُ الدرب، ورأيكم هو بوصلةُ التطويرِ والاستمرار، نرجو أن لا تبخلوا علينا بتقييمكم وملاحظاتكم، لنتقدّم معاً نحو الأفضل، و<span style="color: var(--accent-emerald);">﴿قُلِ اعْمَلُوا فَسَيَرَى اللَّهُ عَمَلَكُمْ وَرَسُولُهُ وَالْمُؤْمِنُونَ﴾</span>.
+          </p>
+
+          <div class="goals-footer">
+            <p>لا تنسونا من صالحِ دعواتكم في مظانّ الإجابة 🤲🏻🤍</p>
+            <p style="font-weight: 700; color: var(--accent-gold); margin-top: 10px;">- من خُدّامِكُم في نور الحوزة</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Categories Section -->
   <section class="categories-section" id="categoriesSection">
@@ -10571,7 +10872,8 @@ ITEMS_PER_PAGE: 30
         document.querySelector('.library-section')
       ],
       youtube: document.getElementById('page-youtube'),
-      summaries: document.getElementById('page-summaries')
+      summaries: document.getElementById('page-summaries'),
+      goals: document.getElementById('page-goals')
     };
 
     let currentPage = 'library';
@@ -10585,6 +10887,8 @@ ITEMS_PER_PAGE: 30
       MAIN_PAGES.library.forEach(el => { if (el) el.style.display = 'none'; });
       // إخفاء صفحة يوتيوب
       if (MAIN_PAGES.youtube) MAIN_PAGES.youtube.style.display = 'none';
+      // إخفاء صفحة أهدافنا
+      if (MAIN_PAGES.goals) MAIN_PAGES.goals.style.display = 'none';
 
       // إخفاء صفحة التلخيصات
       if (MAIN_PAGES.summaries) MAIN_PAGES.summaries.style.display = 'none';
@@ -10634,6 +10938,17 @@ ITEMS_PER_PAGE: 30
         buildCategoryDropdown();
         renderMediaGrid();
       }
+    }
+
+    // عرض صفحة أهدافنا
+    function showGoalsPage() {
+      hideAllPages();
+      if (MAIN_PAGES.goals) MAIN_PAGES.goals.style.display = 'block';
+      currentPage = 'goals';
+      updateSidebarActive('navGoals');
+      localStorage.setItem('noor_last_page', 'goals');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      closeSidebar();
     }
 
     // عرض صفحة حقيبة المؤمن - رابط خارجي
@@ -11668,6 +11983,14 @@ ITEMS_PER_PAGE: 30
         });
       }
 
+      // زر أهدافنا
+      const navGoals = document.getElementById('navGoals');
+      if (navGoals) {
+        navGoals.addEventListener('click', () => {
+          showGoalsPage();
+        });
+      }
+
       // زر قنوات ومقاطع
       const navYoutube = document.getElementById('navYoutube');
       if (navYoutube) {
@@ -11728,6 +12051,9 @@ ITEMS_PER_PAGE: 30
       // أزرار العودة
       const ytBackBtn = document.getElementById('ytBackBtn');
       if (ytBackBtn) ytBackBtn.addEventListener('click', showLibraryPage);
+
+      const goalsBackBtn = document.getElementById('goalsBackBtn');
+      if (goalsBackBtn) goalsBackBtn.addEventListener('click', showLibraryPage);
 
       const haqibaBackBtn = document.getElementById('haqibaBackBtn');
       if (haqibaBackBtn) haqibaBackBtn.addEventListener('click', () => {
