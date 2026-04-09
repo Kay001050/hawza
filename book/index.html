@@ -8,9 +8,47 @@
   <meta property="og:title" content="المكتبة الرقمية | نور الحوزة">
   <meta property="og:description" content="مكتبة رقمية للكتب الحوزوية والإسلامية">
   <title>المكتبة الرقمية | نور الحوزة</title>
-  <link rel="icon" type="image/png" href="/book/icons/icon-32.png">
-  <link rel="apple-touch-icon" href="/book/icons/icon-192.png">
-  
+  <!-- ══════════════ PWA Manifest & Icons ══════════════ -->
+  <link rel="manifest" href="/book/manifest.json">
+
+  <!-- Favicon sizes -->
+  <link rel="icon" type="image/png" sizes="16x16"  href="/book/icons/icon-16.png">
+  <link rel="icon" type="image/png" sizes="32x32"  href="/book/icons/icon-32.png">
+  <link rel="icon" type="image/png" sizes="96x96"  href="/book/icons/icon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/book/icons/icon-192.png">
+
+  <!-- Apple PWA -->
+  <link rel="apple-touch-icon" sizes="152x152" href="/book/icons/icon-152.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="/book/icons/icon-167.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/book/icons/icon-180.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/book/icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="نور الحوزة">
+  <link rel="apple-touch-startup-image" href="/book/icons/icon-512.png">
+
+  <!-- Windows / Microsoft -->
+  <meta name="msapplication-TileImage" content="/book/icons/icon-144.png">
+  <meta name="msapplication-TileColor" content="#0a1517">
+  <meta name="msapplication-config" content="none">
+
+  <!-- Open Graph extended -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://hawza.netlify.app/book/">
+  <meta property="og:image" content="/book/icons/icon-512.png">
+  <meta property="og:locale" content="ar_AR">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="المكتبة الرقمية | نور الحوزة">
+  <meta name="twitter:description" content="مكتبة رقمية شاملة للكتب الحوزوية والإسلامية">
+  <meta name="twitter:image" content="/book/icons/icon-512.png">
+
+  <!-- Mobile / SEO -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="نور الحوزة">
+  <meta name="robots" content="index, follow">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
@@ -12654,6 +12692,17 @@ ITEMS_PER_PAGE: 30
         optimizeForMobile();
     }
 
+  </script>
+
+  <!-- ══════════════ Service Worker Registration ══════════════ -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/book/sw.js', { scope: '/book/' })
+          .then(reg => console.log('[PWA] Service Worker registered:', reg.scope))
+          .catch(err => console.warn('[PWA] Service Worker failed:', err));
+      });
+    }
   </script>
 </body>
 </html>
