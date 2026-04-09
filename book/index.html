@@ -8,13 +8,8 @@
   <meta property="og:title" content="المكتبة الرقمية | نور الحوزة">
   <meta property="og:description" content="مكتبة رقمية للكتب الحوزوية والإسلامية">
   <title>المكتبة الرقمية | نور الحوزة</title>
-  <link rel="manifest" href="/book/manifest.json">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="نور الحوزة">
+  <link rel="icon" type="image/png" href="/book/icons/icon-32.png">
   <link rel="apple-touch-icon" href="/book/icons/icon-192.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/book/icons/icon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/book/icons/icon-16.png">
-  <link rel="shortcut icon" href="/book/icons/favicon.ico">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -8422,7 +8417,7 @@
   <div class="support-modal-overlay" id="supportModalOverlay" onclick="closeSupportModalOutside(event)">
     <div class="support-modal" role="dialog" aria-modal="true">
       <button class="support-modal-close" onclick="closeSupportModal()" aria-label="إغلاق">✕</button>
-      <div class="support-modal-title">🤲🏻 دعم المطور</div>
+      <div class="support-modal-title">📌 دعم المطور</div>
       <div class="support-modal-msg">
         عزيزي الداعم نحيطكم علماً<br>
         هذا الدعم يشمل:<br><br>
@@ -11946,4 +11941,719 @@ ITEMS_PER_PAGE: 30
                     // إرسال رسالة للـ iframe إذا كان يدعم postMessage أو إعادة تحميله بالثيم الجديد
                     try {
                         const url = new URL(iframe.src);
-                        url.sear
+                        url.searchParams.set('theme', currentTheme);
+                        iframe.src = url.toString();
+                    } catch(err) {}
+                }
+            }, 100);
+        }
+    });
+
+    const originalHideAllPages_v2 = hideAllPages;
+    hideAllPages = function() {
+        originalHideAllPages_v2();
+        document.body.classList.remove('showing-external');
+        const iframeContainer = document.getElementById('page-external');
+        if (iframeContainer) iframeContainer.style.display = 'none';
+        const iframe = document.getElementById('externalIframe');
+        if (iframe) iframe.src = '';
+        // مسح الصفحة الخارجية المحفوظة عند الخروج اليدوي
+        localStorage.removeItem('noor_external_page');
+    };
+
+
+    
+    function initNewSidebar() {
+      const sidebar = document.getElementById('sidebar');
+
+      // زر الصفحة الرئيسية المنسدل
+      const homeToggle = document.getElementById('sidebarHomeToggle');
+      const homeDropdown = document.getElementById('sidebarHomeDropdown');
+      if (homeToggle && homeDropdown) {
+        homeToggle.addEventListener('click', () => {
+          homeToggle.classList.toggle('open');
+          homeDropdown.classList.toggle('open');
+        });
+      }
+
+      
+      // زر مكتبتنا - يعرض صفحة المكتبة الداخلية
+      const navLibrary = document.getElementById('navLibrary');
+      if (navLibrary) {
+        navLibrary.addEventListener('click', () => {
+          showLibraryPage();
+        });
+      }
+
+      // زر أهدافنا
+      const navGoals = document.getElementById('navGoals');
+      if (navGoals) {
+        navGoals.addEventListener('click', () => {
+          showGoalsPage();
+        });
+      }
+
+      // زر قنوات ومقاطع
+      const navYoutube = document.getElementById('navYoutube');
+      if (navYoutube) {
+        navYoutube.addEventListener('click', () => {
+          showYoutubePage();
+        });
+      }
+
+      // زر تلخيصاتنا
+      const navSummaries = document.getElementById('navSummaries');
+      if (navSummaries) {
+        navSummaries.addEventListener('click', () => {
+          showSummariesPage();
+        });
+      }
+
+      // زر متابعة الحفظ
+      const navMemorization = document.getElementById('navMemorization');
+      if (navMemorization) {
+        navMemorization.addEventListener('click', () => {
+          showMemorizationPage();
+        });
+      }
+
+      // زر حقيبة المؤمن
+      const navHaqiba = document.getElementById('navHaqiba');
+      if (navHaqiba) {
+        navHaqiba.addEventListener('click', () => {
+          loadExternalPage('https://hawza.netlify.app/book/bag/', 'navHaqiba');
+        });
+      }
+
+      // زر القرآن (في رحاب الذكر)
+      const navQuran = document.getElementById('navDhikr');
+      if (navQuran) {
+        navQuran.addEventListener('click', () => {
+          loadExternalPage('https://hawza.netlify.app/book/quran/', 'navDhikr');
+        });
+      }
+
+      // زر زاد المتقين
+      const navZad = document.getElementById('navZad');
+      if (navZad) {
+        navZad.addEventListener('click', () => {
+          loadExternalPage('https://hawza.netlify.app/book/zad/', 'navZad');
+        });
+      }
+
+      // زر للأطفال (قريباً)
+      const navKids = document.getElementById('navKids');
+      if (navKids) {
+        navKids.addEventListener('click', () => {
+          showToast('قريباً', 'سيتم إضافة صفحة الأطفال قريباً', 'info');
+          closeSidebar();
+        });
+      }
+
+      // أزرار العودة
+      const ytBackBtn = document.getElementById('ytBackBtn');
+      if (ytBackBtn) ytBackBtn.addEventListener('click', showLibraryPage);
+
+      const goalsBackBtn = document.getElementById('goalsBackBtn');
+      if (goalsBackBtn) goalsBackBtn.addEventListener('click', showLibraryPage);
+
+      const haqibaBackBtn = document.getElementById('haqibaBackBtn');
+      if (haqibaBackBtn) haqibaBackBtn.addEventListener('click', () => {
+        // إذا كان التاريخ فيه أكثر من عنصر واحد ارجع خطوة
+        if (haqibaHistory.length > 1) {
+          haqibaHistory.pop(); // إزالة الحالي
+          const prev = haqibaHistory[haqibaHistory.length - 1];
+          haqibaHistory.pop(); // سيتم إضافته مجدداً في loadHaqibaFolders
+          loadHaqibaFolders(prev.id, prev.name, true);
+        } else {
+          showLibraryPage();
+        }
+      });
+
+      const summariesBackBtn = document.getElementById('summariesBackBtn');
+      if (summariesBackBtn) summariesBackBtn.addEventListener('click', showLibraryPage);
+
+      const memorizationBackBtn = document.getElementById('memorizationBackBtn');
+      if (memorizationBackBtn) memorizationBackBtn.addEventListener('click', showLibraryPage);
+    }
+
+    function initMemorizationEvents() {
+      const searchInput = document.getElementById('memorization-search');
+      if (searchInput) {
+        searchInput.addEventListener('input', renderSurahsList);
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // الأجزاء القرآنية الثلاثون
+    // ═══════════════════════════════════════════════════════════════════
+    const JUZZ_DATA = [
+      { juz: 1,  surahs: [{id:1,name:"الفاتحة"},{id:2,name:"البقرة",range:"1-141"}] },
+      { juz: 2,  surahs: [{id:2,name:"البقرة",range:"142-252"}] },
+      { juz: 3,  surahs: [{id:2,name:"البقرة",range:"253-286"},{id:3,name:"آل عمران",range:"1-92"}] },
+      { juz: 4,  surahs: [{id:3,name:"آل عمران",range:"93-200"},{id:4,name:"النساء",range:"1-23"}] },
+      { juz: 5,  surahs: [{id:4,name:"النساء",range:"24-147"}] },
+      { juz: 6,  surahs: [{id:4,name:"النساء",range:"148-176"},{id:5,name:"المائدة",range:"1-81"}] },
+      { juz: 7,  surahs: [{id:5,name:"المائدة",range:"82-120"},{id:6,name:"الأنعام",range:"1-110"}] },
+      { juz: 8,  surahs: [{id:6,name:"الأنعام",range:"111-165"},{id:7,name:"الأعراف",range:"1-87"}] },
+      { juz: 9,  surahs: [{id:7,name:"الأعراف",range:"88-206"},{id:8,name:"الأنفال",range:"1-40"}] },
+      { juz: 10, surahs: [{id:8,name:"الأنفال",range:"41-75"},{id:9,name:"التوبة",range:"1-92"}] },
+      { juz: 11, surahs: [{id:9,name:"التوبة",range:"93-129"},{id:10,name:"يونس"},{id:11,name:"هود",range:"1-5"}] },
+      { juz: 12, surahs: [{id:11,name:"هود",range:"6-123"},{id:12,name:"يوسف"},{id:13,name:"الرعد",range:"1-18"}] },
+      { juz: 13, surahs: [{id:13,name:"الرعد",range:"19-43"},{id:14,name:"إبراهيم"},{id:15,name:"الحجر"},{id:16,name:"النحل",range:"1-128"}] },
+      { juz: 14, surahs: [{id:16,name:"النحل",range:"129"},{id:17,name:"الإسراء"},{id:18,name:"الكهف",range:"1-74"}] },
+      { juz: 15, surahs: [{id:18,name:"الكهف",range:"75-110"},{id:19,name:"مريم"},{id:20,name:"طه",range:"1-135"}] },
+      { juz: 16, surahs: [{id:20,name:"طه",range:"136"},{id:21,name:"الأنبياء"},{id:22,name:"الحج",range:"1-78"}] },
+      { juz: 17, surahs: [{id:22,name:"الحج",range:"79"},{id:23,name:"المؤمنون"},{id:24,name:"النور"},{id:25,name:"الفرقان",range:"1-20"}] },
+      { juz: 18, surahs: [{id:25,name:"الفرقان",range:"21"},{id:26,name:"الشعراء"},{id:27,name:"النمل",range:"1-55"}] },
+      { juz: 19, surahs: [{id:27,name:"النمل",range:"56"},{id:28,name:"القصص"},{id:29,name:"العنكبوت",range:"1-44"}] },
+      { juz: 20, surahs: [{id:29,name:"العنكبوت",range:"45"},{id:30,name:"الروم"},{id:31,name:"لقمان"},{id:32,name:"السجدة"},{id:33,name:"الأحزاب",range:"1-30"}] },
+      { juz: 21, surahs: [{id:33,name:"الأحزاب",range:"31"},{id:34,name:"سبأ"},{id:35,name:"فاطر"},{id:36,name:"يس",range:"1-27"}] },
+      { juz: 22, surahs: [{id:36,name:"يس",range:"28"},{id:37,name:"الصافات"},{id:38,name:"ص"},{id:39,name:"الزمر",range:"1-31"}] },
+      { juz: 23, surahs: [{id:39,name:"الزمر",range:"32"},{id:40,name:"غافر"},{id:41,name:"فصلت",range:"1-46"}] },
+      { juz: 24, surahs: [{id:41,name:"فصلت",range:"47"},{id:42,name:"الشورى"},{id:43,name:"الزخرف"},{id:44,name:"الدخان"},{id:45,name:"الجاثية"},{id:46,name:"الأحقاف",range:"1-35"}] },
+      { juz: 25, surahs: [{id:46,name:"الأحقاف",range:"36"},{id:47,name:"محمد"},{id:48,name:"الفتح"},{id:49,name:"الحجرات"},{id:50,name:"ق"},{id:51,name:"الذاريات",range:"1-30"}] },
+      { juz: 26, surahs: [{id:51,name:"الذاريات",range:"31"},{id:52,name:"الطور"},{id:53,name:"النجم"},{id:54,name:"القمر"},{id:55,name:"الرحمن"},{id:56,name:"الواقعة"},{id:57,name:"الحديد",range:"1-29"}] },
+      { juz: 27, surahs: [{id:57,name:"الحديد",range:"30"},{id:58,name:"المجادلة"},{id:59,name:"الحشر"},{id:60,name:"الممتحنة"},{id:61,name:"الصف"},{id:62,name:"الجمعة"},{id:63,name:"المنافقون"},{id:64,name:"التغابن"},{id:65,name:"الطلاق"},{id:66,name:"التحريم"}] },
+      { juz: 28, surahs: [{id:67,name:"الملك"},{id:68,name:"القلم"},{id:69,name:"الحاقة"},{id:70,name:"المعارج"},{id:71,name:"نوح"},{id:72,name:"الجن"},{id:73,name:"المزمل"},{id:74,name:"المدثر"},{id:75,name:"القيامة"},{id:76,name:"الإنسان"},{id:77,name:"المرسلات"}] },
+      { juz: 29, surahs: [{id:78,name:"النبأ"},{id:79,name:"النازعات"},{id:80,name:"عبس"},{id:81,name:"التكوير"},{id:82,name:"الانفطار"},{id:83,name:"المطففين"},{id:84,name:"الانشقاق"},{id:85,name:"البروج"},{id:86,name:"الطارق"},{id:87,name:"الأعلى"},{id:88,name:"الغاشية"},{id:89,name:"الفجر"},{id:90,name:"البلد"},{id:91,name:"الشمس"},{id:92,name:"الليل"},{id:93,name:"الضحى"},{id:94,name:"الشرح"},{id:95,name:"التين"},{id:96,name:"العلق"}] },
+      { juz: 30, surahs: [{id:97,name:"القدر"},{id:98,name:"البينة"},{id:99,name:"الزلزلة"},{id:100,name:"العاديات"},{id:101,name:"القارعة"},{id:102,name:"التكاثر"},{id:103,name:"العصر"},{id:104,name:"الهمزة"},{id:105,name:"الفيل"},{id:106,name:"قريش"},{id:107,name:"الماعون"},{id:108,name:"الكوثر"},{id:109,name:"الكافرون"},{id:110,name:"النصر"},{id:111,name:"المسد"},{id:112,name:"الإخلاص"},{id:113,name:"الفلق"},{id:114,name:"الناس"}] }
+    ];
+
+    let memorizationViewMode = 'surah'; // 'surah' | 'juz'
+
+    function setMemorizationView(mode) {
+      memorizationViewMode = mode;
+      const surahPanel = document.getElementById('surah-view-panel');
+      const juzPanel = document.getElementById('juz-view-panel');
+      const surahBtn = document.getElementById('viewBySurah');
+      const juzBtn = document.getElementById('viewByJuz');
+      if (!surahPanel || !juzPanel) return;
+      if (mode === 'surah') {
+        surahPanel.style.display = '';
+        juzPanel.style.display = 'none';
+        if (surahBtn) { surahBtn.style.background = 'var(--accent-gold)'; surahBtn.style.color = 'var(--bg-primary)'; surahBtn.style.borderColor = 'var(--accent-gold)'; }
+        if (juzBtn) { juzBtn.style.background = 'var(--bg-secondary)'; juzBtn.style.color = 'var(--text-secondary)'; juzBtn.style.borderColor = 'var(--border-medium)'; }
+      } else {
+        surahPanel.style.display = 'none';
+        juzPanel.style.display = '';
+        if (juzBtn) { juzBtn.style.background = 'var(--accent-gold)'; juzBtn.style.color = 'var(--bg-primary)'; juzBtn.style.borderColor = 'var(--accent-gold)'; }
+        if (surahBtn) { surahBtn.style.background = 'var(--bg-secondary)'; surahBtn.style.color = 'var(--text-secondary)'; surahBtn.style.borderColor = 'var(--border-medium)'; }
+        renderJuzList();
+      }
+    }
+    window.setMemorizationView = setMemorizationView;
+
+    function renderJuzList() {
+      const container = document.getElementById('juz-list-container');
+      if (!container) return;
+      container.innerHTML = JUZZ_DATA.map(juzItem => {
+        // حساب إجمالي نسبة الحفظ في الجزء
+        const surahIds = juzItem.surahs.map(s => s.id);
+        const uniqueIds = [...new Set(surahIds)];
+        let totalChecks = 0, totalDays = 0;
+        uniqueIds.forEach(id => {
+          const surah = SURAHS_DATA.find(s => s.id === id);
+          const data = memorizationState[id] || { days: surah?.pages || 1, checks: [] };
+          totalChecks += data.checks.length;
+          totalDays += data.days;
+        });
+        const pct = totalDays > 0 ? Math.round((totalChecks / totalDays) * 100) : 0;
+        const surahNames = juzItem.surahs.map(s => s.name + (s.range ? ` (${s.range})` : '')).join(' ، ');
+
+        return `
+          <div style="border:1px solid var(--border-subtle); border-radius:var(--radius-md); margin-bottom:10px; overflow:hidden; background:var(--bg-card);">
+            <div style="padding:12px 14px; background:var(--bg-secondary); display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer;"
+                 onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? '' : 'none'; this.querySelector('.juz-arrow').style.transform = this.nextElementSibling.style.display === 'none' ? '' : 'rotate(180deg)';">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--accent-gold-dark),var(--accent-gold)); color:white; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.85rem; flex-shrink:0;">${juzItem.juz}</div>
+                <span style="font-weight:700; color:var(--text-primary);">الجزء ${juzItem.juz}</span>
+                <span style="font-size:0.72rem; color:var(--text-muted);">${pct}%</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div style="width:80px; height:6px; background:var(--bg-tertiary); border-radius:3px; overflow:hidden;">
+                  <div style="width:${pct}%; height:100%; background:var(--accent-emerald); border-radius:3px;"></div>
+                </div>
+                <i class="fas fa-chevron-down juz-arrow" style="font-size:0.75rem; color:var(--text-muted); transition:transform 0.2s;"></i>
+              </div>
+            </div>
+            <div style="padding:12px 14px; display:none;">
+              <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">${surahNames}</p>
+              <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                ${uniqueIds.map(id => {
+                  const s = SURAHS_DATA.find(s => s.id === id);
+                  if (!s) return '';
+                  const d = memorizationState[id] || { days: s.pages, checks: [] };
+                  const p = d.days > 0 ? Math.round((d.checks.length/d.days)*100) : 0;
+                  return `<button onclick="openQuranSurahByName('${s.name}')" style="padding:5px 12px; border:1px solid var(--border-subtle); border-radius:var(--radius-full); background:var(--bg-secondary); color:var(--text-primary); font-size:0.78rem; font-weight:600; cursor:pointer;">${s.name} <span style="color:var(--accent-emerald);font-size:0.7rem;">${p}%</span></button>`;
+                }).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    window.renderJuzList = renderJuzList;
+
+    // ═══════════════════════════════════════════════════════════════════
+    // بحث حقيبة المؤمن وتلخيصاتنا
+    // ═══════════════════════════════════════════════════════════════════
+    function filterHaqibaSearch(term) {
+      const cards = document.querySelectorAll('#haqibaGrid .folder-card-modern');
+      const t = term.trim().toLowerCase();
+      cards.forEach(card => {
+        const name = card.querySelector('.folder-name-modern')?.textContent.toLowerCase() || '';
+        card.style.display = (!t || name.includes(t)) ? '' : 'none';
+      });
+    }
+
+    function filterSummariesSearch(term) {
+      const cards = document.querySelectorAll('#summariesGrid .folder-card-modern');
+      const t = term.trim().toLowerCase();
+      cards.forEach(card => {
+        const name = card.querySelector('.folder-name-modern')?.textContent.toLowerCase() || '';
+        card.style.display = (!t || name.includes(t)) ? '' : 'none';
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // نظام المفضلة
+    // ═══════════════════════════════════════════════════════════════════
+    function loadFavorites() {
+      try { return JSON.parse(localStorage.getItem('noor_favorites_v1') || '[]'); } catch { return []; }
+    }
+    function saveFavorites(favs) {
+      localStorage.setItem('noor_favorites_v1', JSON.stringify(favs));
+    }
+    function toggleFavorite(id, name, type, url) {
+      let favs = loadFavorites();
+      const idx = favs.findIndex(f => f.id === id);
+      if (idx > -1) {
+        favs.splice(idx, 1);
+        showToast('تمت الإزالة', `تم حذف "${name}" من المفضلة`, 'info');
+      } else {
+        favs.push({ id, name, type, url, addedAt: Date.now() });
+        showToast('تمت الإضافة', `تمت إضافة "${name}" للمفضلة`, 'success');
+      }
+      saveFavorites(favs);
+      updateFavButtons();
+    }
+    function isFavorite(id) {
+      return loadFavorites().some(f => f.id === id);
+    }
+    function updateFavButtons() {
+      const favs = loadFavorites();
+      document.querySelectorAll('[data-fav-id]').forEach(btn => {
+        const isFav = favs.some(f => f.id === btn.dataset.favId);
+        btn.style.color = isFav ? 'var(--accent-gold)' : '';
+        btn.title = isFav ? 'إزالة من المفضلة' : 'أضف للمفضلة';
+        const icon = btn.querySelector('i');
+        if (icon) icon.className = isFav ? 'fas fa-bookmark' : 'far fa-bookmark';
+      });
+    }
+    window.toggleFavorite = toggleFavorite;
+
+    // ═══════════════════════════════════════════════════════════════════
+    // حفظ الصفحة الحالية عند التحديث (Fix 6)
+    // ═══════════════════════════════════════════════════════════════════
+    function saveCurrentPageState() {
+      localStorage.setItem('noor_last_page', currentPage);
+    }
+    function restoreLastPage() {
+      // أولاً: التحقق من وجود صفحة خارجية محفوظة (حقيبة / زاد / قرآن)
+      try {
+        const externalData = localStorage.getItem('noor_external_page');
+        if (externalData) {
+          const { url, navId } = JSON.parse(externalData);
+          if (url) {
+            setTimeout(() => loadExternalPage(url, navId), 300);
+            return;
+          }
+        }
+      } catch(e) {}
+      // ثانياً: استعادة الصفحات الداخلية
+      const last = localStorage.getItem('noor_last_page');
+      if (last && last !== 'library') {
+        setTimeout(() => {
+          if (last === 'youtube') showYoutubePage();
+          else if (last === 'haqiba') showHaqibaPage();
+          else if (last === 'summaries') showSummariesPage();
+          else if (last === 'memorization') showMemorizationPage();
+        }, 300);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      initEventListeners();
+      initLibraryTypeTabs();
+      initLibrary();
+      initMediaSection();
+      initSmartSearch();
+      initNewSidebar();
+      initMemorizationEvents();
+      restoreLastPage();
+      // حفظ الصفحة الحالية عند كل تغيير
+      window.addEventListener('beforeunload', saveCurrentPageState);
+    });
+  
+    // ═══════════════════════════════════════════════════════════════════════════
+    // UPDATED FUNCTIONS - Premium Modal, Haqiba Bento, Summaries Notebook
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // Updated Modal Function with Drive Preview
+    function openModal(bookId) {
+      const book = state.allBooks.find(b => b.id === bookId);
+      if (!book) return;
+
+      const cleanName = book.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '');
+      const thumbnailUrl = getThumbnailUrl(book.id, book.thumbnailLink);
+      const previewUrl = book.webViewLink || getPreviewUrl(book.id);
+      const downloadUrl = getDownloadUrl(book.id);
+      const fileFormat = getFileFormat(book.mimeType);
+      const fileIcon = getFileIcon(book.mimeType);
+
+      // Use smaller thumbnail for faster loading
+      const optimizedThumbnail = `https://drive.google.com/thumbnail?sz=w400&id=${book.id}`;
+
+      DOM.modalCoverImg.src = optimizedThumbnail;
+      DOM.modalCoverImg.style.display = 'block';
+      DOM.modalNoCover.style.display = 'none';
+      DOM.modalCoverImg.onerror = () => {
+        DOM.modalCoverImg.style.display = 'none';
+        DOM.modalNoCover.style.display = 'flex';
+        DOM.modalNoCover.querySelector('i').className = `fas ${fileIcon}`;
+        DOM.modalNoCoverTitle.textContent = cleanName.substring(0, 40);
+      };
+
+      DOM.modalCategory.textContent = book.folderName || 'غير مصنف';
+      DOM.modalTitle.textContent = cleanName;
+      DOM.modalFormat.textContent = fileFormat;
+      DOM.modalSize.textContent = formatFileSize(book.size);
+
+      const actions = document.querySelector('.modal-actions');
+
+      // Drive preview iframe with optimized loading
+      const drivePreview = `https://drive.google.com/file/d/${book.id}/preview`;
+      const driveViewLink = book.webViewLink || getPreviewUrl(book.id);
+
+      actions.innerHTML = `
+        <div style="width:100%; display:flex; flex-direction:column; gap:12px;">
+          <div class="modal-preview-container">
+            <iframe src="${drivePreview}" loading="lazy" allow="autoplay"></iframe>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <a href="${driveViewLink}" class="modal-btn primary" target="_blank">
+              <i class="fab fa-google-drive"></i>
+              <span>فتح في درايف</span>
+            </a>
+            <a href="${downloadUrl}" class="modal-btn secondary" target="_blank">
+              <i class="fas fa-download"></i>
+              <span>تحميل مباشر</span>
+            </a>
+          </div>
+          <button class="modal-btn secondary" id="modalShareBtn" style="width:100%;">
+            <i class="fas fa-share-alt"></i>
+            <span>مشاركة الرابط</span>
+          </button>
+        </div>
+      `;
+
+      document.getElementById('modalShareBtn').onclick = () => shareBook(book.id, cleanName);
+
+      DOM.bookModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Updated Haqiba Loader with Bento Design
+    async function loadHaqibaFolders(folderId = HAQIBA_ROOT_ID, folderName = 'حقيبة المؤمن', isBack = false) {
+      const grid = document.getElementById('haqibaGrid');
+      if (!grid) return;
+
+      grid.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري تحميل المحتوى...</span></div>';
+
+      // Update breadcrumbs
+      if (!isBack) {
+        if (folderId === HAQIBA_ROOT_ID) {
+          haqibaHistory = [{ id: HAQIBA_ROOT_ID, name: 'حقيبة المؤمن' }];
+        } else {
+          haqibaHistory.push({ id: folderId, name: folderName });
+        }
+      } else {
+        haqibaHistory.push({ id: folderId, name: folderName });
+      }
+
+      updateHaqibaBreadcrumbs();
+
+      const apiKey = CONFIG.API_KEY;
+      // FIX: Use correct API endpoint with proper fields
+      const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType,thumbnailLink,webViewLink,size)&pageSize=100&orderBy=name&key=${apiKey}`;
+
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('API Error: ' + response.status);
+        const data = await response.json();
+        const items = data.files || [];
+
+        if (items.length === 0) {
+          grid.innerHTML = '<div class="media-loading"><i class="fas fa-inbox"></i><span>المجلد فارغ</span></div>';
+          return;
+        }
+
+        // Sort Quran folder items
+        const QURAN_FOLDER_ID_HAQIBA = '15cRmsfYeg4u0yKTe5Ly6owNJy9ox8-bt';
+        if (folderId === QURAN_FOLDER_ID_HAQIBA) {
+          const quranOrder = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
+          items.sort((a, b) => {
+            const cleanA = a.name.replace(/^سورة\s*/,'').trim();
+            const cleanB = b.name.replace(/^سورة\s*/,'').trim();
+            const ia = quranOrder.findIndex(s => cleanA.includes(s) || s.includes(cleanA));
+            const ib = quranOrder.findIndex(s => cleanB.includes(s) || s.includes(cleanB));
+            if (ia === -1 && ib === -1) return a.name.localeCompare(b.name, 'ar');
+            if (ia === -1) return 1;
+            if (ib === -1) return -1;
+            return ia - ib;
+          });
+        }
+
+        // Render Bento Grid
+        grid.innerHTML = '';
+        grid.className = 'haqiba-bento-grid';
+
+        items.forEach((item, idx) => {
+          const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
+          const isDoc = item.mimeType === 'application/vnd.google-apps.document' || 
+                       item.mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+          const isQuran = item.name.toLowerCase().includes('سورة') || item.name.toLowerCase().includes('قرآن');
+
+          const card = document.createElement('div');
+          card.className = 'haqiba-bento-card';
+          card.style.animationDelay = `${idx * 0.05}s`;
+
+          // Determine icon and badge type
+          let iconClass = 'folder';
+          let badgeClass = 'folder';
+          let badgeText = 'مجلد';
+          let icon = 'fa-folder';
+
+          if (isFolder) {
+            const nameLower = item.name.toLowerCase();
+            if (nameLower.includes('قرآن') || nameLower.includes('سورة')) {
+              iconClass = 'quran';
+              badgeClass = 'quran';
+              badgeText = 'قرآن';
+              icon = 'fa-quran';
+            } else if (nameLower.includes('دعاء') || nameLower.includes('دعا') || nameLower.includes('أدعية')) {
+              iconClass = 'dua';
+              badgeClass = 'dua';
+              badgeText = 'دعاء';
+              icon = 'fa-hands-praying';
+            }
+          } else if (isDoc) {
+            if (isQuran) {
+              iconClass = 'quran';
+              badgeClass = 'quran';
+              badgeText = 'قرآن';
+              icon = 'fa-quran';
+            } else {
+              iconClass = 'dua';
+              badgeClass = 'dua';
+              badgeText = 'دعاء';
+              icon = 'fa-file-alt';
+            }
+          } else {
+            iconClass = 'file';
+            badgeClass = 'file';
+            badgeText = 'ملف';
+            icon = 'fa-file-pdf';
+          }
+
+          card.innerHTML = `
+            <span class="haqiba-bento-badge ${badgeClass}">${badgeText}</span>
+            <div class="haqiba-bento-icon ${iconClass}">
+              <i class="fas ${icon}"></i>
+            </div>
+            <div class="haqiba-bento-name">${item.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, "")}</div>
+          `;
+
+          card.addEventListener('click', () => {
+            if (isFolder) loadHaqibaFolders(item.id, item.name);
+            else if (isDoc) openDuaInPopup(item.id, item.name);
+            else window.open(`https://drive.google.com/file/d/${item.id}/view`, '_blank');
+          });
+
+          grid.appendChild(card);
+        });
+
+      } catch (error) {
+        console.error('Error loading haqiba folders:', error);
+        grid.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>خطأ في التحميل. يرجى المحاولة مرة أخرى.</span></div>';
+      }
+    }
+
+    // Updated Summaries Loader with Notebook Design
+    async function loadSummariesFolders(folderId = SUMMARIES_ROOT_ID, folderName = 'تلخيصاتنا', isBack = false) {
+      const grid = document.getElementById('summariesGrid');
+      if (!grid) return;
+
+      grid.innerHTML = '<div class="media-loading"><div class="loading-spinner"></div><span>جاري تحميل التلخيصات...</span></div>';
+
+      if (!isBack) {
+        if (folderId === SUMMARIES_ROOT_ID) summariesHistory = [{ id: SUMMARIES_ROOT_ID, name: 'تلخيصاتنا' }];
+        else summariesHistory.push({ id: folderId, name: folderName });
+      } else {
+        summariesHistory.push({ id: folderId, name: folderName });
+      }
+
+      updateSummariesBreadcrumbs();
+
+      const apiKey = CONFIG.API_KEY;
+      // FIX: Use correct API endpoint with proper fields
+      const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType,thumbnailLink,webViewLink,size)&pageSize=100&orderBy=name&key=${apiKey}`;
+
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('API Error: ' + response.status);
+        const data = await response.json();
+        const items = data.files || [];
+
+        if (items.length === 0) {
+          grid.innerHTML = '<div class="media-loading"><i class="fas fa-inbox"></i><span>المجلد فارغ</span></div>';
+          return;
+        }
+
+        // Render Notebook Grid
+        grid.innerHTML = '';
+        grid.className = 'summaries-notebook-grid';
+
+        items.forEach((item, idx) => {
+          const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
+          const isDoc = item.mimeType === 'application/vnd.google-apps.document' || 
+                       item.mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+
+          const card = document.createElement('div');
+          card.className = 'summaries-notebook-card';
+          card.style.animationDelay = `${idx * 0.05}s`;
+
+          // Determine icon and badge type
+          let iconClass = 'folder';
+          let badgeClass = 'folder';
+          let badgeText = 'مجلد';
+          let icon = 'fa-folder';
+
+          if (isFolder) {
+            iconClass = 'folder';
+            badgeClass = 'folder';
+            badgeText = 'مجلد';
+            icon = 'fa-folder';
+          } else if (isDoc) {
+            iconClass = 'doc';
+            badgeClass = 'doc';
+            badgeText = 'تلخيص';
+            icon = 'fa-file-alt';
+          } else {
+            iconClass = 'pdf';
+            badgeClass = 'pdf';
+            badgeText = 'PDF';
+            icon = 'fa-file-pdf';
+          }
+
+          card.innerHTML = `
+            <div class="summaries-notebook-header">
+              <div class="summaries-notebook-icon ${iconClass}">
+                <i class="fas ${icon}"></i>
+              </div>
+            </div>
+            <div class="summaries-notebook-body">
+              <div class="summaries-notebook-name">${item.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, "")}</div>
+              <div class="summaries-notebook-meta">
+                <span class="summaries-notebook-badge ${badgeClass}">${badgeText}</span>
+              </div>
+            </div>
+          `;
+
+          card.addEventListener('click', () => {
+            if (isFolder) loadSummariesFolders(item.id, item.name);
+            else if (isDoc) openDuaInPopup(item.id, item.name);
+            else window.open(`https://drive.google.com/file/d/${item.id}/view`, '_blank');
+          });
+
+          grid.appendChild(card);
+        });
+
+      } catch (error) {
+        console.error('Error loading summaries:', error);
+        grid.innerHTML = '<div class="media-loading"><i class="fas fa-exclamation-circle"></i><span>خطأ في التحميل. يرجى المحاولة مرة أخرى.</span></div>';
+      }
+    }
+
+    // Optimized Thumbnail URL - Use smaller size for faster loading
+    function getThumbnailUrl(fileId, thumbnailLink) {
+      if (thumbnailLink) {
+        // Use smaller thumbnail size
+        return thumbnailLink.replace('=s220', '=w400');
+      }
+      return `https://drive.google.com/thumbnail?sz=w400&id=${fileId}`;
+    }
+
+    // Updated Book Card Render with Optimized Images
+    function renderBookCard(book, isMobile) {
+      const cleanName = book.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '');
+      // Use smaller thumbnail for faster loading
+      const thumbnailUrl = `https://drive.google.com/thumbnail?sz=w200&id=${book.id}`;
+      const previewUrl = book.webViewLink || getPreviewUrl(book.id);
+      const downloadUrl = getDownloadUrl(book.id);
+      const fileFormat = getFileFormat(book.mimeType);
+      const fileIcon = getFileIcon(book.mimeType);
+      const favIcon = isFavorite(book.id) ? 'fas fa-bookmark' : 'far fa-bookmark';
+      const favColor = isFavorite(book.id) ? 'color:var(--accent-gold)' : '';
+
+      // Optimized image loading with lazy loading
+      const imgOnError = `onerror="this.onerror=null;this.src='https://drive.google.com/thumbnail?sz=w200&id=${book.id}';if(this.naturalWidth===0){this.style.display='none';this.nextElementSibling.style.display='flex';}"`;
+
+      const coverHtml = `<img src="${thumbnailUrl}" alt="${cleanName}" class="book-cover" loading="lazy" ${imgOnError}><div class="book-no-cover" style="display:none;"><i class="fas ${fileIcon}"></i><span>${cleanName.substring(0, 25)}...</span></div>`;
+
+      const favBtn = `<button class="action-btn" title="مفضلة" data-fav-id="${book.id}" onclick="event.stopPropagation();toggleFavorite('${book.id}','${cleanName.replace(/'/g,"\\'")}','book','${previewUrl}');updateFavButtons();"><i class="${favIcon}" style="${favColor}"></i></button>`;
+
+      if (isMobile) {
+        return `<div class="book-card" onclick="openModal('${book.id}')"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay">${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3></div></div>`;
+      }
+
+      return `<div class="book-card" data-id="${book.id}"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay"><a href="${previewUrl}" target="_blank" class="action-btn" title="معاينة" onclick="event.stopPropagation()"><i class="fas fa-eye"></i></a><a href="${downloadUrl}" class="action-btn" title="تحميل" onclick="event.stopPropagation()"><i class="fas fa-download"></i></a><button class="action-btn" title="مشاركة" data-action="share" data-id="${book.id}" data-name="${cleanName}"><i class="fas fa-share-alt"></i></button>${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3><div class="book-meta"><span class="book-format"><i class="fas ${fileIcon}"></i>${fileFormat}</span><span>${formatFileSize(book.size)}</span></div></div></div>`;
+    }
+
+    // Mobile Optimization for iframe
+    function optimizeForMobile() {
+        const iframeContainer = document.getElementById('page-external');
+        const iframe = document.getElementById('externalIframe');
+        
+        if (!iframeContainer || !iframe) return;
+        
+        // حساب الارتفاع الصحيح بناءً على حجم الشاشة
+        function updateIframeHeight() {
+            const headerHeight = window.innerWidth <= 768 ? 64 : 72;
+            const newHeight = window.innerHeight - headerHeight;
+            iframeContainer.style.height = newHeight + 'px';
+            iframe.style.height = '100%';
+        }
+        
+        // تحديث الارتفاع عند تغيير حجم النافذة
+        window.addEventListener('resize', updateIframeHeight);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(updateIframeHeight, 100);
+        });
+        
+        // تحديث أولي
+        updateIframeHeight();
+    }
+    
+    // استدعاء التحسينات عند تحميل الصفحة
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', optimizeForMobile);
+    } else {
+        optimizeForMobile();
+    }
+
+  </script>
+</body>
+</html>
