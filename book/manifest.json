@@ -1,9 +1,9 @@
 {
   "name": "المكتبة الرقمية | نور الحوزة",
   "short_name": "نور الحوزة",
-  "description": "المكتبة الرقمية لنور الحوزة — مكتبة شاملة للكتب الحوزوية والإسلامية، تضم المكتبة الرئيسية ومكتبة الطفل الموالي ومكتبة نون والقلم وإصدارات نور الحوزة",
+  "description": "المكتبة الرقمية لنور الحوزة — مكتبة شاملة للكتب الحوزوية والإسلامية والثقافية، تضم المكتبة الرئيسية ومكتبة الطفل الموالي ومكتبة نون والقلم وإصدارات نور الحوزة",
+  "id": "nwr_lhwz",
   "start_url": "/book/",
-  "id": "/book/",
   "scope": "/book/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "minimal-ui", "browser"],
@@ -15,58 +15,29 @@
   "categories": ["education", "books", "reference", "religion"],
   "prefer_related_applications": false,
   "icons": [
-    { "src": "/book/icons/icon-16.png",            "sizes": "16x16",   "type": "image/png", "purpose": "any" },
-    { "src": "/book/icons/icon-32.png",            "sizes": "32x32",   "type": "image/png", "purpose": "any" },
-    { "src": "/book/icons/icon-72.png",            "sizes": "72x72",   "type": "image/png", "purpose": "any" },
-    { "src": "/book/icons/icon-96.png",            "sizes": "96x96",   "type": "image/png", "purpose": "any" },
-    { "src": "/book/icons/icon-128.png",           "sizes": "128x128", "type": "image/png", "purpose": "any" },
-    { "src": "/book/icons/icon-144.png",           "sizes": "144x144", "type": "image/png", "purpose": "any" },
-    { "src": "/book/icons/icon-152.png",           "sizes": "152x152", "type": "image/png", "purpose": "any" },
-    { "src": "/book/icons/icon-167.png",           "sizes": "167x167", "type": "image/png", "purpose": "any" },
-    { "src": "/book/icons/icon-180.png",           "sizes": "180x180", "type": "image/png", "purpose": "any" },
-    { "src": "/book/icons/icon-192.png",           "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/book/icons/icon-384.png",           "sizes": "384x384", "type": "image/png", "purpose": "any" },
-    { "src": "/book/icons/icon-512.png",           "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/book/icons/icon-192-maskable.png",  "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "/book/icons/icon-512-maskable.png",  "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "/book/icons/icon-16.png",           "sizes": "16x16",   "type": "image/png", "purpose": "any" },
+    { "src": "/book/icons/icon-32.png",           "sizes": "32x32",   "type": "image/png", "purpose": "any" },
+    { "src": "/book/icons/icon-72.png",           "sizes": "72x72",   "type": "image/png", "purpose": "any" },
+    { "src": "/book/icons/icon-96.png",           "sizes": "96x96",   "type": "image/png", "purpose": "any" },
+    { "src": "/book/icons/icon-128.png",          "sizes": "128x128", "type": "image/png", "purpose": "any" },
+    { "src": "/book/icons/icon-144.png",          "sizes": "144x144", "type": "image/png", "purpose": "any" },
+    { "src": "/book/icons/icon-152.png",          "sizes": "152x152", "type": "image/png", "purpose": "any" },
+    { "src": "/book/icons/icon-167.png",          "sizes": "167x167", "type": "image/png", "purpose": "any" },
+    { "src": "/book/icons/icon-180.png",          "sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "/book/icons/icon-192.png",          "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/book/icons/icon-384.png",          "sizes": "384x384", "type": "image/png", "purpose": "any" },
+    { "src": "/book/icons/icon-512.png",          "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/book/icons/icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/book/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "https://hawza.netlify.app/favicon.ico", "type": "image/x-icon" }
   ],
   "screenshots": [
-    {
-      "src": "/book/icons/screenshot-wide.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "المكتبة الرقمية — نور الحوزة"
-    },
-    {
-      "src": "/book/icons/screenshot-narrow.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "المكتبة الرقمية — نور الحوزة"
-    }
+    { "src": "/book/icons/screenshot-wide.png",   "sizes": "1280x720", "type": "image/png", "form_factor": "wide",   "label": "المكتبة الرقمية — نور الحوزة" },
+    { "src": "/book/icons/screenshot-narrow.png", "sizes": "390x844",  "type": "image/png", "form_factor": "narrow", "label": "المكتبة الرقمية — نور الحوزة" }
   ],
   "shortcuts": [
-    {
-      "name": "المكتبة الرئيسية",
-      "short_name": "الرئيسية",
-      "description": "تصفح الكتب الحوزوية والإسلامية",
-      "url": "/book/?lib=main",
-      "icons": [{ "src": "/book/icons/icon-96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "مكتبة الطفل الموالي",
-      "short_name": "الطفل",
-      "description": "كتب خاصة بالأطفال",
-      "url": "/book/?lib=child",
-      "icons": [{ "src": "/book/icons/icon-96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "المفضلة",
-      "short_name": "مفضلة",
-      "description": "الكتب المحفوظة لديك",
-      "url": "/book/?section=favorites",
-      "icons": [{ "src": "/book/icons/icon-96.png", "sizes": "96x96" }]
-    }
+    { "name": "المكتبة الرئيسية",    "url": "/book/?lib=main",         "icons": [{ "src": "/book/icons/icon-96.png", "sizes": "96x96" }] },
+    { "name": "مكتبة الطفل الموالي", "url": "/book/?lib=child",        "icons": [{ "src": "/book/icons/icon-96.png", "sizes": "96x96" }] },
+    { "name": "المفضلة",             "url": "/book/?section=favorites", "icons": [{ "src": "/book/icons/icon-96.png", "sizes": "96x96" }] }
   ]
 }
