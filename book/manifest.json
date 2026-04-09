@@ -6,7 +6,7 @@
   "start_url": "/book/?source=pwa",
   "scope": "/book/",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "standalone", "minimal-ui", "browser"],
+  "display_override": ["tabbed", "window-controls-overlay", "standalone", "minimal-ui", "browser"],
   "orientation": "any",
   "background_color": "#0a1517",
   "theme_color": "#a07f3a",
@@ -53,7 +53,8 @@
   ],
 
   "scope_extensions": [
-    { "origin": "https://hawza.netlify.app" }
+    { "origin": "https://hawza.netlify.app" },
+    { "origin": "https://*.hawza.netlify.app" }
   ],
 
   "launch_handler": {
@@ -121,6 +122,8 @@
   },
 
   "periodic_sync": {
-    "minimum_interval": 86400
+    "minimum_interval": 86400,
+    "sync_url": "/book/api/sync",
+    "tag": "library-sync"
   }
 }
