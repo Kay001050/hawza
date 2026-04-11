@@ -835,11 +835,11 @@
     .media-card:hover { transform: translateY(-7px); }
 
     /* ── بطاقة القناة ── */
-    .media-card.channel-card { gap: 10px; }
+    .media-card.channel-card { gap: 8px; }
 
     .media-card.channel-card .media-thumbnail {
-      width: 130px;
-      height: 130px;
+      width: clamp(70px, 18vw, 130px);
+      height: clamp(70px, 18vw, 130px);
       border-radius: 50%;
       overflow: hidden;
       border: 3px solid var(--accent-youtube);
@@ -3859,88 +3859,35 @@
       padding: 8px 14px;
     }
 
-    .sidebar-home-toggle {
-      width: 100%;
+
+
+    /* زر الصفحة الرئيسية البسيط */
+    .sidebar-home-btn {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 14px;
-      background: linear-gradient(135deg, rgba(160,127,58,0.1), rgba(160,127,58,0.04));
-      border: 1.5px solid rgba(160,127,58,0.25);
+      width: 100%;
+      padding: 12px 18px 12px 14px;
+      background: linear-gradient(90deg, rgba(160,127,58,0.08), transparent);
+      border: none;
+      border-right: 3px solid var(--accent-gold);
       border-radius: var(--radius-md);
       color: var(--accent-gold);
-      font-weight: 700;
       font-size: 0.95rem;
+      font-weight: 700;
       cursor: pointer;
+      text-decoration: none;
       transition: var(--transition-fast);
+      box-sizing: border-box;
     }
-
-    .sidebar-home-toggle:hover {
-      background: linear-gradient(135deg, rgba(160,127,58,0.18), rgba(160,127,58,0.08));
-      border-color: var(--accent-gold);
-    }
-
-    .sidebar-home-toggle .toggle-left-part {
+    .sidebar-home-btn .toggle-left-part {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
-
-    .sidebar-home-toggle .home-arrow {
-      font-size: 0.75rem;
-      transition: transform 0.3s ease;
-      color: var(--accent-gold-dark);
-    }
-
-    .sidebar-home-toggle.open .home-arrow {
-      transform: rotate(180deg);
-    }
-
-    /* القائمة المنسدلة */
-    .sidebar-home-dropdown {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-      opacity: 0;
-    }
-
-    .sidebar-home-dropdown.open {
-      max-height: 400px;
-      opacity: 1;
-    }
-
-    .sidebar-home-dropdown-inner {
-      padding: 8px 0 4px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .sidebar-sub-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 9px 18px 9px 14px;
-      border-radius: var(--radius-sm);
-      color: var(--text-secondary);
-      font-size: 0.88rem;
-      font-weight: 600;
-      transition: var(--transition-fast);
-      border-right: 3px solid transparent;
-      margin-right: 8px;
-    }
-
-    .sidebar-sub-item i {
-      font-size: 0.65rem;
-      color: var(--accent-gold-dark);
-      opacity: 0.7;
-    }
-
-    .sidebar-sub-item:hover {
-      background: rgba(160,127,58,0.08);
-      color: var(--accent-gold);
-      border-right-color: var(--accent-gold);
-      transform: translateX(-4px);
+    .sidebar-home-btn:hover {
+      background: rgba(160,127,58,0.14);
+      color: var(--accent-gold-light);
     }
 
     /* فاصل */
@@ -4460,14 +4407,15 @@
       gap: 24px;
     }
 
-    .media-grid-layout {
+    .media-grid-layout:not(.channels-view):not(.videos-view) {
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     }
 
-    /* شبكة القنوات: 150px لكل عمود */
+    /* شبكة القنوات: responsive */
     .standalone-grid.channels-view {
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      width: 100%;
     }
 
     /* شبكة الفيديو: aspect-ratio 16/9 */
@@ -7577,23 +7525,37 @@
     display: none;
     min-height: 100vh;
     background: var(--bg-primary);
-    overflow-x: hidden;
+    /* الخلفية الداكنة في الجزء العلوي لتجنب الفجوة البيضاء */
+    background: linear-gradient(to bottom, #1a0000 var(--header-height), var(--bg-primary) var(--header-height));
+    padding-top: var(--header-height);
+    /* لا نضع overflow-x:hidden هنا لأنه يكسر position:sticky */
+  }
+
+  @media (max-width: 768px) {
+    #page-youtube {
+      background: linear-gradient(to bottom, #1a0000 var(--header-height-mobile), var(--bg-primary) var(--header-height-mobile));
+      padding-top: var(--header-height-mobile);
+    }
   }
 
   #page-youtube.page-active { display: block; }
+
+  /* ── غلاف الهيدر والتصنيفات الثابت ── */
+  .yt-sticky-wrapper {
+    position: sticky;
+    top: var(--header-height);
+    z-index: 100;
+  }
+
+  @media (max-width: 768px) {
+    .yt-sticky-wrapper { top: var(--header-height-mobile); }
+  }
 
   /* ── هيدر الصفحة الداكن ── */
   .yt-page-header {
     background: linear-gradient(180deg, #1a0000 0%, #2d1010 60%, #3a1a1a 100%);
     padding: 0;
-    position: sticky;
-    top: var(--header-height);
-    z-index: 100;
     border-bottom: 2px solid rgba(255,0,0,0.2);
-  }
-
-  @media (max-width: 768px) {
-    .yt-page-header { top: var(--header-height-mobile); }
   }
 
   /* صف 1: العنوان والأيقونات */
@@ -7841,29 +7803,25 @@
   /* ── منطقة المحتوى ── */
   .yt-content-area {
     padding: 16px;
+    overflow-x: clip; /* يمنع الفيض أفقياً دون كسر sticky */
   }
 
-  /* شبكة القنوات */
+  /* شبكة القنوات - محسّنة لجميع الأجهزة */
   #page-youtube .standalone-grid.channels-view {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 100%;
+    width: 100%;
   }
 
-  @media (max-width: 600px) {
+  @media (min-width: 480px) {
     #page-youtube .standalone-grid.channels-view {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
     }
   }
 
-  @media (max-width: 360px) {
-    #page-youtube .standalone-grid.channels-view {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-  }
-
-  /* شبكة الفيديوهات */
+  /* شبكة الفيديوهات - محسّنة لجميع الأجهزة */
   #page-youtube .standalone-grid.videos-view {
     grid-template-columns: 1fr;
     gap: 14px;
@@ -7873,15 +7831,6 @@
     #page-youtube .standalone-grid.videos-view { grid-template-columns: repeat(2, 1fr); }
   }
 
-  @media (min-width: 900px) {
-    #page-youtube .standalone-grid.videos-view { grid-template-columns: repeat(3, 1fr); }
-  }
-
-  @media (min-width: 1200px) {
-    #page-youtube .standalone-grid.videos-view { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
-  }
-
-  /* ديسكتوب: إظهار الأزرار الإضافية */
   @media (min-width: 768px) {
     .yt-header-top { padding: 16px 24px 12px; }
     .yt-search-row { padding: 12px 24px; }
@@ -7889,10 +7838,24 @@
     .yt-header-tabs { padding: 0 24px 0; justify-content: flex-end; gap: 4px; }
     .yt-tab { padding: 10px 22px; font-size: 1rem; }
     .yt-content-area { padding: 20px 24px; }
+    #page-youtube .standalone-grid.channels-view {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      max-width: 100%;
+    }
+    #page-youtube .standalone-grid.videos-view { grid-template-columns: repeat(3, 1fr); }
+  }
 
+  @media (min-width: 900px) {
+    #page-youtube .standalone-grid.videos-view { grid-template-columns: repeat(3, 1fr); }
     #page-youtube .standalone-grid.channels-view {
       grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      max-width: 900px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    #page-youtube .standalone-grid.videos-view { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+    #page-youtube .standalone-grid.channels-view {
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
     }
   }
 
@@ -7930,48 +7893,15 @@
     
     <div class="sidebar-content">
 
-      <!-- قسم الصفحة الرئيسية المنسدل -->
+      <!-- زر الصفحة الرئيسية -->
       <div class="sidebar-home-section">
-        <button class="sidebar-home-toggle" id="sidebarHomeToggle">
+        <a href="https://hawza.netlify.app/" target="_blank" class="sidebar-home-btn">
           <div class="toggle-left-part">
             <i class="fas fa-home"></i>
             <span>الصفحة الرئيسية</span>
           </div>
-          <i class="fas fa-chevron-down home-arrow"></i>
-        </button>
-
-        <div class="sidebar-home-dropdown" id="sidebarHomeDropdown">
-          <div class="sidebar-home-dropdown-inner">
-            <a href="https://hawza.netlify.app/" onclick="loadExternalPage('https://hawza.netlify.app/book/', 'navLibrary')" class="sidebar-sub-item">
-              <i class="fas fa-chevron-left"></i>
-              <span>الرئيسية</span>
-            </a>
-            <a href="https://hawza.netlify.app/about" class="sidebar-sub-item">
-              <i class="fas fa-chevron-left"></i>
-              <span>من نحن</span>
-            </a>
-            <a href="https://hawza.netlify.app/sources" class="sidebar-sub-item">
-              <i class="fas fa-chevron-left"></i>
-              <span>مصادرنا</span>
-            </a>
-            <a href="https://hawza.netlify.app/faq" class="sidebar-sub-item">
-              <i class="fas fa-chevron-left"></i>
-              <span>الأسئلة</span>
-            </a>
-            <a href="https://hawza.netlify.app/publications" class="sidebar-sub-item">
-              <i class="fas fa-chevron-left"></i>
-              <span>إصداراتنا</span>
-            </a>
-            <a href="https://hawza.netlify.app/about" class="sidebar-sub-item">
-              <i class="fas fa-chevron-left"></i>
-              <span>من نحن</span>
-            </a>
-            <a href="https://hawza.netlify.app/channels" class="sidebar-sub-item">
-              <i class="fas fa-chevron-left"></i>
-              <span>قنواتنا</span>
-            </a>
-          </div>
-        </div>
+          <i class="fas fa-external-link-alt" style="font-size:0.75rem; opacity:0.6;"></i>
+        </a>
       </div>
 
       <div class="sidebar-divider"></div>
@@ -8748,6 +8678,7 @@
        ═══════════════════════════════════════════════════════════════════════ -->
   <div id="page-youtube" class="standalone-page-wrapper">
 
+    <div class="yt-sticky-wrapper">
     <!-- ══ هيدر صفحة يوتيوب - مطابق للصورة ══ -->
     <div class="yt-page-header">
       <!-- صف 1: عنوان + أيقونات -->
@@ -8826,6 +8757,8 @@
     <div class="yt-cats-panel" id="ytCatsPanel">
       <div class="yt-cats-panel-inner" id="ytCatChipsContainer"></div>
     </div>
+
+    </div><!-- /yt-sticky-wrapper -->
 
     <!-- نتائج البحث -->
     <div class="yt-results-info" id="ytResultsInfo" style="display:none;">
@@ -10886,10 +10819,10 @@ ITEMS_PER_PAGE: 30
         // بناء قائمة التصنيفات
         buildCategoryDropdown();
 
-        // عرض فوري
+        // عرض فوري أول 10 عناصر ثم الباقي
         renderMediaGrid();
 
-        // جلب البيانات الحقيقية في الخلفية
+        // جلب البيانات الحقيقية في الخلفية مع تحديث تدريجي
         fetchRealDataInBackground();
 
       } catch (err) {
@@ -11083,19 +11016,39 @@ ITEMS_PER_PAGE: 30
         filtered = sortMediaItems(filtered);
       } else {
         // الترتيب الافتراضي المحسّن:
-        // 1. المقاطع: آخر مقطع مضاف (آخر صف في البيانات) يكون الأول، ثم باقي المقاطع عشوائياً
-        // 2. القنوات وقوائم التشغيل: عشوائية + المشترك بها تظهر أولاً في القنوات
+        // 1. المقاطع: مقاطع القنوات المشترك فيها أولاً، ثم آخر مقطع مضاف، ثم باقي المقاطع عشوائياً
+        // 2. القنوات: المشترك بها تظهر أولاً ثم الباقي عشوائياً
+        // 3. القوائم: عشوائية
         if (activeTab === 'videos') {
-          // آخر فيديو في البيانات الأصلية (ليس في filtered لأن filtered مُرشَّحة)
           const allVideos = allMediaData.filter(i => i.type === 'video');
-          if (allVideos.length > 0) {
-            const latestUrl = allVideos[allVideos.length - 1].url;
-            const latestInFiltered = filtered.find(i => i.url === latestUrl);
-            const rest = filtered.filter(i => i.url !== latestUrl);
-            const shuffled = seededShuffle(rest, shuffleSeed);
-            filtered = latestInFiltered ? [latestInFiltered, ...shuffled] : shuffled;
+          const latestUrl = allVideos.length > 0 ? allVideos[allVideos.length - 1].url : null;
+          const subs = loadYtSubscriptions();
+          const subTitles = new Set(subs.map(s => (s.title || '').toLowerCase()));
+          const subHandles = new Set(subs.map(s => (s.handle || '').toLowerCase()));
+
+          const latestInFiltered = latestUrl ? filtered.find(i => i.url === latestUrl) : null;
+          const rest = filtered.filter(i => i.url !== latestUrl);
+
+          // فصل مقاطع القنوات المشترك بها
+          const fromSubs = rest.filter(i => {
+            const authorMatch = i.author && subTitles.has(i.author.toLowerCase());
+            return authorMatch;
+          });
+          const notFromSubs = rest.filter(i => {
+            const authorMatch = i.author && subTitles.has(i.author.toLowerCase());
+            return !authorMatch;
+          });
+
+          const shuffledSubs = seededShuffle(fromSubs, shuffleSeed);
+          const shuffledRest = seededShuffle(notFromSubs, shuffleSeed);
+
+          // الترتيب: مقاطع المشتركين → المقطع الجديد → الباقي
+          if (fromSubs.length > 0) {
+            filtered = latestInFiltered
+              ? [...shuffledSubs, latestInFiltered, ...shuffledRest]
+              : [...shuffledSubs, ...shuffledRest];
           } else {
-            filtered = seededShuffle(filtered, shuffleSeed);
+            filtered = latestInFiltered ? [latestInFiltered, ...shuffledRest] : shuffledRest;
           }
         } else if (activeTab === 'channels') {
           // القنوات المشترك بها تظهر أولاً ثم الباقي عشوائياً
@@ -11131,16 +11084,28 @@ ITEMS_PER_PAGE: 30
       const allVideos = allMediaData.filter(i => i.type === 'video');
       const latestVideoUrl = allVideos.length > 0 ? allVideos[allVideos.length - 1].url : null;
 
-      grid.innerHTML = filtered.map((item, idx) => buildMediaCard(item, idx, latestVideoUrl)).join('');
-
-      // مستمعي النقر
-      grid.querySelectorAll('.media-card').forEach((card, i) => {
-        card.addEventListener('click', (e) => {
-          if (e.target.closest('.mc-action-btn')) return;
-          e.preventDefault();
-          openMediaInfoCard(filtered[i]);
-        });
-      });
+      // عرض تدريجي واحد تلو واحد
+      grid.innerHTML = '';
+      let idx = 0;
+      function renderNext() {
+        if (idx >= filtered.length) return;
+        const cardHtml = buildMediaCard(filtered[idx], idx, latestVideoUrl);
+        const temp = document.createElement('div');
+        temp.innerHTML = cardHtml;
+        const cardEl = temp.firstElementChild;
+        if (cardEl) {
+          const item = filtered[idx];
+          cardEl.addEventListener('click', (e) => {
+            if (e.target.closest('.mc-action-btn')) return;
+            e.preventDefault();
+            openMediaInfoCard(item);
+          });
+          grid.appendChild(cardEl);
+        }
+        idx++;
+        requestAnimationFrame(renderNext);
+      }
+      requestAnimationFrame(renderNext);
     }
 
     function buildMediaCard(item, idx, latestVideoUrl) {
@@ -11219,25 +11184,21 @@ ITEMS_PER_PAGE: 30
     // جلب البيانات الحقيقية من يوتيوب في الخلفية
     // ───────────────────────────────────────────────────────────────────────────
     async function fetchRealDataInBackground() {
-      let updatesCount = 0;
       for (let i = 0; i < allMediaData.length; i++) {
         const item = allMediaData[i];
         if (item.nameProvided && item.title && item.title !== 'جاري التحميل...') {
-          // الاسم موجود مسبقاً – فقط نحتاج للمؤلف
           if ((item.type === 'video' || item.type === 'playlist') && !item.author) {
             await fetchVideoAuthor(item);
-            updatesCount++;
+            // تحديث لكل عنصر بعد جلب مؤلفه
+            renderMediaGrid();
           }
           continue;
         }
         if (item.type === 'video' || item.type === 'playlist') await fetchVideoData(item);
         else await fetchChannelData(item);
-        updatesCount++;
-        // تحديث العرض في الخلفية بعد كل عنصر
+        // تحديث تدريجي بعد كل عنصر
         renderMediaGrid();
       }
-      // تحديث نهائي بعد اكتمال كل الجلب
-      if (updatesCount > 0) renderMediaGrid();
     }
 
     async function fetchVideoAuthor(item) {
