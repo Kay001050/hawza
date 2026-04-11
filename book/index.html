@@ -11236,8 +11236,7 @@ ITEMS_PER_PAGE: 30
       const subBadge = (isChannel && isSub) ? `<span class="yt-subscribed-badge"><i class="fas fa-check"></i> مشترك</span>` : '';
 
       if (isChannel) {
-        const imgSrc = `https://unavatar.io/youtube/${item.handle}?fallback=https://ui-avatars.com/api/?name=${encodeURIComponent(item.title)}&background=ff0000&color=fff&size=130`;
-        return `
+        const imgSrc = `https://unavatar.io/youtube/${item.handle}?fallback=https://ui-avatars.com/api/?name=${encodeURIComponent(item.title)}&background=ff0000&color=fff&size=130`;        return `
           <div class="media-card channel-card" style="animation-delay:${idx * 0.05}s">
             ${actionsHtml}
             ${subBadge}
@@ -11425,12 +11424,13 @@ ITEMS_PER_PAGE: 30
 
       if (isChannel) {
         hero.className = 'mic-hero mic-hero-channel';
-        const src = `https://unavatar.io/youtube/${item.handle}?fallback=https://ui-avatars.com/api/?name=${encodeURIComponent(item.title)}&background=ff0000&color=fff&size=200`;
+        const fallbackSrc = `https://ui-avatars.com/api/?name=${encodeURIComponent(item.title.charAt(0))}&background=1565c0&color=fff&size=200`;
+        const src = item.thumbnail || `https://unavatar.io/youtube/${item.handle}`;
         thumbImg.src = src; thumbImg.style.filter = 'blur(8px) brightness(0.4)'; thumbImg.alt = item.title;
-        thumbImg.onerror = null;
+        thumbImg.onerror = () => { thumbImg.onerror=null; thumbImg.src = fallbackSrc; };
         channelAvatar.style.display = 'block';
         chAvImg.src = src; chAvImg.alt = item.title;
-        chAvImg.onerror = null;
+        chAvImg.onerror = () => { chAvImg.onerror=null; chAvImg.src = fallbackSrc; };
         playIcon.style.display = 'none';
         header.className = 'mic-header has-avatar';
         typePill.className = 'mic-type-pill channel';
