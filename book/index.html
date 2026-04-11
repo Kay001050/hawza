@@ -4502,9 +4502,22 @@
       padding: 0;
     }
     .yt-cats-panel.open {
-      max-height: 300px;
+      max-height: 220px;
+      overflow-y: auto;
+      overflow-x: hidden;
       opacity: 1;
       padding: 14px 0 6px;
+      overscroll-behavior: contain;
+    }
+    .yt-cats-panel.open::-webkit-scrollbar {
+      width: 4px;
+    }
+    .yt-cats-panel.open::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .yt-cats-panel.open::-webkit-scrollbar-thumb {
+      background: rgba(255, 0, 0, 0.4);
+      border-radius: 4px;
     }
     .yt-cats-panel-inner {
       display: flex;
@@ -7784,10 +7797,89 @@
 
   #page-youtube .yt-cats-panel.open {
     padding: 12px 16px;
+    max-height: 220px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
   }
 
-  /* ── شريط النتائج ── */
-  .yt-results-info {
+  #page-youtube .yt-cats-panel.open::-webkit-scrollbar { width: 4px; }
+  #page-youtube .yt-cats-panel.open::-webkit-scrollbar-track { background: transparent; }
+  #page-youtube .yt-cats-panel.open::-webkit-scrollbar-thumb { background: rgba(255,0,0,0.4); border-radius: 4px; }
+
+  /* ── تسميات التبويبات ── */
+  .yt-tab-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    font-family: var(--font-ui);
+  }
+
+  /* ── أزرار الوضع المضغوط (تظهر فقط عند التمرير) ── */
+  .yt-compact-actions {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    margin-right: auto;
+    padding-right: 6px;
+  }
+
+  /* ── سلوك التمرير: إخفاء رأس الصفحة بسلاسة ── */
+  .yt-sticky-wrapper {
+    will-change: transform;
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .yt-header-collapsible {
+    overflow: hidden;
+  }
+
+  /* عند التمرير للأسفل: يُطبّق translateY من JS مباشرةً على الـ wrapper */
+
+  .yt-header-scrolled .yt-compact-actions {
+    display: flex;
+  }
+
+  .yt-header-scrolled .yt-header-tabs {
+    border-bottom: 2px solid rgba(255,0,0,0.25);
+    background: linear-gradient(180deg, #1a0000 0%, #2a0f0f 100%);
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+
+  /* ── اسم القناة في النافذة المنبثقة ── */
+  .mic-author-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.65);
+    font-weight: 600;
+    margin-top: 4px;
+    font-family: var(--font-ui);
+  }
+
+  /* ── إصلاحات الهاتف وجميع الأجهزة ── */
+  @media (max-width: 480px) {
+    .yt-tab { padding: 8px 10px; gap: 4px; }
+    .yt-tab-label { font-size: 0.72rem; }
+    .yt-tab .tab-badge { font-size: 0.55rem; min-width: 15px; height: 15px; }
+    .yt-header-top { padding: 10px 12px 8px; }
+    .yt-search-row { padding: 8px 12px; }
+    .yt-filter-row { padding: 8px 12px 10px; }
+    .yt-content-area { padding: 10px 10px; }
+    #page-youtube .standalone-grid.channels-view { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    #page-youtube .standalone-grid.videos-view { grid-template-columns: 1fr; gap: 10px; }
+  }
+
+  @media (min-width: 481px) and (max-width: 767px) {
+    #page-youtube .standalone-grid.channels-view { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    #page-youtube .standalone-grid.videos-view { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    #page-youtube .standalone-grid.channels-view { grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    #page-youtube .standalone-grid.videos-view { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  }
     display: flex;
     align-items: center;
     gap: 8px;
@@ -8152,6 +8244,7 @@
     <div class="mic-header" id="micHeader">
       <div class="mic-type-label" id="micTypeLabel"></div>
       <div class="mic-title" id="micTitle"></div>
+      <div class="mic-author-row" id="micAuthorRow" style="display:none;"></div>
       <div class="mic-tags-row" id="micTagsRow"></div>
     </div>
     <div class="mic-body" id="micBody"></div>
@@ -8681,77 +8774,94 @@
     <div class="yt-sticky-wrapper">
     <!-- ══ هيدر صفحة يوتيوب - مطابق للصورة ══ -->
     <div class="yt-page-header">
-      <!-- صف 1: عنوان + أيقونات -->
-      <div class="yt-header-top">
-        <div class="yt-header-actions-right">
-          <button class="yt-header-icon-btn" onclick="toggleYtSubsFilter()" id="ytSubsBellBtn" title="الاشتراكات">
-            <i class="fas fa-bell"></i>
-            <span class="yt-subs-count" id="ytSubsCount" style="display:none;">0</span>
-          </button>
-          <button class="yt-header-icon-btn" onclick="openYtFavShelf()" id="ytFavBtn" title="المفضلة">
-            <i class="far fa-bookmark"></i>
-            <span class="yt-fav-count" id="ytFavCount" style="display:none;">0</span>
-          </button>
-        </div>
-        <div class="yt-header-brand">
-          <span class="yt-header-title">قنوات ومقاطع</span>
-          <span class="yt-header-sub">مكتبة نور الحوزة</span>
-        </div>
-        <div class="yt-header-actions-left">
-          <div class="yt-header-yt-icon">
-            <i class="fab fa-youtube"></i>
+      <!-- القسم القابل للإخفاء عند التمرير -->
+      <div class="yt-header-collapsible">
+        <!-- صف 1: عنوان + أيقونات -->
+        <div class="yt-header-top">
+          <div class="yt-header-actions-right">
+            <button class="yt-header-icon-btn" onclick="toggleYtSubsFilter()" id="ytSubsBellBtn" title="الاشتراكات">
+              <i class="fas fa-bell"></i>
+              <span class="yt-subs-count" id="ytSubsCount" style="display:none;">0</span>
+            </button>
+            <button class="yt-header-icon-btn" onclick="openYtFavShelf()" id="ytFavBtn" title="المفضلة">
+              <i class="far fa-bookmark"></i>
+              <span class="yt-fav-count" id="ytFavCount" style="display:none;">0</span>
+            </button>
           </div>
-          <button class="yt-header-icon-btn yt-header-back" id="ytBackBtn">
-            <i class="fas fa-chevron-left"></i>
+          <div class="yt-header-brand">
+            <span class="yt-header-title">قنوات ومقاطع</span>
+            <span class="yt-header-sub">مكتبة نور الحوزة</span>
+          </div>
+          <div class="yt-header-actions-left">
+            <div class="yt-header-yt-icon">
+              <i class="fab fa-youtube"></i>
+            </div>
+            <button class="yt-header-icon-btn yt-header-back" id="ytBackBtn">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- صف 3: بحث -->
+        <div class="yt-search-row">
+          <div class="yt-search-wrap">
+            <i class="fas fa-search yt-search-icon"></i>
+            <input type="text" id="yt-search" class="yt-search-input"
+                   placeholder="ابحث عن قناة أو فيديو..."
+                   onkeyup="filterContentBySearch(this.value.toLowerCase())">
+          </div>
+        </div>
+
+        <!-- صف 4: تصنيفات -->
+        <div class="yt-filter-row">
+          <button class="yt-cats-toggle" id="ytCatsToggleBtn" onclick="toggleYtCatsPanel()">
+            <i class="fas fa-filter"></i>
+            <span>التصنيفات</span>
+            <i class="fas fa-chevron-down chevron" id="ytCatsChevron"></i>
+          </button>
+          <div class="yt-filter-spacer"></div>
+          <div class="filter-select-wrapper" style="position:relative;">
+            <i class="fas fa-sort-amount-down sort-icon-main"></i>
+            <select id="ytSortSelect" class="standalone-select yt-sort-select">
+              <option value="default">الافتراضي</option>
+              <option value="name-asc">أ ← ي</option>
+              <option value="name-desc">ي ← أ</option>
+              <option value="date-newest">الأحدث إضافة</option>
+              <option value="date-oldest">الأقدم إضافة</option>
+            </select>
+            <i class="fas fa-chevron-down filter-arrow-icon"></i>
+          </div>
+        </div>
+      </div><!-- /yt-header-collapsible -->
+
+      <!-- صف 2: تبويبات (تبقى دائماً) -->
+      <div class="yt-header-tabs" id="ytPageTabs">
+        <!-- أزرار مضغوطة تظهر فقط عند التمرير -->
+        <div class="yt-compact-actions">
+          <button class="yt-header-icon-btn" onclick="toggleYtSubsFilter()" title="الاشتراكات">
+            <i class="fas fa-bell"></i>
+          </button>
+          <button class="yt-header-icon-btn" onclick="openYtFavShelf()" title="المفضلة">
+            <i class="far fa-bookmark"></i>
           </button>
         </div>
-      </div>
-
-      <!-- صف 2: تبويبات -->
-      <div class="yt-header-tabs" id="ytPageTabs">
         <button class="yt-tab active" data-tab-yt="playlists">
           <i class="fas fa-list"></i>
+          <span class="yt-tab-label">القوائم</span>
           <span class="tab-badge" id="ytTabPlaylists">0</span>
         </button>
         <button class="yt-tab" data-tab-yt="videos">
           <i class="fas fa-play-circle"></i>
+          <span class="yt-tab-label">الفيديوهات</span>
           <span class="tab-badge" id="ytTabVideos">0</span>
         </button>
         <button class="yt-tab active" data-tab-yt="channels">
           <i class="fas fa-tv"></i>
+          <span class="yt-tab-label">القنوات</span>
           <span class="tab-badge" id="ytTabChannels">0</span>
         </button>
       </div>
-
-      <!-- صف 3: بحث -->
-      <div class="yt-search-row">
-        <div class="yt-search-wrap">
-          <i class="fas fa-search yt-search-icon"></i>
-          <input type="text" id="yt-search" class="yt-search-input"
-                 placeholder="ابحث عن قناة أو فيديو..."
-                 onkeyup="filterContentBySearch(this.value.toLowerCase())">
-        </div>
-      </div>
-
-      <!-- صف 4: تصنيفات -->
-      <div class="yt-filter-row">
-        <button class="yt-cats-toggle" id="ytCatsToggleBtn" onclick="toggleYtCatsPanel()">
-          <i class="fas fa-filter"></i>
-          <span>التصنيفات</span>
-          <i class="fas fa-chevron-down chevron" id="ytCatsChevron"></i>
-        </button>
-        <div class="yt-filter-spacer"></div>
-        <div class="filter-select-wrapper" style="position:relative;">
-          <i class="fas fa-sort-amount-down sort-icon-main"></i>
-          <select id="ytSortSelect" class="standalone-select yt-sort-select">
-            <option value="default">الافتراضي</option>
-            <option value="name-asc">أ ← ي</option>
-            <option value="name-desc">ي ← أ</option>
-          </select>
-          <i class="fas fa-chevron-down filter-arrow-icon"></i>
-        </div>
-      </div>
-    </div>
+    </div><!-- /yt-page-header -->
 
     <!-- لوح التصنيفات -->
     <div class="yt-cats-panel" id="ytCatsPanel">
@@ -11084,28 +11194,24 @@ ITEMS_PER_PAGE: 30
       const allVideos = allMediaData.filter(i => i.type === 'video');
       const latestVideoUrl = allVideos.length > 0 ? allVideos[allVideos.length - 1].url : null;
 
-      // عرض تدريجي واحد تلو واحد
+      // مسح الشبكة ثم عرض دفعي فوري بدون وميض
       grid.innerHTML = '';
-      let idx = 0;
-      function renderNext() {
-        if (idx >= filtered.length) return;
-        const cardHtml = buildMediaCard(filtered[idx], idx, latestVideoUrl);
+      const frag = document.createDocumentFragment();
+      filtered.forEach((item, idx) => {
+        const cardHtml = buildMediaCard(item, idx, latestVideoUrl);
         const temp = document.createElement('div');
         temp.innerHTML = cardHtml;
         const cardEl = temp.firstElementChild;
         if (cardEl) {
-          const item = filtered[idx];
           cardEl.addEventListener('click', (e) => {
             if (e.target.closest('.mc-action-btn')) return;
             e.preventDefault();
             openMediaInfoCard(item);
           });
-          grid.appendChild(cardEl);
+          frag.appendChild(cardEl);
         }
-        idx++;
-        requestAnimationFrame(renderNext);
-      }
-      requestAnimationFrame(renderNext);
+      });
+      grid.appendChild(frag);
     }
 
     function buildMediaCard(item, idx, latestVideoUrl) {
@@ -11250,6 +11356,7 @@ ITEMS_PER_PAGE: 30
           const d = await res.json();
           item.title  = d.author_name || item.handle;
           item.author = d.author_name || '';
+          if (d.thumbnail_url) item.thumbnail = d.thumbnail_url;
           return;
         }
       } catch (e) {}
@@ -11318,11 +11425,12 @@ ITEMS_PER_PAGE: 30
 
       if (isChannel) {
         hero.className = 'mic-hero mic-hero-channel';
-        const src = `https://unavatar.io/youtube/${item.handle}?fallback=https://ui-avatars.com/api/?name=${encodeURIComponent(item.title.charAt(0))}&background=1565c0&color=fff&size=200`;
+        const src = `https://unavatar.io/youtube/${item.handle}?fallback=https://ui-avatars.com/api/?name=${encodeURIComponent(item.title)}&background=ff0000&color=fff&size=200`;
         thumbImg.src = src; thumbImg.style.filter = 'blur(8px) brightness(0.4)'; thumbImg.alt = item.title;
+        thumbImg.onerror = null;
         channelAvatar.style.display = 'block';
         chAvImg.src = src; chAvImg.alt = item.title;
-        chAvImg.onerror = () => { chAvImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(item.title.charAt(0))}&background=1565c0&color=fff&size=200`; };
+        chAvImg.onerror = null;
         playIcon.style.display = 'none';
         header.className = 'mic-header has-avatar';
         typePill.className = 'mic-type-pill channel';
@@ -11346,6 +11454,18 @@ ITEMS_PER_PAGE: 30
       }
 
       titleEl.textContent = item.title;
+
+      // اسم القناة في النافذة المنبثقة
+      const authorRow = document.getElementById('micAuthorRow');
+      if (authorRow) {
+        if (!isChannel && item.author) {
+          authorRow.innerHTML = `<i class="fab fa-youtube" style="color:var(--accent-youtube);font-size:0.8rem;"></i><span>${item.author}</span>`;
+          authorRow.style.display = 'flex';
+        } else {
+          authorRow.style.display = 'none';
+        }
+      }
+
       tagsRow.innerHTML = (item.tags && item.tags.length)
         ? item.tags.map(t => `<span class="mic-tag"><i class="fas fa-tag"></i>${t}</span>`).join('') : '';
 
@@ -11624,7 +11744,12 @@ ITEMS_PER_PAGE: 30
       // إخفاء صفحة المكتبة
       MAIN_PAGES.library.forEach(el => { if (el) el.style.display = 'none'; });
       // إخفاء صفحة يوتيوب
-      if (MAIN_PAGES.youtube) MAIN_PAGES.youtube.style.display = 'none';
+      if (MAIN_PAGES.youtube) {
+        if (MAIN_PAGES.youtube.style.display !== 'none') {
+          document.dispatchEvent(new Event('ytPageClosed'));
+        }
+        MAIN_PAGES.youtube.style.display = 'none';
+      }
       // إخفاء صفحة أهدافنا
       if (MAIN_PAGES.goals) MAIN_PAGES.goals.style.display = 'none';
 
@@ -11668,6 +11793,7 @@ ITEMS_PER_PAGE: 30
       localStorage.setItem('noor_last_page', 'youtube');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       closeSidebar();
+      document.dispatchEvent(new Event('ytPageOpened'));
       if (!ytPageLoaded) {
         ytPageLoaded = true;
         initYtPage();
@@ -12675,6 +12801,59 @@ ITEMS_PER_PAGE: 30
     // تعريض الدوال عالمياً
     window.toggleYtCatsPanel    = toggleYtCatsPanel;
     window.toggleYtFavorite     = toggleYtFavorite;
+
+    // ── إخفاء/إظهار رأس يوتيوب عند التمرير داخل صفحة يوتيوب فقط ──
+    (function initYtScrollBehavior() {
+      let ticking = false;
+      let ytScrollHandler = null;
+
+      function handleYtScroll() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          const wrapper = document.querySelector('#page-youtube .yt-sticky-wrapper');
+          const collapsible = document.querySelector('#page-youtube .yt-header-collapsible');
+          if (wrapper && collapsible) {
+            const st = window.scrollY || document.documentElement.scrollTop;
+            const colH = collapsible.offsetHeight;
+            if (st > 10) {
+              // إخفاء الجزء القابل للطي فقط، الـ tabs تبقى ظاهرة
+              wrapper.style.transform = `translateY(-${colH}px)`;
+              wrapper.classList.add('yt-header-scrolled');
+            } else {
+              wrapper.style.transform = 'translateY(0)';
+              wrapper.classList.remove('yt-header-scrolled');
+            }
+          }
+          ticking = false;
+        });
+      }
+
+      document.addEventListener('ytPageOpened', () => {
+        window.scrollTo(0, 0);
+        const wrapper = document.querySelector('#page-youtube .yt-sticky-wrapper');
+        if (wrapper) {
+          wrapper.style.transform = 'translateY(0)';
+          wrapper.classList.remove('yt-header-scrolled');
+        }
+        if (!ytScrollHandler) {
+          ytScrollHandler = handleYtScroll;
+          window.addEventListener('scroll', ytScrollHandler, { passive: true });
+        }
+      });
+
+      document.addEventListener('ytPageClosed', () => {
+        if (ytScrollHandler) {
+          window.removeEventListener('scroll', ytScrollHandler);
+          ytScrollHandler = null;
+        }
+        const wrapper = document.querySelector('#page-youtube .yt-sticky-wrapper');
+        if (wrapper) {
+          wrapper.style.transform = 'translateY(0)';
+          wrapper.classList.remove('yt-header-scrolled');
+        }
+      });
+    })();
     window.toggleYtSubscription = toggleYtSubscription;
     window.toggleYtSubsFilter   = toggleYtSubsFilter;
     window.openYtFavShelf       = openYtFavShelf;
