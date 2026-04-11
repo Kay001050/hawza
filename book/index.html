@@ -5343,11 +5343,11 @@
     }
 
     /* صفحة حقيبة المؤمن */
-    #page-haqiba, #page-youtube, #page-summaries {
+    #page-haqiba, #page-summaries {
       display: none;
     }
 
-    #page-haqiba.page-active, #page-youtube.page-active, #page-summaries.page-active {
+    #page-haqiba.page-active, #page-summaries.page-active {
       display: block;
     }
 
@@ -7570,215 +7570,339 @@
     }
 
   /* ════════════════════════════════════════════════════
-     صفحة يوتيوب - تجاوب شامل
+     صفحة يوتيوب - هيدر وتصميم الموبايل
   ════════════════════════════════════════════════════ */
 
-  /* الصفحة الكاملة */
-  #page-youtube .standalone-page-wrapper,
   #page-youtube {
+    display: none;
+    min-height: 100vh;
+    background: var(--bg-primary);
     overflow-x: hidden;
-    width: 100%;
   }
 
-  /* Hero Banner mobile */
-  @media (max-width: 480px) {
-    #page-youtube .page-hero-banner {
-      padding: calc(var(--header-height-mobile) + 20px) 0 20px;
-    }
-    #page-youtube .hero-banner-title { font-size: 1.5rem; }
-    #page-youtube .hero-banner-subtitle { font-size: 0.82rem; }
-    #page-youtube .hero-banner-icon-wrapper { width: 52px; height: 52px; font-size: 1.5rem; }
-    #page-youtube .hero-banner-content { gap: 12px; }
+  #page-youtube.page-active { display: block; }
+
+  /* ── هيدر الصفحة الداكن ── */
+  .yt-page-header {
+    background: linear-gradient(180deg, #1a0000 0%, #2d1010 60%, #3a1a1a 100%);
+    padding: 0;
+    position: sticky;
+    top: var(--header-height);
+    z-index: 100;
+    border-bottom: 2px solid rgba(255,0,0,0.2);
   }
 
-  /* Controls bar layout */
-  #page-youtube .standalone-controls-bar {
+  @media (max-width: 768px) {
+    .yt-page-header { top: var(--header-height-mobile); }
+  }
+
+  /* صف 1: العنوان والأيقونات */
+  .yt-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 10px;
+    gap: 10px;
+  }
+
+  .yt-header-brand {
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    padding: 16px;
-    margin-bottom: 20px;
-    background: var(--bg-card);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border-subtle);
+    align-items: center;
+    flex: 1;
+    text-align: center;
   }
 
-  /* Search full width */
-  #page-youtube .filter-wrapper-with-badge {
-    width: 100%;
-    max-width: 100% !important;
+  .yt-header-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    font-family: var(--font-ui);
+    line-height: 1.2;
   }
 
-  #page-youtube .filter-wrapper-with-badge .filter-select-wrapper input,
-  #page-youtube #yt-search {
-    width: 100% !important;
-    min-width: 0;
+  .yt-header-sub {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.55);
+    font-weight: 400;
   }
 
-  /* Tabs always horizontal scrollable */
-  #page-youtube .standalone-tabs {
+  .yt-header-actions-right,
+  .yt-header-actions-left {
     display: flex;
-    flex-direction: row !important;
-    gap: 8px;
-    width: 100%;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    padding-bottom: 2px;
-    flex-wrap: nowrap;
-  }
-
-  #page-youtube .standalone-tabs::-webkit-scrollbar { display: none; }
-
-  #page-youtube .standalone-tab {
-    flex-shrink: 0;
-    white-space: nowrap;
-    padding: 9px 16px;
-    font-size: 0.85rem;
-  }
-
-  /* Actions row: فلاتر واشتراكات */
-  #page-youtube .standalone-controls-bar > div:last-child {
-    display: flex;
-    flex-wrap: wrap;
     align-items: center;
     gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .yt-header-icon-btn {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.2s;
+    font-family: var(--font-ui);
+  }
+
+  .yt-header-icon-btn:hover { background: rgba(255,255,255,0.18); }
+
+  .yt-header-yt-icon {
+    width: 40px; height: 40px;
+    background: var(--accent-youtube);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 1.1rem;
+  }
+
+  .yt-header-back { background: rgba(255,255,255,0.12); }
+
+  /* عدادات الهيدر */
+  .yt-fav-count, .yt-subs-count {
+    position: absolute;
+    top: -4px; left: -4px;
+    background: var(--accent-youtube);
+    color: white;
+    border-radius: 50%;
+    font-size: 0.52rem;
+    font-weight: 800;
+    width: 16px; height: 16px;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid #1a0000;
+  }
+
+  /* صف 2: التبويبات */
+  .yt-header-tabs {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0;
+    padding: 0 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .yt-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: rgba(255,255,255,0.5);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-ui);
+    position: relative;
+    bottom: -1px;
+  }
+
+  .yt-tab .tab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px; height: 18px;
+    padding: 0 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 99px;
+    font-size: 0.62rem;
+    font-weight: 800;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .yt-tab.active {
+    color: #fff;
+    border-bottom-color: var(--accent-youtube);
+  }
+
+  .yt-tab.active .tab-badge {
+    background: var(--accent-youtube);
+    color: white;
+  }
+
+  .yt-tab:hover:not(.active) { color: rgba(255,255,255,0.8); }
+
+  /* صف 3: البحث */
+  .yt-search-row {
+    padding: 12px 16px;
+  }
+
+  .yt-search-wrap {
+    position: relative;
     width: 100%;
   }
 
-  /* Sort select full stretch on small */
-  @media (max-width: 480px) {
-    #page-youtube .standalone-select {
-      min-width: 0;
-      flex: 1;
-      font-size: 0.8rem;
-    }
-    #page-youtube .yt-cats-toggle { font-size: 0.8rem; padding: 8px 12px; }
-    #page-youtube .yt-fav-btn span,
-    #page-youtube .yt-subs-btn span { display: none; }
-    #page-youtube .yt-fav-btn,
-    #page-youtube .yt-subs-btn { padding: 8px 10px; }
+  .yt-search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255,255,255,0.4);
+    font-size: 0.9rem;
+    pointer-events: none;
   }
 
-  /* Cats panel full width */
+  .yt-search-input {
+    width: 100%;
+    padding: 12px 16px 12px 42px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-full);
+    color: #fff;
+    font-size: 0.9rem;
+    font-family: var(--font-ui);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .yt-search-input::placeholder { color: rgba(255,255,255,0.4); }
+  .yt-search-input:focus {
+    border-color: var(--accent-youtube);
+    background: rgba(255,0,0,0.08);
+  }
+
+  /* صف 4: فلتر التصنيفات */
+  .yt-filter-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px 14px;
+  }
+
+  .yt-filter-spacer { flex: 1; }
+
+  .yt-cats-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 14px;
+    background: var(--accent-youtube);
+    border: none;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    font-family: var(--font-ui);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .yt-cats-toggle .chevron { transition: transform 0.3s; font-size: 0.7rem; }
+  .yt-cats-toggle.open .chevron { transform: rotate(180deg); }
+  .yt-cats-toggle:hover { background: #cc0000; }
+
+  /* Sort select داخل الهيدر */
+  #page-youtube .yt-sort-select {
+    padding: 8px 28px 8px 28px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: var(--radius-full);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    min-width: 110px;
+    font-family: var(--font-ui);
+  }
+
+  #page-youtube .yt-sort-select option { background: #1a0000; color: #fff; }
+  #page-youtube .sort-icon-main { color: rgba(255,255,255,0.6); }
+  #page-youtube .filter-arrow-icon { color: rgba(255,255,255,0.4); }
+
+  /* ── لوح التصنيفات ── */
   #page-youtube .yt-cats-panel {
-    width: 100%;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-subtle);
   }
 
-  /* Channels grid responsive */
+  #page-youtube .yt-cats-panel.open {
+    padding: 12px 16px;
+  }
+
+  /* ── شريط النتائج ── */
+  .yt-results-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--bg-secondary);
+  }
+
+  .yt-results-count { font-weight: 700; color: var(--accent-youtube); font-size: 1rem; }
+
+  /* ── منطقة المحتوى ── */
+  .yt-content-area {
+    padding: 16px;
+  }
+
+  /* شبكة القنوات */
   #page-youtube .standalone-grid.channels-view {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 16px;
   }
 
   @media (max-width: 600px) {
     #page-youtube .standalone-grid.channels-view {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 12px;
     }
   }
 
-  @media (max-width: 380px) {
+  @media (max-width: 360px) {
     #page-youtube .standalone-grid.channels-view {
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
     }
   }
 
-  /* Channel card thumb size on mobile */
-  @media (max-width: 480px) {
-    #page-youtube .media-card.channel-card .media-thumbnail {
-      width: 86px !important;
-      height: 86px !important;
-    }
-    #page-youtube .media-card.channel-card .media-title {
-      font-size: 0.76rem;
-    }
-  }
-
-  /* Videos grid responsive */
+  /* شبكة الفيديوهات */
   #page-youtube .standalone-grid.videos-view {
     grid-template-columns: 1fr;
     gap: 14px;
   }
 
-  @media (min-width: 480px) {
-    #page-youtube .standalone-grid.videos-view {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
+  @media (min-width: 500px) {
+    #page-youtube .standalone-grid.videos-view { grid-template-columns: repeat(2, 1fr); }
   }
 
+  @media (min-width: 900px) {
+    #page-youtube .standalone-grid.videos-view { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (min-width: 1200px) {
+    #page-youtube .standalone-grid.videos-view { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  }
+
+  /* ديسكتوب: إظهار الأزرار الإضافية */
   @media (min-width: 768px) {
-    #page-youtube .standalone-grid.videos-view {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
+    .yt-header-top { padding: 16px 24px 12px; }
+    .yt-search-row { padding: 12px 24px; }
+    .yt-filter-row { padding: 10px 24px 14px; }
+    .yt-header-tabs { padding: 0 24px 0; justify-content: flex-end; gap: 4px; }
+    .yt-tab { padding: 10px 22px; font-size: 1rem; }
+    .yt-content-area { padding: 20px 24px; }
+
+    #page-youtube .standalone-grid.channels-view {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      max-width: 900px;
     }
   }
 
   @media (min-width: 1024px) {
-    #page-youtube .standalone-grid.videos-view {
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 24px;
-    }
-  }
-
-  /* Container padding on small screens */
-  @media (max-width: 480px) {
-    #page-youtube .page-content-area {
-      padding-left: 12px !important;
-      padding-right: 12px !important;
-    }
-    #page-youtube .standalone-controls-bar {
-      padding: 12px;
-      gap: 10px;
-      border-radius: var(--radius-md);
-    }
-    #page-youtube .standalone-tab {
-      padding: 8px 12px;
-      font-size: 0.8rem;
-    }
-  }
-
-  /* Fix video card on mobile */
-  @media (max-width: 480px) {
-    #page-youtube .media-card.video-card {
-      flex-direction: column !important;
-    }
-    #page-youtube .media-card.video-card .media-info {
-      padding: 10px;
-    }
-    #page-youtube .media-card.video-card .media-title {
-      font-size: 0.82rem;
-    }
-  }
-
-  /* Results info */
-  #page-youtube .yt-results-info {
-    margin-bottom: 14px;
-  }
-
-  /* Cats panel on mobile */
-  @media (max-width: 480px) {
-    #page-youtube .yt-cats-panel.open {
-      max-height: 200px;
-      overflow-y: auto;
-    }
-    #page-youtube .yt-cat-chip {
-      padding: 5px 10px;
-      font-size: 0.74rem;
-    }
-  }
-
-  /* Page content area spacing */
-  #page-youtube .page-content-area {
-    padding-top: 24px !important;
-  }
-
-  @media (max-width: 768px) {
-    #page-youtube .page-content-area {
-      padding-top: 18px !important;
-    }
+    .yt-page-header { position: sticky; }
+    .yt-content-area { padding: 24px 32px; }
+    .yt-header-top { padding: 18px 32px 14px; }
+    .yt-search-row { padding: 0 32px 12px; }
+    .yt-filter-row { padding: 0 32px 16px; }
+    .yt-header-tabs { padding: 0 32px 0; }
   }
 
   </style>
@@ -7818,7 +7942,7 @@
 
         <div class="sidebar-home-dropdown" id="sidebarHomeDropdown">
           <div class="sidebar-home-dropdown-inner">
-            <a href="javascript:void(0)" onclick="loadExternalPage('https://hawza.netlify.app/book/', 'navLibrary')" class="sidebar-sub-item">
+            <a href="https://hawza.netlify.app/" onclick="loadExternalPage('https://hawza.netlify.app/book/', 'navLibrary')" class="sidebar-sub-item">
               <i class="fas fa-chevron-left"></i>
               <span>الرئيسية</span>
             </a>
@@ -7957,7 +8081,7 @@
 
   <header class="header" id="header">
     <div class="container nav-container">
-      <a href="javascript:void(0)" onclick="loadExternalPage('https://hawza.netlify.app/book/', 'navLibrary')" class="brand">
+      <a href="https://hawza.netlify.app/" onclick="loadExternalPage('https://hawza.netlify.app/book/', 'navLibrary')" class="brand">
         <div class="brand-icon">
           <i class="fas fa-book-open"></i>
         </div>
@@ -7968,7 +8092,7 @@
       </a>
 
       <nav class="nav-actions">
-        <a href="javascript:void(0)" onclick="loadExternalPage('https://hawza.netlify.app/book/', 'navLibrary')" class="nav-link">
+        <a href="https://hawza.netlify.app/" onclick="loadExternalPage('https://hawza.netlify.app/book/', 'navLibrary')" class="nav-link">
           <i class="fas fa-home"></i>
           <span>الرئيسية</span>
         </a>
@@ -8623,111 +8747,103 @@
        صفحة قنوات ومقاطع (يوتيوب مستقل) - تصميم متطور
        ═══════════════════════════════════════════════════════════════════════ -->
   <div id="page-youtube" class="standalone-page-wrapper">
-    <div class="page-hero-banner youtube-theme">
-      <div class="container hero-banner-container">
-        <button class="page-back-btn-modern" id="ytBackBtn">
-          <i class="fas fa-chevron-right"></i>
-          <span>العودة للمكتبة</span>
-        </button>
-        <div class="hero-banner-content">
-          <div class="hero-banner-icon-wrapper">
+
+    <!-- ══ هيدر صفحة يوتيوب - مطابق للصورة ══ -->
+    <div class="yt-page-header">
+      <!-- صف 1: عنوان + أيقونات -->
+      <div class="yt-header-top">
+        <div class="yt-header-actions-right">
+          <button class="yt-header-icon-btn" onclick="toggleYtSubsFilter()" id="ytSubsBellBtn" title="الاشتراكات">
+            <i class="fas fa-bell"></i>
+            <span class="yt-subs-count" id="ytSubsCount" style="display:none;">0</span>
+          </button>
+          <button class="yt-header-icon-btn" onclick="openYtFavShelf()" id="ytFavBtn" title="المفضلة">
+            <i class="far fa-bookmark"></i>
+            <span class="yt-fav-count" id="ytFavCount" style="display:none;">0</span>
+          </button>
+        </div>
+        <div class="yt-header-brand">
+          <span class="yt-header-title">قنوات ومقاطع</span>
+          <span class="yt-header-sub">مكتبة نور الحوزة</span>
+        </div>
+        <div class="yt-header-actions-left">
+          <div class="yt-header-yt-icon">
             <i class="fab fa-youtube"></i>
           </div>
-          <div class="hero-banner-text">
-            <h1 class="hero-banner-title">قنوات ومقاطع</h1>
-            <p class="hero-banner-subtitle">مكتبة القنوات والمقاطع المقترحة من نور الحوزة</p>
-          </div>
+          <button class="yt-header-icon-btn yt-header-back" id="ytBackBtn">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- صف 2: تبويبات -->
+      <div class="yt-header-tabs" id="ytPageTabs">
+        <button class="yt-tab active" data-tab-yt="playlists">
+          <i class="fas fa-list"></i>
+          <span class="tab-badge" id="ytTabPlaylists">0</span>
+        </button>
+        <button class="yt-tab" data-tab-yt="videos">
+          <i class="fas fa-play-circle"></i>
+          <span class="tab-badge" id="ytTabVideos">0</span>
+        </button>
+        <button class="yt-tab active" data-tab-yt="channels">
+          <i class="fas fa-tv"></i>
+          <span class="tab-badge" id="ytTabChannels">0</span>
+        </button>
+      </div>
+
+      <!-- صف 3: بحث -->
+      <div class="yt-search-row">
+        <div class="yt-search-wrap">
+          <i class="fas fa-search yt-search-icon"></i>
+          <input type="text" id="yt-search" class="yt-search-input"
+                 placeholder="ابحث عن قناة أو فيديو..."
+                 onkeyup="filterContentBySearch(this.value.toLowerCase())">
+        </div>
+      </div>
+
+      <!-- صف 4: تصنيفات -->
+      <div class="yt-filter-row">
+        <button class="yt-cats-toggle" id="ytCatsToggleBtn" onclick="toggleYtCatsPanel()">
+          <i class="fas fa-filter"></i>
+          <span>التصنيفات</span>
+          <i class="fas fa-chevron-down chevron" id="ytCatsChevron"></i>
+        </button>
+        <div class="yt-filter-spacer"></div>
+        <div class="filter-select-wrapper" style="position:relative;">
+          <i class="fas fa-sort-amount-down sort-icon-main"></i>
+          <select id="ytSortSelect" class="standalone-select yt-sort-select">
+            <option value="default">الافتراضي</option>
+            <option value="name-asc">أ ← ي</option>
+            <option value="name-desc">ي ← أ</option>
+          </select>
+          <i class="fas fa-chevron-down filter-arrow-icon"></i>
         </div>
       </div>
     </div>
 
-    <div class="container page-content-area">
-      <!-- شريط البحث والتبويبات والأزرار -->
-      <div class="standalone-controls-bar">
-        <div class="filter-wrapper-with-badge" style="flex: 1; max-width: 360px;">
-          <span class="filter-label-abs">بحث</span>
-          <div class="filter-select-wrapper" style="position: relative;">
-            <i class="fas fa-search filter-icon-main"></i>
-            <input type="text" id="yt-search" placeholder="ابحث عن قناة أو فيديو..." 
-                   style="width: 100%; padding: 10px 15px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem; font-family: var(--font-ui);"
-                   onkeyup="filterContentBySearch(this.value.toLowerCase())">
-          </div>
-        </div>
+    <!-- لوح التصنيفات -->
+    <div class="yt-cats-panel" id="ytCatsPanel">
+      <div class="yt-cats-panel-inner" id="ytCatChipsContainer"></div>
+    </div>
 
-        <div class="standalone-tabs" id="ytPageTabs">
-          <button class="standalone-tab active" data-tab-yt="channels">
-            <i class="fas fa-tv"></i>
-            <span>القنوات</span>
-            <span class="tab-badge" id="ytTabChannels">0</span>
-          </button>
-          <button class="standalone-tab" data-tab-yt="videos">
-            <i class="fas fa-play-circle"></i>
-            <span>الفيديوهات</span>
-            <span class="tab-badge" id="ytTabVideos">0</span>
-          </button>
-          <button class="standalone-tab" data-tab-yt="playlists">
-            <i class="fas fa-list"></i>
-            <span>قوائم التشغيل</span>
-            <span class="tab-badge" id="ytTabPlaylists">0</span>
-          </button>
-        </div>
+    <!-- نتائج البحث -->
+    <div class="yt-results-info" id="ytResultsInfo" style="display:none;">
+      <i class="fab fa-youtube" style="color:var(--accent-youtube);"></i>
+      <span>عدد النتائج:</span>
+      <span class="yt-results-count" id="ytResultsCount">0</span>
+    </div>
 
-        <!-- أزرار التصنيفات والمفضلة والاشتراكات -->
-        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-          <!-- زر التصنيفات المنسدل -->
-          <button class="yt-cats-toggle" id="ytCatsToggleBtn" onclick="toggleYtCatsPanel()">
-            <i class="fas fa-filter"></i>
-            <span>التصنيفات</span>
-            <i class="fas fa-chevron-down chevron"></i>
-          </button>
-
-          <!-- ترتيب -->
-          <div class="filter-select-wrapper" style="position:relative; min-width:140px;">
-            <i class="fas fa-sort-amount-down sort-icon-main"></i>
-            <select id="ytSortSelect" class="standalone-select">
-              <option value="default">الترتيب الافتراضي</option>
-              <option value="name-asc">الاسم (أ ← ي)</option>
-              <option value="name-desc">الاسم (ي ← أ)</option>
-            </select>
-            <i class="fas fa-chevron-down filter-arrow-icon"></i>
-          </div>
-
-          <!-- زر المفضلة -->
-          <button class="yt-fav-btn" id="ytFavBtn" onclick="openYtFavShelf()" title="المفضلة">
-            <i class="far fa-bookmark"></i>
-            <span>المفضلة</span>
-            <span class="yt-fav-count" id="ytFavCount" style="display:none;">0</span>
-          </button>
-
-          <!-- زر الاشتراكات -->
-          <button class="yt-subs-btn" id="ytSubsBtn" onclick="toggleYtSubsFilter()" title="الاشتراكات">
-            <i class="fas fa-bell"></i>
-            <span>الاشتراكات</span>
-            <span class="yt-subs-count" id="ytSubsCount" style="display:none;">0</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- لوح التصنيفات المنسدل -->
-      <div class="yt-cats-panel" id="ytCatsPanel">
-        <div class="yt-cats-panel-inner" id="ytCatChipsContainer">
-          <!-- تُبنى ديناميكياً -->
-        </div>
-      </div>
-
-      <div class="yt-results-info" id="ytResultsInfo" style="display:none;">
-        <i class="fab fa-youtube" style="color:var(--accent-youtube);"></i>
-        <span>عدد النتائج:</span>
-        <span class="yt-results-count" id="ytResultsCount">0</span>
-      </div>
-
-      <div id="ytPageGrid" class="standalone-grid media-grid-layout">
+    <!-- الشبكة -->
+    <div class="yt-content-area">
+      <div id="ytPageGrid" class="standalone-grid channels-view">
         <div class="media-loading">
           <div class="loading-spinner"></div>
           <span>جاري تحميل المحتوى...</span>
         </div>
       </div>
     </div>
+
   </div>
 
   <!-- رف مفضلة يوتيوب -->
@@ -8825,7 +8941,7 @@
         <div class="footer-column">
           <h4>روابط مهمة</h4>
           <ul class="footer-links">
-            <li><a href="javascript:void(0)" onclick="loadExternalPage('https://hawza.netlify.app/book/', 'navLibrary')"><i class="fas fa-globe"></i> الموقع الرسمي</a></li>
+            <li><a href="https://hawza.netlify.app/" onclick="loadExternalPage('https://hawza.netlify.app/book/', 'navLibrary')"><i class="fas fa-globe"></i> الموقع الرسمي</a></li>
             <li><a href="https://hawza.netlify.app/r-1447"><i class="fas fa-star"></i> المفكرة الرمضانية</a></li>
             <li><a href="https://forms.office.com/r/32uLvS3Ykx/" target="_blank"><i class="fas fa-poll"></i> استبيان تقييم المكتبة</a></li>
           </ul>
