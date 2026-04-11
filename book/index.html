@@ -3366,175 +3366,7 @@
     }
 
     /* Modal */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(248, 246, 243, 0.92);
-      backdrop-filter: blur(12px);
-      z-index: 2000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      opacity: 0;
-      visibility: hidden;
-      transition: var(--transition-smooth);
-    }
-
-    [data-theme="dark"] .modal-overlay {
-      background: rgba(10, 21, 23, 0.92);
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .modal-content {
-      background: var(--bg-secondary);
-      border-radius: var(--radius-xl);
-      max-width: 800px;
-      width: 100%;
-      max-height: 90vh;
-      overflow: hidden;
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      transform: scale(0.92);
-      transition: var(--transition-smooth);
-      border: 1px solid var(--border-medium);
-      box-shadow: none; border: 1px solid var(--border-strong);
-    }
-
-    .modal-overlay.active .modal-content {
-      transform: scale(1);
-    }
-
-    .modal-cover {
-      position: relative;
-      background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-primary) 100%);
-      min-height: 380px;
-    }
-
-    .modal-cover img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 14px;
-      left: 14px;
-      width: 40px;
-      height: 40px;
-      background: var(--bg-card);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-primary);
-      font-size: 1rem;
-      transition: var(--transition-fast);
-      z-index: 10;
-      border: 1px solid var(--border-subtle);
-    }
-
-    .modal-close:hover {
-      background: #c0392b;
-      color: white;
-      border-color: transparent;
-      transform: rotate(90deg);
-    }
-
-    .modal-details {
-      padding: 28px;
-      overflow-y: auto;
-      max-height: 90vh;
-    }
-
-    .modal-category {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 14px;
-      background: rgba(30, 107, 84, 0.12);
-      border-radius: var(--radius-full);
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--accent-emerald-light);
-      margin-bottom: 18px;
-    }
-
-    .modal-title {
-      font-family: var(--font-heading);
-      font-size: 1.5rem;
-      color: var(--text-primary);
-      margin-bottom: 18px;
-      line-height: 1.45;
-    }
-
-    .modal-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 22px;
-      padding-bottom: 22px;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-    }
-
-    .meta-item i {
-      color: var(--accent-gold);
-      width: 16px;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .modal-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 13px 24px;
-      border-radius: var(--radius-md);
-      font-weight: 700;
-      font-size: 0.9rem;
-      transition: var(--transition-fast);
-      text-decoration: none;
-    }
-
-    .modal-btn.primary {
-      flex: 1;
-      background: linear-gradient(135deg, var(--accent-gold-dark) 0%, var(--accent-gold) 100%);
-      color: var(--bg-primary);
-    }
-
-    .modal-btn.primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 20px rgba(160, 127, 58, 0.25);
-    }
-
-    .modal-btn.secondary {
-      background: var(--bg-card);
-      color: var(--text-primary);
-      border: 1px solid var(--border-subtle);
-    }
-
-    .modal-btn.secondary:hover {
-      border-color: var(--accent-gold);
-      color: var(--accent-gold);
-    }
+    /* ═══ Modal CSS defined in bottom-sheet section ═══ */
 
     /* Pagination */
     .pagination {
@@ -4614,15 +4446,6 @@
 
     /* شريط التحكم المستقل */
     .standalone-controls-bar {
-        <div class="filter-wrapper-with-badge" style="flex: 1; max-width: 400px;">
-          <span class="filter-label-abs">بحث</span>
-          <div class="filter-select-wrapper" style="position: relative;">
-            <i class="fas fa-search filter-icon-main"></i>
-            <input type="text" id="yt-search" placeholder="ابحث عن قناة أو فيديو..." 
-                   style="width: 100%; padding: 10px 15px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem; font-family: var(--font-ui);"
-                   onkeyup="filterContentBySearch(this.value.toLowerCase())">
-          </div>
-        </div>
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -4692,6 +4515,330 @@
       font-weight: 700;
       color: var(--accent-youtube);
       font-size: 1rem;
+    }
+
+    /* ── أزرار التصنيفات المنسدلة ليوتيوب ── */
+    .yt-cats-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-medium);
+      border-radius: var(--radius-full);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: var(--font-ui);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .yt-cats-toggle:hover,
+    .yt-cats-toggle.open {
+      background: rgba(255,0,0,0.07);
+      border-color: var(--accent-youtube);
+      color: var(--accent-youtube);
+    }
+    .yt-cats-toggle .chevron {
+      transition: transform 0.3s ease;
+      font-size: 0.75rem;
+    }
+    .yt-cats-toggle.open .chevron { transform: rotate(180deg); }
+
+    .yt-cats-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.38s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease, padding 0.3s ease;
+      opacity: 0;
+      padding: 0;
+    }
+    .yt-cats-panel.open {
+      max-height: 300px;
+      opacity: 1;
+      padding: 14px 0 6px;
+    }
+    .yt-cats-panel-inner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .yt-cat-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      font-weight: 500;
+      font-family: var(--font-ui);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+    }
+    .yt-cat-chip:hover {
+      border-color: var(--accent-youtube);
+      color: var(--accent-youtube);
+      background: rgba(255,0,0,0.06);
+    }
+    .yt-cat-chip.active {
+      background: rgba(255,0,0,0.1);
+      border-color: var(--accent-youtube);
+      color: var(--accent-youtube);
+      font-weight: 700;
+    }
+    .yt-cat-chip .yt-cat-count {
+      padding: 1px 6px;
+      background: rgba(255,0,0,0.12);
+      border-radius: 9px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--accent-youtube);
+    }
+
+    /* ── زر المفضلة والاشتراك على البطاقات ── */
+    .media-card-actions {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 5;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .media-card:hover .media-card-actions { opacity: 1; }
+    .media-card { position: relative; }
+
+    .mc-action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.6);
+      border: 1.5px solid rgba(255,255,255,0.2);
+      color: #fff;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      font-family: var(--font-ui);
+      backdrop-filter: blur(4px);
+    }
+    .mc-action-btn:hover { transform: scale(1.12); }
+    .mc-action-btn.fav-btn:hover,
+    .mc-action-btn.fav-btn.active { background: rgba(255,180,0,0.85); border-color: #ffd700; color: #fff; }
+    .mc-action-btn.sub-btn:hover,
+    .mc-action-btn.sub-btn.active { background: rgba(255,0,0,0.85); border-color: var(--accent-youtube); color: #fff; }
+    .mc-action-btn.sub-btn.active { background: rgba(50,200,100,0.85); border-color: #2ecc71; }
+
+    /* شارة "جديد" للمقاطع الأولى */
+    .yt-new-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--accent-youtube);
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      z-index: 5;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* شارة "مشترك" على القنوات */
+    .yt-subscribed-badge {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(46,204,113,0.9);
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      z-index: 5;
+    }
+
+    /* ── رف مفضلة يوتيوب ── */
+    .yt-fav-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      display: flex;
+      align-items: flex-end;
+    }
+    .yt-fav-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .yt-fav-shelf {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border-radius: 24px 24px 0 0;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.38s cubic-bezier(0.4,0,0.2,1);
+      overflow: hidden;
+    }
+    .yt-fav-overlay.active .yt-fav-shelf { transform: translateY(0); }
+    .yt-fav-shelf-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .yt-fav-shelf-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .yt-fav-shelf-title i { color: var(--accent-youtube); }
+    .yt-fav-shelf-close {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--bg-tertiary);
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-family: var(--font-ui);
+    }
+    .yt-fav-shelf-close:hover { background: var(--bg-card-hover); }
+    .yt-fav-shelf-body { overflow-y: auto; padding: 12px 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+    .yt-fav-shelf-empty {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .yt-fav-shelf-empty i { font-size: 2.5rem; color: rgba(255,0,0,0.25); }
+    .yt-fav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .yt-fav-item:hover { background: var(--bg-card-hover); }
+    .yt-fav-item-thumb {
+      width: 56px;
+      height: 40px;
+      border-radius: 6px;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: var(--bg-tertiary);
+    }
+    .yt-fav-item-info { flex: 1; min-width: 0; }
+    .yt-fav-item-title { font-size: 0.82rem; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .yt-fav-item-type { font-size: 0.7rem; color: var(--accent-youtube); margin-top: 2px; }
+    .yt-fav-item-remove {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: none; border: none;
+      color: var(--text-muted); font-size: 0.75rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: color 0.15s;
+      font-family: var(--font-ui);
+    }
+    .yt-fav-item-remove:hover { color: var(--accent-youtube); }
+
+    /* زر المفضلة في شريط التحكم */
+    .yt-fav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 16px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-medium);
+      border-radius: var(--radius-full);
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: var(--font-ui);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      white-space: nowrap;
+    }
+    .yt-fav-btn:hover { border-color: #ffd700; color: #c9a050; background: rgba(255,215,0,0.07); }
+    .yt-fav-btn.has-items { border-color: #ffd700; color: #c9a050; }
+    .yt-fav-btn .yt-fav-count {
+      position: absolute;
+      top: -6px;
+      left: -6px;
+      background: var(--accent-youtube);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 0.6rem;
+      font-weight: 800;
+      width: 18px; height: 18px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* زر الاشتراكات */
+    .yt-subs-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 16px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-medium);
+      border-radius: var(--radius-full);
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: var(--font-ui);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      white-space: nowrap;
+    }
+    .yt-subs-btn:hover { border-color: #2ecc71; color: #2ecc71; background: rgba(46,204,113,0.07); }
+    .yt-subs-btn.has-subs { border-color: #2ecc71; color: #27ae60; }
+    .yt-subs-btn .yt-subs-count {
+      position: absolute;
+      top: -6px;
+      left: -6px;
+      background: #2ecc71;
+      color: #fff;
+      border-radius: 50%;
+      font-size: 0.6rem;
+      font-weight: 800;
+      width: 18px; height: 18px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* في الموبايل إخفاء نص بعض الأزرار */
+    @media (max-width: 600px) {
+      .yt-fav-btn span, .yt-subs-btn span { display: none; }
+      .yt-fav-btn, .yt-subs-btn { padding: 9px 11px; }
     }
 
     .folders-grid-layout {
@@ -4807,15 +4954,6 @@
       .hero-banner-icon-wrapper { width: 60px; height: 60px; font-size: 1.8rem; }
       
       .standalone-controls-bar { flex-direction: column; align-items: stretch; }
-        <div class="filter-wrapper-with-badge" style="flex: 1; max-width: 400px;">
-          <span class="filter-label-abs">بحث</span>
-          <div class="filter-select-wrapper" style="position: relative;">
-            <i class="fas fa-search filter-icon-main"></i>
-            <input type="text" id="yt-search" placeholder="ابحث عن قناة أو فيديو..." 
-                   style="width: 100%; padding: 10px 15px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem; font-family: var(--font-ui);"
-                   onkeyup="filterContentBySearch(this.value.toLowerCase())">
-          </div>
-        </div>
       .standalone-tabs { overflow-x: auto; padding: 4px; }
       .standalone-tab { white-space: nowrap; padding: 8px 15px; }
       
@@ -5316,15 +5454,6 @@
 
     /* صفحة اليوتيوب - شريط التحكم عمودي */
     .standalone-controls-bar {
-        <div class="filter-wrapper-with-badge" style="flex: 1; max-width: 400px;">
-          <span class="filter-label-abs">بحث</span>
-          <div class="filter-select-wrapper" style="position: relative;">
-            <i class="fas fa-search filter-icon-main"></i>
-            <input type="text" id="yt-search" placeholder="ابحث عن قناة أو فيديو..." 
-                   style="width: 100%; padding: 10px 15px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem; font-family: var(--font-ui);"
-                   onkeyup="filterContentBySearch(this.value.toLowerCase())">
-          </div>
-        </div>
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -5542,15 +5671,6 @@
     /* تجاوب الهاتف: التبويبات بسطر والفلاتر بسطر تحته */
     @media (max-width: 768px) {
       .standalone-controls-bar {
-        <div class="filter-wrapper-with-badge" style="flex: 1; max-width: 400px;">
-          <span class="filter-label-abs">بحث</span>
-          <div class="filter-select-wrapper" style="position: relative;">
-            <i class="fas fa-search filter-icon-main"></i>
-            <input type="text" id="yt-search" placeholder="ابحث عن قناة أو فيديو..." 
-                   style="width: 100%; padding: 10px 15px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem; font-family: var(--font-ui);"
-                   onkeyup="filterContentBySearch(this.value.toLowerCase())">
-          </div>
-        </div>
         padding: 14px;
         gap: 10px;
         flex-direction: column;
@@ -5910,12 +6030,7 @@
       
       .books-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
       
-      .modal-content {
-        grid-template-columns: 1fr;
-        max-height: 95vh;
-      }
-      
-      .modal-cover { min-height: 200px; }
+      /* modal responsive - bottom-sheet block */
       
       .footer-content { grid-template-columns: 1fr; gap: 30px; }
 
@@ -6020,10 +6135,7 @@
       .pagination { gap: 6px; }
       .page-btn { min-width: 36px; height: 36px; font-size: 0.8rem; }
       
-      .modal-details { padding: 20px; }
-      .modal-title { font-size: 1.2rem; }
-      .modal-actions { flex-direction: column; }
-      .modal-btn { width: 100%; }
+      /* modal responsive - bottom-sheet block */
       
       .toast-container { left: 10px; right: 10px; }
       .toast { max-width: 100%; }
@@ -6829,571 +6941,531 @@
     ════════════════════════════════════════════════════════════════════════ */
 
     /* ── Premium Book Modal (Glassmorphism) ── */
+    /* ════════════════════════════════════════════════════════════════
+       بطاقة الكتاب – تصميم index-1 cards (Bottom Sheet)
+       ════════════════════════════════════════════════════════════════ */
+
+    /* ── Overlay ── */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(15, 23, 42, 0.62);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
       z-index: 9999;
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: center;
-      padding: 20px;
       opacity: 0;
       visibility: hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0.38s cubic-bezier(0.16, 1, 0.3, 1);
     }
+    .modal-overlay.active { opacity: 1; visibility: visible; }
 
-    .modal-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
+    /* ── Sheet ── */
     .modal-content {
       background: var(--bg-card);
-      border-radius: 24px;
-      max-width: 900px;
       width: 100%;
-      max-height: 90vh;
-      overflow: hidden;
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      transform: scale(0.9) translateY(20px);
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      border: 1px solid var(--border-medium);
-      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.4);
-    }
-
-    .modal-overlay.active .modal-content {
-      transform: scale(1) translateY(0);
-    }
-
-    .modal-cover {
-      position: relative;
-      background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-primary) 100%);
-      min-height: 400px;
+      max-width: 600px;
+      height: 94vh;
+      border-radius: 32px 32px 0 0;
+      box-shadow: 0 -12px 48px rgba(0,0,0,0.18);
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
+      position: relative;
+      transform: translateY(100%);
+      transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
       overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      border-bottom: none;
+    }
+    .modal-overlay.active .modal-content { transform: translateY(0); }
+
+    /* ── Drag Handle ── */
+    .modal-handle {
+      width: 40px; height: 5px;
+      background: var(--border-medium);
+      border-radius: 10px;
+      margin: 12px auto 0;
+      flex-shrink: 0;
     }
 
-    .modal-cover img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
-
-    .modal-cover:hover img {
-      transform: scale(1.05);
-    }
-
+    /* ── Close Button (absolute circle) ── */
     .modal-close {
       position: absolute;
-      top: 16px;
-      left: 16px;
-      width: 44px;
-      height: 44px;
-      background: rgba(0, 0, 0, 0.5);
+      top: 16px; left: 20px;
+      width: 36px; height: 36px;
       border-radius: 50%;
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: 0.2s ease;
+      z-index: 20;
+    }
+    .modal-close:active, .modal-close:hover {
+      transform: scale(0.9);
+      background: #fee2e2;
+      color: #ef4444;
+      border-color: #fca5a5;
+    }
+
+    /* ── Header (Cover + Info) ── */
+    .modal-header-strip {
       display: flex;
-      align-items: center;
+      gap: 16px;
+      padding: 14px 22px 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    /* غلاف الكتاب المجسم */
+    .modal-thumb-wrap {
+      width: 80px; height: 115px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: var(--bg-tertiary);
+      box-shadow: 5px 10px 22px rgba(0,0,0,0.14),
+                  0 0 0 1px rgba(0,0,0,0.06) inset;
+    }
+    .modal-thumb-img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+    .modal-thumb-wrap .book-no-cover {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 5px; font-size: 0.5rem;
+      color: var(--text-muted); text-align: center;
+      padding: 6px; background: var(--bg-tertiary);
+    }
+    .modal-thumb-wrap .book-no-cover i {
+      font-size: 1.5rem; color: var(--accent-gold);
+    }
+
+    /* معلومات الكتاب */
+    .modal-header-info {
+      display: flex; flex-direction: column;
       justify-content: center;
-      color: white;
-      font-size: 1.1rem;
-      transition: all 0.3s ease;
-      z-index: 10;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(8px);
+      flex: 1; min-width: 0;
+      padding-left: 44px; /* مساحة لزر الإغلاق */
     }
 
-    .modal-close:hover {
-      background: #e74c3c;
-      transform: rotate(90deg) scale(1.1);
-    }
-
-    .modal-details {
-      padding: 32px;
-      overflow-y: auto;
-      max-height: 90vh;
-      display: flex;
-      flex-direction: column;
-    }
-
+    /* شارة التصنيف */
     .modal-category {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      background: rgba(160, 127, 58, 0.12);
-      border-radius: var(--radius-full);
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--accent-gold);
-      margin-bottom: 16px;
-      width: fit-content;
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.65rem; font-weight: 800;
+      color: var(--accent-gold-dark);
+      background: rgba(160, 127, 58, 0.13);
+      padding: 4px 10px; border-radius: 20px;
+      margin-bottom: 8px; width: fit-content;
+      letter-spacing: 0.2px;
     }
 
+    /* عنوان الكتاب */
     .modal-title {
       font-family: var(--font-heading);
-      font-size: 1.6rem;
+      font-size: 1.18rem; font-weight: 700;
       color: var(--text-primary);
-      margin-bottom: 20px;
-      line-height: 1.4;
+      line-height: 1.38; margin-bottom: 8px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
+    /* ميتا */
     .modal-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 24px;
-      padding-bottom: 24px;
-      border-bottom: 1px solid var(--border-subtle);
+      display: flex; align-items: center;
+      gap: 10px; flex-wrap: wrap;
+      margin: 0; padding: 0; border: none;
     }
-
     .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      padding: 8px 14px;
+      display: flex; align-items: center;
+      gap: 4px; font-size: 0.74rem;
+      color: var(--text-muted); font-weight: 600;
+      background: none; padding: 0; border-radius: 0;
+    }
+    .meta-item i { color: var(--accent-gold); width: auto; font-size: 0.7rem; }
+    .meta-sep { color: var(--border-medium); }
+
+    /* ── Preview Area (flex-grow) ── */
+    .modal-preview-main {
+      flex: 1; padding: 14px 18px;
       background: var(--bg-secondary);
-      border-radius: var(--radius-md);
+      min-height: 0; display: flex; flex-direction: column;
     }
-
-    .meta-item i {
-      color: var(--accent-gold);
-      width: 18px;
-    }
-
     .modal-preview-container {
-      width: 100%;
-      height: 300px;
-      border-radius: var(--radius-lg);
-      overflow: hidden;
+      flex: 1; width: 100%;
+      border-radius: 20px; overflow: hidden;
       border: 1px solid var(--border-subtle);
-      background: var(--bg-secondary);
-      margin-bottom: 20px;
+      background: var(--bg-card);
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.03);
+      min-height: 0;
     }
-
     .modal-preview-container iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
+      width: 100%; height: 100%;
+      border: none; display: block;
     }
 
-    .modal-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: auto;
+    /* ── Bottom Action Bar ── */
+    .modal-action-bar {
+      display: flex; align-items: center;
+      gap: 10px; padding: 14px 18px 28px;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border-subtle);
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.04);
+      flex-shrink: 0;
     }
 
-    .modal-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+    /* زر التحميل الرئيسي */
+    .modal-btn-download {
+      flex: 1; height: 54px;
+      display: flex; align-items: center; justify-content: center;
       gap: 10px;
-      padding: 14px 24px;
-      border-radius: var(--radius-md);
-      font-weight: 700;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
+      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-dark) 100%);
+      color: #fff; border-radius: 16px;
+      font-weight: 700; font-size: 0.95rem;
       text-decoration: none;
-      flex: 1;
-      min-width: 140px;
+      box-shadow: 0 8px 24px rgba(160,127,58,0.32);
+      transition: 0.2s cubic-bezier(0.2,0.8,0.2,1);
+      border: none; cursor: pointer;
+    }
+    .modal-btn-download:active {
+      transform: scale(0.97);
+      box-shadow: 0 3px 10px rgba(160,127,58,0.2);
     }
 
-    .modal-btn.primary {
-      background: linear-gradient(135deg, var(--accent-gold-dark) 0%, var(--accent-gold) 100%);
-      color: var(--bg-primary);
-      border: none;
-    }
-
-    .modal-btn.primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(160, 127, 58, 0.35);
-    }
-
-    .modal-btn.secondary {
+    /* أزرار الأيقونة */
+    .modal-btn-icon {
+      width: 54px; height: 54px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
       background: var(--bg-secondary);
-      color: var(--text-primary);
-      border: 1px solid var(--border-medium);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px; font-size: 1.2rem;
+      text-decoration: none;
+      transition: 0.2s ease; cursor: pointer;
     }
+    .modal-btn-icon:active { transform: scale(0.93); background: var(--bg-tertiary); }
+    .modal-btn-icon:hover  { border-color: var(--accent-gold); color: var(--accent-gold); }
 
-    .modal-btn.secondary:hover {
-      border-color: var(--accent-gold);
+    /* زر الحفظ - محفوظ */
+    .modal-btn-icon.is-saved {
       color: var(--accent-gold);
+      border-color: var(--accent-gold);
+      background: rgba(160,127,58,0.1);
+    }
+    .modal-btn-icon.is-saved i { font-weight: 900; }
+
+    /* إخفاء عناصر HTML القديمة */
+    .modal-cover   { display: none !important; }
+    .modal-details { display: none !important; }
+    .modal-actions { display: none !important; }
+
+    /* ── Dark Mode ── */
+    [data-theme="dark"] .modal-overlay { background: rgba(5,12,20,0.75); }
+    [data-theme="dark"] .modal-content {
       background: var(--bg-card);
+      border-color: var(--border-subtle);
+      box-shadow: 0 -12px 48px rgba(0,0,0,0.4);
+    }
+    [data-theme="dark"] .modal-close {
+      background: var(--bg-tertiary); border-color: var(--border-medium);
+    }
+    [data-theme="dark"] .modal-close:hover {
+      background: rgba(239,68,68,0.18); color: #f87171; border-color: rgba(239,68,68,0.4);
+    }
+    [data-theme="dark"] .modal-header-strip { border-bottom-color: var(--border-subtle); }
+    [data-theme="dark"] .modal-preview-main { background: var(--bg-tertiary); }
+    [data-theme="dark"] .modal-preview-container { background: var(--bg-secondary); }
+    [data-theme="dark"] .modal-action-bar {
+      background: var(--bg-card); border-top-color: var(--border-subtle);
+    }
+    [data-theme="dark"] .modal-btn-icon {
+      background: var(--bg-tertiary); border-color: var(--border-subtle);
     }
 
-    /* ── Bento Box Design for Haqiba Page ── */
-    .haqiba-bento-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 16px;
-      padding: 24px 0;
-    }
-
-    @media (min-width: 768px) {
-      .haqiba-bento-grid {
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      }
-    }
-
-    .haqiba-bento-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 20px;
-      padding: 24px 16px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .haqiba-bento-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, transparent 60%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .haqiba-bento-card:hover::before {
-      opacity: 1;
-    }
-
-    .haqiba-bento-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      border-color: rgba(16, 185, 129, 0.4);
-      box-shadow: 0 16px 40px rgba(16, 185, 129, 0.15);
-    }
-
-    .haqiba-bento-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
-      z-index: 1;
-    }
-
-    .haqiba-bento-card:hover .haqiba-bento-icon {
-      transform: scale(1.15) rotate(-5deg);
-    }
-
-    .haqiba-bento-icon.folder {
-      background: rgba(16, 185, 129, 0.12);
-      color: #10b981;
-    }
-
-    .haqiba-bento-icon.dua {
-      background: rgba(245, 158, 11, 0.12);
-      color: #f59e0b;
-    }
-
-    .haqiba-bento-icon.quran {
-      background: rgba(139, 92, 246, 0.12);
-      color: #8b5cf6;
-    }
-
-    .haqiba-bento-icon.file {
-      background: rgba(59, 130, 246, 0.12);
-      color: #3b82f6;
-    }
-
-    .haqiba-bento-name {
-      font-family: var(--font-heading);
-      font-weight: 700;
-      font-size: 1rem;
-      color: var(--text-primary);
-      line-height: 1.4;
-      position: relative;
-      z-index: 1;
-    }
-
-    .haqiba-bento-badge {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px 10px;
-      border-radius: var(--radius-full);
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-    }
-
-    .haqiba-bento-badge.folder {
-      background: rgba(16, 185, 129, 0.12);
-      color: #059669;
-      border: 1px solid rgba(16, 185, 129, 0.25);
-    }
-
-    .haqiba-bento-badge.dua {
-      background: rgba(245, 158, 11, 0.12);
-      color: #d97706;
-      border: 1px solid rgba(245, 158, 11, 0.25);
-    }
-
-    .haqiba-bento-badge.quran {
-      background: rgba(139, 92, 246, 0.12);
-      color: #7c3aed;
-      border: 1px solid rgba(139, 92, 246, 0.25);
-    }
-
-    .haqiba-bento-badge.file {
-      background: rgba(59, 130, 246, 0.12);
-      color: #2563eb;
-      border: 1px solid rgba(59, 130, 246, 0.25);
-    }
-
-    /* ── Notebook Style for Summaries Page ── */
-    .summaries-notebook-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 20px;
-      padding: 24px 0;
-    }
-
-    @media (min-width: 768px) {
-      .summaries-notebook-grid {
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      }
-    }
-
-    .summaries-notebook-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px 24px 24px 12px;
-      padding: 0;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.05);
-    }
-
-    .summaries-notebook-card::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 8px;
-      background: linear-gradient(180deg, #3b82f6 0%, #1e40af 100%);
-      border-radius: 12px 0 0 12px;
-    }
-
-    .summaries-notebook-card:hover {
-      transform: translateY(-6px) rotate(-1deg);
-      border-color: rgba(59, 130, 246, 0.4);
-      box-shadow: 4px 12px 32px rgba(59, 130, 246, 0.15);
-    }
-
-    .summaries-notebook-header {
-      padding: 20px 20px 12px 28px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      border-bottom: 1px dashed var(--border-subtle);
-    }
-
-    .summaries-notebook-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      transition: all 0.35s ease;
-    }
-
-    .summaries-notebook-icon.folder {
-      background: rgba(59, 130, 246, 0.12);
-      color: #3b82f6;
-    }
-
-    .summaries-notebook-icon.doc {
-      background: rgba(245, 158, 11, 0.12);
-      color: #f59e0b;
-    }
-
-    .summaries-notebook-icon.pdf {
-      background: rgba(239, 68, 68, 0.12);
-      color: #ef4444;
-    }
-
-    .summaries-notebook-card:hover .summaries-notebook-icon {
-      transform: scale(1.1);
-    }
-
-    .summaries-notebook-body {
-      padding: 16px 20px 20px 28px;
-      flex: 1;
-    }
-
-    .summaries-notebook-name {
-      font-family: var(--font-heading);
-      font-weight: 700;
-      font-size: 1.05rem;
-      color: var(--text-primary);
-      line-height: 1.5;
-      margin-bottom: 8px;
-    }
-
-    .summaries-notebook-meta {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .summaries-notebook-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 3px 10px;
-      border-radius: var(--radius-full);
-      font-size: 0.65rem;
-      font-weight: 700;
-    }
-
-    .summaries-notebook-badge.folder {
-      background: rgba(59, 130, 246, 0.12);
-      color: #3b82f6;
-    }
-
-    .summaries-notebook-badge.doc {
-      background: rgba(245, 158, 11, 0.12);
-      color: #d97706;
-    }
-
-    .summaries-notebook-badge.pdf {
-      background: rgba(239, 68, 68, 0.12);
-      color: #dc2626;
-    }
-
-    /* ── Optimized Image Loading ── */
-    .book-cover {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-      background: var(--bg-secondary);
-      /* Use smaller thumbnail size for faster loading */
-      image-rendering: -webkit-optimize-contrast;
-      image-rendering: crisp-edges;
-    }
-
-    .book-cover-wrapper {
-      position: relative;
-      padding-top: 140%;
-      overflow: hidden;
-      background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
-      border-radius: var(--radius-md) var(--radius-md) 0 0;
-    }
-
-    /* Skeleton loading for images */
-    .book-cover-wrapper.loading::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-shine) 50%, var(--skeleton-base) 75%);
-      background-size: 200% 100%;
-      animation: skeleton-shimmer 1.5s infinite;
-    }
-
-    /* ── Responsive Modal ── */
-    @media (max-width: 768px) {
+    /* ══ DESKTOP (≥769px) ══ */
+    @media (min-width: 769px) {
+      .modal-overlay { align-items: center; padding: 20px; }
       .modal-content {
-        grid-template-columns: 1fr;
-        max-height: 95vh;
-        border-radius: 20px;
+        height: 88vh; border-radius: 28px;
+        border-bottom: 1px solid var(--border-subtle);
+        flex-direction: row; max-width: 960px;
+        transform: scale(0.9) translateY(20px);
+        transition: transform 0.42s cubic-bezier(0.34,1.56,0.64,1);
+        overflow: hidden;
       }
+      .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+      .modal-handle { display: none; }
 
-      .modal-cover {
-        min-height: 200px;
-        max-height: 250px;
+      /* عمود يمين: غلاف + معلومات + أزرار */
+      .modal-header-strip {
+        flex-direction: column; align-items: stretch;
+        width: 270px; flex-shrink: 0;
+        border-bottom: none;
+        border-left: 1px solid var(--border-subtle);
+        padding: 28px 22px; gap: 16px;
+        overflow-y: auto;
       }
-
-      .modal-details {
-        padding: 20px;
+      .modal-thumb-wrap {
+        width: 100%; height: 210px; border-radius: 14px;
       }
-
-      .modal-title {
-        font-size: 1.3rem;
+      .modal-header-info {
+        padding-left: 0; flex: 0 0 auto;
       }
+      .modal-title { font-size: 1.22rem; -webkit-line-clamp: 3; }
+      .modal-category { font-size: 0.72rem; }
+      .meta-item { font-size: 0.8rem; }
+      .modal-close { top: 18px; left: 18px; }
 
-      .modal-preview-container {
-        height: 200px;
+      /* أزرار الديسكتوب: رأسية بنص */
+      .modal-action-bar {
+        flex-direction: column; gap: 8px;
+        padding: 0 22px 28px; border-top: none;
+        border-top: 1px solid var(--border-subtle);
+        box-shadow: none; margin-top: auto;
       }
-
-      .modal-actions {
-        flex-direction: column;
-      }
-
-      .modal-btn {
-        width: 100%;
-      }
-
-      .haqiba-bento-grid,
-      .summaries-notebook-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-      }
-
-      .haqiba-bento-card,
-      .summaries-notebook-card {
-        padding: 16px 12px;
-      }
-
-      .haqiba-bento-icon,
-      .summaries-notebook-icon {
-        width: 48px;
-        height: 48px;
-        font-size: 1.3rem;
-      }
-
-      .haqiba-bento-name,
-      .summaries-notebook-name {
+      .modal-btn-download {
+        width: 100%; height: 48px; border-radius: 14px;
         font-size: 0.9rem;
       }
-    }
-
-    @media (max-width: 480px) {
-      .haqiba-bento-grid,
-      .summaries-notebook-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+      .modal-btn-icon {
+        width: 100%; height: 44px; border-radius: 14px;
+        font-size: 0.9rem; gap: 10px;
+        justify-content: flex-start; padding: 0 16px;
+      }
+      .modal-btn-icon::after {
+        content: attr(data-label);
+        font-size: 0.85rem; font-weight: 600;
+        font-family: var(--font-body);
       }
 
-      .modal-preview-container {
-        height: 180px;
+      /* عمود يسار: معاينة كاملة */
+      .modal-preview-main {
+        flex: 1; padding: 22px; display: flex;
+        flex-direction: column;
       }
+      .modal-preview-container { border-radius: 16px; }
     }
+
+    /* ══ TABLET ADJUSTMENT ══ */
+    @media (max-width: 600px) {
+      .modal-title { font-size: 1.05rem; }
+      .modal-action-bar { padding: 12px 14px 24px; gap: 8px; }
+      .modal-btn-download { height: 50px; font-size: 0.9rem; }
+      .modal-btn-icon { width: 50px; height: 50px; font-size: 1.1rem; }
+    }
+
+
+    /* ════════════════════════════════════════════════
+       زر المفضلة + رف المفضلة
+       ════════════════════════════════════════════════ */
+
+    /* صف أزرار رأس التصنيفات */
+    .categories-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .categories-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* زر رف المفضلة */
+    .fav-shelf-btn {
+      position: relative;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-size: 1.15rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: 0.22s ease;
+      flex-shrink: 0;
+    }
+    .fav-shelf-btn:hover {
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+      background: rgba(160,127,58,0.08);
+    }
+    .fav-shelf-btn.has-items {
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+    }
+    .fav-shelf-count {
+      position: absolute;
+      top: -5px; left: -5px;
+      min-width: 20px; height: 20px;
+      background: var(--accent-gold);
+      color: #fff; border-radius: 10px;
+      font-size: 0.65rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 5px;
+      box-shadow: 0 2px 6px rgba(160,127,58,0.4);
+    }
+
+    /* ── رف المفضلة (Bottom Sheet) ── */
+    .fav-shelf-overlay {
+      position: fixed; inset: 0;
+      background: rgba(15,23,42,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 9998;
+      display: flex; align-items: flex-end; justify-content: center;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+    .fav-shelf-overlay.active { opacity: 1; visibility: visible; }
+
+    .fav-shelf {
+      background: var(--bg-card);
+      width: 100%; max-width: 600px;
+      max-height: 88vh;
+      border-radius: 32px 32px 0 0;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.16);
+      display: flex; flex-direction: column;
+      position: relative;
+      transform: translateY(100%);
+      transition: transform 0.48s cubic-bezier(0.2,0.8,0.2,1);
+      border: 1px solid var(--border-subtle);
+      border-bottom: none;
+      overflow: hidden;
+    }
+    .fav-shelf-overlay.active .fav-shelf { transform: translateY(0); }
+
+    .fav-shelf-handle {
+      width: 40px; height: 5px;
+      background: var(--border-medium);
+      border-radius: 10px;
+      margin: 12px auto 0; flex-shrink: 0;
+    }
+
+    .fav-shelf-close {
+      position: absolute; top: 16px; left: 20px;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary); font-size: 0.9rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: 0.2s ease; z-index: 5;
+    }
+    .fav-shelf-close:hover { background: #fee2e2; color: #ef4444; }
+
+    .fav-shelf-header {
+      padding: 14px 22px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      flex-shrink: 0;
+    }
+    .fav-shelf-title-row {
+      display: flex; align-items: center; gap: 14px;
+      padding-left: 44px;
+    }
+    .fav-shelf-icon {
+      width: 46px; height: 46px; border-radius: 14px;
+      background: rgba(160,127,58,0.12);
+      color: var(--accent-gold);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .fav-shelf-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem; font-weight: 700;
+      color: var(--text-primary); margin-bottom: 3px;
+    }
+    .fav-shelf-sub {
+      font-size: 0.78rem; color: var(--text-muted); font-weight: 500;
+    }
+
+    .fav-shelf-body {
+      flex: 1; overflow-y: auto;
+      padding: 14px 16px 20px;
+    }
+
+    .fav-shelf-empty {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 10px; padding: 50px 20px;
+      color: var(--text-muted); text-align: center;
+    }
+    .fav-shelf-empty i {
+      font-size: 2.8rem; color: var(--border-medium);
+      margin-bottom: 6px;
+    }
+    .fav-shelf-empty p { font-size: 1rem; font-weight: 600; color: var(--text-secondary); }
+    .fav-shelf-empty span { font-size: 0.82rem; max-width: 240px; line-height: 1.5; }
+
+    /* بطاقة كتاب في رف المفضلة */
+    .fav-book-card {
+      display: flex; align-items: center;
+      gap: 14px; padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-secondary);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+    .fav-book-card:hover {
+      border-color: var(--accent-gold);
+      background: rgba(160,127,58,0.05);
+    }
+    .fav-book-card:active { transform: scale(0.98); }
+
+    .fav-book-cover {
+      width: 46px; height: 64px; border-radius: 7px;
+      object-fit: cover; flex-shrink: 0;
+      background: var(--bg-tertiary);
+      box-shadow: 3px 5px 12px rgba(0,0,0,0.1);
+    }
+    .fav-book-info { flex: 1; min-width: 0; }
+    .fav-book-name {
+      font-size: 0.88rem; font-weight: 700;
+      color: var(--text-primary); line-height: 1.35;
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+      margin-bottom: 4px;
+    }
+    .fav-book-cat {
+      font-size: 0.7rem; color: var(--accent-gold);
+      font-weight: 600;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .fav-book-remove {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: transparent; border: none;
+      color: var(--text-muted); font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: 0.18s ease; flex-shrink: 0;
+    }
+    .fav-book-remove:hover { color: #ef4444; background: #fee2e2; }
+
+    /* desktop */
+    @media (min-width: 769px) {
+      .fav-shelf-overlay { align-items: center; padding: 20px; }
+      .fav-shelf {
+        border-radius: 28px; border-bottom: 1px solid var(--border-subtle);
+        transform: scale(0.9) translateY(20px);
+        transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        max-height: 80vh;
+      }
+      .fav-shelf-overlay.active .fav-shelf { transform: scale(1) translateY(0); }
+      .fav-shelf-handle { display: none; }
+    }
+
 
     /* Iframe Container Styles */
     
@@ -7496,6 +7568,218 @@
             padding-bottom: max(0px, env(safe-area-inset-bottom));
         }
     }
+
+  /* ════════════════════════════════════════════════════
+     صفحة يوتيوب - تجاوب شامل
+  ════════════════════════════════════════════════════ */
+
+  /* الصفحة الكاملة */
+  #page-youtube .standalone-page-wrapper,
+  #page-youtube {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  /* Hero Banner mobile */
+  @media (max-width: 480px) {
+    #page-youtube .page-hero-banner {
+      padding: calc(var(--header-height-mobile) + 20px) 0 20px;
+    }
+    #page-youtube .hero-banner-title { font-size: 1.5rem; }
+    #page-youtube .hero-banner-subtitle { font-size: 0.82rem; }
+    #page-youtube .hero-banner-icon-wrapper { width: 52px; height: 52px; font-size: 1.5rem; }
+    #page-youtube .hero-banner-content { gap: 12px; }
+  }
+
+  /* Controls bar layout */
+  #page-youtube .standalone-controls-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px;
+    margin-bottom: 20px;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-subtle);
+  }
+
+  /* Search full width */
+  #page-youtube .filter-wrapper-with-badge {
+    width: 100%;
+    max-width: 100% !important;
+  }
+
+  #page-youtube .filter-wrapper-with-badge .filter-select-wrapper input,
+  #page-youtube #yt-search {
+    width: 100% !important;
+    min-width: 0;
+  }
+
+  /* Tabs always horizontal scrollable */
+  #page-youtube .standalone-tabs {
+    display: flex;
+    flex-direction: row !important;
+    gap: 8px;
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 2px;
+    flex-wrap: nowrap;
+  }
+
+  #page-youtube .standalone-tabs::-webkit-scrollbar { display: none; }
+
+  #page-youtube .standalone-tab {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 9px 16px;
+    font-size: 0.85rem;
+  }
+
+  /* Actions row: فلاتر واشتراكات */
+  #page-youtube .standalone-controls-bar > div:last-child {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  /* Sort select full stretch on small */
+  @media (max-width: 480px) {
+    #page-youtube .standalone-select {
+      min-width: 0;
+      flex: 1;
+      font-size: 0.8rem;
+    }
+    #page-youtube .yt-cats-toggle { font-size: 0.8rem; padding: 8px 12px; }
+    #page-youtube .yt-fav-btn span,
+    #page-youtube .yt-subs-btn span { display: none; }
+    #page-youtube .yt-fav-btn,
+    #page-youtube .yt-subs-btn { padding: 8px 10px; }
+  }
+
+  /* Cats panel full width */
+  #page-youtube .yt-cats-panel {
+    width: 100%;
+  }
+
+  /* Channels grid responsive */
+  #page-youtube .standalone-grid.channels-view {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+  }
+
+  @media (max-width: 600px) {
+    #page-youtube .standalone-grid.channels-view {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    #page-youtube .standalone-grid.channels-view {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+  }
+
+  /* Channel card thumb size on mobile */
+  @media (max-width: 480px) {
+    #page-youtube .media-card.channel-card .media-thumbnail {
+      width: 86px !important;
+      height: 86px !important;
+    }
+    #page-youtube .media-card.channel-card .media-title {
+      font-size: 0.76rem;
+    }
+  }
+
+  /* Videos grid responsive */
+  #page-youtube .standalone-grid.videos-view {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  @media (min-width: 480px) {
+    #page-youtube .standalone-grid.videos-view {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    #page-youtube .standalone-grid.videos-view {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    #page-youtube .standalone-grid.videos-view {
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+  }
+
+  /* Container padding on small screens */
+  @media (max-width: 480px) {
+    #page-youtube .page-content-area {
+      padding-left: 12px !important;
+      padding-right: 12px !important;
+    }
+    #page-youtube .standalone-controls-bar {
+      padding: 12px;
+      gap: 10px;
+      border-radius: var(--radius-md);
+    }
+    #page-youtube .standalone-tab {
+      padding: 8px 12px;
+      font-size: 0.8rem;
+    }
+  }
+
+  /* Fix video card on mobile */
+  @media (max-width: 480px) {
+    #page-youtube .media-card.video-card {
+      flex-direction: column !important;
+    }
+    #page-youtube .media-card.video-card .media-info {
+      padding: 10px;
+    }
+    #page-youtube .media-card.video-card .media-title {
+      font-size: 0.82rem;
+    }
+  }
+
+  /* Results info */
+  #page-youtube .yt-results-info {
+    margin-bottom: 14px;
+  }
+
+  /* Cats panel on mobile */
+  @media (max-width: 480px) {
+    #page-youtube .yt-cats-panel.open {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    #page-youtube .yt-cat-chip {
+      padding: 5px 10px;
+      font-size: 0.74rem;
+    }
+  }
+
+  /* Page content area spacing */
+  #page-youtube .page-content-area {
+    padding-top: 24px !important;
+  }
+
+  @media (max-width: 768px) {
+    #page-youtube .page-content-area {
+      padding-top: 18px !important;
+    }
+  }
 
   </style>
 </head>
@@ -7819,6 +8103,8 @@
     <div class="mic-body" id="micBody"></div>
     <div class="mic-footer">
       <a href="#" target="_blank" class="mic-open-btn" id="micOpenBtn"><i class="fab fa-youtube"></i><span>فتح على يوتيوب</span></a>
+      <button class="mic-share-btn" id="micFavBtn" title="حفظ في المفضلة" onclick="(function(){const url=document.getElementById('micOpenBtn')?.href;if(!url)return;const it=allMediaData.find(m=>m.url===url);if(it)toggleYtFavorite(it,null);const i=document.querySelector('#micFavBtn i');if(i){const isFav=isYtFavorite(url);i.className=isFav?'fas fa-bookmark':'far fa-bookmark';}})()"><i class="far fa-bookmark"></i></button>
+      <button class="mic-share-btn" id="micSubBtn" title="اشتراك" style="display:none;" onclick="(function(){const url=document.getElementById('micOpenBtn')?.href;if(!url)return;const it=allMediaData.find(m=>m.url===url);if(it)toggleYtSubscription(it,null);const isSub=isYtSubscribed(url);const i=document.querySelector('#micSubBtn i');if(i)i.className=isSub?'fas fa-check':'fas fa-bell';document.querySelector('#micSubBtn').style.color=isSub?'#2ecc71':'';})()"><i class="fas fa-bell"></i></button>
       <button class="mic-share-btn" id="micShareBtn" title="مشاركة الرابط"><i class="fas fa-share-alt"></i></button>
     </div>
   </div>
@@ -7992,10 +8278,16 @@
           <span>التصنيفات</span>
           <i class="fas fa-chevron-down"></i>
         </button>
-        <button class="show-all-btn" id="showAllBtn">
-          <i class="fas fa-books"></i>
-          <span>عرض جميع الكتب</span>
-        </button>
+        <div class="categories-header-actions">
+          <button class="show-all-btn" id="showAllBtn">
+            <i class="fas fa-books"></i>
+            <span>عرض جميع الكتب</span>
+          </button>
+          <button class="fav-shelf-btn" id="favShelfBtn" onclick="openFavShelf()" title="الكتب المفضلة">
+            <i class="far fa-bookmark"></i>
+            <span class="fav-shelf-count" id="favShelfCount" style="display:none;">0</span>
+          </button>
+        </div>
       </div>
       
       <div class="categories-progress-wrapper" id="categoriesProgressWrapper">
@@ -8210,46 +8502,113 @@
   </div>
 
   <!-- Modal -->
+  <!-- ═══════════════ بطاقة الكتاب – index-1 cards design ═══════════════ -->
   <div class="modal-overlay" id="bookModal">
     <div class="modal-content">
-      <div class="modal-cover">
-        <button class="modal-close" id="modalClose">
-          <i class="fas fa-times"></i>
-        </button>
-        <img id="modalCoverImg" src="" alt="">
-        <div class="book-no-cover" id="modalNoCover" style="display: none;">
-          <i class="fas fa-book"></i>
-          <span id="modalNoCoverTitle"></span>
+
+      <!-- مقبض السحب -->
+      <div class="modal-handle"></div>
+
+      <!-- زر الإغلاق الدائري (مطلق) -->
+      <button class="modal-close" id="modalClose" title="إغلاق">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <!-- رأس البطاقة: غلاف + معلومات -->
+      <div class="modal-header-strip">
+
+        <!-- غلاف الكتاب المجسم -->
+        <div class="modal-thumb-wrap">
+          <img id="modalCoverImg" src="" alt="" class="modal-thumb-img">
+          <div id="modalNoCover" class="book-no-cover" style="display:none;">
+            <i class="fas fa-book"></i>
+            <span id="modalNoCoverTitle"></span>
+          </div>
+        </div>
+
+        <!-- معلومات الكتاب -->
+        <div class="modal-header-info">
+          <span class="modal-category" id="modalCategory">
+            <i class="fas fa-bookmark"></i>
+            <span id="modalCategoryText">مكتبة نور الحوزة</span>
+          </span>
+          <h2 class="modal-title" id="modalTitle"></h2>
+          <div class="modal-meta">
+            <span class="meta-item">
+              <i class="fas fa-file-alt"></i>
+              <span id="modalFormat"></span>
+            </span>
+            <span class="meta-sep">|</span>
+            <span class="meta-item">
+              <i class="fas fa-database"></i>
+              <span id="modalSize"></span>
+            </span>
+            <span class="meta-sep">|</span>
+            <span class="meta-item">
+              <i class="fas fa-eye"></i>
+              <span>قراءة مباشرة</span>
+            </span>
+          </div>
         </div>
       </div>
-      <div class="modal-details">
-        <div class="modal-category">
-          <i class="fas fa-folder"></i>
-          <span id="modalCategory"></span>
+
+      <!-- منطقة المعاينة (flex-grow) -->
+      <div class="modal-preview-main">
+        <div class="modal-preview-container">
+          <iframe id="modalIframe" src="" loading="lazy" allow="autoplay"></iframe>
         </div>
-        <h2 class="modal-title" id="modalTitle"></h2>
-        <div class="modal-meta">
-          <div class="meta-item">
-            <i class="fas fa-file-alt"></i>
-            <span id="modalFormat"></span>
-          </div>
-          <div class="meta-item">
-            <i class="fas fa-weight-hanging"></i>
-            <span id="modalSize"></span>
+      </div>
+
+      <!-- شريط الإجراءات السفلي -->
+      <div class="modal-action-bar">
+        <a id="modalDownload" href="#" class="modal-btn-download" target="_blank">
+          <i class="fas fa-download"></i>
+          <span>تحميل الكتاب</span>
+        </a>
+        <a id="modalDriveBtn" href="#" class="modal-btn-icon"
+           target="_blank" title="فتح في درايف" data-label="فتح في درايف">
+          <i class="fab fa-google-drive"></i>
+        </a>
+        <button id="modalShare" class="modal-btn-icon"
+                title="مشاركة الرابط" data-label="مشاركة">
+          <i class="fas fa-share-alt"></i>
+        </button>
+        <button id="modalFavBtn" class="modal-btn-icon"
+                title="حفظ في المفضلة" data-label="المفضلة" data-fav-id="">
+          <i class="far fa-bookmark"></i>
+        </button>
+      </div>
+
+      <!-- عناصر مخفية للتوافق مع DOM refs القديمة -->
+      <div class="modal-cover" style="display:none;"></div>
+      <div class="modal-details" style="display:none;"></div>
+      <div class="modal-actions" id="modalActions" style="display:none;"></div>
+      <a id="modalPreview" href="#" style="display:none;" target="_blank"></a>
+
+    </div>
+  </div>
+
+  <!-- ═══════ رف المفضلة ═══════ -->
+  <div class="fav-shelf-overlay" id="favShelfOverlay" onclick="if(event.target===this)closeFavShelf()">
+    <div class="fav-shelf">
+      <div class="fav-shelf-handle"></div>
+      <button class="fav-shelf-close" onclick="closeFavShelf()">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="fav-shelf-header">
+        <div class="fav-shelf-title-row">
+          <div class="fav-shelf-icon"><i class="fas fa-bookmark"></i></div>
+          <div>
+            <h3 class="fav-shelf-title">الكتب المفضلة</h3>
+            <p class="fav-shelf-sub" id="favShelfSubtitle">لا توجد كتب محفوظة بعد</p>
           </div>
         </div>
-        <div class="modal-actions">
-          <a href="#" class="modal-btn primary" id="modalDownload" target="_blank">
-            <i class="fas fa-download"></i>
-            <span>تحميل الكتاب</span>
-          </a>
-          <a href="#" class="modal-btn secondary" id="modalPreview" target="_blank">
-            <i class="fas fa-eye"></i>
-            <span>معاينة</span>
-          </a>
-          <button class="modal-btn secondary" id="modalShare">
-            <i class="fas fa-share-alt"></i>
-          </button>
+      </div>
+      <div class="fav-shelf-body" id="favShelfBody">
+        <div class="fav-shelf-empty" id="favShelfEmpty">
+          <i class="far fa-bookmark"></i>
+          <p>لم تحفظ أي كتاب بعد</p>
+          <span>اضغط على أيقونة الحفظ في أي كتاب لإضافته هنا</span>
         </div>
       </div>
     </div>
@@ -8283,8 +8642,9 @@
     </div>
 
     <div class="container page-content-area">
+      <!-- شريط البحث والتبويبات والأزرار -->
       <div class="standalone-controls-bar">
-        <div class="filter-wrapper-with-badge" style="flex: 1; max-width: 400px;">
+        <div class="filter-wrapper-with-badge" style="flex: 1; max-width: 360px;">
           <span class="filter-label-abs">بحث</span>
           <div class="filter-select-wrapper" style="position: relative;">
             <i class="fas fa-search filter-icon-main"></i>
@@ -8293,6 +8653,7 @@
                    onkeyup="filterContentBySearch(this.value.toLowerCase())">
           </div>
         </div>
+
         <div class="standalone-tabs" id="ytPageTabs">
           <button class="standalone-tab active" data-tab-yt="channels">
             <i class="fas fa-tv"></i>
@@ -8311,29 +8672,46 @@
           </button>
         </div>
 
-        <div class="standalone-filters">
-          <div class="filter-wrapper-with-badge">
-            <span class="filter-label-abs">تصنيف</span>
-            <div class="filter-select-wrapper">
-              <i class="fas fa-filter filter-icon-main"></i>
-              <select id="ytCategorySelect" class="standalone-select">
-                <option value="all">جميع التصنيفات</option>
-              </select>
-              <i class="fas fa-chevron-down filter-arrow-icon"></i>
-            </div>
+        <!-- أزرار التصنيفات والمفضلة والاشتراكات -->
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <!-- زر التصنيفات المنسدل -->
+          <button class="yt-cats-toggle" id="ytCatsToggleBtn" onclick="toggleYtCatsPanel()">
+            <i class="fas fa-filter"></i>
+            <span>التصنيفات</span>
+            <i class="fas fa-chevron-down chevron"></i>
+          </button>
+
+          <!-- ترتيب -->
+          <div class="filter-select-wrapper" style="position:relative; min-width:140px;">
+            <i class="fas fa-sort-amount-down sort-icon-main"></i>
+            <select id="ytSortSelect" class="standalone-select">
+              <option value="default">الترتيب الافتراضي</option>
+              <option value="name-asc">الاسم (أ ← ي)</option>
+              <option value="name-desc">الاسم (ي ← أ)</option>
+            </select>
+            <i class="fas fa-chevron-down filter-arrow-icon"></i>
           </div>
-          <div class="filter-wrapper-with-badge">
-            <span class="sort-label-abs">ترتيب</span>
-            <div class="filter-select-wrapper">
-              <i class="fas fa-sort-amount-down sort-icon-main"></i>
-              <select id="ytSortSelect" class="standalone-select">
-                <option value="default">الترتيب الافتراضي</option>
-                <option value="name-asc">الاسم (أ ← ي)</option>
-                <option value="name-desc">الاسم (ي ← أ)</option>
-              </select>
-              <i class="fas fa-chevron-down filter-arrow-icon"></i>
-            </div>
-          </div>
+
+          <!-- زر المفضلة -->
+          <button class="yt-fav-btn" id="ytFavBtn" onclick="openYtFavShelf()" title="المفضلة">
+            <i class="far fa-bookmark"></i>
+            <span>المفضلة</span>
+            <span class="yt-fav-count" id="ytFavCount" style="display:none;">0</span>
+          </button>
+
+          <!-- زر الاشتراكات -->
+          <button class="yt-subs-btn" id="ytSubsBtn" onclick="toggleYtSubsFilter()" title="الاشتراكات">
+            <i class="fas fa-bell"></i>
+            <span>الاشتراكات</span>
+            <span class="yt-subs-count" id="ytSubsCount" style="display:none;">0</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- لوح التصنيفات المنسدل -->
+      <div class="yt-cats-panel" id="ytCatsPanel">
+        <div class="yt-cats-panel-inner" id="ytCatChipsContainer">
+          <!-- تُبنى ديناميكياً -->
         </div>
       </div>
 
@@ -8347,6 +8725,27 @@
         <div class="media-loading">
           <div class="loading-spinner"></div>
           <span>جاري تحميل المحتوى...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- رف مفضلة يوتيوب -->
+  <div class="yt-fav-overlay" id="ytFavOverlay" onclick="if(event.target===this)closeYtFavShelf()">
+    <div class="yt-fav-shelf">
+      <div class="yt-fav-shelf-header">
+        <div class="yt-fav-shelf-title">
+          <i class="fas fa-bookmark"></i>
+          <span>المفضلة</span>
+          <span id="ytFavShelfSubtitle" style="font-size:0.75rem; color:var(--text-muted); font-weight:400;"></span>
+        </div>
+        <button class="yt-fav-shelf-close" onclick="closeYtFavShelf()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="yt-fav-shelf-body" id="ytFavShelfBody">
+        <div class="yt-fav-shelf-empty">
+          <i class="far fa-bookmark"></i>
+          <p>لم تحفظ أي محتوى بعد</p>
+          <span style="font-size:0.78rem;">اضغط على أيقونة الحفظ في أي بطاقة لإضافتها هنا</span>
         </div>
       </div>
     </div>
@@ -8627,8 +9026,12 @@ ITEMS_PER_PAGE: 30
       modalFormat: document.getElementById('modalFormat'),
       modalSize: document.getElementById('modalSize'),
       modalDownload: document.getElementById('modalDownload'),
-      modalPreview: document.getElementById('modalPreview'),
+      modalDriveBtn: document.getElementById('modalDriveBtn'),
       modalShare: document.getElementById('modalShare'),
+      modalFavBtn: document.getElementById('modalFavBtn'),
+      modalIframe: document.getElementById('modalIframe'),
+      modalPreview: document.getElementById('modalPreview'),
+      modalCategoryText: document.getElementById('modalCategoryText'),
       toastContainer: document.getElementById('toastContainer'),
       currentYear: document.getElementById('currentYear'),
       breadcrumbsSection: document.getElementById('breadcrumbsSection'),
@@ -9730,59 +10133,58 @@ ITEMS_PER_PAGE: 30
       const book = state.allBooks.find(b => b.id === bookId);
       if (!book) return;
 
-      const cleanName = book.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '');
-      const fileFormat = getFileFormat(book.mimeType);
-      const fileIcon = getFileIcon(book.mimeType);
-
-      // Use smaller thumbnail for faster loading
-      const optimizedThumbnail = `https://drive.google.com/thumbnail?sz=w400&id=${book.id}`;
-      const previewUrl = book.webViewLink || getPreviewUrl(book.id);
+      const cleanName   = book.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '');
+      const fileFormat  = getFileFormat(book.mimeType);
+      const fileIcon    = getFileIcon(book.mimeType);
+      const thumb       = `https://drive.google.com/thumbnail?sz=w400&id=${book.id}`;
+      const drivePreview= `https://drive.google.com/file/d/${book.id}/preview`;
+      const driveView   = book.webViewLink || getPreviewUrl(book.id);
       const downloadUrl = getDownloadUrl(book.id);
 
-      DOM.modalCoverImg.src = optimizedThumbnail;
+      // ── غلاف ──
+      DOM.modalCoverImg.src = thumb;
       DOM.modalCoverImg.style.display = 'block';
-      DOM.modalNoCover.style.display = 'none';
+      DOM.modalNoCover.style.display  = 'none';
       DOM.modalCoverImg.onerror = () => {
         DOM.modalCoverImg.style.display = 'none';
-        DOM.modalNoCover.style.display = 'flex';
-        DOM.modalNoCover.querySelector('i').className = `fas ${fileIcon}`;
-        DOM.modalNoCoverTitle.textContent = cleanName.substring(0, 40);
+        DOM.modalNoCover.style.display  = 'flex';
+        const ico = DOM.modalNoCover.querySelector('i');
+        if (ico) ico.className = `fas ${fileIcon}`;
+        DOM.modalNoCoverTitle.textContent = cleanName.substring(0, 35);
       };
 
-      DOM.modalCategory.innerHTML = `<i class="fas fa-folder-open"></i><span>${book.folderName || 'غير مصنف'}</span>`;
-      DOM.modalTitle.textContent = cleanName;
+      // ── معلومات ──
+      if (DOM.modalCategoryText) DOM.modalCategoryText.textContent = book.folderName || 'مكتبة نور الحوزة';
+      DOM.modalTitle.textContent  = cleanName;
       DOM.modalFormat.textContent = fileFormat;
-      DOM.modalSize.textContent = formatFileSize(book.size);
+      DOM.modalSize.textContent   = formatFileSize(book.size);
 
-      const actions = document.getElementById('modalActions');
+      // ── iframe ──
+      DOM.modalIframe.src = drivePreview;
 
-      // Drive preview iframe with optimized loading
-      const drivePreview = `https://drive.google.com/file/d/${book.id}/preview`;
-      const driveViewLink = book.webViewLink || getPreviewUrl(book.id);
+      // ── روابط ──
+      DOM.modalDownload.href = downloadUrl;
+      DOM.modalDriveBtn.href = driveView;
 
-      actions.innerHTML = `
-        <div style="width:100%; display:flex; flex-direction:column; gap:12px;">
-          <div class="modal-preview-container">
-            <iframe src="${drivePreview}" loading="lazy" allow="autoplay"></iframe>
-          </div>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <a href="${driveViewLink}" class="modal-btn primary" target="_blank">
-              <i class="fab fa-google-drive"></i>
-              <span>فتح في درايف</span>
-            </a>
-            <a href="${downloadUrl}" class="modal-btn secondary" target="_blank">
-              <i class="fas fa-download"></i>
-              <span>تحميل مباشر</span>
-            </a>
-          </div>
-          <button class="modal-btn secondary" id="modalShareBtn" style="width:100%;">
-            <i class="fas fa-share-alt"></i>
-            <span>مشاركة الرابط</span>
-          </button>
-        </div>
-      `;
+      // ── مشاركة ──
+      DOM.modalShare.onclick = () => shareBook(book.id, cleanName);
 
-      document.getElementById('modalShareBtn').onclick = () => shareBook(book.id, cleanName);
+      // ── مفضلة (حفظ مستمر) ──
+      const favBtn = DOM.modalFavBtn;
+      favBtn.dataset.favId = book.id;
+      const refreshFav = () => {
+        const saved = isFavorite(book.id);
+        favBtn.classList.toggle('is-saved', saved);
+        const icon = favBtn.querySelector('i');
+        if (icon) icon.className = saved ? 'fas fa-bookmark' : 'far fa-bookmark';
+        favBtn.title = saved ? 'إزالة من المفضلة' : 'حفظ في المفضلة';
+      };
+      refreshFav();
+      favBtn.onclick = () => {
+        toggleFavorite(book.id, cleanName, 'book', driveView);
+        refreshFav();
+        updateFavShelfCount();
+      };
 
       DOM.bookModal.classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -9791,6 +10193,10 @@ ITEMS_PER_PAGE: 30
     function closeModal() {
       DOM.bookModal.classList.remove('active');
       document.body.style.overflow = 'auto';
+      setTimeout(() => {
+        if (!DOM.bookModal.classList.contains('active') && DOM.modalIframe)
+          DOM.modalIframe.src = '';
+      }, 420);
     }
 
     function shareBook(bookId, bookName) {
@@ -10026,6 +10432,155 @@ ITEMS_PER_PAGE: 30
     let currentCategory = 'all';
     let activeTab       = 'channels';
     let currentSort     = 'default'; // خيار الترتيب الحالي
+    let shuffleSeed     = Date.now(); // بذرة الترتيب العشوائي - تتغير كل 30 دقيقة
+    let showSubsOnly    = false;      // تصفية الاشتراكات
+
+    // تحديث بذرة الترتيب العشوائي كل 30 دقيقة
+    setInterval(() => {
+      shuffleSeed = Date.now();
+      if (document.getElementById('page-youtube') && 
+          document.getElementById('page-youtube').classList.contains('page-active')) {
+        renderMediaGrid();
+      }
+    }, 30 * 60 * 1000);
+
+    // ── أدوات المفضلة والاشتراكات ──
+    function loadYtFavorites() {
+      try { return JSON.parse(localStorage.getItem('noor_yt_favorites') || '[]'); } catch(e) { return []; }
+    }
+    function saveYtFavorites(arr) {
+      try { localStorage.setItem('noor_yt_favorites', JSON.stringify(arr)); } catch(e) {}
+    }
+    function isYtFavorite(url) {
+      return loadYtFavorites().some(f => f.url === url);
+    }
+    function toggleYtFavorite(item, event) {
+      if (event) event.stopPropagation();
+      const favs = loadYtFavorites();
+      const idx = favs.findIndex(f => f.url === item.url);
+      if (idx >= 0) {
+        favs.splice(idx, 1);
+      } else {
+        favs.push({ url: item.url, type: item.type, title: item.title, thumbnail: item.thumbnail, handle: item.handle || null, vId: item.vId || null });
+      }
+      saveYtFavorites(favs);
+      updateYtFavUI();
+      renderMediaGrid();
+    }
+    function updateYtFavUI() {
+      const favs = loadYtFavorites();
+      const btn = document.getElementById('ytFavBtn');
+      const countEl = document.getElementById('ytFavCount');
+      if (!btn || !countEl) return;
+      if (favs.length > 0) {
+        countEl.textContent = favs.length;
+        countEl.style.display = 'flex';
+        btn.classList.add('has-items');
+        btn.querySelector('i').className = 'fas fa-bookmark';
+      } else {
+        countEl.style.display = 'none';
+        btn.classList.remove('has-items');
+        btn.querySelector('i').className = 'far fa-bookmark';
+      }
+    }
+    function openYtFavShelf() {
+      renderYtFavShelf();
+      const overlay = document.getElementById('ytFavOverlay');
+      if (overlay) { overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+    }
+    function closeYtFavShelf() {
+      const overlay = document.getElementById('ytFavOverlay');
+      if (overlay) { overlay.classList.remove('active'); document.body.style.overflow = ''; }
+    }
+    function renderYtFavShelf() {
+      const body = document.getElementById('ytFavShelfBody');
+      const subtitle = document.getElementById('ytFavShelfSubtitle');
+      if (!body) return;
+      const favs = loadYtFavorites();
+      if (subtitle) subtitle.textContent = favs.length > 0 ? `— ${favs.length} عنصر محفوظ` : '';
+      if (favs.length === 0) {
+        body.innerHTML = `<div class="yt-fav-shelf-empty">
+          <i class="far fa-bookmark"></i>
+          <p>لم تحفظ أي محتوى بعد</p>
+          <span style="font-size:0.78rem;">اضغط على أيقونة الحفظ في أي بطاقة لإضافتها هنا</span>
+        </div>`;
+        return;
+      }
+      const typeLabel = { channel: 'قناة', video: 'مقطع فيديو', playlist: 'قائمة تشغيل' };
+      const typeIcon  = { channel: 'fa-tv', video: 'fa-play-circle', playlist: 'fa-list' };
+      body.innerHTML = favs.map((fav, i) => `
+        <div class="yt-fav-item" onclick="closeYtFavShelf(); setTimeout(()=>{ const it=loadYtFavorites()[${i}]; if(it){ const d=allMediaData.find(m=>m.url===it.url); if(d) openMediaInfoCard(d); } }, 250)">
+          <img class="yt-fav-item-thumb" src="${fav.thumbnail || ''}" alt="${fav.title}"
+               onerror="this.src='https://img.youtube.com/vi/${fav.vId||''}/mqdefault.jpg'; this.onerror=null;">
+          <div class="yt-fav-item-info">
+            <div class="yt-fav-item-title">${fav.title}</div>
+            <div class="yt-fav-item-type"><i class="fas ${typeIcon[fav.type]||'fa-youtube'}"></i> ${typeLabel[fav.type]||'يوتيوب'}</div>
+          </div>
+          <button class="yt-fav-item-remove" onclick="event.stopPropagation();
+            (function(url){ const fs=loadYtFavorites(); const idx=fs.findIndex(f=>f.url===url); if(idx>=0){fs.splice(idx,1);saveYtFavorites(fs);} updateYtFavUI(); renderYtFavShelf(); renderMediaGrid(); })('${fav.url.replace(/'/g,"\\'")}')">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>`).join('');
+    }
+
+    function loadYtSubscriptions() {
+      try { return JSON.parse(localStorage.getItem('noor_yt_subscriptions') || '[]'); } catch(e) { return []; }
+    }
+    function saveYtSubscriptions(arr) {
+      try { localStorage.setItem('noor_yt_subscriptions', JSON.stringify(arr)); } catch(e) {}
+    }
+    function isYtSubscribed(url) {
+      return loadYtSubscriptions().some(s => s.url === url);
+    }
+    function toggleYtSubscription(item, event) {
+      if (event) event.stopPropagation();
+      const subs = loadYtSubscriptions();
+      const idx = subs.findIndex(s => s.url === item.url);
+      if (idx >= 0) { subs.splice(idx, 1); }
+      else { subs.push({ url: item.url, handle: item.handle, title: item.title, thumbnail: item.thumbnail }); }
+      saveYtSubscriptions(subs);
+      updateYtSubsUI();
+      renderMediaGrid();
+    }
+    function updateYtSubsUI() {
+      const subs = loadYtSubscriptions();
+      const btn = document.getElementById('ytSubsBtn');
+      const countEl = document.getElementById('ytSubsCount');
+      if (!btn || !countEl) return;
+      if (subs.length > 0) {
+        countEl.textContent = subs.length;
+        countEl.style.display = 'flex';
+        btn.classList.add('has-subs');
+      } else {
+        countEl.style.display = 'none';
+        btn.classList.remove('has-subs');
+      }
+      // تحديث مؤشر التفعيل
+      if (showSubsOnly) {
+        btn.style.background = 'rgba(46,204,113,0.12)';
+        btn.style.color = '#27ae60';
+      } else {
+        btn.style.background = '';
+        btn.style.color = '';
+      }
+    }
+    function toggleYtSubsFilter() {
+      showSubsOnly = !showSubsOnly;
+      updateYtSubsUI();
+      renderMediaGrid();
+    }
+
+    // دالة الترتيب العشوائي (Seeded Fisher-Yates)
+    function seededShuffle(arr, seed) {
+      const a = [...arr];
+      let s = seed;
+      function rand() { s = (s * 1664525 + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; }
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(rand() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
 
     // ───────────────────────────────────────────────────────────────────────────
     // تحليل CSV مع دعم الحقول المقتبسة (quoted fields)
@@ -10269,9 +10824,9 @@ ITEMS_PER_PAGE: 30
       renderMediaGrid();
     }
 
-    function buildCategoryDropdown() {
-      const select = document.getElementById('ytCategorySelect');
-      if (!select) return;
+    function buildCategoryChips() {
+      const container = document.getElementById('ytCatChipsContainer');
+      if (!container) return;
 
       // جمع التصنيفات الخاصة بالتبويب النشط فقط
       const tabItems = allMediaData.filter(item => {
@@ -10288,30 +10843,43 @@ ITEMS_PER_PAGE: 30
       }));
       const cats = Object.keys(catCount).sort((a, b) => a.localeCompare(b, 'ar'));
 
-      // تحديد نص الخيار الأول حسب التبويب
+      // تحديث نص زر التبديل
       let allLabel = 'جميع التصنيفات';
       if (activeTab === 'channels')  allLabel = `جميع القنوات (${tabItems.length})`;
       if (activeTab === 'videos')    allLabel = `جميع الفيديوهات (${tabItems.length})`;
       if (activeTab === 'playlists') allLabel = `جميع القوائم (${tabItems.length})`;
 
-      select.innerHTML = `<option value="all">${allLabel}</option>`;
+      // بناء الأزرار (chips)
+      let html = `<button class="yt-cat-chip ${currentCategory === 'all' ? 'active' : ''}" data-cat="all">
+        <i class="fas fa-layer-group"></i><span>${allLabel}</span></button>`;
       cats.forEach(cat => {
-        const opt = document.createElement('option');
-        opt.value = cat;
-        opt.textContent = `${cat} (${catCount[cat]})`;
-        if (cat === currentCategory) opt.selected = true;
-        select.appendChild(opt);
+        html += `<button class="yt-cat-chip ${currentCategory === cat ? 'active' : ''}" data-cat="${cat}">
+          <i class="fas fa-tag"></i><span>${cat}</span>
+          <span class="yt-cat-count">${catCount[cat]}</span></button>`;
+      });
+      container.innerHTML = html;
+
+      // مستمعي النقر
+      container.querySelectorAll('.yt-cat-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          currentCategory = chip.dataset.cat;
+          container.querySelectorAll('.yt-cat-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          renderMediaGrid();
+        });
       });
 
-      // إعادة تعيين التصنيف إلى الكل إذا كان التصنيف الحالي غير موجود في هذا التبويب
+      // إعادة تعيين التصنيف إذا غير موجود
       if (currentCategory !== 'all' && !catCount[currentCategory]) {
         currentCategory = 'all';
-        select.value = 'all';
       }
 
       // تحديث عدادات التبويبات
       updateTabCounts();
     }
+
+    // دالة قديمة للتوافق - تُعيد توجيه لـ buildCategoryChips
+    function buildCategoryDropdown() { buildCategoryChips(); }
 
     function updateTabCounts() {
       const channelCount  = allMediaData.filter(i => i.type === 'channel').length;
@@ -10384,11 +10952,46 @@ ITEMS_PER_PAGE: 30
         else if (activeTab === 'playlists') matchTab = (item.type === 'playlist');
         
         const matchCat = (currentCategory === 'all') || (item.tags && item.tags.includes(currentCategory));
+
+        // فلتر الاشتراكات
+        if (showSubsOnly && activeTab === 'channels') {
+          const subUrls = loadYtSubscriptions().map(s => s.url);
+          return matchTab && matchCat && subUrls.includes(item.url);
+        }
         return matchTab && matchCat;
       });
 
-      // تطبيق الترتيب
-      filtered = sortMediaItems(filtered);
+      // ── ترتيب المحتوى ──
+      if (currentSort !== 'default') {
+        // ترتيب يدوي
+        filtered = sortMediaItems(filtered);
+      } else {
+        // الترتيب الافتراضي المحسّن:
+        // 1. المقاطع: آخر مقطع مضاف (آخر صف في البيانات) يكون الأول، ثم باقي المقاطع عشوائياً
+        // 2. القنوات وقوائم التشغيل: عشوائية + المشترك بها تظهر أولاً في القنوات
+        if (activeTab === 'videos') {
+          // آخر فيديو في البيانات الأصلية (ليس في filtered لأن filtered مُرشَّحة)
+          const allVideos = allMediaData.filter(i => i.type === 'video');
+          if (allVideos.length > 0) {
+            const latestUrl = allVideos[allVideos.length - 1].url;
+            const latestInFiltered = filtered.find(i => i.url === latestUrl);
+            const rest = filtered.filter(i => i.url !== latestUrl);
+            const shuffled = seededShuffle(rest, shuffleSeed);
+            filtered = latestInFiltered ? [latestInFiltered, ...shuffled] : shuffled;
+          } else {
+            filtered = seededShuffle(filtered, shuffleSeed);
+          }
+        } else if (activeTab === 'channels') {
+          // القنوات المشترك بها تظهر أولاً ثم الباقي عشوائياً
+          const subUrls = new Set(loadYtSubscriptions().map(s => s.url));
+          const subscribed = filtered.filter(i => subUrls.has(i.url));
+          const rest = filtered.filter(i => !subUrls.has(i.url));
+          filtered = [...seededShuffle(subscribed, shuffleSeed), ...seededShuffle(rest, shuffleSeed)];
+        } else {
+          // قوائم تشغيل عشوائية
+          filtered = seededShuffle(filtered, shuffleSeed);
+        }
+      }
 
       // ضبط كلاسات الشبكة
       grid.className = 'standalone-grid media-grid-layout ' + (activeTab === 'channels' ? 'channels-view' : 'videos-view');
@@ -10408,24 +11011,49 @@ ITEMS_PER_PAGE: 30
         return;
       }
 
-      grid.innerHTML = filtered.map((item, idx) => buildMediaCard(item, idx)).join('');
+      // تحديد المقطع الجديد (أول مقطع في القائمة عند الفيديوهات الافتراضية)
+      const allVideos = allMediaData.filter(i => i.type === 'video');
+      const latestVideoUrl = allVideos.length > 0 ? allVideos[allVideos.length - 1].url : null;
+
+      grid.innerHTML = filtered.map((item, idx) => buildMediaCard(item, idx, latestVideoUrl)).join('');
 
       // مستمعي النقر
       grid.querySelectorAll('.media-card').forEach((card, i) => {
         card.addEventListener('click', (e) => {
+          if (e.target.closest('.mc-action-btn')) return;
           e.preventDefault();
           openMediaInfoCard(filtered[i]);
         });
       });
     }
 
-    function buildMediaCard(item, idx) {
+    function buildMediaCard(item, idx, latestVideoUrl) {
       const isChannel = item.type === 'channel';
+      const isFav = isYtFavorite(item.url);
+      const isSub = isYtSubscribed(item.url);
+      const isNew = (activeTab === 'videos' && currentSort === 'default' && latestVideoUrl && item.url === latestVideoUrl && idx === 0);
+
+      // أزرار الإجراءات (مفضلة + اشتراك للقنوات)
+      const favBtnHtml = `<button class="mc-action-btn fav-btn ${isFav ? 'active' : ''}" 
+        title="${isFav ? 'إزالة من المفضلة' : 'حفظ في المفضلة'}"
+        onclick="(function(e){e.stopPropagation();const it=allMediaData.find(m=>m.url==='${item.url.replace(/'/g,"\\'")}');if(it)toggleYtFavorite(it,e);})(event)">
+        <i class="${isFav ? 'fas' : 'far'} fa-bookmark"></i></button>`;
+
+      const subBtnHtml = isChannel ? `<button class="mc-action-btn sub-btn ${isSub ? 'active' : ''}"
+        title="${isSub ? 'إلغاء الاشتراك' : 'اشتراك'}"
+        onclick="(function(e){e.stopPropagation();const it=allMediaData.find(m=>m.url==='${item.url.replace(/'/g,"\\'")}');if(it)toggleYtSubscription(it,e);})(event)">
+        <i class="fas ${isSub ? 'fa-check' : 'fa-bell'}"></i></button>` : '';
       
+      const actionsHtml = `<div class="media-card-actions">${favBtnHtml}${subBtnHtml}</div>`;
+      const newBadge = isNew ? `<span class="yt-new-badge">جديد</span>` : '';
+      const subBadge = (isChannel && isSub) ? `<span class="yt-subscribed-badge"><i class="fas fa-check"></i> مشترك</span>` : '';
+
       if (isChannel) {
         const imgSrc = `https://unavatar.io/youtube/${item.handle}?fallback=https://ui-avatars.com/api/?name=${encodeURIComponent(item.title)}&background=ff0000&color=fff&size=130`;
         return `
           <div class="media-card channel-card" style="animation-delay:${idx * 0.05}s">
+            ${actionsHtml}
+            ${subBadge}
             <div class="media-thumbnail">
               <img src="${imgSrc}" alt="${item.title}" loading="lazy">
             </div>
@@ -10438,11 +11066,13 @@ ITEMS_PER_PAGE: 30
 
       const isPlaylist = item.type === 'playlist' || (item.url && item.url.includes('list='));
       const duration = item.duration || (isPlaylist ? 'قائمة تشغيل' : '--:--');
-      const views = item.views || Math.floor(Math.random() * 5000) + 100; // قيمة افتراضية إذا لم تتوفر
+      const views = item.views || Math.floor(Math.random() * 5000) + 100;
       const date = item.publishedDate ? new Date(item.publishedDate).toLocaleDateString('ar-SA') : 'منذ فترة';
 
       return `
         <div class="media-card video-card" style="animation-delay:${idx * 0.05}s">
+          ${actionsHtml}
+          ${newBadge}
           <div class="media-thumbnail">
             <img src="${item.thumbnail}" alt="${item.title}" loading="lazy" 
                  onerror="this.src='https://img.youtube.com/vi/${item.vId}/mqdefault.jpg'">
@@ -10654,6 +11284,27 @@ ITEMS_PER_PAGE: 30
         : isPlaylist ? '<i class="fas fa-list"></i> فتح قائمة التشغيل'
         : '<i class="fas fa-play"></i> مشاهدة الفيديو';
 
+      // تحديث أزرار المفضلة والاشتراك في النافذة المنبثقة
+      const micFavBtn = document.getElementById('micFavBtn');
+      const micSubBtn = document.getElementById('micSubBtn');
+      if (micFavBtn) {
+        const isFav = isYtFavorite(item.url);
+        micFavBtn.querySelector('i').className = isFav ? 'fas fa-bookmark' : 'far fa-bookmark';
+        micFavBtn.style.color = isFav ? '#c9a050' : '';
+        micFavBtn.title = isFav ? 'إزالة من المفضلة' : 'حفظ في المفضلة';
+      }
+      if (micSubBtn) {
+        if (isChannel) {
+          micSubBtn.style.display = '';
+          const isSub = isYtSubscribed(item.url);
+          micSubBtn.querySelector('i').className = isSub ? 'fas fa-check' : 'fas fa-bell';
+          micSubBtn.style.color = isSub ? '#2ecc71' : '';
+          micSubBtn.title = isSub ? 'إلغاء الاشتراك' : 'اشتراك في القناة';
+        } else {
+          micSubBtn.style.display = 'none';
+        }
+      }
+
       overlay.classList.add('active');
       card.classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -10694,36 +11345,6 @@ ITEMS_PER_PAGE: 30
           duaText.style.setProperty('--dua-font-size', e.target.value + 'rem');
         };
       }
-
-      // بطاقة المعلومات - زر الإغلاق
-      const closeBtn = document.getElementById('micCloseBtn');
-      const overlay  = document.getElementById('mediaInfoOverlay');
-      if (closeBtn) closeBtn.addEventListener('click', closeMediaInfoCard);
-      if (overlay)  overlay.addEventListener('click', closeMediaInfoCard);
-
-      // زر المشاركة
-      const shareBtn = document.getElementById('micShareBtn');
-      if (shareBtn) {
-        shareBtn.addEventListener('click', () => {
-          const openBtn = document.getElementById('micOpenBtn');
-          if (openBtn && openBtn.href) {
-            if (navigator.share) {
-              navigator.share({ url: openBtn.href, title: document.getElementById('micTitle')?.textContent || '' });
-            } else {
-              navigator.clipboard.writeText(openBtn.href).then(() => showToast('تم نسخ الرابط', 'success'));
-            }
-          }
-        });
-      }
-
-      // إغلاق بالضغط على Escape
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          const card = document.getElementById('mediaInfoCard');
-          if (card && card.classList.contains('active')) closeMediaInfoCard();
-        }
-      });
-
       // ملاحظة: لا يتم استدعاء loadMediaFromSheets هنا لأنها تُستدعى فقط عند فتح صفحة يوتيوب عبر initYtPage()
     }
 
@@ -11879,11 +12500,22 @@ ITEMS_PER_PAGE: 30
     }
 
     // تهيئة صفحة يوتيوب المستقلة
+    // دالة فتح/إغلاق لوح التصنيفات
+    function toggleYtCatsPanel() {
+      const panel = document.getElementById('ytCatsPanel');
+      const btn   = document.getElementById('ytCatsToggleBtn');
+      if (!panel || !btn) return;
+      const isOpen = panel.classList.contains('open');
+      panel.classList.toggle('open', !isOpen);
+      btn.classList.toggle('open', !isOpen);
+    }
+
     function initYtPage() {
       // إعادة تعيين الحالة للقيم الافتراضية
       activeTab       = 'channels';
       currentCategory = 'all';
       currentSort     = 'default';
+      showSubsOnly    = false;
 
       // تعيين التبويب النشط في الواجهة
       document.querySelectorAll('[data-tab-yt]').forEach(tab => {
@@ -11897,21 +12529,16 @@ ITEMS_PER_PAGE: 30
           tab.classList.add('active');
           activeTab = tab.dataset.tabYt;
           currentCategory = 'all';
-          // إعادة تعيين قائمة التصنيفات للتبويب الجديد
-          buildCategoryDropdown();
+          // إغلاق لوح التصنيفات عند التبديل
+          const panel = document.getElementById('ytCatsPanel');
+          const toggleBtn = document.getElementById('ytCatsToggleBtn');
+          if (panel) panel.classList.remove('open');
+          if (toggleBtn) toggleBtn.classList.remove('open');
+          // إعادة بناء أزرار التصنيفات للتبويب الجديد
+          buildCategoryChips();
           renderMediaGrid();
         });
       });
-
-      // قائمة التصنيفات
-      const catSel = document.getElementById('ytCategorySelect');
-      if (catSel) {
-        catSel.value = 'all';
-        catSel.addEventListener('change', (e) => {
-          currentCategory = e.target.value;
-          renderMediaGrid();
-        });
-      }
 
       // قائمة الترتيب
       const sortSel = document.getElementById('ytSortSelect');
@@ -11922,6 +12549,38 @@ ITEMS_PER_PAGE: 30
           renderMediaGrid();
         });
       }
+
+      // تحديث واجهة المفضلة والاشتراكات
+      updateYtFavUI();
+      updateYtSubsUI();
+
+      // إضافة مستمعي بطاقة المعلومات لزري مفضلة واشتراك فيها
+      const closeBtn = document.getElementById('micCloseBtn');
+      const overlay  = document.getElementById('mediaInfoOverlay');
+      if (closeBtn) closeBtn.addEventListener('click', closeMediaInfoCard);
+      if (overlay)  overlay.addEventListener('click', closeMediaInfoCard);
+
+      const shareBtn = document.getElementById('micShareBtn');
+      if (shareBtn) {
+        shareBtn.addEventListener('click', () => {
+          const openBtn = document.getElementById('micOpenBtn');
+          if (openBtn && openBtn.href) {
+            if (navigator.share) {
+              navigator.share({ url: openBtn.href, title: document.getElementById('micTitle')?.textContent || '' });
+            } else {
+              navigator.clipboard.writeText(openBtn.href).then(() => showToast('تم نسخ الرابط', 'success'));
+            }
+          }
+        });
+      }
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          const card = document.getElementById('mediaInfoCard');
+          if (card && card.classList.contains('active')) closeMediaInfoCard();
+          closeYtFavShelf();
+        }
+      });
 
       // جلب البيانات من Google Sheets
       loadMediaFromSheets();
@@ -11935,6 +12594,27 @@ ITEMS_PER_PAGE: 30
       if (el2) el2.textContent = allMediaData.filter(i => i.type === 'video').length;
       if (el3) el3.textContent = allMediaData.filter(i => i.type === 'playlist').length;
     }
+
+    // تعريض الدوال عالمياً
+    window.toggleYtCatsPanel    = toggleYtCatsPanel;
+    window.toggleYtFavorite     = toggleYtFavorite;
+    window.toggleYtSubscription = toggleYtSubscription;
+    window.toggleYtSubsFilter   = toggleYtSubsFilter;
+    window.openYtFavShelf       = openYtFavShelf;
+    window.closeYtFavShelf      = closeYtFavShelf;
+    window.isYtFavorite         = isYtFavorite;
+    window.isYtSubscribed       = isYtSubscribed;
+    window.loadYtFavorites      = loadYtFavorites;
+    window.saveYtFavorites      = saveYtFavorites;
+    window.loadYtSubscriptions  = loadYtSubscriptions;
+    window.saveYtSubscriptions  = saveYtSubscriptions;
+    window.renderYtFavShelf     = renderYtFavShelf;
+    window.allMediaData         = allMediaData;
+
+    // تحديث عدادات المفضلة والاشتراكات عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => { updateYtFavUI(); updateYtSubsUI(); }, 800);
+    });
 
 
 
@@ -12275,6 +12955,7 @@ ITEMS_PER_PAGE: 30
       }
       saveFavorites(favs);
       updateFavButtons();
+      if (typeof updateFavShelfCount === 'function') updateFavShelfCount();
     }
     function isFavorite(id) {
       return loadFavorites().some(f => f.id === id);
@@ -12339,69 +13020,7 @@ ITEMS_PER_PAGE: 30
     // UPDATED FUNCTIONS - Premium Modal, Haqiba Bento, Summaries Notebook
     // ═══════════════════════════════════════════════════════════════════════════
 
-    // Updated Modal Function with Drive Preview
-    function openModal(bookId) {
-      const book = state.allBooks.find(b => b.id === bookId);
-      if (!book) return;
-
-      const cleanName = book.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '');
-      const thumbnailUrl = getThumbnailUrl(book.id, book.thumbnailLink);
-      const previewUrl = book.webViewLink || getPreviewUrl(book.id);
-      const downloadUrl = getDownloadUrl(book.id);
-      const fileFormat = getFileFormat(book.mimeType);
-      const fileIcon = getFileIcon(book.mimeType);
-
-      // Use smaller thumbnail for faster loading
-      const optimizedThumbnail = `https://drive.google.com/thumbnail?sz=w400&id=${book.id}`;
-
-      DOM.modalCoverImg.src = optimizedThumbnail;
-      DOM.modalCoverImg.style.display = 'block';
-      DOM.modalNoCover.style.display = 'none';
-      DOM.modalCoverImg.onerror = () => {
-        DOM.modalCoverImg.style.display = 'none';
-        DOM.modalNoCover.style.display = 'flex';
-        DOM.modalNoCover.querySelector('i').className = `fas ${fileIcon}`;
-        DOM.modalNoCoverTitle.textContent = cleanName.substring(0, 40);
-      };
-
-      DOM.modalCategory.textContent = book.folderName || 'غير مصنف';
-      DOM.modalTitle.textContent = cleanName;
-      DOM.modalFormat.textContent = fileFormat;
-      DOM.modalSize.textContent = formatFileSize(book.size);
-
-      const actions = document.querySelector('.modal-actions');
-
-      // Drive preview iframe with optimized loading
-      const drivePreview = `https://drive.google.com/file/d/${book.id}/preview`;
-      const driveViewLink = book.webViewLink || getPreviewUrl(book.id);
-
-      actions.innerHTML = `
-        <div style="width:100%; display:flex; flex-direction:column; gap:12px;">
-          <div class="modal-preview-container">
-            <iframe src="${drivePreview}" loading="lazy" allow="autoplay"></iframe>
-          </div>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <a href="${driveViewLink}" class="modal-btn primary" target="_blank">
-              <i class="fab fa-google-drive"></i>
-              <span>فتح في درايف</span>
-            </a>
-            <a href="${downloadUrl}" class="modal-btn secondary" target="_blank">
-              <i class="fas fa-download"></i>
-              <span>تحميل مباشر</span>
-            </a>
-          </div>
-          <button class="modal-btn secondary" id="modalShareBtn" style="width:100%;">
-            <i class="fas fa-share-alt"></i>
-            <span>مشاركة الرابط</span>
-          </button>
-        </div>
-      `;
-
-      document.getElementById('modalShareBtn').onclick = () => shareBook(book.id, cleanName);
-
-      DOM.bookModal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
+    // openModal defined above
 
     // Updated Haqiba Loader with Bento Design
     async function loadHaqibaFolders(folderId = HAQIBA_ROOT_ID, folderName = 'حقيبة المؤمن', isBack = false) {
@@ -12703,6 +13322,80 @@ ITEMS_PER_PAGE: 30
           .catch(err => console.warn('[PWA] Service Worker failed:', err));
       });
     }
-  </script>
+  
+    // ════════════════════════════════════════════════════
+    // رف المفضلة
+    // ════════════════════════════════════════════════════
+    function openFavShelf() {
+      renderFavShelf();
+      const overlay = document.getElementById('favShelfOverlay');
+      if (overlay) { overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+    }
+    function closeFavShelf() {
+      const overlay = document.getElementById('favShelfOverlay');
+      if (overlay) { overlay.classList.remove('active'); document.body.style.overflow = 'auto'; }
+    }
+    function updateFavShelfCount() {
+      const favs = loadFavorites().filter(f => f.type === 'book');
+      const countEl = document.getElementById('favShelfCount');
+      const btn = document.getElementById('favShelfBtn');
+      if (!countEl || !btn) return;
+      if (favs.length > 0) {
+        countEl.textContent = favs.length;
+        countEl.style.display = 'flex';
+        btn.classList.add('has-items');
+        const icon = btn.querySelector('i');
+        if (icon) icon.className = 'fas fa-bookmark';
+      } else {
+        countEl.style.display = 'none';
+        btn.classList.remove('has-items');
+        const icon = btn.querySelector('i');
+        if (icon) icon.className = 'far fa-bookmark';
+      }
+    }
+    function renderFavShelf() {
+      const favs = loadFavorites().filter(f => f.type === 'book');
+      const body    = document.getElementById('favShelfBody');
+      const empty   = document.getElementById('favShelfEmpty');
+      const subtitle= document.getElementById('favShelfSubtitle');
+      if (!body) return;
+      if (subtitle) subtitle.textContent = favs.length > 0
+        ? `${favs.length} كتاب محفوظ`
+        : 'لا توجد كتب محفوظة بعد';
+      if (favs.length === 0) {
+        body.innerHTML = '';
+        body.appendChild(document.getElementById('favShelfEmpty') || (() => {
+          const d = document.createElement('div');
+          d.id = 'favShelfEmpty'; d.className = 'fav-shelf-empty';
+          d.innerHTML = '<i class="far fa-bookmark"></i><p>لم تحفظ أي كتاب بعد</p><span>اضغط على أيقونة الحفظ في أي كتاب لإضافته هنا</span>';
+          return d;
+        })());
+        return;
+      }
+      body.innerHTML = favs.map(fav => {
+        const thumb = `https://drive.google.com/thumbnail?sz=w200&id=${fav.id}`;
+        const name  = fav.name || 'كتاب';
+        return `
+          <div class="fav-book-card" onclick="closeFavShelf(); setTimeout(()=>openModal('${fav.id}'),200)">
+            <img class="fav-book-cover" src="${thumb}" alt="${name}"
+                 onerror="this.style.background='var(--bg-tertiary)';this.style.opacity='0.6'">
+            <div class="fav-book-info">
+              <div class="fav-book-name">${name}</div>
+              <div class="fav-book-cat"><i class="fas fa-bookmark"></i> محفوظ في المفضلة</div>
+            </div>
+            <button class="fav-book-remove" onclick="event.stopPropagation();
+              toggleFavorite('${fav.id}','${name.replace(/'/g,"\\'")}','book','${fav.url||''}');
+              updateFavShelfCount(); renderFavShelf();" title="إزالة">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>`;
+      }).join('');
+    }
+    window.openFavShelf  = openFavShelf;
+    window.closeFavShelf = closeFavShelf;
+    // تحديث العداد عند التحميل
+    document.addEventListener('DOMContentLoaded', () => setTimeout(updateFavShelfCount, 600));
+
+</script>
 </body>
 </html>
