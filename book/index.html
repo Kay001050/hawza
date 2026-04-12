@@ -4106,16 +4106,45 @@
       min-height: 100vh;
       background: var(--bg-secondary);
       padding-bottom: 60px;
+      padding-top: var(--header-height);
+    }
+
+    @media (max-width: 768px) {
+      .standalone-page-wrapper {
+        padding-top: var(--header-height-mobile);
+      }
+    }
+
+    /* منطقة المحتوى تحت الهامش الثابت */
+    .page-content-area {
+      padding-top: 32px;
     }
 
     /* هيرو بانر عصري */
     .page-hero-banner {
-      padding: calc(var(--header-height) + 40px) 0 40px;
+      padding: clamp(40px, 7vw, 80px) clamp(20px, 5vw, 60px) clamp(30px, 5vw, 55px);
       margin-bottom: 30px;
       border-bottom: 1px solid var(--border-subtle);
-      position: relative;
+      position: sticky;
+      top: var(--header-height);
+      z-index: 500;
+      overflow: hidden;
+      transition: padding 0.4s ease;
+    }
+
+    /* إخفاء تدريجي للعنوان الفرعي عند التمرير */
+    .page-hero-banner.scrolled {
+      padding-top: clamp(12px, 2vw, 18px);
+      padding-bottom: clamp(12px, 2vw, 18px);
+    }
+
+    .page-hero-banner.scrolled .hero-banner-subtitle {
+      opacity: 0;
+      max-height: 0;
+      margin-top: 0;
       overflow: hidden;
     }
+
 
     .page-hero-banner::before {
       content: '';
@@ -4146,15 +4175,15 @@
       box-shadow: 0 0 30px rgba(16,185,129,0.25), 0 10px 25px rgba(0,0,0,0.3);
     }
     
-    .summaries-theme { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); color: white; }
-    .summaries-theme::before { background: #3b82f6; }
+    .summaries-theme { background: linear-gradient(160deg, #0a1e1a 0%, #0d2e25 50%, #142a3a 100%); color: white; }
+    .summaries-theme::before { background: #2a8a6e; }
     
-    .goals-theme { background: linear-gradient(160deg, #a07f3a 0%, #1e6b54 100%); color: white; }
-    .goals-theme::before { background: var(--accent-gold); }
+    .goals-theme { background: linear-gradient(160deg, #052e2e 0%, #0a4a4a 45%, #0d5c4a 100%); color: white; }
+    .goals-theme::before { background: #2dd4bf; }
     .goals-theme .hero-banner-icon-wrapper {
-      background: rgba(160, 127, 58, 0.15);
-      border-color: rgba(160, 127, 58, 0.35);
-      box-shadow: 0 0 30px rgba(160, 127, 58, 0.25), 0 10px 25px rgba(0,0,0,0.3);
+      background: rgba(45, 212, 191, 0.15);
+      border-color: rgba(45, 212, 191, 0.35);
+      box-shadow: 0 0 30px rgba(45, 212, 191, 0.2), 0 10px 25px rgba(0,0,0,0.3);
     }
     
     .goals-content-card {
@@ -4331,30 +4360,6 @@
       z-index: 1;
     }
 
-    .page-back-btn-modern {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: var(--radius-full);
-      color: white;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-bottom: 24px;
-      backdrop-filter: blur(4px);
-      position: relative;
-      z-index: 100;
-    }
-
-    .page-back-btn-modern:hover {
-      background: white;
-      color: #333;
-      transform: translateX(5px);
-    }
 
     .hero-banner-content {
       display: flex;
@@ -4374,21 +4379,33 @@
       font-size: 2.2rem;
       backdrop-filter: blur(10px);
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      flex-shrink: 0;
+      transition: width 0.3s ease, height 0.3s ease, font-size 0.3s ease;
+    }
+
+    .page-hero-banner.scrolled .hero-banner-icon-wrapper {
+      width: 48px;
+      height: 48px;
+      font-size: 1.4rem;
     }
 
     .hero-banner-title {
       font-family: var(--font-heading);
-      font-size: 2.2rem;
-      font-weight: 800;
+      font-size: clamp(2.2rem, 5vw, 3rem);
+      font-weight: 700;
       margin: 0 0 8px 0;
-      letter-spacing: -1px;
+      letter-spacing: 0;
+      line-height: 1.2;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
 
     .hero-banner-subtitle {
-      font-size: 1.1rem;
+      font-size: clamp(0.85rem, 2vw, 1.05rem);
       opacity: 0.85;
       margin: 0;
       font-weight: 400;
+      max-height: 60px;
+      transition: opacity 0.35s ease, max-height 0.35s ease, margin-top 0.35s ease;
     }
 
     /* شريط التحكم المستقل */
@@ -4908,9 +4925,8 @@
 
     /* تحسين التجاوب للهواتف */
     @media (max-width: 768px) {
-      .page-hero-banner { padding: calc(var(--header-height-mobile) + 40px) 0 30px; }
-      .hero-banner-content { flex-direction: column; text-align: center; gap: 15px; }
-      .page-back-btn-modern { position: relative; z-index: 1001; margin-top: 10px; }
+      .page-hero-banner { top: var(--header-height-mobile); }
+      .hero-banner-content { flex-direction: row; align-items: center; text-align: right; gap: 14px; }
       .hero-banner-title { font-size: 1.8rem; }
       .hero-banner-icon-wrapper { width: 60px; height: 60px; font-size: 1.8rem; }
       
@@ -5982,6 +5998,8 @@
       .btn-primary span { display: none; }
       .btn-primary { padding: 10px; }
       
+      .hero { padding-top: calc(var(--header-height-mobile) + clamp(40px, 7vw, 80px)); }
+
       .hero-title { font-size: 1.9rem; }
       .hero-stats { gap: 28px; }
       .stat-number { font-size: 2rem; }
@@ -7564,42 +7582,178 @@
     .yt-sticky-wrapper { top: var(--header-height-mobile); }
   }
 
-  /* ── هيدر الصفحة الداكن ── */
-  .yt-page-header {
-    background: linear-gradient(180deg, #1a0000 0%, #2d1010 60%, #3a1a1a 100%);
-    padding: 0;
-    border-bottom: 2px solid rgba(255,0,0,0.2);
-  }
-
-  /* صف 1: العنوان والأيقونات */
-  .yt-header-top {
+  /* ══════════════════════════════════════════════════════
+     هيدر يوتيوب — هيدر 1: العنوان (يصغر عند التمرير)
+     ══════════════════════════════════════════════════════ */
+  .yt-title-header {
+    background: linear-gradient(160deg, #1a0000 0%, #2d1010 55%, #3a1a1a 100%);
+    padding: clamp(28px, 5vw, 52px) clamp(16px, 4vw, 32px) clamp(20px, 3vw, 32px);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 16px 10px;
-    gap: 10px;
+    gap: 14px;
+    border-bottom: 1px solid rgba(255,0,0,0.12);
+    transition: padding 0.38s cubic-bezier(0.4,0,0.2,1);
+    overflow: hidden;
+    position: relative;
   }
 
-  .yt-header-brand {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  .yt-title-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 80% 60%, rgba(255,0,0,0.08) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  /* عند التمرير: يصغر ويبقى العنوان ظاهراً دائماً */
+  .yt-title-header.scrolled {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .yt-title-header.scrolled .yt-title-sub {
+    opacity: 0;
+    max-height: 0;
+    margin-top: 0;
+    overflow: hidden;
+  }
+
+  .yt-title-header.scrolled .yt-title-icon {
+    width: 30px; height: 30px; font-size: 0.82rem; border-radius: 8px;
+  }
+
+  /* الخط ثابت عند التمرير — فقط الهامش يصغر */
+
+  /* أيقونة YT */
+  .yt-title-icon {
+    width: 44px; height: 44px;
+    background: var(--accent-youtube);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 1.15rem;
+    flex-shrink: 0;
+    transition: width 0.38s ease, height 0.38s ease,
+                font-size 0.38s ease, border-radius 0.38s ease;
+  }
+
+  /* كتلة العنوان */
+  .yt-title-text-block {
     flex: 1;
-    text-align: center;
+    display: flex; flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    min-width: 0;
   }
 
-  .yt-header-title {
-    font-size: 1.1rem;
-    font-weight: 800;
+  .yt-title-main {
+    font-family: var(--font-heading);
+    font-size: clamp(2.2rem, 5vw, 3rem);
+    font-weight: 700;
     color: #fff;
-    font-family: var(--font-ui);
     line-height: 1.2;
+    text-shadow: 0 3px 12px rgba(0,0,0,0.5);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .yt-header-sub {
-    font-size: 0.7rem;
-    color: rgba(255,255,255,0.55);
+  .yt-title-sub {
+    font-size: clamp(0.7rem, 1.6vw, 0.85rem);
+    color: rgba(255,255,255,0.52);
     font-weight: 400;
+    margin-top: 4px;
+    max-height: 24px;
+    transition: opacity 0.3s ease, max-height 0.3s ease, margin-top 0.3s ease;
+  }
+
+  /* أزرار جانبية للعنوان */
+  .yt-title-actions {
+    display: flex; align-items: center;
+    gap: 6px; flex-shrink: 0;
+  }
+
+  /* ══════════════════════════════════════════════════════
+     هيدر يوتيوب — هيدر 2: التنقل
+     يصغر عند التمرير | ثبّت أو أخفِ من الأزرار أسفل اليسار
+     ══════════════════════════════════════════════════════ */
+  .yt-nav-header {
+    background: linear-gradient(180deg, #220000 0%, #2d1010 100%);
+    border-bottom: 2px solid rgba(255,0,0,0.2);
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+  }
+
+  /* حالة التصغير تلقائياً (scrolled) — بحث+فلتر تختفي، تبويبات تبقى */
+  .yt-nav-header.nav-scrolled .yt-nav-collapsible {
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* حالة التثبيت: لا تتأثر بـ nav-scrolled */
+  .yt-nav-header.pinned .yt-nav-collapsible {
+    max-height: 200px !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  /* حالة الإخفاء الكامل بالمستخدم */
+  /* عند إخفاء المستخدم: فقط البحث والفلتر يختفيان، التبويبات تبقى */
+  .yt-nav-header.user-hidden .yt-nav-collapsible {
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* قسم البحث والفلتر */
+  .yt-nav-collapsible {
+    overflow: hidden;
+    max-height: 200px;
+    opacity: 1;
+    transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1),
+                opacity   0.28s ease;
+  }
+
+  /* أزرار التحكم — أسفل اليسار داخل هيدر التبويبات */
+  .yt-nav-ctrl-btns {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: auto;          /* يدفعهم ليسار في RTL */
+    padding-left: 8px;
+  }
+
+  .yt-nav-ctrl-btn {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.55);
+    font-size: 0.7rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    position: relative;
+  }
+
+  .yt-nav-ctrl-btn:hover {
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    border-color: rgba(255,255,255,0.25);
+  }
+
+  /* حالة التثبيت */
+  .yt-nav-ctrl-btn.pinned-active {
+    background: rgba(255, 80, 80, 0.25);
+    color: #ff8888;
+    border-color: rgba(255,80,80,0.35);
+  }
+
+  /* حالة إخفاء كامل */
+  .yt-nav-ctrl-btn.hidden-active {
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.3);
   }
 
   .yt-header-actions-right,
@@ -7655,10 +7809,12 @@
   .yt-header-tabs {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-end;    /* تبويبات على اليمين */
     gap: 0;
-    padding: 0 16px 0;
+    padding: 0 10px;
+    border-top: 1px solid rgba(255,255,255,0.06);
     border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: rgba(0,0,0,0.15);
   }
 
   .yt-tab {
@@ -7815,35 +7971,11 @@
   }
 
   /* ── أزرار الوضع المضغوط (تظهر فقط عند التمرير) ── */
-  .yt-compact-actions {
-    display: none;
-    align-items: center;
-    gap: 6px;
-    margin-right: auto;
-    padding-right: 6px;
-  }
+  /* yt-compact-actions removed — replaced by yt-title-actions */
 
-  /* ── سلوك التمرير: إخفاء رأس الصفحة بسلاسة ── */
+  /* ── سلوك التمرير: هيدر العنوان يختفي تلقائياً ── */
   .yt-sticky-wrapper {
-    will-change: transform;
-    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .yt-header-collapsible {
-    overflow: hidden;
-  }
-
-  /* عند التمرير للأسفل: يُطبّق translateY من JS مباشرةً على الـ wrapper */
-
-  .yt-header-scrolled .yt-compact-actions {
-    display: flex;
-  }
-
-  .yt-header-scrolled .yt-header-tabs {
-    border-bottom: 2px solid rgba(255,0,0,0.25);
-    background: linear-gradient(180deg, #1a0000 0%, #2a0f0f 100%);
-    padding-top: 2px;
-    padding-bottom: 2px;
+    will-change: auto;
   }
 
   /* ── اسم القناة في النافذة المنبثقة ── */
@@ -7952,7 +8084,7 @@
   }
 
   @media (min-width: 1024px) {
-    .yt-page-header { position: sticky; }
+    .yt-title-header, .yt-nav-header { position: sticky; }
     .yt-content-area { padding: 24px 32px; }
     .yt-header-top { padding: 18px 32px 14px; }
     .yt-search-row { padding: 0 32px 12px; }
@@ -8308,10 +8440,7 @@
   <div id="page-goals" class="standalone-page-wrapper">
     <div class="page-hero-banner goals-theme">
       <div class="container hero-banner-container">
-        <button class="page-back-btn-modern" id="goalsBackBtn">
-          <i class="fas fa-chevron-right"></i>
-          <span>العودة للمكتبة</span>
-        </button>
+
         <div class="hero-banner-content">
           <div class="hero-banner-icon-wrapper">
             <i class="fas fa-bullseye"></i>
@@ -8772,101 +8901,109 @@
   <div id="page-youtube" class="standalone-page-wrapper">
 
     <div class="yt-sticky-wrapper">
-    <!-- ══ هيدر صفحة يوتيوب - مطابق للصورة ══ -->
-    <div class="yt-page-header">
-      <!-- القسم القابل للإخفاء عند التمرير -->
-      <div class="yt-header-collapsible">
-        <!-- صف 1: عنوان + أيقونات -->
-        <div class="yt-header-top">
-          <div class="yt-header-actions-right">
-            <button class="yt-header-icon-btn" onclick="toggleYtSubsFilter()" id="ytSubsBellBtn" title="الاشتراكات">
-              <i class="fas fa-bell"></i>
-              <span class="yt-subs-count" id="ytSubsCount" style="display:none;">0</span>
-            </button>
-            <button class="yt-header-icon-btn" onclick="openYtFavShelf()" id="ytFavBtn" title="المفضلة">
-              <i class="far fa-bookmark"></i>
-              <span class="yt-fav-count" id="ytFavCount" style="display:none;">0</span>
-            </button>
-          </div>
-          <div class="yt-header-brand">
-            <span class="yt-header-title">قنوات ومقاطع</span>
-            <span class="yt-header-sub">مكتبة نور الحوزة</span>
-          </div>
-          <div class="yt-header-actions-left">
-            <div class="yt-header-yt-icon">
-              <i class="fab fa-youtube"></i>
-            </div>
-            <button class="yt-header-icon-btn yt-header-back" id="ytBackBtn">
-              <i class="fas fa-chevron-left"></i>
-            </button>
-          </div>
+
+      <!-- ══ هيدر 1: العنوان — يختفي تلقائياً عند التمرير ══ -->
+      <div class="yt-title-header" id="ytTitleHeader">
+        <div class="yt-title-icon">
+          <i class="fab fa-youtube"></i>
         </div>
 
-        <!-- صف 3: بحث -->
-        <div class="yt-search-row">
-          <div class="yt-search-wrap">
-            <i class="fas fa-search yt-search-icon"></i>
-            <input type="text" id="yt-search" class="yt-search-input"
-                   placeholder="ابحث عن قناة أو فيديو..."
-                   onkeyup="filterContentBySearch(this.value.toLowerCase())">
-          </div>
+        <div class="yt-title-text-block">
+          <h1 class="yt-title-main">قنوات ومقاطع</h1>
+          <p class="yt-title-sub">مكتبة نور الحوزة الرقمية</p>
         </div>
 
-        <!-- صف 4: تصنيفات -->
-        <div class="yt-filter-row">
-          <button class="yt-cats-toggle" id="ytCatsToggleBtn" onclick="toggleYtCatsPanel()">
-            <i class="fas fa-filter"></i>
-            <span>التصنيفات</span>
-            <i class="fas fa-chevron-down chevron" id="ytCatsChevron"></i>
-          </button>
-          <div class="yt-filter-spacer"></div>
-          <div class="filter-select-wrapper" style="position:relative;">
-            <i class="fas fa-sort-amount-down sort-icon-main"></i>
-            <select id="ytSortSelect" class="standalone-select yt-sort-select">
-              <option value="default">الافتراضي</option>
-              <option value="name-asc">أ ← ي</option>
-              <option value="name-desc">ي ← أ</option>
-              <option value="date-newest">الأحدث إضافة</option>
-              <option value="date-oldest">الأقدم إضافة</option>
-            </select>
-            <i class="fas fa-chevron-down filter-arrow-icon"></i>
-          </div>
-        </div>
-      </div><!-- /yt-header-collapsible -->
-
-      <!-- صف 2: تبويبات (تبقى دائماً) -->
-      <div class="yt-header-tabs" id="ytPageTabs">
-        <!-- أزرار مضغوطة تظهر فقط عند التمرير -->
-        <div class="yt-compact-actions">
-          <button class="yt-header-icon-btn" onclick="toggleYtSubsFilter()" title="الاشتراكات">
+        <div class="yt-title-actions">
+          <button class="yt-header-icon-btn" onclick="toggleYtSubsFilter()" id="ytSubsBellBtn" title="الاشتراكات">
             <i class="fas fa-bell"></i>
+            <span class="yt-subs-count" id="ytSubsCount" style="display:none;">0</span>
           </button>
-          <button class="yt-header-icon-btn" onclick="openYtFavShelf()" title="المفضلة">
+          <button class="yt-header-icon-btn" onclick="openYtFavShelf()" id="ytFavBtn" title="المفضلة">
             <i class="far fa-bookmark"></i>
+            <span class="yt-fav-count" id="ytFavCount" style="display:none;">0</span>
+          </button>
+          <button class="yt-header-icon-btn yt-header-back" id="ytBackBtn" title="العودة">
+            <i class="fas fa-chevron-left"></i>
           </button>
         </div>
-        <button class="yt-tab active" data-tab-yt="playlists">
-          <i class="fas fa-list"></i>
-          <span class="yt-tab-label">القوائم</span>
-          <span class="tab-badge" id="ytTabPlaylists">0</span>
-        </button>
-        <button class="yt-tab" data-tab-yt="videos">
-          <i class="fas fa-play-circle"></i>
-          <span class="yt-tab-label">الفيديوهات</span>
-          <span class="tab-badge" id="ytTabVideos">0</span>
-        </button>
-        <button class="yt-tab active" data-tab-yt="channels">
-          <i class="fas fa-tv"></i>
-          <span class="yt-tab-label">القنوات</span>
-          <span class="tab-badge" id="ytTabChannels">0</span>
-        </button>
-      </div>
-    </div><!-- /yt-page-header -->
+      </div><!-- /yt-title-header -->
 
-    <!-- لوح التصنيفات -->
-    <div class="yt-cats-panel" id="ytCatsPanel">
-      <div class="yt-cats-panel-inner" id="ytCatChipsContainer"></div>
-    </div>
+      <!-- ══ هيدر 2: نظام التنقل — بتحكم المستخدم ══ -->
+      <div class="yt-nav-header" id="ytNavHeader">
+
+        <!-- القسم القابل للطي: بحث + فلتر -->
+        <div class="yt-nav-collapsible" id="ytNavCollapsible">
+          <!-- بحث -->
+          <div class="yt-search-row">
+            <div class="yt-search-wrap">
+              <i class="fas fa-search yt-search-icon"></i>
+              <input type="text" id="yt-search" class="yt-search-input"
+                     placeholder="ابحث عن قناة أو فيديو..."
+                     onkeyup="filterContentBySearch(this.value.toLowerCase())">
+            </div>
+          </div>
+          <!-- تصنيفات وترتيب -->
+          <div class="yt-filter-row">
+            <button class="yt-cats-toggle" id="ytCatsToggleBtn" onclick="toggleYtCatsPanel()">
+              <i class="fas fa-filter"></i>
+              <span>التصنيفات</span>
+              <i class="fas fa-chevron-down chevron" id="ytCatsChevron"></i>
+            </button>
+            <div class="yt-filter-spacer"></div>
+            <div class="filter-select-wrapper" style="position:relative;">
+              <i class="fas fa-sort-amount-down sort-icon-main"></i>
+              <select id="ytSortSelect" class="standalone-select yt-sort-select">
+                <option value="default">الافتراضي</option>
+                <option value="name-asc">أ ← ي</option>
+                <option value="name-desc">ي ← أ</option>
+                <option value="date-newest">الأحدث إضافة</option>
+                <option value="date-oldest">الأقدم إضافة</option>
+              </select>
+              <i class="fas fa-chevron-down filter-arrow-icon"></i>
+            </div>
+          </div>
+        </div><!-- /yt-nav-collapsible -->
+
+        <!-- التبويبات + أزرار التحكم أسفل اليسار -->
+        <div class="yt-header-tabs" id="ytPageTabs">
+
+          <!-- أزرار التحكم: تثبيت / إخفاء — أسفل اليسار -->
+          <div class="yt-nav-ctrl-btns">
+            <button class="yt-nav-ctrl-btn" id="ytNavPinBtn"
+                    onclick="ytNavTogglePin()"
+                    title="تثبيت شريط البحث مفتوحاً">
+              <i class="fas fa-thumbtack"></i>
+            </button>
+            <button class="yt-nav-ctrl-btn" id="ytNavHideBtn"
+                    onclick="ytNavToggleHide()"
+                    title="إخفاء شريط التنقل">
+              <i class="fas fa-eye-slash"></i>
+            </button>
+          </div>
+
+          <button class="yt-tab active" data-tab-yt="playlists">
+            <i class="fas fa-list"></i>
+            <span class="yt-tab-label">القوائم</span>
+            <span class="tab-badge" id="ytTabPlaylists">0</span>
+          </button>
+          <button class="yt-tab" data-tab-yt="videos">
+            <i class="fas fa-play-circle"></i>
+            <span class="yt-tab-label">الفيديوهات</span>
+            <span class="tab-badge" id="ytTabVideos">0</span>
+          </button>
+          <button class="yt-tab active" data-tab-yt="channels">
+            <i class="fas fa-tv"></i>
+            <span class="yt-tab-label">القنوات</span>
+            <span class="tab-badge" id="ytTabChannels">0</span>
+          </button>
+        </div>
+
+      </div><!-- /yt-nav-header -->
+
+      <!-- لوح التصنيفات -->
+      <div class="yt-cats-panel" id="ytCatsPanel">
+        <div class="yt-cats-panel-inner" id="ytCatChipsContainer"></div>
+      </div>
 
     </div><!-- /yt-sticky-wrapper -->
 
@@ -8916,10 +9053,7 @@
   <div id="page-summaries" class="standalone-page-wrapper">
     <div class="page-hero-banner summaries-theme">
       <div class="container hero-banner-container">
-        <button class="page-back-btn-modern" id="summariesBackBtn">
-          <i class="fas fa-chevron-right"></i>
-          <span>العودة للمكتبة</span>
-        </button>
+
         <div class="hero-banner-content">
           <div class="hero-banner-icon-wrapper">
             <i class="fas fa-file-alt"></i>
@@ -11771,7 +11905,7 @@ ITEMS_PER_PAGE: 30
       cleanupSidebarState();
     }
 
-    // عرض صفحة المكتبة
+    // عرض صفحة المكتبة الرئيسية
     function showLibraryPage() {
       hideAllPages();
       MAIN_PAGES.library.forEach(el => { if (el) el.style.display = ''; });
@@ -11782,6 +11916,12 @@ ITEMS_PER_PAGE: 30
       localStorage.setItem('noor_last_page', 'library');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       closeSidebar();
+      if (_goalsScrollHandler) { window.removeEventListener('scroll', _goalsScrollHandler); _goalsScrollHandler = null; }
+      if (_summariesScrollHandler) { window.removeEventListener('scroll', _summariesScrollHandler); _summariesScrollHandler = null; }
+      const goalsBanner = document.querySelector('#page-goals .page-hero-banner');
+      const sumBanner   = document.querySelector('#page-summaries .page-hero-banner');
+      if (goalsBanner) goalsBanner.classList.remove('scrolled');
+      if (sumBanner)   sumBanner.classList.remove('scrolled');
     }
 
     // عرض صفحة يوتيوب
@@ -11804,6 +11944,14 @@ ITEMS_PER_PAGE: 30
       }
     }
 
+    // ═══ scroll handler لصفحة أهدافنا ═══
+    let _goalsScrollHandler = null;
+    function _goalsScroll() {
+      const banner = document.querySelector('#page-goals .page-hero-banner');
+      if (!banner) return;
+      banner.classList.toggle('scrolled', window.scrollY > 60);
+    }
+
     // عرض صفحة أهدافنا
     function showGoalsPage() {
       hideAllPages();
@@ -11813,11 +11961,26 @@ ITEMS_PER_PAGE: 30
       localStorage.setItem('noor_last_page', 'goals');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       closeSidebar();
+      // تفعيل scroll handler
+      const banner = document.querySelector('#page-goals .page-hero-banner');
+      if (banner) banner.classList.remove('scrolled');
+      if (!_goalsScrollHandler) {
+        _goalsScrollHandler = _goalsScroll;
+        window.addEventListener('scroll', _goalsScrollHandler, { passive: true });
+      }
     }
 
     // عرض صفحة حقيبة المؤمن - رابط خارجي
     function showHaqibaPage() {
       loadExternalPage('https://hawza.netlify.app/book/bag/', 'navHaqiba');
+    }
+
+    // ═══ scroll handler لصفحة تلخيصاتنا ═══
+    let _summariesScrollHandler = null;
+    function _summariesScroll() {
+      const banner = document.querySelector('#page-summaries .page-hero-banner');
+      if (!banner) return;
+      banner.classList.toggle('scrolled', window.scrollY > 60);
     }
 
     // عرض صفحة التلخيصات
@@ -11829,6 +11992,13 @@ ITEMS_PER_PAGE: 30
       localStorage.setItem('noor_last_page', 'summaries');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       closeSidebar();
+      // تفعيل scroll handler
+      const banner = document.querySelector('#page-summaries .page-hero-banner');
+      if (banner) banner.classList.remove('scrolled');
+      if (!_summariesScrollHandler) {
+        _summariesScrollHandler = _summariesScroll;
+        window.addEventListener('scroll', _summariesScrollHandler, { passive: true });
+      }
       loadSummariesFolders('1IwsqRD7Z5GVn2c3jScx7h5pBmo1RZ28e', 'تلخيصاتنا');
     }
 
@@ -12802,40 +12972,53 @@ ITEMS_PER_PAGE: 30
     window.toggleYtCatsPanel    = toggleYtCatsPanel;
     window.toggleYtFavorite     = toggleYtFavorite;
 
-    // ── إخفاء/إظهار رأس يوتيوب عند التمرير داخل صفحة يوتيوب فقط ──
+    // ══ سلوك هيدري يوتيوب ══
+    // هيدر 1: يصغر تلقائياً عند التمرير (العنوان يبقى دائماً)
+    // هيدر 2: يصغر تلقائياً | أزرار تثبيت/إخفاء أسفل اليسار
     (function initYtScrollBehavior() {
       let ticking = false;
       let ytScrollHandler = null;
+      let _navPinned = false;
+      let _navHidden = false;
 
       function handleYtScroll() {
         if (ticking) return;
         ticking = true;
         requestAnimationFrame(() => {
-          const wrapper = document.querySelector('#page-youtube .yt-sticky-wrapper');
-          const collapsible = document.querySelector('#page-youtube .yt-header-collapsible');
-          if (wrapper && collapsible) {
-            const st = window.scrollY || document.documentElement.scrollTop;
-            const colH = collapsible.offsetHeight;
-            if (st > 10) {
-              // إخفاء الجزء القابل للطي فقط، الـ tabs تبقى ظاهرة
-              wrapper.style.transform = `translateY(-${colH}px)`;
-              wrapper.classList.add('yt-header-scrolled');
-            } else {
-              wrapper.style.transform = 'translateY(0)';
-              wrapper.classList.remove('yt-header-scrolled');
-            }
+          const scrolled = window.scrollY > 55;
+
+          // هيدر 1: يصغر (العنوان يبقى)
+          const th = document.getElementById('ytTitleHeader');
+          if (th) th.classList.toggle('scrolled', scrolled);
+
+          // هيدر 2: يصغر إلا إذا كان مثبتاً
+          const nh = document.getElementById('ytNavHeader');
+          if (nh && !_navPinned && !_navHidden) {
+            nh.classList.toggle('nav-scrolled', scrolled);
           }
+
           ticking = false;
         });
       }
 
+      function resetYtHeaders() {
+        const th = document.getElementById('ytTitleHeader');
+        const nh = document.getElementById('ytNavHeader');
+        if (th) th.classList.remove('scrolled');
+        if (nh) {
+          nh.classList.remove('nav-scrolled', 'pinned', 'user-hidden');
+        }
+        _navPinned = false;
+        _navHidden = false;
+        const pinBtn  = document.getElementById('ytNavPinBtn');
+        const hideBtn = document.getElementById('ytNavHideBtn');
+        if (pinBtn)  pinBtn.classList.remove('pinned-active');
+        if (hideBtn) hideBtn.classList.remove('hidden-active');
+      }
+
       document.addEventListener('ytPageOpened', () => {
         window.scrollTo(0, 0);
-        const wrapper = document.querySelector('#page-youtube .yt-sticky-wrapper');
-        if (wrapper) {
-          wrapper.style.transform = 'translateY(0)';
-          wrapper.classList.remove('yt-header-scrolled');
-        }
+        resetYtHeaders();
         if (!ytScrollHandler) {
           ytScrollHandler = handleYtScroll;
           window.addEventListener('scroll', ytScrollHandler, { passive: true });
@@ -12847,12 +13030,55 @@ ITEMS_PER_PAGE: 30
           window.removeEventListener('scroll', ytScrollHandler);
           ytScrollHandler = null;
         }
-        const wrapper = document.querySelector('#page-youtube .yt-sticky-wrapper');
-        if (wrapper) {
-          wrapper.style.transform = 'translateY(0)';
-          wrapper.classList.remove('yt-header-scrolled');
-        }
+        resetYtHeaders();
       });
+
+      // ── زر التثبيت: يبقي شريط البحث مفتوحاً دائماً ──
+      window.ytNavTogglePin = function() {
+        const nh = document.getElementById('ytNavHeader');
+        const btn = document.getElementById('ytNavPinBtn');
+        if (!nh || !btn) return;
+
+        _navPinned = !_navPinned;
+        if (_navPinned) {
+          _navHidden = false;
+          nh.classList.add('pinned');
+          nh.classList.remove('nav-scrolled', 'user-hidden');
+          btn.classList.add('pinned-active');
+          btn.title = 'إلغاء التثبيت';
+          const hideBtn = document.getElementById('ytNavHideBtn');
+          if (hideBtn) hideBtn.classList.remove('hidden-active');
+        } else {
+          nh.classList.remove('pinned');
+          btn.classList.remove('pinned-active');
+          btn.title = 'تثبيت شريط البحث مفتوحاً';
+        }
+      };
+
+      // ── زر الإخفاء: يخفي شريط التنقل كامل ──
+      window.ytNavToggleHide = function() {
+        const nh = document.getElementById('ytNavHeader');
+        const btn = document.getElementById('ytNavHideBtn');
+        if (!nh || !btn) return;
+
+        _navHidden = !_navHidden;
+        if (_navHidden) {
+          _navPinned = false;
+          nh.classList.add('user-hidden');
+          nh.classList.remove('pinned', 'nav-scrolled');
+          btn.classList.add('hidden-active');
+          btn.title = 'إظهار شريط التنقل';
+          btn.querySelector('i').className = 'fas fa-eye';
+          const pinBtn = document.getElementById('ytNavPinBtn');
+          if (pinBtn) pinBtn.classList.remove('pinned-active');
+        } else {
+          nh.classList.remove('user-hidden');
+          btn.classList.remove('hidden-active');
+          btn.title = 'إخفاء شريط التنقل';
+          btn.querySelector('i').className = 'fas fa-eye-slash';
+        }
+      };
+
     })();
     window.toggleYtSubscription = toggleYtSubscription;
     window.toggleYtSubsFilter   = toggleYtSubsFilter;
@@ -13028,8 +13254,6 @@ ITEMS_PER_PAGE: 30
       const ytBackBtn = document.getElementById('ytBackBtn');
       if (ytBackBtn) ytBackBtn.addEventListener('click', showLibraryPage);
 
-      const goalsBackBtn = document.getElementById('goalsBackBtn');
-      if (goalsBackBtn) goalsBackBtn.addEventListener('click', showLibraryPage);
 
       const haqibaBackBtn = document.getElementById('haqibaBackBtn');
       if (haqibaBackBtn) haqibaBackBtn.addEventListener('click', () => {
@@ -13044,8 +13268,6 @@ ITEMS_PER_PAGE: 30
         }
       });
 
-      const summariesBackBtn = document.getElementById('summariesBackBtn');
-      if (summariesBackBtn) summariesBackBtn.addEventListener('click', showLibraryPage);
 
       const memorizationBackBtn = document.getElementById('memorizationBackBtn');
       if (memorizationBackBtn) memorizationBackBtn.addEventListener('click', showLibraryPage);
