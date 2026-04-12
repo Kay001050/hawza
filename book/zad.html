@@ -9,6 +9,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script>
+    // مزامنة فورية مع نظام التشغيل قبل الرسم لتجنب الوميض
+    (function() {
+      var dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    })();
+  </script>
 
   <style>
     /* ══════════════════════════════════════════
@@ -75,29 +82,57 @@
        ══════════════════════════════════════════ */
     .app-header {
       background-color: var(--green-deep);
-      background-image: linear-gradient(135deg, var(--green-deep) 0%, var(--green-mid) 100%);
-      padding: clamp(30px, 5vw, 45px) 20px;
-      display: flex; align-items: center; justify-content: center;
-      position: relative;
+      background-image: linear-gradient(160deg, var(--green-deep) 0%, #0d3520 60%, var(--green-mid) 100%);
+      padding: clamp(40px, 7vw, 80px) clamp(20px, 5vw, 60px) clamp(30px, 5vw, 55px);
+      display: flex; align-items: flex-end; justify-content: flex-start;
+      position: sticky; top: 0;
       border-bottom: 3px solid var(--gold-dark);
-      box-shadow: 0 8px 30px rgba(11, 43, 29, 0.6);
-      z-index: 10;
+      box-shadow: 0 8px 30px rgba(11, 43, 29, 0.7);
+      z-index: 200;
+      transition: padding 0.4s ease, min-height 0.4s ease;
+      overflow: hidden;
     }
 
-    .theme-toggle-btn {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      left: clamp(15px, 4vw, 30px);
-      background: rgba(255, 255, 255, 0.05); border: 1px solid var(--gold); color: var(--gold);
-      width: clamp(35px, 8vw, 45px); height: clamp(35px, 8vw, 45px);
-      border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      font-size: clamp(14px, 4vw, 18px); transition: var(--transition); backdrop-filter: blur(5px);
+    .app-header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 20% 50%, rgba(46, 139, 87, 0.12) 0%, transparent 70%);
+      pointer-events: none;
     }
-    .theme-toggle-btn:hover { background: var(--gold); color: var(--green-deep); transform: translateY(-50%) scale(1.1); }
+
+    .app-header.scrolled {
+      padding-top: clamp(12px, 2vw, 18px);
+      padding-bottom: clamp(12px, 2vw, 18px);
+    }
+
+    .app-header.scrolled .header-subtitle {
+      opacity: 0;
+      max-height: 0;
+      margin-top: 0;
+      overflow: hidden;
+    }
+
+    .header-text-block {
+      text-align: right;
+      display: flex; flex-direction: column; align-items: flex-start;
+    }
 
     .header-title {
-      font-family: 'Amiri', serif; font-size: clamp(35px, 6vw, 55px); font-weight: 700;
+      font-family: 'Amiri', serif; font-size: clamp(36px, 4vw, 46px); font-weight: 700;
       color: var(--gold-light); margin: 0; line-height: 1.2; letter-spacing: 1px;
       text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      transition: font-size 0.4s ease;
+    }
+
+    .header-subtitle {
+      font-family: 'Cairo', sans-serif;
+      font-size: clamp(12px, 2vw, 15px);
+      color: rgba(201, 168, 76, 0.75);
+      margin-top: 6px;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+      transition: opacity 0.35s ease, max-height 0.35s ease, margin-top 0.35s ease;
+      max-height: 40px;
     }
 
     /* ══════════════════════════════════════════
@@ -349,15 +384,455 @@
       display: flex; align-items: center; gap: 10px;
     }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* ══════════════════════════════════════════
+       10. بطاقات تحدي الـ 40 يوماً
+       ══════════════════════════════════════════ */
+
+    /* الفاصل بين البطاقات العلوية وقسم التحدي */
+    .challenge-divider {
+      margin: clamp(18px, 3vw, 28px) 0 0;
+      border: none;
+      border-top: 1px dashed var(--border-color);
+    }
+
+    .challenge-section-title {
+      font-family: 'Amiri', serif;
+      font-size: clamp(20px, 4.5vw, 28px);
+      color: var(--gold);
+      text-align: center;
+      margin: clamp(14px, 2.5vw, 20px) 0 clamp(14px, 2.5vw, 20px);
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+
+    /* شبكة البطاقات: 3 أعمدة → 2 → 1 — متساوية الارتفاع */
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(12px, 2vw, 20px);
+      align-items: stretch;   /* ← متساوية الارتفاع */
+    }
+    @media (max-width: 860px) {
+      .challenge-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 540px) {
+      .challenge-grid { grid-template-columns: 1fr; }
+    }
+
+    .challenge-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      padding: clamp(12px, 2.5vw, 18px);
+      display: flex; flex-direction: column;
+      transition: var(--transition);
+      animation: slideUp 0.6s ease forwards; opacity: 0; transform: translateY(20px);
+      position: relative;
+      overflow: hidden;
+    }
+    .challenge-card::before {
+      content: '';
+      position: absolute; top: 0; right: 0;
+      width: 3px; height: 100%;
+      background: linear-gradient(180deg, var(--gold), var(--green-soft));
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+    .challenge-card:nth-child(1) { animation-delay: 0.1s; }
+    .challenge-card:nth-child(2) { animation-delay: 0.2s; }
+    .challenge-card:nth-child(3) { animation-delay: 0.3s; }
+    .challenge-card:hover {
+      box-shadow: var(--shadow-gold);
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .challenge-card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px; padding-bottom: 8px;
+      border-bottom: 1px dashed var(--border-color);
+    }
+    .challenge-card-title {
+      font-family: 'Amiri', serif;
+      font-size: clamp(15px, 3vw, 18px);
+      font-weight: 700; color: var(--gold);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .challenge-card-subtitle {
+      font-size: 11px; color: var(--text-muted);
+      font-family: 'Cairo', sans-serif; white-space: nowrap;
+    }
+
+    /* شريط التقدم */
+    .challenge-progress-wrap { margin-bottom: 10px; }
+    .challenge-progress-header {
+      display: flex; justify-content: space-between;
+      font-size: 11px; font-weight: 700; color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .challenge-progress-track {
+      height: 6px; background: var(--bg-input);
+      border-radius: 10px; overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+    .challenge-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green-soft), var(--gold));
+      border-radius: 10px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    /* شبكة أزرار الـ40 — 8 أعمدة ثابتة، تتكيف مع عرض البطاقة */
+    .challenge-buttons-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 860px) {
+      /* عند 2 أعمدة: البطاقة أعرض قليلاً */
+      .challenge-buttons-grid { gap: 5px; }
+    }
+    @media (max-width: 380px) {
+      .challenge-buttons-grid { gap: 4px; }
+    }
+
+    .challenge-day-btn {
+      aspect-ratio: 1;
+      border-radius: 6px;
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-input);
+      font-size: 10px; font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cairo', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      min-width: 0;
+      padding: 0;
+    }
+    .challenge-day-btn:active { transform: scale(0.92); }
+    .challenge-day-btn:hover {
+      border-color: var(--gold); color: var(--gold);
+      background: var(--bg-card);
+    }
+    .challenge-day-btn.done {
+      background: var(--green-soft);
+      border-color: var(--green-soft);
+      color: #fff;
+    }
+    .challenge-day-btn.today-target {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.12);
+      color: var(--gold);
+      animation: pulse-btn 2s ease-in-out infinite;
+    }
+    .challenge-day-btn.today-target.done {
+      background: var(--green-soft);
+      border-color: var(--green-soft);
+      color: #fff;
+      animation: none;
+    }
+    @keyframes pulse-btn {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.45); }
+      50%       { box-shadow: 0 0 0 4px rgba(201,168,76,0); }
+    }
+
+    /* تذكير اليوم — 5 ثوانٍ + زر إغلاق */
+    .challenge-reminder {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 10px;
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+      font-size: 12px; font-weight: 600; color: var(--gold);
+      font-family: 'Cairo', sans-serif;
+      animation: fadeInReminder 0.35s ease;
+      position: relative;
+    }
+    .challenge-reminder.hidden {
+      display: none !important;
+    }
+    @keyframes fadeInReminder {
+      from { opacity: 0; transform: translateY(-5px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reminder-bell { font-size: 14px; flex-shrink: 0; }
+    .reminder-text { flex: 1; line-height: 1.4; }
+    .reminder-close {
+      background: none; border: none; padding: 0;
+      color: var(--gold); font-size: 13px; cursor: pointer;
+      opacity: 0.7; flex-shrink: 0; transition: opacity 0.15s;
+      width: 20px; height: 20px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+    }
+    .reminder-close:hover { opacity: 1; background: rgba(201,168,76,0.15); }
+
+    /* خانة الإهداء */
+    .challenge-dedication {
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-color);
+      margin-top: auto;
+    }
+    .challenge-dedication-label {
+      font-size: 11px; color: var(--text-muted);
+      margin-bottom: 5px;
+      display: flex; align-items: center; gap: 5px;
+      font-family: 'Cairo', sans-serif; font-weight: 700;
+    }
+    .challenge-dedication-label i { color: var(--gold); font-size: 12px; }
+    .challenge-dedication-input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+      color: var(--text-main);
+      font-family: 'Amiri', serif;
+      font-size: 13px;
+      direction: rtl; outline: none;
+      transition: border-color 0.2s;
+    }
+    .challenge-dedication-input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(201,168,76,0.1);
+    }
+    .challenge-dedication-input::placeholder {
+      color: var(--text-muted); font-size: 12px;
+    }
+
+    /* ── حقل اسم العمل الاختياري ── */
+    .optional-work-wrap {
+      margin-bottom: 10px;
+    }
+    .optional-work-label {
+      font-size: 11px; font-weight: 700; color: var(--text-muted);
+      font-family: 'Cairo', sans-serif;
+      display: flex; align-items: center; gap: 5px;
+      margin-bottom: 5px;
+    }
+    .optional-work-label i { color: var(--gold); font-size: 12px; }
+    .optional-work-input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1.5px solid var(--gold);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      color: var(--text-main);
+      font-family: 'Amiri', serif;
+      font-size: 14px;
+      direction: rtl; outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .optional-work-input:focus {
+      border-color: var(--gold-light);
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.15);
+    }
+    .optional-work-input::placeholder {
+      color: var(--text-muted); font-size: 12px; font-family: 'Cairo', sans-serif;
+    }
+
+    /* زر عرض الدعاء/الزيارة */
+    .btn-show-dua {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.35);
+      border-radius: 20px;
+      font-size: 11px; font-weight: 700;
+      color: var(--gold); font-family: 'Cairo', sans-serif;
+      cursor: pointer; transition: background 0.2s, transform 0.15s;
+      white-space: nowrap;
+    }
+    .btn-show-dua:hover {
+      background: rgba(201,168,76,0.2);
+      transform: translateY(-1px);
+    }
+    .btn-show-dua i { font-size: 10px; }
+
+    /* ══ بطاقة الدعاء المنبثقة ══ */
+    .dua-modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      padding: clamp(10px, 3vw, 24px);
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s;
+    }
+    .dua-modal-overlay.active {
+      opacity: 1; visibility: visible;
+    }
+
+    .dua-modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      width: 100%;
+      max-width: 680px;
+      max-height: 88vh;
+      display: flex; flex-direction: column;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+      transform: scale(0.94) translateY(16px);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      overflow: hidden;
+      position: relative;
+    }
+    .dua-modal-overlay.active .dua-modal-box {
+      transform: scale(1) translateY(0);
+    }
+
+    /* شريط الذهب العلوي */
+    .dua-modal-box::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-dark));
+    }
+
+    .dua-modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px 12px;
+      border-bottom: 1px dashed var(--border-color);
+      flex-shrink: 0;
+    }
+    .dua-modal-title {
+      font-family: 'Amiri', serif;
+      font-size: clamp(18px, 4vw, 22px);
+      font-weight: 700; color: var(--gold);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .dua-modal-close {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted); font-size: 14px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+      flex-shrink: 0;
+    }
+    .dua-modal-close:hover {
+      background: rgba(201,168,76,0.15);
+      color: var(--gold); transform: rotate(90deg);
+    }
+
+    .dua-modal-body {
+      flex: 1; overflow-y: auto;
+      padding: clamp(16px, 3vw, 28px) clamp(16px, 4vw, 36px);
+      direction: rtl;
+      scrollbar-width: thin;
+      scrollbar-color: var(--gold-dark) var(--bg-input);
+    }
+    .dua-modal-body::-webkit-scrollbar { width: 5px; }
+    .dua-modal-body::-webkit-scrollbar-thumb {
+      background: var(--gold-dark); border-radius: 5px;
+    }
+
+    .dua-modal-text {
+      font-family: 'Amiri', serif;
+      font-size: clamp(17px, 2.5vw, 21px);
+      line-height: 2.2;
+      color: var(--text-main);
+      text-align: justify;
+    }
+    /* بسملة مميزة */
+    .dua-modal-basmala {
+      font-family: 'Amiri', serif;
+      font-size: clamp(18px, 3vw, 23px);
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+      line-height: 2;
+    }
+
+    .dua-modal-footer {
+      padding: 10px 18px;
+      border-top: 1px dashed var(--border-color);
+      text-align: center;
+      font-family: 'Cairo', sans-serif;
+      font-size: 11px; color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 480px) {
+      .dua-modal-body { padding: 14px 16px; }
+      .dua-modal-text { font-size: 16px; line-height: 2; }
+    }
+
+    /* ══ تساوي أحجام بطاقات التحدي ══ */
+    .challenge-grid {
+      align-items: stretch;   /* يجعل جميع البطاقات نفس الارتفاع */
+    }
+    .challenge-card {
+      height: 100%;           /* تملأ الخلية كاملاً */
+    }
+
+    /* ══ قائمة اختيارات السبحة ══ */
+    .tasbeeh-presets {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+    .tasbeeh-preset-btn {
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-input);
+      font-family: 'Cairo', sans-serif;
+      font-size: 11px; font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tasbeeh-preset-btn:hover,
+    .tasbeeh-preset-btn.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--green-deep);
+      transform: translateY(-1px);
+    }
+    /* شريط مرحلة تسبيحة الزهراء */
+    .zahra-phase-bar {
+      display: none;
+      align-items: center; gap: 8px;
+      margin-top: 8px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 12px; font-weight: 700;
+    }
+    .zahra-phase-bar.visible { display: flex; }
+    .zahra-phase-label {
+      flex: 1; text-align: center;
+      padding: 5px 8px; border-radius: 10px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      transition: background 0.3s, color 0.3s;
+    }
+    .zahra-phase-label.current {
+      background: var(--gold);
+      color: var(--green-deep);
+      border-color: var(--gold);
+    }
   </style>
 </head>
 <body>
 
-  <header class="app-header">
-    <button class="theme-toggle-btn" id="theme-toggle" title="الوضع الليلي/النهاري" onclick="toggleTheme()">
-      <i class="fas fa-moon" id="theme-icon"></i>
-    </button>
-    <h1 class="header-title">زاد المتقين</h1>
+  <header class="app-header" id="app-header">
+    <div class="header-text-block">
+      <h1 class="header-title"><i class="fas fa-leaf" style="font-size:0.7em; margin-left: 12px; opacity:0.85; vertical-align: middle;"></i>زاد المتقين</h1>
+      <p class="header-subtitle">زادٌ يقتاتُ منه الراجعون إلى الله</p>
+    </div>
   </header>
 
   <main class="container">
@@ -420,6 +895,19 @@
               <button class="t-action-btn reset" onclick="resetTasbeeh()" title="تصفير العداد"><i class="fas fa-redo"></i></button>
               <button class="t-action-btn" onclick="saveTasbeehTarget()" title="تحديد هدف"><i class="fas fa-flag"></i></button>
             </div>
+            <!-- أزرار الاختيارات السريعة -->
+            <div class="tasbeeh-presets">
+              <button class="tasbeeh-preset-btn" onclick="setTasbeehPreset('free')" id="preset-free" title="حر">حر</button>
+              <button class="tasbeeh-preset-btn" onclick="setTasbeehPreset('zahra')" id="preset-zahra" title="تسبيحة الزهراء">تسبيحة الزهراء ع</button>
+              <button class="tasbeeh-preset-btn" onclick="setTasbeehPreset('istighfar70')" id="preset-istighfar70" title="استغفر الله × 70">استغفار × ٧٠</button>
+              <button class="tasbeeh-preset-btn" onclick="setTasbeehPreset('istighfar100')" id="preset-istighfar100" title="استغفر الله × 100">استغفار × ١٠٠</button>
+            </div>
+            <!-- شريط مراحل تسبيحة الزهراء -->
+            <div class="zahra-phase-bar" id="zahra-phase-bar">
+              <div class="zahra-phase-label" id="zahra-p1">٣٤ الله أكبر</div>
+              <div class="zahra-phase-label" id="zahra-p2">٣٣ الحمد لله</div>
+              <div class="zahra-phase-label" id="zahra-p3">٣٣ سبحان الله</div>
+            </div>
           </div>
         </div>
       </section>
@@ -459,7 +947,160 @@
       </section>
 
     </div>
+
+    <!-- فاصل -->
+    <hr class="challenge-divider">
+
+    <!-- ══ قسم تحدي الـ 40 يوماً (داخل main.container) ══ -->
+    <h2 class="challenge-section-title">
+      <i class="fas fa-calendar-check"></i> تحدي الـ 40 يوماً
+      <i class="fas fa-calendar-check"></i>
+    </h2>
+    <div class="challenge-grid">
+
+      <!-- بطاقة 1: دعاء العهد -->
+      <div class="challenge-card" id="card-ahd">
+        <div class="challenge-card-header">
+          <div class="challenge-card-title">
+            <i class="fas fa-moon"></i> دعاء العهد
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button class="btn-show-dua" onclick="openDuaModal('ahd')">
+              <i class="fas fa-book-open"></i> اقرأ الدعاء
+            </button>
+            <span class="challenge-card-subtitle">كل فجر</span>
+          </div>
+        </div>
+        <div class="challenge-reminder hidden" id="reminder-ahd">
+          <i class="fas fa-bell reminder-bell"></i>
+          <span class="reminder-text">لم تُسجّل دعاء العهد اليوم — سجّله الآن!</span>
+          <button class="reminder-close" onclick="dismissReminder('ahd')" title="إغلاق"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="challenge-progress-wrap">
+          <div class="challenge-progress-header">
+            <span>التقدم</span>
+            <span id="pct-ahd" style="color:var(--gold);">0 / 40</span>
+          </div>
+          <div class="challenge-progress-track">
+            <div class="challenge-progress-bar" id="bar-ahd"></div>
+          </div>
+        </div>
+        <div class="challenge-buttons-grid" id="grid-ahd"></div>
+        <div class="challenge-dedication">
+          <div class="challenge-dedication-label">
+            <i class="fas fa-heart"></i> إهداء الثواب
+          </div>
+          <input type="text" class="challenge-dedication-input" id="ded-ahd"
+            placeholder="يهدى ثواب هذا العمل إلى الشهيد...."
+            oninput="saveDedication('ahd', this.value)">
+        </div>
+      </div>
+
+      <!-- بطاقة 2: زيارة عاشوراء -->
+      <div class="challenge-card" id="card-ashura">
+        <div class="challenge-card-header">
+          <div class="challenge-card-title">
+            <i class="fas fa-star-and-crescent"></i> زيارة عاشوراء
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button class="btn-show-dua" onclick="openDuaModal('ashura')">
+              <i class="fas fa-book-open"></i> اقرأ الزيارة
+            </button>
+            <span class="challenge-card-subtitle">يومياً</span>
+          </div>
+        </div>
+        <div class="challenge-reminder hidden" id="reminder-ashura">
+          <i class="fas fa-bell reminder-bell"></i>
+          <span class="reminder-text">لم تُسجّل زيارة عاشوراء اليوم — سجّلها الآن!</span>
+          <button class="reminder-close" onclick="dismissReminder('ashura')" title="إغلاق"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="challenge-progress-wrap">
+          <div class="challenge-progress-header">
+            <span>التقدم</span>
+            <span id="pct-ashura" style="color:var(--gold);">0 / 40</span>
+          </div>
+          <div class="challenge-progress-track">
+            <div class="challenge-progress-bar" id="bar-ashura"></div>
+          </div>
+        </div>
+        <div class="challenge-buttons-grid" id="grid-ashura"></div>
+        <div class="challenge-dedication">
+          <div class="challenge-dedication-label">
+            <i class="fas fa-heart"></i> إهداء الثواب
+          </div>
+          <input type="text" class="challenge-dedication-input" id="ded-ashura"
+            placeholder="يهدى ثواب هذا العمل إلى الشهيد...."
+            oninput="saveDedication('ashura', this.value)">
+        </div>
+      </div>
+
+      <!-- بطاقة 3: أعمال اختيارية -->
+      <div class="challenge-card" id="card-optional">
+        <div class="challenge-card-header">
+          <div class="challenge-card-title">
+            <i class="fas fa-seedling"></i> أعمال اختيارية
+          </div>
+          <span class="challenge-card-subtitle">مستحبات</span>
+        </div>
+
+        <!-- حقل اسم العمل الاختياري -->
+        <div class="optional-work-wrap">
+          <div class="optional-work-label">
+            <i class="fas fa-pen-nib"></i> اسم العمل
+          </div>
+          <input type="text" id="optional-work-name"
+            class="optional-work-input"
+            placeholder="مثال: صلاة الليل، زيارة أمين الله، دعاء كميل..."
+            oninput="saveOptionalWorkName(this.value)">
+        </div>
+
+        <div class="challenge-reminder hidden" id="reminder-optional">
+          <i class="fas fa-bell reminder-bell"></i>
+          <span class="reminder-text" id="reminder-optional-text">لم تُسجّل عملك الاختياري اليوم — سجّله الآن!</span>
+          <button class="reminder-close" onclick="dismissReminder('optional')" title="إغلاق"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="challenge-progress-wrap">
+          <div class="challenge-progress-header">
+            <span>التقدم</span>
+            <span id="pct-optional" style="color:var(--gold);">0 / 40</span>
+          </div>
+          <div class="challenge-progress-track">
+            <div class="challenge-progress-bar" id="bar-optional"></div>
+          </div>
+        </div>
+        <div class="challenge-buttons-grid" id="grid-optional"></div>
+        <div class="challenge-dedication">
+          <div class="challenge-dedication-label">
+            <i class="fas fa-heart"></i> إهداء الثواب
+          </div>
+          <input type="text" class="challenge-dedication-input" id="ded-optional"
+            placeholder="يهدى ثواب هذا العمل إلى الشهيد...."
+            oninput="saveDedication('optional', this.value)">
+        </div>
+      </div>
+
+    </div><!-- end challenge-grid -->
+
   </main>
+
+  <!-- ══ مودال الدعاء / الزيارة ══ -->
+  <div class="dua-modal-overlay" id="duaModalOverlay" onclick="handleDuaOverlayClick(event)">
+    <div class="dua-modal-box" id="duaModalBox">
+      <div class="dua-modal-header">
+        <div class="dua-modal-title" id="duaModalTitle">
+          <i class="fas fa-book-open"></i>
+          <span>دعاء العهد</span>
+        </div>
+        <button class="dua-modal-close" onclick="closeDuaModal()" title="إغلاق">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="dua-modal-body" id="duaModalBody">
+        <!-- يتم حقن النص هنا -->
+      </div>
+      <div class="dua-modal-footer" id="duaModalFooter"></div>
+    </div>
+  </div>
 
   <div class="toast" id="toast"><i class="fas fa-info-circle"></i> <span id="toast-msg">تم الإنجاز</span></div>
 
@@ -489,22 +1130,24 @@
       setTimeout(() => t.classList.remove('show'), 3000);
     }
 
+    function applyTheme(theme) {
+      document.body.setAttribute('data-theme', theme);
+      localStorage.setItem(LS_THEME, theme);
+      localStorage.setItem('noor_library_theme', theme);
+      localStorage.setItem('bento-theme', theme);
+    }
+
     function initTheme() {
       const urlParams = new URLSearchParams(window.location.search);
       const urlTheme = urlParams.get('theme');
-      const savedTheme = urlTheme || localStorage.getItem('noor_library_theme') || localStorage.getItem('bento-theme') || localStorage.getItem(LS_THEME) || 'light';
-      document.body.setAttribute('data-theme', savedTheme);
-      document.getElementById('theme-icon').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-    }
-    
-    function toggleTheme() {
-      const isDark = document.body.getAttribute('data-theme') === 'dark';
-      const nextTheme = isDark ? 'light' : 'dark';
-      document.body.setAttribute('data-theme', nextTheme);
-      localStorage.setItem(LS_THEME, nextTheme);
-      localStorage.setItem('noor_library_theme', nextTheme);
-      localStorage.setItem('bento-theme', nextTheme);
-      document.getElementById('theme-icon').className = nextTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+      if (urlTheme) { applyTheme(urlTheme); return; }
+      // مزامنة تلقائية مع نظام التشغيل
+      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      applyTheme(systemDark ? 'dark' : 'light');
+      // الاستماع لتغييرات النظام
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        applyTheme(e.matches ? 'dark' : 'light');
+      });
     }
 
     // ══════════════════════════════════════════
@@ -766,27 +1409,98 @@
     }
 
     // ══════════════════════════════════════════
-    //  المسبحة الإلكترونية
+    //  المسبحة الإلكترونية + الاختيارات
     // ══════════════════════════════════════════
     let tasbeehCount = parseInt(localStorage.getItem(LS_TASBEEH)) || 0;
     let tasbeehTarget = parseInt(localStorage.getItem(LS_TASBEEH_TARGET)) || 100;
-    
-    function updateTasbeehUI() {
-      document.getElementById('tasbeeh-btn').innerText = tasbeehCount;
+    let tasbeehPreset = localStorage.getItem('zad_tasbeeh_preset') || 'free';
+
+    // إعدادات الاختيارات
+    const PRESETS = {
+      free:        { label: 'حر',             target: 0,   phases: null },
+      zahra:       { label: 'تسبيحة الزهراء', target: 100, phases: [
+        { name: '٣٤ الله أكبر', count: 34, text: 'اللهُ أكبر' },
+        { name: '٣٣ الحمد لله', count: 33, text: 'الحمدُ لله' },
+        { name: '٣٣ سبحان الله', count: 33, text: 'سبحانَ الله' }
+      ]},
+      istighfar70:  { label: 'استغفار × 70',  target: 70,  phases: null },
+      istighfar100: { label: 'استغفار × 100', target: 100, phases: null }
+    };
+
+    function setTasbeehPreset(preset) {
+      tasbeehPreset = preset;
+      localStorage.setItem('zad_tasbeeh_preset', preset);
+      tasbeehCount = 0;
+      localStorage.setItem(LS_TASBEEH, 0);
+      const p = PRESETS[preset];
+      tasbeehTarget = p.target || 100;
+      localStorage.setItem(LS_TASBEEH_TARGET, tasbeehTarget);
+      // تحديث الأزرار
+      document.querySelectorAll('.tasbeeh-preset-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById(`preset-${preset}`);
+      if (activeBtn) activeBtn.classList.add('active');
+      // شريط الزهراء
+      const bar = document.getElementById('zahra-phase-bar');
+      if (preset === 'zahra') {
+        bar.classList.add('visible');
+      } else {
+        bar.classList.remove('visible');
+      }
+      updateTasbeehUI();
+      showToast(`✅ تم الاختيار: ${p.label}`);
     }
-    
+
+    function getZahraPhase(count) {
+      if (count <= 34) return 0;
+      if (count <= 67) return 1;
+      return 2;
+    }
+
+    function updateZahraBar(count) {
+      const phase = getZahraPhase(count);
+      const labels = ['zahra-p1', 'zahra-p2', 'zahra-p3'];
+      labels.forEach((id, i) => {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('current', i === phase);
+      });
+    }
+
+    function updateTasbeehUI() {
+      const btn = document.getElementById('tasbeeh-btn');
+      if (!btn) return;
+      if (tasbeehPreset === 'zahra') {
+        const phases = PRESETS.zahra.phases;
+        const phase = getZahraPhase(tasbeehCount);
+        const phaseStart = phase === 0 ? 0 : phase === 1 ? 34 : 67;
+        const phaseCount = tasbeehCount - phaseStart;
+        const phaseTarget = phases[phase].count;
+        btn.innerHTML = `<span style="font-size:32px;">${phaseCount}</span><span style="font-size:12px;display:block;margin-top:2px;opacity:0.75;">${phases[phase].text}</span>`;
+        updateZahraBar(tasbeehCount);
+      } else {
+        btn.innerHTML = tasbeehCount;
+      }
+    }
+
     window.incrementTasbeeh = function() {
+      // تسبيحة الزهراء: الإجمالي 100 ثم يتوقف
+      const p = PRESETS[tasbeehPreset];
+      const max = p.target || Infinity;
+      if (max && tasbeehCount >= max) {
+        showToast('✨ اكتملت التسبيحة! يمكنك إعادة الضبط.');
+        if (navigator.vibrate) navigator.vibrate([100,50,100]);
+        return;
+      }
       tasbeehCount++;
       localStorage.setItem(LS_TASBEEH, tasbeehCount);
       updateTasbeehUI();
-      if (navigator.vibrate) navigator.vibrate(40);
-      
-      if(tasbeehCount === tasbeehTarget) {
-        showToast(`ما شاء الله! وصلت لهدفك: ${tasbeehTarget} تسبيحة ✨`);
-        if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+      if (navigator.vibrate) navigator.vibrate(35);
+      if (tasbeehCount === max) {
+        const label = p.label;
+        showToast(`ما شاء الله! اكتملت ${label} ✨`);
+        if (navigator.vibrate) navigator.vibrate([100,50,100,50,100]);
       }
     };
-    
+
     window.resetTasbeeh = function() {
       if(tasbeehCount > 0 && confirm('هل تريد تصفير العداد؟')) {
         tasbeehCount = 0;
@@ -802,11 +1516,284 @@
         localStorage.setItem(LS_TASBEEH_TARGET, tasbeehTarget);
         showToast(`تم تعيين الهدف: ${tasbeehTarget}`);
       }
+    };
+
+    function initTasbeeh() {
+      updateTasbeehUI();
+      // تطبيق الاختيار المحفوظ
+      if (tasbeehPreset && tasbeehPreset !== 'free') {
+        const activeBtn = document.getElementById(`preset-${tasbeehPreset}`);
+        if (activeBtn) activeBtn.classList.add('active');
+        if (tasbeehPreset === 'zahra') {
+          document.getElementById('zahra-phase-bar').classList.add('visible');
+          updateZahraBar(tasbeehCount);
+        }
+      } else {
+        const freeBtn = document.getElementById('preset-free');
+        if (freeBtn) freeBtn.classList.add('active');
+      }
     }
+
+    // ══════════════════════════════════════════
+    //  مودال الدعاء والزيارة
+    // ══════════════════════════════════════════
+
+    const DUA_CONTENT = {
+      ahd: {
+        title: 'دعاء العهد',
+        icon: 'fa-moon',
+        footer: 'يُقرأ كل يوم بعد صلاة الفجر — أربعين يوماً',
+        body: `
+          <p class="dua-modal-basmala">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</p>
+          <p>اللَّهُمَّ رَبَّ النُّورِ الْعَظِيمِ، وَرَبَّ الْكُرْسِيِّ الرَّفِيعِ، وَرَبَّ الْبَحْرِ الْمَسْجُورِ، وَمُنْزِلَ التَّوْرَاةِ وَالإِنْجِيلِ وَالزَّبُورِ، وَرَبَّ الظِّلِّ وَالْحَرُورِ.</p>
+          <p>وَمُنْزِلَ الْقُرْآنِ الْعَظِيمِ، وَرَبَّ الْمَلاَئِكَةِ الْمُقَرَّبِينَ وَالأَنْبِيَاءِ وَالْمُرْسَلِينَ.</p>
+          <p>اللَّهُمَّ إِنِّي أَسْأَلُكَ بِوَجْهِكَ الْكَرِيمِ، وَبِنُورِ وَجْهِكَ الْمُنِيرِ، وَمُلْكِكَ الْقَدِيمِ.</p>
+          <p>يَا حَيُّ يَا قَيُّومُ، أَسْأَلُكَ بِاسْمِكَ الَّذِي أَشْرَقَتْ بِهِ السَّمَاوَاتُ وَالأَرَضُونَ، وَبِاسْمِكَ الَّذِي يَصْلُحُ بِهِ الأَوَّلُونَ وَالآخِرُونَ.</p>
+          <p>يَا حَيًّا قَبْلَ كُلِّ حَيٍّ، وَيَا حَيًّا بَعْدَ كُلِّ حَيٍّ، وَيَا حَيًّا حِينَ لاَ حَيَّ.</p>
+          <p>يَا مُحْيِيَ الْمَوْتَى وَمُمِيتَ الأَحْيَاءِ، يَا حَيُّ لاَ إِلٰهَ إِلاَّ أَنْتَ.</p>
+          <p>اللَّهُمَّ بَلِّغْ مَوْلاَنَا الإِمَامَ الْهَادِيَ الْمَهْدِيَّ الْقَائِمَ بِأَمْرِكَ صَلَوَاتُ اللهِ عَلَيْهِ وَعَلَى آبَائِهِ الطَّاهِرِينَ.</p>
+          <p>عَنْ جَمِيعِ الْمُؤْمِنِينَ وَالْمُؤْمِنَاتِ، فِي مَشَارِقِ الأَرْضِ وَمَغَارِبِهَا، سَهْلِهَا وَجَبَلِهَا، بَرِّهَا وَبَحْرِهَا.</p>
+          <p>وَعَنِّي وَعَنْ وَالِدَيَّ مِنَ الصَّلَوَاتِ زِنَةَ عَرْشِ اللهِ وَمِدَادَ كَلِمَاتِهِ.</p>
+          <p>وَمَا أَحْصَاهُ عِلْمُهُ وَأَحَاطَ بِهِ كِتَابُهُ.</p>
+          <p>اللَّهُمَّ إِنِّي أُجَدِّدُ لَهُ فِي صَبِيحَةِ يَوْمِي هٰذَا وَمَا عِشْتُ مِنْ أَيَّامِي.</p>
+          <p>عَهْدًا وَعَقْدًا وَبَيْعَةً لَهُ فِي عُنُقِي، لاَ أَحُولُ عَنْهَا وَلاَ أَزُولُ أَبَدًا.</p>
+          <p>اللَّهُمَّ اجْعَلْنِي مِنْ أَنْصَارِهِ وَأَعْوَانِهِ وَالذَّابِّينَ عَنْهُ.</p>
+          <p>وَالْمُسَارِعِينَ إِلَيْهِ فِي قَضَاءِ حَوَائِجِهِ، وَالْمُمْتَثِلِينَ لِأَوَامِرِهِ.</p>
+          <p>وَالْمُحَامِينَ عَنْهُ، وَالسَّابِقِينَ إِلَى إِرَادَتِهِ، وَالْمُسْتَشْهَدِينَ بَيْنَ يَدَيْهِ.</p>
+          <p>اللَّهُمَّ إِنْ حَالَ بَيْنِي وَبَيْنَهُ الْمَوْتُ الَّذِي جَعَلْتَهُ عَلَى عِبَادِكَ حَتْمًا مَقْضِيًّا.</p>
+          <p>فَأَخْرِجْنِي مِنْ قَبْرِي مُؤْتَزِرًا كَفَنِي، شَاهِرًا سَيْفِي، مُجَرِّدًا قَنَاتِي.</p>
+          <p>مُلَبِّيًا دَعْوَةَ الدَّاعِي فِي الْحَاضِرِ وَالْبَادِي.</p>
+          <p style="text-align:center;color:var(--gold);font-size:1.05em;">اللَّهُمَّ أَرِنِي الطَّلْعَةَ الرَّشِيدَةَ وَالْغُرَّةَ الْحَمِيدَةَ، وَاكْحُلْ نَاظِرِي بِنَظْرَةٍ مِنِّي إِلَيْهِ.</p>
+          <p>وَعَجِّلْ فَرَجَهُ، وَسَهِّلْ مَخْرَجَهُ، وَأَوْسِعْ مَنْهَجَهُ، وَاسْلُكْ بِي مَحَجَّتَهُ.</p>
+          <p>وَأَنْفِذْ أَمْرَهُ، وَاشْدُدْ أَزْرَهُ، وَاعْمُرِ اللَّهُمَّ بِهِ بِلاَدَكَ.</p>
+          <p>وَأَحْيِ بِهِ عِبَادَكَ، فَإِنَّكَ قُلْتَ وَقَوْلُكَ الْحَقُّ:</p>
+          <p style="text-align:center;font-style:italic;color:var(--gold);">﴿ ظَهَرَ الْفَسَادُ فِي الْبَرِّ وَالْبَحْرِ بِمَا كَسَبَتْ أَيْدِي النَّاسِ ﴾</p>
+          <p>فَأَظْهِرِ اللَّهُمَّ لَنَا وَلِيَّكَ وَابْنَ بِنْتِ نَبِيِّكَ الْمُسَمَّى بِاسْمِ رَسُولِكَ.</p>
+          <p>حَتَّى لاَ يَظْفَرَ بِشَيْءٍ مِنَ الْبَاطِلِ إِلاَّ مَزَّقَهُ، وَيُحِقَّ الْحَقَّ وَيُحَقِّقَهُ.</p>
+          <p>وَاجْعَلْهُ اللَّهُمَّ مَفْزَعًا لِمَظْلُومِ عِبَادِكَ، وَنَاصِرًا لِمَنْ لاَ يَجِدُ لَهُ نَاصِرًا غَيْرَكَ.</p>
+          <p>وَمُجَدِّدًا لِمَا عُطِّلَ مِنْ أَحْكَامِ كِتَابِكَ، وَمُشَيِّدًا لِمَا وَرَدَ مِنْ أَعْلاَمِ دِينِكَ وَسُنَنِ نَبِيِّكَ.</p>
+          <p>وَاجْعَلْهُ اللَّهُمَّ مِمَّنْ حَصَّنْتَهُ مِنْ بَأْسِ الْمُعْتَدِينَ.</p>
+          <p style="text-align:center;margin-top:20px;">اللَّهُمَّ وَسُرَّ نَبِيَّكَ مُحَمَّدًا صَلَّى اللهُ عَلَيْهِ وَآلِهِ بِرُؤْيَتِهِ.</p>
+          <p style="text-align:center;">وَمَنْ تَبِعَهُ عَلَى دَعْوَتِهِ.</p>
+          <p style="text-align:center;">وَارْحَمِ اسْتِكَانَتَنَا بَعْدَهُ.</p>
+          <p style="text-align:center;color:var(--gold);font-weight:700;">اللَّهُمَّ اكْشِفْ هٰذِهِ الْغُمَّةَ عَنْ هٰذِهِ الأُمَّةِ بِحُضُورِهِ.</p>
+          <p style="text-align:center;">وَعَجِّلْ لَنَا ظُهُورَهُ، إِنَّهُمْ يَرَوْنَهُ بَعِيدًا وَنَرَاهُ قَرِيبًا.</p>
+          <p style="text-align:center;">بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ.</p>
+        `
+      },
+
+      ashura: {
+        title: 'زيارة عاشوراء',
+        icon: 'fa-star-and-crescent',
+        footer: 'رُوي أن من قرأها أربعين يوماً متوالية كُتب له ثواب شهيد',
+        body: `
+          <p class="dua-modal-basmala">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</p>
+          <p>السَّلاَمُ عَلَيْكَ يَا أَبَا عَبْدِ اللهِ، السَّلاَمُ عَلَيْكَ يَا ابْنَ رَسُولِ اللهِ.</p>
+          <p>السَّلاَمُ عَلَيْكَ يَا ابْنَ أَمِيرِ الْمُؤْمِنِينَ وَابْنَ سَيِّدِ الْوَصِيِّينَ.</p>
+          <p>السَّلاَمُ عَلَيْكَ يَا ابْنَ فَاطِمَةَ سَيِّدَةِ نِسَاءِ الْعَالَمِينَ.</p>
+          <p>السَّلاَمُ عَلَيْكَ يَا ثَارَ اللهِ وَابْنَ ثَارِهِ وَالْوِتْرَ الْمَوْتُورَ.</p>
+          <p>السَّلاَمُ عَلَيْكَ وَعَلَى الأَرْوَاحِ الَّتِي حَلَّتْ بِفِنَائِكَ.</p>
+          <p>عَلَيْكُمْ مِنِّي جَمِيعًا سَلاَمُ اللهِ أَبَدًا، مَا بَقِيتُ وَبَقِيَ اللَّيْلُ وَالنَّهَارُ.</p>
+          <p>يَا أَبَا عَبْدِ اللهِ، لَقَدْ عَظُمَتِ الرَّزِيَّةُ وَجَلَّتِ الْمُصِيبَةُ بِكَ عَلَيْنَا.</p>
+          <p>وَعَلَى جَمِيعِ أَهْلِ الإِسْلاَمِ، وَجَلَّتْ وَعَظُمَتْ مُصِيبَتُكَ.</p>
+          <p>فِي السَّمَاوَاتِ عَلَى جَمِيعِ أَهْلِ السَّمَاوَاتِ.</p>
+          <p>فَلَعَنَ اللهُ أُمَّةً أَسَّسَتْ أَسَاسَ الظُّلْمِ وَالْجَوْرِ عَلَيْكُمْ أَهْلَ الْبَيْتِ.</p>
+          <p>وَلَعَنَ اللهُ أُمَّةً دَفَعَتْكُمْ عَنْ مَقَامِكُمْ وَأَزَالَتْكُمْ عَنْ مَرَاتِبِكُمُ الَّتِي رَتَّبَكُمُ اللهُ فِيهَا.</p>
+          <p>وَلَعَنَ اللهُ أُمَّةً قَتَلَتْكُمْ، وَلَعَنَ اللهُ الْمُمَهِّدِينَ لَهُمْ بِالتَّمْكِينِ مِنْ قِتَالِكُمْ.</p>
+          <p>بَرِئْتُ إِلَى اللهِ وَإِلَيْكُمْ مِنْهُمْ وَمِنْ أَشْيَاعِهِمْ وَأَتْبَاعِهِمْ وَأَوْلِيَائِهِمْ.</p>
+          <p>يَا أَبَا عَبْدِ اللهِ، إِنِّي سِلْمٌ لِمَنْ سَالَمَكُمْ، وَحَرْبٌ لِمَنْ حَارَبَكُمْ إِلَى يَوْمِ الْقِيَامَةِ.</p>
+          <p>وَلَعَنَ اللهُ آلَ زِيَادٍ وَآلَ مَرْوَانَ، وَلَعَنَ اللهُ بَنِي أُمَيَّةَ قَاطِبَةً.</p>
+          <p>وَلَعَنَ اللهُ ابْنَ مَرْجَانَةَ، وَلَعَنَ اللهُ عُمَرَ بْنَ سَعْدٍ.</p>
+          <p>وَلَعَنَ اللهُ شِمْرًا، وَلَعَنَ اللهُ أُمَّةً أَسْرَجَتْ وَأَلْجَمَتْ وَتَنَقَّبَتْ لِقِتَالِكَ.</p>
+          <p>بِأَبِي أَنْتَ وَأُمِّي، لَقَدْ عَظُمَ مُصَابِي بِكَ.</p>
+          <p>فَأَسْأَلُ اللهَ الَّذِي أَكْرَمَ مَقَامَكَ وَأَكْرَمَنِي بِكَ.</p>
+          <p>أَنْ يَرْزُقَنِي طَلَبَ ثَأْرِكَ مَعَ إِمَامٍ مَنْصُورٍ مِنْ أَهْلِ بَيْتِ مُحَمَّدٍ صَلَّى اللهُ عَلَيْهِ وَآلِهِ.</p>
+          <p>اللَّهُمَّ اجْعَلْنِي عِنْدَكَ وَجِيهًا بِالْحُسَيْنِ عَلَيْهِ السَّلاَمُ فِي الدُّنْيَا وَالآخِرَةِ.</p>
+          <p>يَا أَبَا عَبْدِ اللهِ، إِنِّي أَتَقَرَّبُ إِلَى اللهِ وَإِلَى رَسُولِهِ.</p>
+          <p>وَإِلَى أَمِيرِ الْمُؤْمِنِينَ وَإِلَى فَاطِمَةَ وَإِلَى الْحَسَنِ وَإِلَيْكَ.</p>
+          <p>بِمُوَالاَتِكَ وَبِالْبَرَاءَةِ مِمَّنْ أَسَّسَ أَسَاسَ ذٰلِكَ.</p>
+          <p>وَبَنَى عَلَيْهِ بُنْيَانَهُ، وَجَرَى فِي ظُلْمِهِ وَجَوْرِهِ عَلَيْكُمْ وَعَلَى أَشْيَاعِكُمْ.</p>
+          <p>بَرِئْتُ إِلَى اللهِ وَإِلَيْكُمْ مِنْهُمْ.</p>
+          <p>وَأَتَقَرَّبُ إِلَى اللهِ، ثُمَّ إِلَيْكُمْ بِمُوَالاَتِكُمْ وَمُوَالاَةِ وَلِيِّكُمْ.</p>
+          <p>وَبِالْبَرَاءَةِ مِنْ أَعْدَائِكُمْ وَالنَّاصِبِينَ لَكُمُ الْحَرْبَ.</p>
+          <p>وَبِالْبَرَاءَةِ مِنْ أَشْيَاعِهِمْ وَأَتْبَاعِهِمْ.</p>
+          <p>إِنِّي سِلْمٌ لِمَنْ سَالَمَكُمْ، وَحَرْبٌ لِمَنْ حَارَبَكُمْ.</p>
+          <p>وَوَلِيٌّ لِمَنْ وَالاَكُمْ، وَعَدُوٌّ لِمَنْ عَادَاكُمْ.</p>
+          <p>فَأَسْأَلُ اللهَ الَّذِي أَكْرَمَنِي بِمَعْرِفَتِكُمْ وَمَعْرِفَةِ أَوْلِيَائِكُمْ.</p>
+          <p>وَرَزَقَنِي الْبَرَاءَةَ مِنْ أَعْدَائِكُمْ.</p>
+          <p>أَنْ يَجْعَلَنِي مَعَكُمْ فِي الدُّنْيَا وَالآخِرَةِ.</p>
+          <p>وَأَنْ يُثَبِّتَ لِي عِنْدَكُمْ قَدَمَ صِدْقٍ فِي الدُّنْيَا وَالآخِرَةِ.</p>
+          <p>وَأَسْأَلُهُ أَنْ يُبَلِّغَنِي الْمَقَامَ الْمَحْمُودَ لَكُمْ عِنْدَ اللهِ.</p>
+          <p>وَأَنْ يَرْزُقَنِي طَلَبَ ثَأْرِكُمْ مَعَ إِمَامٍ هُدًى ظَاهِرٍ نَاطِقٍ بِالْحَقِّ مِنْكُمْ.</p>
+          <p>وَأَسْأَلُ اللهَ بِحَقِّكُمْ وَبِالشَّأْنِ الَّذِي لَكُمْ عِنْدَهُ.</p>
+          <p>أَنْ يُعْطِيَنِي بِمُصَابِي بِكُمْ أَفْضَلَ مَا يُعْطِي مُصَابًا بِمُصِيبَتِهِ.</p>
+          <p style="text-align:center;margin-top:16px;">إِنَّا لِلهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ.</p>
+          <p style="text-align:center;color:var(--gold);font-weight:700;">يَا لَهَا مِنْ مُصِيبَةٍ مَا أَفْجَعَهَا وَأَوْجَعَهَا لِقُلُوبِ الْمُؤْمِنِينَ.</p>
+        `
+      }
+    };
+
+    window.openDuaModal = function(type) {
+      const content = DUA_CONTENT[type];
+      if (!content) return;
+      document.getElementById('duaModalTitle').innerHTML = `<i class="fas ${content.icon}"></i> <span>${content.title}</span>`;
+      document.getElementById('duaModalBody').innerHTML = `<div class="dua-modal-text">${content.body}</div>`;
+      document.getElementById('duaModalFooter').textContent = content.footer;
+      const overlay = document.getElementById('duaModalOverlay');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeDuaModal = function() {
+      document.getElementById('duaModalOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+    };
+
+    window.handleDuaOverlayClick = function(e) {
+      if (e.target === document.getElementById('duaModalOverlay')) closeDuaModal();
+    };
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeDuaModal();
+    });
 
     // ══════════════════════════════════════════
     //  التشغيل والإقلاع 
     // ══════════════════════════════════════════
+    // ══════════════════════════════════════════
+    //  تحدي الـ 40 يوماً — Challenge Cards Logic
+    // ══════════════════════════════════════════
+
+    const CHALLENGES = ['ahd', 'ashura', 'optional'];
+
+    function getChallengeData(id) {
+      try { return JSON.parse(localStorage.getItem(`zad_challenge_${id}`)) || {}; }
+      catch { return {}; }
+    }
+    function saveChallengeData(id, data) {
+      localStorage.setItem(`zad_challenge_${id}`, JSON.stringify(data));
+    }
+    function saveDedication(id, value) {
+      const data = getChallengeData(id);
+      data.dedication = value;
+      saveChallengeData(id, data);
+    }
+
+    function getTodayNumber() {
+      // حساب رقم اليوم (1-40) من تاريخ بدء التحدي
+      // نستخدم الأسبوع الأول كيوم 1
+      return new Date().getDate(); // simplified: day of month
+    }
+
+    function buildChallengeGrid(id) {
+      const grid = document.getElementById(`grid-${id}`);
+      if (!grid) return;
+      const data = getChallengeData(id);
+      const done = data.days || {};
+
+      grid.innerHTML = '';
+      for (let d = 1; d <= 40; d++) {
+        const btn = document.createElement('button');
+        btn.className = 'challenge-day-btn';
+        btn.textContent = d;
+        const dKey = `day_${d}`;
+
+        if (done[dKey]) btn.classList.add('done');
+
+        btn.addEventListener('click', () => {
+          btn.classList.toggle('done');
+          const d2 = getChallengeData(id);
+          if (!d2.days) d2.days = {};
+          d2.days[dKey] = btn.classList.contains('done');
+          saveChallengeData(id, d2);
+          updateChallengeProgress(id);
+          if (btn.classList.contains('done')) showToast('تم التسجيل! بارك الله فيك 🤲');
+          if (navigator.vibrate) navigator.vibrate(40);
+        });
+        grid.appendChild(btn);
+      }
+    }
+
+    function updateChallengeProgress(id) {
+      const data = getChallengeData(id);
+      const done = data.days || {};
+      const count = Object.values(done).filter(Boolean).length;
+      const pct = Math.round((count / 40) * 100);
+      const bar = document.getElementById(`bar-${id}`);
+      const pctEl = document.getElementById(`pct-${id}`);
+      if (bar) bar.style.width = pct + '%';
+      if (pctEl) pctEl.textContent = `${count} / 40`;
+    }
+
+    function checkChallengeReminder(id) {
+      // التذكيرات تُعرض فقط عند الضغط على زر التذكير يدوياً
+      const reminder = document.getElementById(`reminder-${id}`);
+      if (reminder) reminder.classList.add('hidden');
+    }
+
+    // مؤقتات الإشعار لكل تحدي
+    const _reminderTimers = {};
+
+    function showReminder(id) {
+      const reminder = document.getElementById(`reminder-${id}`);
+      if (!reminder) return;
+      reminder.classList.remove('hidden');
+      // إلغاء أي مؤقت سابق
+      if (_reminderTimers[id]) clearTimeout(_reminderTimers[id]);
+      // إخفاء تلقائي بعد 5 ثوانٍ
+      _reminderTimers[id] = setTimeout(() => {
+        reminder.classList.add('hidden');
+      }, 5000);
+    }
+
+    window.dismissReminder = function(id) {
+      const reminder = document.getElementById(`reminder-${id}`);
+      if (!reminder) return;
+      if (_reminderTimers[id]) clearTimeout(_reminderTimers[id]);
+      reminder.classList.add('hidden');
+    };
+
+    function loadDedications() {
+      CHALLENGES.forEach(id => {
+        const data = getChallengeData(id);
+        const inp = document.getElementById(`ded-${id}`);
+        if (inp && data.dedication) inp.value = data.dedication;
+      });
+      // تحميل اسم العمل الاختياري المحفوظ
+      const optData = getChallengeData('optional');
+      const optInp = document.getElementById('optional-work-name');
+      if (optInp && optData.workName) {
+        optInp.value = optData.workName;
+        window.saveOptionalWorkName(optData.workName); // تحديث نص التذكير
+      }
+    }
+
+    function initChallenges() {
+      CHALLENGES.forEach(id => {
+        buildChallengeGrid(id);
+        updateChallengeProgress(id);
+        checkChallengeReminder(id);
+      });
+      loadDedications();
+    }
+
+    // تصدير saveDedication كدالة عامة
+    window.saveDedication = saveDedication;
+
+    // حفظ وتحميل اسم العمل الاختياري
+    window.saveOptionalWorkName = function(value) {
+      const data = getChallengeData('optional');
+      data.workName = value.trim();
+      saveChallengeData('optional', data);
+      // تحديث نص التذكير ليعكس اسم العمل
+      const textEl = document.getElementById('reminder-optional-text');
+      if (textEl) {
+        textEl.textContent = value.trim()
+          ? `لم تُسجّل "${value.trim()}" اليوم — سجّله الآن!`
+          : 'لم تُسجّل عملك الاختياري اليوم — سجّله الآن!';
+      }
+    };
+
     document.addEventListener('DOMContentLoaded', () => {
       initTheme(); 
       initDates(); 
@@ -815,7 +1802,21 @@
       fetchPrayers(); 
       renderTasks('daily'); 
       renderTasks('monthly');
-      updateTasbeehUI();
+      initTasbeeh();
+      initChallenges();
+
+      // إخفاء الهامش تدريجياً عند التمرير مع إبقاء العنوان
+      const header = document.getElementById('app-header');
+      let lastScroll = 0;
+      window.addEventListener('scroll', () => {
+        const sy = window.scrollY;
+        if (sy > 60) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+        lastScroll = sy;
+      }, { passive: true });
     });
   </script>
 </body>
