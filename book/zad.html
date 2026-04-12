@@ -10,10 +10,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <script>
-    /* ══ مزامنة فورية مع نظام التشغيل قبل الرسم (يمنع الوميض) ══ */
+    /* ══ قارئ الوضع: URL param ← نظام التشغيل (يمنع الوميض) ══ */
     (function() {
-      var dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var params = new URLSearchParams(window.location.search);
+      var urlTheme = params.get('theme');
+      var dark = urlTheme === 'dark' ? true : urlTheme === 'light' ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
       document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      if (!urlTheme) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+          document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+        });
+      }
     })();
   </script>
 
@@ -49,9 +56,9 @@
       --transition: 0.4s ease;
     }
 
-    /* ═══ Dark mode — يُفعَّل تلقائياً بناءً على إعدادات النظام ═══ */
+    /* ═══ Dark mode — تلقائي (OS) أو يدوي عبر المكتبة ═══ */
     @media (prefers-color-scheme: dark) {
-      :root {
+      :root:not([data-theme="light"]) {
         --gold: #dcb85c;
         --gold-light: #f0d58b;
         --gold-dark: #b59345;
@@ -63,6 +70,19 @@
         --border-color: rgba(220, 184, 92, 0.15);
         --shadow-md: 0 8px 30px rgba(0,0,0,0.4);
       }
+    }
+    /* Manual dark override — sent from library button */
+    [data-theme="dark"] {
+      --gold: #dcb85c;
+      --gold-light: #f0d58b;
+      --gold-dark: #b59345;
+      --bg-body: #0a0e12;
+      --bg-card: #12181e;
+      --bg-input: #171f26;
+      --text-main: #f0ebe3;
+      --text-muted: #8b9d9f;
+      --border-color: rgba(220, 184, 92, 0.15);
+      --shadow-md: 0 8px 30px rgba(0,0,0,0.4);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1134,21 +1154,8 @@
       setTimeout(() => t.classList.remove('show'), 3000);
     }
 
-    function applyTheme(theme) {
-      document.documentElement.setAttribute('data-theme', theme);
-      document.body.setAttribute('data-theme', theme);
-    }
-
-    function initTheme() {
-      // تطبيق وضع نظام التشغيل دائماً
-      const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      applyTheme(dark ? 'dark' : 'light');
-
-      // تغيير تلقائي فوري عند تبديل وضع نظام التشغيل
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-        applyTheme(e.matches ? 'dark' : 'light');
-      });
-    }
+    // الوضع الليلي يُدار من script في <head> — لا حاجة لهذه الدوال
+    function initTheme() { /* handled by <head> script */ }
 
     // ══════════════════════════════════════════
     //  التقويم الذكي
