@@ -10,17 +10,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script>
-      // مزامنة فورية مع نظام التشغيل قبل الرسم لتجنب الوميض
+      /* ══ مزامنة فورية مع نظام التشغيل قبل الرسم (يمنع الوميض) ══ */
       (function() {
-        var dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+        var dark  = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = dark ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
         document.addEventListener('DOMContentLoaded', function() {
-          document.body.setAttribute('data-theme', dark ? 'dark' : 'light');
-        });
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-          var t = e.matches ? 'dark' : 'light';
-          document.documentElement.setAttribute('data-theme', t);
-          document.body.setAttribute('data-theme', t);
+          document.body.setAttribute('data-theme', theme);
         });
       })();
     </script>
@@ -30,43 +26,16 @@
            1. نظام الألوان والمتغيرات - THEME SYSTEM (ROYAL GOLD & MIDNIGHT)
            ════════════════════════════════════════════════════════════
         */
+        /* ═══ نظام الألوان التكيفي — Light mode is default ═══ */
         :root {
-            /* ── Midnight Teal & Deep Forest ── */
-            --bg-body: #050F0F;
-            --bg-card: #1C2B2D;
-            --bg-header: #042426;
-            
-            /* ── Luminous Gold (العنبر الناعم / الذهبي المضيء) ── */
-            --gold-main: #F1D279; 
-            --gold-bright: #F1D279;
-            --gold-glow: rgba(241, 210, 121, 0.45);
-            --gold-soft: rgba(241, 210, 121, 0.1);
-            --gold-border: rgba(241, 210, 121, 0.22);
-            
-            /* النصوص والظلال */
-            --text-main: #f1f5f9;
-            --text-dim: #a8c5c3;
-            --accent-blue: #0f7a74;
-            --glass-bg: rgba(4, 36, 38, 0.92);
-            --bg-accent: rgba(241, 210, 121, 0.05);
-            --shadow-heavy: none;
-            --transition-smooth: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            
-            /* مقاسات الخطوط */
-            --fs-logo: clamp(36px, 4vw, 46px);
-            --fs-h2: 30px;
-            --fs-body: 16px;
-        }
-
-        [data-theme="light"] {
-            /* ── Mint White / Frosted Glass ── */
+            /* ── Mint White / Frosted Glass — Light Mode ── */
             --bg-body: #F4F7F6;
             --bg-card: #dff0ed;
             --bg-header: #042426;
             /* ── Royal Pine (النص الأساسي) ── */
             --text-main: #042426;
             --text-dim: #3a6460;
-            /* ── Dark Goldenrod / Old Gold (ذهب النهار المطفي) ── */
+            /* ── Dark Goldenrod / Old Gold ── */
             --gold-main: #B8860B;
             --gold-bright: #B8860B;
             --gold-glow: rgba(184, 134, 11, 0.35);
@@ -74,6 +43,35 @@
             --gold-border: rgba(184, 134, 11, 0.22);
             --accent-blue: #0f7a74;
             --glass-bg: rgba(244, 247, 246, 0.97);
+            --bg-accent: rgba(184, 134, 11, 0.05);
+            --shadow-heavy: none;
+            --transition-smooth: 0.4s ease;
+            /* مقاسات الخطوط */
+            --fs-logo: clamp(36px, 4vw, 46px);
+            --fs-h2: 30px;
+            --fs-body: 16px;
+        }
+
+        /* ═══ Dark mode — يُفعَّل تلقائياً بناءً على إعدادات النظام ═══ */
+        @media (prefers-color-scheme: dark) {
+          :root {
+            /* ── Midnight Teal & Deep Forest — Dark Mode ── */
+            --bg-body: #050F0F;
+            --bg-card: #1C2B2D;
+            --bg-header: #042426;
+            /* ── Luminous Gold ── */
+            --gold-main: #F1D279;
+            --gold-bright: #F1D279;
+            --gold-glow: rgba(241, 210, 121, 0.45);
+            --gold-soft: rgba(241, 210, 121, 0.1);
+            --gold-border: rgba(241, 210, 121, 0.22);
+            /* النصوص والظلال */
+            --text-main: #f1f5f9;
+            --text-dim: #a8c5c3;
+            --accent-blue: #0f7a74;
+            --glass-bg: rgba(4, 36, 38, 0.92);
+            --bg-accent: rgba(241, 210, 121, 0.05);
+          }
         }
 
         /* ════════════════════════════════════════════════════════════
@@ -89,19 +87,19 @@
         }
         
         body { 
-            font-family: 'Cairo', sans-serif; 
-            background: linear-gradient(160deg, #050F0F 0%, #042426 100%);
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg-body);
             background-attachment: fixed;
             color: var(--text-main); 
-            transition: var(--transition-smooth); 
+            transition: background-color 0.4s ease, color 0.4s ease;
             overflow-x: hidden;
             min-height: 100vh;
         }
 
-        [data-theme="light"] body,
-        body[data-theme="light"] {
-            background: #F4F7F6;
-            background-image: none;
+        @media (prefers-color-scheme: dark) {
+          body {
+            background: linear-gradient(160deg, #050F0F 0%, #042426 100%);
+          }
         }
 
         a { text-decoration: none; color: inherit; }
@@ -111,10 +109,10 @@
            ════════════════════════════════════════════════════════════
         */
         .master-header {
-            background: var(--bg-header);
+            background: #042426;
             padding: clamp(40px, 7vw, 80px) clamp(20px, 5vw, 60px) clamp(30px, 5vw, 55px);
             text-align: right;
-            border-bottom: 3px solid var(--gold-main);
+            border-bottom: 3px solid #F1D279;
             position: sticky; top: 0;
             box-shadow: var(--shadow-heavy);
             z-index: 1000;
@@ -242,7 +240,7 @@
             border: 1px solid var(--gold-border);
             border-radius: 30px;
             padding: 14px;
-            transition: var(--transition-smooth);
+            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, transform 0.3s ease;
             position: relative;
             overflow: hidden;
         }
@@ -1741,12 +1739,20 @@
                 this.startHadithEngine();
             },
 
-            // ════════ إدارة الثيم ════════
+            // ════════ إدارة الثيم (تلقائي بالكامل) ════════
+            applyTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                document.body.setAttribute('data-theme', theme);
+            },
             loadSavedTheme() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const urlTheme = urlParams.get('theme');
-                const saved = urlTheme || localStorage.getItem('noor_library_theme') || localStorage.getItem('bento-theme') || localStorage.getItem('rihab_theme_v12') || 'dark';
-                document.body.setAttribute('data-theme', saved);
+                // تطبيق وضع نظام التشغيل دائماً
+                const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                this.applyTheme(dark ? 'dark' : 'light');
+
+                // تغيير تلقائي فوري عند تبديل وضع نظام التشغيل
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                    this.applyTheme(e.matches ? 'dark' : 'light');
+                });
             },
 
             // ════════ إدارة التقويم ════════
@@ -2414,13 +2420,7 @@
         // تطبيق الثيم فوراً من المكتبة الرئيسية قبل أي شيء آخر
         appController.loadSavedTheme();
 
-        // مزامنة تلقائية عند تغيير الثيم من المكتبة الرئيسية
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'noor_library_theme' || e.key === 'bento-theme') {
-                const newTheme = e.newValue || 'dark';
-                document.body.setAttribute('data-theme', newTheme);
-            }
-        });
+        // ملاحظة: مستمع storage مدمج داخل loadSavedTheme لتجنب التكرار
 
         // ════════════════════════════════════════════════════════
         // إخفاء ترويسة السورة عند التمرير + شريط مصغّر عائم
@@ -2574,19 +2574,9 @@
             if (icon) icon.className = _audioBarHidden ? 'fas fa-music' : 'fas fa-volume-up';
         }
 
-        // مزامنة الوضع تلقائياً مع نظام التشغيل
-        (function initSystemTheme() {
-            function applyTheme(theme) {
-                document.body.setAttribute('data-theme', theme);
-                document.documentElement.setAttribute('data-theme', theme);
-                localStorage.setItem('noor_library_theme', theme);
-            }
-            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            applyTheme(systemDark ? 'dark' : 'light');
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-                applyTheme(e.matches ? 'dark' : 'light');
-            });
-        })();
+        // مزامنة الوضع مع المكتبة الرئيسية — لا تتجاوز التفضيل المحفوظ
+        // (الأولوية: noor_library_theme ← نظام التشغيل)
+        // تم الاستغناء عن initSystemTheme لأن loadSavedTheme يتكفل بهذا
 
         // تشغيل التطبيق
         appController.init();
