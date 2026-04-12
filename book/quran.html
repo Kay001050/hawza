@@ -90,6 +90,20 @@
             --glass-bg: rgba(4, 36, 38, 0.92);
             --bg-accent: rgba(241, 210, 121, 0.05);
         }
+        /* إجبار المتغيرات الفاتحة عند data-theme="light" الصريح — يتجاوز @media ══ */
+        [data-theme="light"] {
+            --bg-body: #F4F7F6 !important;
+            --bg-card: #dff0ed !important;
+            --text-main: #042426 !important;
+            --text-dim: #3a6460 !important;
+            --gold-main: #B8860B !important;
+            --gold-bright: #B8860B !important;
+            --gold-glow: rgba(184, 134, 11, 0.35) !important;
+            --gold-soft: rgba(184, 134, 11, 0.08) !important;
+            --gold-border: rgba(184, 134, 11, 0.22) !important;
+            --glass-bg: rgba(244, 247, 246, 0.97) !important;
+            --bg-accent: rgba(184, 134, 11, 0.05) !important;
+        }
 
         /* ════════════════════════════════════════════════════════════
            2. الإعدادات العامة للهيكل - BASE STYLES
@@ -120,6 +134,12 @@
         }
         [data-theme="dark"] body, body[data-theme="dark"] {
           background: linear-gradient(160deg, #050F0F 0%, #042426 100%);
+        }
+        /* إجبار الوضع الفاتح عندما ترسل المكتبة theme=light حتى لو OS داكن */
+        [data-theme="light"] body, body[data-theme="light"],
+        html[data-theme="light"] body {
+          background: #F4F7F6 !important;
+          color: var(--text-main);
         }
 
         a { text-decoration: none; color: inherit; }
@@ -1759,20 +1779,27 @@
                 this.startHadithEngine();
             },
 
-            // ════════ إدارة الثيم (تلقائي بالكامل) ════════
+            // ════════ إدارة الثيم — الأولوية: URL param ← نظام التشغيل ════════
             applyTheme(theme) {
                 document.documentElement.setAttribute('data-theme', theme);
                 document.body.setAttribute('data-theme', theme);
             },
             loadSavedTheme() {
-                // تطبيق وضع نظام التشغيل دائماً
-                const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                // 1) URL param أولاً (مرسل من زر المكتبة عبر iframe)
+                const params   = new URLSearchParams(window.location.search);
+                const urlTheme = params.get('theme');
+                let dark;
+                if (urlTheme === 'dark' || urlTheme === 'light') {
+                    dark = (urlTheme === 'dark');
+                } else {
+                    // 2) نظام التشغيل كبديل
+                    dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    // استمع لتغيير OS فقط إذا لم يكن URL يتحكم
+                    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                        this.applyTheme(e.matches ? 'dark' : 'light');
+                    });
+                }
                 this.applyTheme(dark ? 'dark' : 'light');
-
-                // تغيير تلقائي فوري عند تبديل وضع نظام التشغيل
-                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-                    this.applyTheme(e.matches ? 'dark' : 'light');
-                });
             },
 
             // ════════ إدارة التقويم ════════
