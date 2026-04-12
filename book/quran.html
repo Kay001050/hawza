@@ -10,14 +10,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script>
-      /* ══ مزامنة فورية مع نظام التشغيل قبل الرسم (يمنع الوميض) ══ */
+      /* ══ قارئ الوضع: URL param ← نظام التشغيل (يمنع الوميض) ══ */
       (function() {
-        var dark  = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var params = new URLSearchParams(window.location.search);
+        var urlTheme = params.get('theme');
+        var dark = urlTheme === 'dark' ? true : urlTheme === 'light' ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
         var theme = dark ? 'dark' : 'light';
         document.documentElement.setAttribute('data-theme', theme);
         document.addEventListener('DOMContentLoaded', function() {
           document.body.setAttribute('data-theme', theme);
         });
+        if (!urlTheme) {
+          window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+            var t = e.matches ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', t);
+          });
+        }
       })();
     </script>
 
@@ -28,14 +36,11 @@
         */
         /* ═══ نظام الألوان التكيفي — Light mode is default ═══ */
         :root {
-            /* ── Mint White / Frosted Glass — Light Mode ── */
             --bg-body: #F4F7F6;
             --bg-card: #dff0ed;
             --bg-header: #042426;
-            /* ── Royal Pine (النص الأساسي) ── */
             --text-main: #042426;
             --text-dim: #3a6460;
-            /* ── Dark Goldenrod / Old Gold ── */
             --gold-main: #B8860B;
             --gold-bright: #B8860B;
             --gold-glow: rgba(184, 134, 11, 0.35);
@@ -46,32 +51,44 @@
             --bg-accent: rgba(184, 134, 11, 0.05);
             --shadow-heavy: none;
             --transition-smooth: 0.4s ease;
-            /* مقاسات الخطوط */
             --fs-logo: clamp(36px, 4vw, 46px);
             --fs-h2: 30px;
             --fs-body: 16px;
         }
 
-        /* ═══ Dark mode — يُفعَّل تلقائياً بناءً على إعدادات النظام ═══ */
+        /* ═══ Dark mode — تلقائي (OS) أو يدوي عبر المكتبة ═══ */
         @media (prefers-color-scheme: dark) {
-          :root {
-            /* ── Midnight Teal & Deep Forest — Dark Mode ── */
+          :root:not([data-theme="light"]) {
             --bg-body: #050F0F;
             --bg-card: #1C2B2D;
             --bg-header: #042426;
-            /* ── Luminous Gold ── */
             --gold-main: #F1D279;
             --gold-bright: #F1D279;
             --gold-glow: rgba(241, 210, 121, 0.45);
             --gold-soft: rgba(241, 210, 121, 0.1);
             --gold-border: rgba(241, 210, 121, 0.22);
-            /* النصوص والظلال */
             --text-main: #f1f5f9;
             --text-dim: #a8c5c3;
             --accent-blue: #0f7a74;
             --glass-bg: rgba(4, 36, 38, 0.92);
             --bg-accent: rgba(241, 210, 121, 0.05);
           }
+        }
+        /* Manual dark override — sent from library button */
+        [data-theme="dark"] {
+            --bg-body: #050F0F;
+            --bg-card: #1C2B2D;
+            --bg-header: #042426;
+            --gold-main: #F1D279;
+            --gold-bright: #F1D279;
+            --gold-glow: rgba(241, 210, 121, 0.45);
+            --gold-soft: rgba(241, 210, 121, 0.1);
+            --gold-border: rgba(241, 210, 121, 0.22);
+            --text-main: #f1f5f9;
+            --text-dim: #a8c5c3;
+            --accent-blue: #0f7a74;
+            --glass-bg: rgba(4, 36, 38, 0.92);
+            --bg-accent: rgba(241, 210, 121, 0.05);
         }
 
         /* ════════════════════════════════════════════════════════════
@@ -97,9 +114,12 @@
         }
 
         @media (prefers-color-scheme: dark) {
-          body {
+          body:not([data-theme="light"]) {
             background: linear-gradient(160deg, #050F0F 0%, #042426 100%);
           }
+        }
+        [data-theme="dark"] body, body[data-theme="dark"] {
+          background: linear-gradient(160deg, #050F0F 0%, #042426 100%);
         }
 
         a { text-decoration: none; color: inherit; }
@@ -2574,9 +2594,7 @@
             if (icon) icon.className = _audioBarHidden ? 'fas fa-music' : 'fas fa-volume-up';
         }
 
-        // مزامنة الوضع مع المكتبة الرئيسية — لا تتجاوز التفضيل المحفوظ
-        // (الأولوية: noor_library_theme ← نظام التشغيل)
-        // تم الاستغناء عن initSystemTheme لأن loadSavedTheme يتكفل بهذا
+        // الوضع الليلي يُدار من script في <head> — لا حاجة لمزامنة إضافية
 
         // تشغيل التطبيق
         appController.init();
