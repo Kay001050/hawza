@@ -113,14 +113,44 @@
       --font-heading: 'Amiri', serif;
     }
 
-    /* Dark Theme */
+    /* ═══ Dark Theme — يُفعَّل تلقائياً بناءً على نظام التشغيل أو يدوياً ═══ */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg-primary: #0a1517;
+        --bg-secondary: #0d1c1d;
+        --bg-tertiary: #111f21;
+        --bg-card: #152426;
+        --bg-card-hover: #1a2d2f;
+        --accent-gold: #c9a050;
+        --accent-gold-light: #dbb85c;
+        --accent-gold-dark: #a07f3a;
+        --accent-emerald: #2d8a6e;
+        --accent-emerald-light: #3da882;
+        --accent-youtube: #ff0000;
+        --accent-youtube-light: #ff4444;
+        --text-primary: #f0ebe3;
+        --text-secondary: #b8c4c5;
+        --text-muted: #6b8082;
+        --border-subtle: rgba(201, 160, 80, 0.1);
+        --border-medium: rgba(201, 160, 80, 0.2);
+        --border-strong: rgba(201, 160, 80, 0.3);
+        --glass-bg: rgba(13, 28, 29, 0.95);
+        --glass-border: rgba(201, 160, 80, 0.12);
+        --shadow-sm: none !important;
+        --shadow-md: none !important;
+        --shadow-lg: none !important;
+        --skeleton-base: #1a2d2f;
+        --skeleton-shine: #243d40;
+      }
+    }
+
+    /* Manual dark override — when user explicitly selects dark */
     [data-theme="dark"] {
       --bg-primary: #0a1517;
       --bg-secondary: #0d1c1d;
       --bg-tertiary: #111f21;
       --bg-card: #152426;
       --bg-card-hover: #1a2d2f;
-      
       --accent-gold: #c9a050;
       --accent-gold-light: #dbb85c;
       --accent-gold-dark: #a07f3a;
@@ -128,22 +158,17 @@
       --accent-emerald-light: #3da882;
       --accent-youtube: #ff0000;
       --accent-youtube-light: #ff4444;
-      
       --text-primary: #f0ebe3;
       --text-secondary: #b8c4c5;
       --text-muted: #6b8082;
-      
       --border-subtle: rgba(201, 160, 80, 0.1);
       --border-medium: rgba(201, 160, 80, 0.2);
       --border-strong: rgba(201, 160, 80, 0.3);
-      
       --glass-bg: rgba(13, 28, 29, 0.95);
       --glass-border: rgba(201, 160, 80, 0.12);
-      
       --shadow-sm: none !important;
       --shadow-md: none !important;
       --shadow-lg: none !important;
-      
       --skeleton-base: #1a2d2f;
       --skeleton-shine: #243d40;
     }
@@ -202,6 +227,13 @@
         radial-gradient(ellipse 60% 40% at 100% 100%, rgba(30, 107, 84, 0.06), transparent);
     }
 
+    @media (prefers-color-scheme: dark) {
+      html:not([data-theme="light"]) .bg-pattern {
+        background: 
+          radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201, 160, 80, 0.06), transparent),
+          radial-gradient(ellipse 60% 40% at 100% 100%, rgba(45, 138, 110, 0.05), transparent);
+      }
+    }
     [data-theme="dark"] .bg-pattern {
       background: 
         radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201, 160, 80, 0.06), transparent),
@@ -7765,20 +7797,31 @@
   }
 
   .yt-header-icon-btn {
-    width: 40px; height: 40px;
+    width: 38px; height: 38px;
     border-radius: 50%;
     background: rgba(255,255,255,0.1);
     border: none;
     color: #fff;
-    font-size: 1rem;
+    font-size: 0.95rem;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
     position: relative;
     transition: background 0.2s;
     font-family: var(--font-ui);
+    flex-shrink: 0;
   }
 
   .yt-header-icon-btn:hover { background: rgba(255,255,255,0.18); }
+
+  @media (max-width: 480px) {
+    .yt-header-icon-btn {
+      width: 34px; height: 34px;
+      font-size: 0.85rem;
+    }
+    .yt-title-actions {
+      gap: 6px;
+    }
+  }
 
   .yt-header-yt-icon {
     width: 40px; height: 40px;
@@ -8093,6 +8136,20 @@
   }
 
   </style>
+
+  <script>
+    /* ══ مزامنة فورية قبل الرسم: URL param ← localStorage ← OS (يمنع الوميض) ══ */
+    (function() {
+      var params  = new URLSearchParams(window.location.search);
+      var urlT    = params.get('theme');
+      var savedT  = localStorage.getItem('noor_library_theme');
+      var dark;
+      if (urlT === 'dark' || urlT === 'light')     { dark = (urlT === 'dark'); }
+      else if (savedT === 'dark' || savedT === 'light') { dark = (savedT === 'dark'); }
+      else { dark = window.matchMedia('(prefers-color-scheme: dark)').matches; }
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    })();
+  </script>
 </head>
 <body>
   <div class="bg-pattern"></div>
@@ -8914,10 +8971,6 @@
         </div>
 
         <div class="yt-title-actions">
-          <button class="yt-header-icon-btn" onclick="toggleYtSubsFilter()" id="ytSubsBellBtn" title="الاشتراكات">
-            <i class="fas fa-bell"></i>
-            <span class="yt-subs-count" id="ytSubsCount" style="display:none;">0</span>
-          </button>
           <button class="yt-header-icon-btn" onclick="openYtFavShelf()" id="ytFavBtn" title="المفضلة">
             <i class="far fa-bookmark"></i>
             <span class="yt-fav-count" id="ytFavCount" style="display:none;">0</span>
@@ -9353,17 +9406,34 @@ ITEMS_PER_PAGE: 30
     // Theme Management - Light is default
     // ═══════════════════════════════════════════════════════════════════════════
     function initTheme() {
-      const savedTheme = localStorage.getItem('noor_library_theme') || 'light';
-      if (savedTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
+      // الأولوية: 1) تفضيل محفوظ يدوياً  2) تفضيل نظام التشغيل
+      const savedTheme = localStorage.getItem('noor_library_theme');
+      let activeTheme;
+      if (savedTheme === 'dark' || savedTheme === 'light') {
+        activeTheme = savedTheme;
+      } else {
+        // لا يوجد تفضيل محفوظ — استخدم تفضيل نظام التشغيل
+        activeTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       }
-      updateThemeIcon(savedTheme);
+      if (activeTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+      updateThemeIcon(activeTheme);
 
-      // تحميل تفضيل العرض المحفوظ (compact-grid افتراضي للتاب والكمبيوتر)
+      // استمع لتغيير نظام التشغيل (فقط إذا لم يكن هناك تفضيل محفوظ)
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+        if (!localStorage.getItem('noor_library_theme')) {
+          const t = e.matches ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', t);
+          updateThemeIcon(t);
+        }
+      });
+
+      // تحميل تفضيل العرض المحفوظ
       const isMobile = window.innerWidth <= 480;
-      const savedView = !isMobile
-        ? (localStorage.getItem('noor_view_pref') || 'compact-grid')
-        : (localStorage.getItem('noor_view_pref') || 'compact-grid');
+      const savedView = localStorage.getItem('noor_view_pref') || 'compact-grid';
       state.currentView = savedView;
       document.querySelectorAll('.view-btn').forEach(b => {
         b.classList.toggle('active', b.dataset.view === savedView);
@@ -9372,14 +9442,18 @@ ITEMS_PER_PAGE: 30
 
     function toggleTheme() {
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      if (isDark) {
-        document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('noor_library_theme', 'light');
-        updateThemeIcon('light');
-      } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('noor_library_theme', 'dark');
-        updateThemeIcon('dark');
+      const newTheme = isDark ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('noor_library_theme', newTheme);
+      updateThemeIcon(newTheme);
+      // مزامنة الصفحات الأخرى عبر الـ iframe بـ URL parameter
+      const iframe = document.getElementById('externalIframe');
+      if (iframe && iframe.src) {
+        try {
+          const url = new URL(iframe.src);
+          url.searchParams.set('theme', newTheme);
+          iframe.src = url.toString();
+        } catch(err) {}
       }
     }
 
@@ -10838,7 +10912,7 @@ ITEMS_PER_PAGE: 30
     function updateYtSubsUI() {
       const subs = loadYtSubscriptions();
       const btn = document.getElementById('ytSubsBtn');
-      const countEl = document.getElementById('ytSubsCount');
+      const countEl = null; // ytSubsCount removed
       if (!btn || !countEl) return;
       if (subs.length > 0) {
         countEl.textContent = subs.length;
@@ -13130,24 +13204,7 @@ ITEMS_PER_PAGE: 30
         }
     }
 
-    // تحديث مزامنة الوضع الليلي عند تغييره والـ iframe مفتوح
-    const originalToggleTheme = typeof toggleTheme === 'function' ? toggleTheme : null;
-    window.addEventListener('click', (e) => {
-        if (e.target.closest('#themeToggle')) {
-            setTimeout(() => {
-                const iframe = document.getElementById('externalIframe');
-                if (iframe && iframe.src) {
-                    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-                    // إرسال رسالة للـ iframe إذا كان يدعم postMessage أو إعادة تحميله بالثيم الجديد
-                    try {
-                        const url = new URL(iframe.src);
-                        url.searchParams.set('theme', currentTheme);
-                        iframe.src = url.toString();
-                    } catch(err) {}
-                }
-            }, 100);
-        }
-    });
+    // ملاحظة: مزامنة الوضع الليلي مع الـ iframe مدمجة الآن في toggleTheme()
 
     const originalHideAllPages_v2 = hideAllPages;
     hideAllPages = function() {
