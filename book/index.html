@@ -7619,7 +7619,7 @@
      ══════════════════════════════════════════════════════ */
   .yt-title-header {
     background: linear-gradient(160deg, #1a0000 0%, #2d1010 55%, #3a1a1a 100%);
-    padding: clamp(28px, 5vw, 52px) clamp(16px, 4vw, 32px) clamp(20px, 3vw, 32px);
+    padding: clamp(14px, 3vw, 52px) clamp(14px, 4vw, 32px) clamp(12px, 2.5vw, 32px);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -7628,6 +7628,8 @@
     transition: padding 0.38s cubic-bezier(0.4,0,0.2,1);
     overflow: hidden;
     position: relative;
+    top: 0;      /* لاستخدامه مع sticky داخل الـ wrapper */
+    z-index: 10;
   }
 
   .yt-title-header::before {
@@ -7679,15 +7681,15 @@
 
   .yt-title-main {
     font-family: var(--font-heading);
-    font-size: clamp(2.2rem, 5vw, 3rem);
+    font-size: clamp(1.6rem, 5.5vw, 3rem);
     font-weight: 700;
     color: #fff;
     line-height: 1.2;
     text-shadow: 0 3px 12px rgba(0,0,0,0.5);
     margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;      /* يسمح بالتفاف النص */
+    word-break: keep-all;
+    overflow: visible;
   }
 
   .yt-title-sub {
@@ -7711,6 +7713,7 @@
      ══════════════════════════════════════════════════════ */
   .yt-nav-header {
     background: linear-gradient(180deg, #220000 0%, #2d1010 100%);
+    border-top: 2px solid rgba(255,0,0,0.35);    /* فاصل واضح عن الهيدر العلوي */
     border-bottom: 2px solid rgba(255,0,0,0.2);
     transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
     position: relative;
@@ -7743,6 +7746,7 @@
     overflow: hidden;
     max-height: 200px;
     opacity: 1;
+    padding-top: 10px;   /* مسافة بين الخط الأحمر وخانة البحث */
     transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1),
                 opacity   0.28s ease;
   }
@@ -7782,10 +7786,9 @@
     border-color: rgba(255,80,80,0.35);
   }
 
-  /* حالة إخفاء كامل */
-  .yt-nav-ctrl-btn.hidden-active {
-    background: rgba(255,255,255,0.04);
-    color: rgba(255,255,255,0.3);
+  /* الاختفاء التدريجي لزر التثبيت أثناء التمرير */
+  .yt-nav-ctrl-btns {
+    transition: opacity 0.3s ease;
   }
 
   .yt-header-actions-right,
@@ -7852,12 +7855,21 @@
   .yt-header-tabs {
     display: flex;
     align-items: center;
-    justify-content: flex-end;    /* تبويبات على اليمين */
+    justify-content: flex-end;
     gap: 0;
-    padding: 0 10px;
+    padding: 0 clamp(6px, 2vw, 10px);
     border-top: 1px solid rgba(255,255,255,0.06);
     border-bottom: 1px solid rgba(255,255,255,0.08);
     background: rgba(0,0,0,0.15);
+    min-height: 42px;
+  }
+
+  /* منع التبويبات من الانضغاط على الشاشات الصغيرة جداً */
+  @media (max-width: 360px) {
+    .yt-tab { padding: 8px 7px; gap: 3px; }
+    .yt-tab-label { font-size: 0.68rem; }
+    .yt-tab .tab-badge { display: none; }
+    .yt-nav-ctrl-btn { width: 24px; height: 24px; font-size: 0.62rem; }
   }
 
   .yt-tab {
@@ -7904,7 +7916,7 @@
 
   /* صف 3: البحث */
   .yt-search-row {
-    padding: 12px 16px;
+    padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 16px);
   }
 
   .yt-search-wrap {
@@ -7924,12 +7936,12 @@
 
   .yt-search-input {
     width: 100%;
-    padding: 12px 16px 12px 42px;
+    padding: clamp(9px, 2vw, 12px) 16px clamp(9px, 2vw, 12px) 40px;
     background: rgba(255,255,255,0.08);
     border: 1px solid rgba(255,255,255,0.12);
     border-radius: var(--radius-full);
     color: #fff;
-    font-size: 0.9rem;
+    font-size: clamp(0.82rem, 2.5vw, 0.92rem);
     font-family: var(--font-ui);
     outline: none;
     transition: border-color 0.2s, background 0.2s;
@@ -7945,8 +7957,8 @@
   .yt-filter-row {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 16px 14px;
+    gap: clamp(6px, 2vw, 10px);
+    padding: clamp(7px, 1.5vw, 10px) clamp(12px, 3vw, 16px) clamp(10px, 2vw, 14px);
   }
 
   .yt-filter-spacer { flex: 1; }
@@ -8126,8 +8138,11 @@
     }
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 768px) {
     .yt-title-header, .yt-nav-header { position: sticky; }
+  }
+
+  @media (min-width: 1024px) {
     .yt-content-area { padding: 24px 32px; }
     .yt-header-top { padding: 18px 32px 14px; }
     .yt-search-row { padding: 0 32px 12px; }
@@ -9027,11 +9042,7 @@
                     title="تثبيت شريط البحث مفتوحاً">
               <i class="fas fa-thumbtack"></i>
             </button>
-            <button class="yt-nav-ctrl-btn" id="ytNavHideBtn"
-                    onclick="ytNavToggleHide()"
-                    title="إخفاء شريط التنقل">
-              <i class="fas fa-eye-slash"></i>
-            </button>
+
           </div>
 
           <button class="yt-tab active" data-tab-yt="playlists">
@@ -13053,13 +13064,13 @@ ITEMS_PER_PAGE: 30
       let ticking = false;
       let ytScrollHandler = null;
       let _navPinned = false;
-      let _navHidden = false;
 
       function handleYtScroll() {
         if (ticking) return;
         ticking = true;
         requestAnimationFrame(() => {
-          const scrolled = window.scrollY > 55;
+          const scrollY = window.scrollY;
+          const scrolled = scrollY > 55;
 
           // هيدر 1: يصغر (العنوان يبقى)
           const th = document.getElementById('ytTitleHeader');
@@ -13067,8 +13078,23 @@ ITEMS_PER_PAGE: 30
 
           // هيدر 2: يصغر إلا إذا كان مثبتاً
           const nh = document.getElementById('ytNavHeader');
-          if (nh && !_navPinned && !_navHidden) {
+          if (nh && !_navPinned) {
             nh.classList.toggle('nav-scrolled', scrolled);
+          }
+
+          // اختفاء تدريجي لزر التثبيت أثناء التمرير (يختفي بين 20-80 بكسل)
+          const ctrlBtns = document.querySelector('.yt-nav-ctrl-btns');
+          if (ctrlBtns && !_navPinned) {
+            const fadeStart = 20;
+            const fadeEnd   = 80;
+            const opacity   = scrollY <= fadeStart ? 1
+                            : scrollY >= fadeEnd   ? 0
+                            : 1 - (scrollY - fadeStart) / (fadeEnd - fadeStart);
+            ctrlBtns.style.opacity = opacity;
+            ctrlBtns.style.pointerEvents = opacity < 0.1 ? 'none' : 'auto';
+          } else if (ctrlBtns && _navPinned) {
+            ctrlBtns.style.opacity = 1;
+            ctrlBtns.style.pointerEvents = 'auto';
           }
 
           ticking = false;
@@ -13083,11 +13109,11 @@ ITEMS_PER_PAGE: 30
           nh.classList.remove('nav-scrolled', 'pinned', 'user-hidden');
         }
         _navPinned = false;
-        _navHidden = false;
-        const pinBtn  = document.getElementById('ytNavPinBtn');
-        const hideBtn = document.getElementById('ytNavHideBtn');
-        if (pinBtn)  pinBtn.classList.remove('pinned-active');
-        if (hideBtn) hideBtn.classList.remove('hidden-active');
+        const pinBtn = document.getElementById('ytNavPinBtn');
+        if (pinBtn) pinBtn.classList.remove('pinned-active');
+        // إعادة ظهور زر التثبيت
+        const ctrlBtns = document.querySelector('.yt-nav-ctrl-btns');
+        if (ctrlBtns) { ctrlBtns.style.opacity = 1; ctrlBtns.style.pointerEvents = 'auto'; }
       }
 
       document.addEventListener('ytPageOpened', () => {
@@ -13114,14 +13140,14 @@ ITEMS_PER_PAGE: 30
         if (!nh || !btn) return;
 
         _navPinned = !_navPinned;
+        const ctrlBtns = document.querySelector('.yt-nav-ctrl-btns');
         if (_navPinned) {
-          _navHidden = false;
           nh.classList.add('pinned');
           nh.classList.remove('nav-scrolled', 'user-hidden');
           btn.classList.add('pinned-active');
           btn.title = 'إلغاء التثبيت';
-          const hideBtn = document.getElementById('ytNavHideBtn');
-          if (hideBtn) hideBtn.classList.remove('hidden-active');
+          // إبقاء الزر ظاهراً عند التثبيت
+          if (ctrlBtns) { ctrlBtns.style.opacity = 1; ctrlBtns.style.pointerEvents = 'auto'; }
         } else {
           nh.classList.remove('pinned');
           btn.classList.remove('pinned-active');
@@ -13129,29 +13155,7 @@ ITEMS_PER_PAGE: 30
         }
       };
 
-      // ── زر الإخفاء: يخفي شريط التنقل كامل ──
-      window.ytNavToggleHide = function() {
-        const nh = document.getElementById('ytNavHeader');
-        const btn = document.getElementById('ytNavHideBtn');
-        if (!nh || !btn) return;
 
-        _navHidden = !_navHidden;
-        if (_navHidden) {
-          _navPinned = false;
-          nh.classList.add('user-hidden');
-          nh.classList.remove('pinned', 'nav-scrolled');
-          btn.classList.add('hidden-active');
-          btn.title = 'إظهار شريط التنقل';
-          btn.querySelector('i').className = 'fas fa-eye';
-          const pinBtn = document.getElementById('ytNavPinBtn');
-          if (pinBtn) pinBtn.classList.remove('pinned-active');
-        } else {
-          nh.classList.remove('user-hidden');
-          btn.classList.remove('hidden-active');
-          btn.title = 'إخفاء شريط التنقل';
-          btn.querySelector('i').className = 'fas fa-eye-slash';
-        }
-      };
 
     })();
     window.toggleYtSubscription = toggleYtSubscription;
