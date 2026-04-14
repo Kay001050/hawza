@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="description" content="سياسة الخصوصية لمكتبة نور الحوزة الرقمية - تعرف على كيفية حماية بياناتك">
+  <meta name="theme-color" content="#f8f6f3">
+  <title>سياسة الخصوصية | نور الحوزة</title>
+
+  <link rel="icon" type="image/png" sizes="16x16"  href="/book/icons/icon-16.png">
+  <link rel="icon" type="image/png" sizes="32x32"  href="/book/icons/icon-32.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <script>
+    /* ══ مزامنة فورية للوضع الليلي والنهاري لمنع الوميض ══ */
+    (function() {
+      var params  = new URLSearchParams(window.location.search);
+      var urlT    = params.get('theme');
+      var savedT  = localStorage.getItem('noor_library_theme');
+      var dark;
+      if (urlT === 'dark' || urlT === 'light')     { dark = (urlT === 'dark'); }
+      else if (savedT === 'dark' || savedT === 'light') { dark = (savedT === 'dark'); }
+      else { dark = window.matchMedia('(prefers-color-scheme: dark)').matches; }
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    })();
+  </script>
+
+  <style>
+    /* ════════ المتغيرات الأساسية (مطابقة للنظام المركزي) ════════ */
+    :root {
+      --bg-primary: #f8f6f3;
+      --bg-secondary: #fffefa;
+      --bg-tertiary: #f0ede8;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f5f3ef;
+      
+      --accent-gold: #a07f3a;
+      --accent-gold-light: #b8934a;
+      --accent-emerald: #1e6b54;
+      --accent-blue: #3498db;
+      
+      --text-primary: #1a1a1a;
+      --text-secondary: #4a4a4a;
+      --text-muted: #7a7a7a;
+      
+      --border-subtle: rgba(160, 127, 58, 0.15);
+      --border-medium: rgba(160, 127, 58, 0.25);
+      
+      --glass-bg: rgba(255, 254, 250, 0.95);
+      --glass-border: rgba(160, 127, 58, 0.15);
+      
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 24px;
+      
+      --header-height: 72px;
+      --font-ui: 'Cairo', sans-serif;
+      --font-heading: 'Amiri', serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg-primary: #0a1517;
+        --bg-secondary: #0d1c1d;
+        --bg-tertiary: #111f21;
+        --bg-card: #152426;
+        --bg-card-hover: #1a2d2f;
+        --accent-gold: #c9a050;
+        --accent-gold-light: #dbb85c;
+        --text-primary: #f0ebe3;
+        --text-secondary: #b8c4c5;
+        --text-muted: #6b8082;
+        --border-subtle: rgba(201, 160, 80, 0.1);
+        --border-medium: rgba(201, 160, 80, 0.2);
+        --glass-bg: rgba(13, 28, 29, 0.95);
+      }
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0a1517;
+      --bg-secondary: #0d1c1d;
+      --bg-tertiary: #111f21;
+      --bg-card: #152426;
+      --bg-card-hover: #1a2d2f;
+      --accent-gold: #c9a050;
+      --text-primary: #f0ebe3;
+      --text-secondary: #b8c4c5;
+      --text-muted: #6b8082;
+      --border-subtle: rgba(201, 160, 80, 0.1);
+      --border-medium: rgba(201, 160, 80, 0.2);
+      --glass-bg: rgba(13, 28, 29, 0.95);
+    }
+
+    /* ════════ الإعدادات العامة ════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+    body {
+      font-family: var(--font-ui);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.8;
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    a { text-decoration: none; color: inherit; }
+    
+    .bg-pattern {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(160, 127, 58, 0.08), transparent);
+    }
+    [data-theme="dark"] .bg-pattern {
+      background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201, 160, 80, 0.06), transparent);
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+
+    /* ════════ الهيدر (مطابق للرئيسية) ════════ */
+    .header {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--header-height);
+      background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border); z-index: 1000; transition: 0.4s ease;
+    }
+    .header.scrolled { border-bottom: 1px solid var(--border-medium); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+    .nav-container { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand-icon {
+      width: 46px; height: 46px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-emerald) 0%, #2a8a6e 100%);
+      display: flex; align-items: center; justify-content: center; color: white; font-size: 1.3rem;
+    }
+    .brand-title { font-family: var(--font-heading); font-size: 1.45rem; font-weight: 700; color: var(--accent-gold); }
+    .back-btn {
+      display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+      background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 50px;
+      font-size: 0.9rem; font-weight: 700; color: var(--text-secondary); transition: 0.3s;
+    }
+    .back-btn:hover { background: var(--accent-gold); color: var(--bg-primary); border-color: var(--accent-gold); }
+
+    /* ════════ الهيرو بانر ════════ */
+    .page-hero {
+      padding: calc(var(--header-height) + 50px) 0 40px;
+      background: linear-gradient(165deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+      border-bottom: 1px solid var(--border-subtle);
+      text-align: center;
+    }
+    .hero-icon {
+      width: 80px; height: 80px; margin: 0 auto 20px;
+      background: rgba(160, 127, 58, 0.1); border: 1px solid var(--border-medium);
+      border-radius: 24px; display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem; color: var(--accent-gold); transform: rotate(-5deg);
+    }
+    .page-hero h1 { font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3rem); color: var(--text-primary); margin-bottom: 10px; }
+    .page-hero p { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+    .last-updated {
+      display: inline-block; margin-top: 20px; padding: 6px 16px;
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      border-radius: 50px; font-size: 0.8rem; font-weight: 700; color: var(--accent-gold);
+    }
+
+    /* ════════ هيكل المحتوى (Grid Layout) ════════ */
+    .privacy-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 40px;
+      padding: 50px 0;
+      align-items: start;
+    }
+
+    /* ── القائمة الجانبية التفاعلية (Table of Contents) ── */
+    .toc-sidebar {
+      position: sticky; top: calc(var(--header-height) + 30px);
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg); padding: 20px;
+    }
+    .toc-title {
+      font-size: 0.9rem; font-weight: 800; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; padding-right: 10px;
+    }
+    .toc-nav { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .toc-link {
+      display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+      border-radius: 12px; color: var(--text-secondary); font-weight: 600; font-size: 0.9rem;
+      transition: 0.3s; border-right: 3px solid transparent;
+    }
+    .toc-link i { font-size: 0.8rem; opacity: 0.6; width: 16px; text-align: center; }
+    .toc-link:hover { background: var(--bg-secondary); color: var(--accent-gold); }
+    .toc-link.active {
+      background: linear-gradient(90deg, rgba(160, 127, 58, 0.1), transparent);
+      color: var(--accent-gold); border-right-color: var(--accent-gold);
+    }
+    .toc-link.active i { opacity: 1; }
+
+    /* ── محتوى السياسة ── */
+    .policy-content { display: flex; flex-direction: column; gap: 30px; }
+    .policy-section {
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg); padding: 40px;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .policy-section:hover { border-color: var(--border-medium); }
+    .section-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 15px; }
+    .section-icon {
+      width: 46px; height: 46px; border-radius: 12px;
+      background: rgba(160, 127, 58, 0.1); color: var(--accent-gold);
+      display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+    }
+    .policy-section h2 { font-family: var(--font-heading); font-size: 1.8rem; color: var(--text-primary); }
+    .policy-section p { font-size: 1rem; color: var(--text-secondary); margin-bottom: 15px; text-align: justify; }
+    .policy-section ul { margin-right: 20px; margin-bottom: 15px; color: var(--text-secondary); }
+    .policy-section li { margin-bottom: 8px; padding-right: 10px; position: relative; }
+    .policy-section li::marker { color: var(--accent-gold); }
+
+    /* صندوق تسليط الضوء (Highlight Box) */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(30, 107, 84, 0.08), transparent);
+      border-right: 4px solid var(--accent-emerald);
+      padding: 20px; border-radius: 12px 0 0 12px; margin: 20px 0;
+    }
+    .highlight-box p { margin: 0; color: var(--accent-emerald); font-weight: 700; font-size: 0.95rem; }
+
+    /* ════════ التجاوب مع الجوال ════════ */
+    @media (max-width: 992px) {
+      .privacy-layout { grid-template-columns: 1fr; gap: 20px; padding: 20px 0; }
+      
+      /* تحويل القائمة الجانبية إلى شريط تمرير أفقي (Pills) */
+      .toc-sidebar {
+        position: sticky; top: var(--header-height); padding: 12px; border-radius: 0 0 16px 16px;
+        border-left: none; border-right: none; border-top: none; z-index: 90;
+      }
+      .toc-title { display: none; }
+      .toc-nav { flex-direction: row; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+      .toc-nav::-webkit-scrollbar { display: none; }
+      .toc-link { white-space: nowrap; border-right: none; border-bottom: 2px solid transparent; padding: 8px 16px; border-radius: 50px; background: var(--bg-secondary); }
+      .toc-link.active { background: var(--accent-gold); color: white; }
+      .toc-link.active i { color: white; }
+
+      .policy-section { padding: 25px 20px; border-radius: 16px; }
+      .policy-section h2 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-pattern"></div>
+
+  <header class="header" id="header">
+    <div class="container nav-container">
+      <div class="brand">
+        <div class="brand-icon"><i class="fas fa-book-open"></i></div>
+        <div class="brand-title">نور الحوزة</div>
+      </div>
+      <a href="https://hawza.netlify.app/" class="back-btn">
+        <i class="fas fa-arrow-right"></i>
+        <span>العودة للمكتبة</span>
+      </a>
+    </div>
+  </header>
+
+  <section class="page-hero">
+    <div class="container">
+      <div class="hero-icon"><i class="fas fa-user-shield"></i></div>
+      <h1>سياسة الخصوصية</h1>
+      <p>شفافية تامة واحترام مطلق لبياناتك الشخصية وخصوصيتك أثناء استخدام منصات نور الحوزة.</p>
+      <div class="last-updated">آخر تحديث: أبريل 2026</div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="privacy-layout">
+      
+      <aside class="toc-sidebar">
+        <div class="toc-title">محتويات الوثيقة</div>
+        <ul class="toc-nav">
+          <li><a href="#intro" class="toc-link active"><i class="fas fa-info-circle"></i> المقدمة</a></li>
+          <li><a href="#data-collection" class="toc-link"><i class="fas fa-database"></i> البيانات التي نجمعها</a></li>
+          <li><a href="#local-storage" class="toc-link"><i class="fas fa-hdd"></i> التخزين المحلي</a></li>
+          <li><a href="#third-party" class="toc-link"><i class="fas fa-globe"></i> الخدمات الخارجية</a></li>
+          <li><a href="#security" class="toc-link"><i class="fas fa-lock"></i> حماية البيانات</a></li>
+          <li><a href="#contact" class="toc-link"><i class="fas fa-envelope"></i> تواصل معنا</a></li>
+        </ul>
+      </aside>
+
+      <div class="policy-content">
+        
+        <section id="intro" class="policy-section">
+          <div class="section-header">
+            <div class="section-icon"><i class="fas fa-info-circle"></i></div>
+            <h2>المقدمة ومبدأ الشفافية</h2>
+          </div>
+          <p>
+            بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ. مرحباً بك في <strong>المكتبة الرقمية لنور الحوزة</strong> (بما في ذلك أقسامها: المكتبة الرئيسية، حقيبة المؤمن، زاد المتقين، وفي رحاب الذكر).
+          </p>
+          <p>
+            نحن نؤمن بأن الخصوصية حق أصيل للمستخدم. صُمم هذا الموقع ليكون أداة تقنية مساعدة في طريق طاعة الله وطلب العلم، وليس لجمع بيانات المستخدمين أو تتبع سلوكهم. توضح هذه الوثيقة بوضوح وبساطة كيفية تعاملنا مع بياناتك.
+          </p>
+          <div class="highlight-box">
+            <p><i class="fas fa-check-circle"></i> القاعدة الذهبية: نحن لا نجمع، لا نخزن في خوادمنا، ولا نبيع أي بيانات شخصية تخصك لأي جهة كانت.</p>
+          </div>
+        </section>
+
+        <section id="data-collection" class="policy-section">
+          <div class="section-header">
+            <div class="section-icon"><i class="fas fa-database"></i></div>
+            <h2>ما هي البيانات التي نجمعها؟</h2>
+          </div>
+          <p>موقع "نور الحوزة" يعمل كـ (تطبيق ويب ثابت - Static Web App). نحن <strong>لا نطلب منك تسجيل الدخول</strong>، ولا نطلب بريدك الإلكتروني، ولا أرقام هواتفك. </p>
+          <p>الموقع لا يحتوي على أي خوادم خلفية (Backend Servers) مخصصة لجمع معلومات الزوار أو تتبع نشاطاتهم.</p>
+        </section>
+
+        <section id="local-storage" class="policy-section">
+          <div class="section-header">
+            <div class="section-icon"><i class="fas fa-hdd"></i></div>
+            <h2>كيف نستخدم التخزين المحلي (Local Storage)؟</h2>
+          </div>
+          <p>لتقديم تجربة استخدام ذكية وشخصية، يعتمد الموقع بشكل كامل على تقنية <strong>التخزين المحلي (Local Storage)</strong> الموجودة داخل متصفحك الخاص (على جهازك أنت فقط). نستخدم هذه التقنية في الأمور التالية:</p>
+          <ul>
+            <li><strong>تفضيلات المظهر:</strong> حفظ اختيارك للوضع الليلي أو النهاري (Dark/Light mode).</li>
+            <li><strong>مكتبة المفضلة:</strong> حفظ الكتب والمقاطع (من يوتيوب) التي تقوم بوضع علامة الإعجاب عليها لتتمكن من العودة إليها لاحقاً.</li>
+            <li><strong>المسبحة الإلكترونية:</strong> حفظ عدد التسبيحات في "زاد المتقين" لتستكملها لاحقاً.</li>
+            <li><strong>تقدم الحفظ:</strong> في قسم "في رحاب الذكر"، نحفظ الأيام والسور التي أنجزتها، وترتيب السور المخصص لك، بالإضافة إلى الإهداءات التي تكتبها.</li>
+            <li><strong>المهام اليومية:</strong> حفظ أهدافك ومهامك اليومية أو الشهرية ومؤشرات الإنجاز في قسم "زاد المتقين".</li>
+          </ul>
+          <div class="highlight-box">
+            <p><i class="fas fa-shield-alt"></i> ملاحظة هامة: جميع هذه البيانات تبقى حبيسة هاتفك أو حاسوبك الشخصي. إذا قمت بمسح بيانات التصفح (Clear Cache/Data) من جهازك، سيتم مسح هذه البيانات نهائياً ولن نتمكن من استعادتها لأننا لا نملك نسخة منها.</p>
+          </div>
+        </section>
+
+        <section id="third-party" class="policy-section">
+          <div class="section-header">
+            <div class="section-icon"><i class="fas fa-globe"></i></div>
+            <h2>الخدمات وروابط الأطراف الخارجية</h2>
+          </div>
+          <p>نظراً لطبيعة المكتبة الرقمية، نحن نعتمد على خدمات خارجية موثوقة لاستضافة وعرض المحتوى. عند استخدامك للموقع، فإنك تتعامل مع هذه الخدمات وفقاً لسياسات الخصوصية الخاصة بها:</p>
+          <ul>
+            <li><strong>Google Drive API:</strong> نستخدمه كقاعدة بيانات سحابية لجلب قوائم الكتب والملفات وعرض ملفات (PDF) وقراءتها داخل الموقع. شركة Google قد تجمع بيانات تقنية روتينية عند تحميل الملفات من خوادمها.</li>
+            <li><strong>YouTube:</strong> في قسم "قنوات ومقاطع"، نستخدم مشغلات يوتيوب لعرض المحتوى المرئي. يخضع هذا لسياسة خصوصية Google و YouTube.</li>
+            <li><strong>Fuse.js:</strong> مكتبة برمجية مفتوحة المصدر نستخدمها لتوفير محرك بحث ذكي وسريع (ضبابي) داخل الموقع. تعمل هذه المكتبة محلياً 100% ولا ترسل أي استعلامات بحث خارج جهازك.</li>
+            <li><strong>Aladhan API:</strong> نستخدم هذه الخدمة المجانية المفتوحة لجلب مواقيت الصلاة وتحويل التاريخ الهجري بناءً على المنطقة الزمنية.</li>
+          </ul>
+        </section>
+
+        <section id="security" class="policy-section">
+          <div class="section-header">
+            <div class="section-icon"><i class="fas fa-lock"></i></div>
+            <h2>أمن البيانات وحمايتها</h2>
+          </div>
+          <p>
+            بما أننا لا نجمع أو نعالج أي بيانات حساسة على خوادم خاصة بنا، فإن الخطر الأمني يكاد يكون معدوماً. اتصالك بالموقع مؤمن بالكامل عبر بروتوكول التشفير الآمن (HTTPS)، مما يضمن عدم تمكن أي طرف ثالث من التجسس على تصفحك للمكتبة.
+          </p>
+        </section>
+
+        <section id="contact" class="policy-section">
+          <div class="section-header">
+            <div class="section-icon"><i class="fas fa-envelope"></i></div>
+            <h2>تواصل معنا</h2>
+          </div>
+          <p>
+            إذا كان لديك أي أسئلة أو استفسارات حول سياسة الخصوصية هذه، أو كنت بحاجة إلى دعم تقني، يسعدنا تواصلك معنا عبر القنوات الرسمية لمشروع "نور الحوزة":
+          </p>
+          <ul>
+            <li>قناة التيليجرام: <a href="https://t.me/nwr_lhwz" target="_blank" style="color: var(--accent-blue); font-weight: bold;">@nwr_lhwz</a></li>
+            <li>الانستقرام: <a href="https://www.instagram.com/nwr_alhwz/" target="_blank" style="color: var(--accent-blue); font-weight: bold;">@nwr_alhwz</a></li>
+            <li>بوت التواصل (تيليجرام): <a href="https://t.me/twasl_noor_alhawza_bot" target="_blank" style="color: var(--accent-blue); font-weight: bold;">للدعم الفني والاستفسارات</a></li>
+          </ul>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <footer style="background: var(--bg-secondary); padding: 50px 0 20px; border-top: 1px solid var(--border-subtle); margin-top: 40px; position: relative;">
+    <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent-emerald), var(--accent-gold), var(--accent-emerald));"></div>
+    <div class="container">
+      <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+        جميع الحقوق محفوظة © <span id="currentYear"></span> نور الحوزة <br>
+        مكتبة رقمية مجانية لا تهدف للربح.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // تعيين السنة الحالية في الفوتر
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    // ════ تأثير الهيدر عند التمرير ════
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    }, { passive: true });
+
+    // ════ نظام التظليل التلقائي للقائمة الجانبية (Scroll Spy) ════
+    document.addEventListener("DOMContentLoaded", () => {
+      const sections = document.querySelectorAll(".policy-section");
+      const navLinks = document.querySelectorAll(".toc-link");
+
+      const observerOptions = {
+        root: null,
+        rootMargin: "-20% 0px -60% 0px", // تفعيل التظليل عندما يكون القسم في الثلث العلوي للشاشة
+        threshold: 0
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // إزالة الكلاس active من الجميع
+            navLinks.forEach(link => link.classList.remove("active"));
+            
+            // إضافة الكلاس للرابط المطابق
+            const activeLink = document.querySelector(`.toc-link[href="#${entry.target.id}"]`);
+            if (activeLink) {
+              activeLink.classList.add("active");
+              
+              // للموبايل: عمل سكرول أفقي للقائمة لتوضيح العنصر النشط
+              if(window.innerWidth <= 992) {
+                const tocNav = document.querySelector('.toc-nav');
+                const linkRect = activeLink.getBoundingClientRect();
+                const navRect = tocNav.getBoundingClientRect();
+                
+                // إذا كان الزر خارج الرؤية الأفقية
+                if(linkRect.left < navRect.left || linkRect.right > navRect.right) {
+                  tocNav.scrollTo({
+                    left: activeLink.offsetLeft - 20,
+                    behavior: 'smooth'
+                  });
+                }
+              }
+            }
+          }
+        });
+      }, observerOptions);
+
+      sections.forEach(section => observer.observe(section));
+    });
+  </script>
+</body>
+</html>
