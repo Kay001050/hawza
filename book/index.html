@@ -1938,6 +1938,8 @@
       border-bottom: 1px solid var(--glass-border);
       z-index: 1000;
       transition: var(--transition-smooth);
+      padding-top: env(safe-area-inset-top);
+      box-sizing: content-box;
     }
 
     .header.scrolled {
@@ -7578,6 +7580,12 @@
         .iframe-container {
             padding-bottom: max(0px, env(safe-area-inset-bottom));
         }
+        body {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
     }
 
   /* ════════════════════════════════════════════════════
@@ -8305,6 +8313,9 @@
     </div>
   </aside>
 
+  <!-- تم إضافة meta tags لتحسين العرض على أندرويد وجوجل بلاي -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <header class="header" id="header">
     <div class="container nav-container">
       <a href="https://hawza.netlify.app/" onclick="loadExternalPage('https://hawza.netlify.app/book/', 'navLibrary')" class="brand">
@@ -13857,8 +13868,19 @@ ITEMS_PER_PAGE: 30
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/book/sw.js', { scope: '/book/' })
-          .then(reg => console.log('[PWA] Service Worker registered:', reg.scope))
-          .catch(err => console.warn('[PWA] Service Worker failed:', err));
+          .then(reg => {
+            console.log('SW registered', reg);
+            // تحديث تلقائي عند وجود نسخة جديدة
+            reg.onupdatefound = () => {
+              const installingWorker = reg.installing;
+              installingWorker.onstatechange = () => {
+                if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  console.log('New content is available; please refresh.');
+                }
+              };
+            };
+          })
+          .catch(err => console.log('SW error', err));
       });
     }
   
