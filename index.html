@@ -2,9 +2,24 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <meta name="description" content="نور الحوزة - صوت العالم بين يديك. نموذج ذكاء اصطناعي حوزوي إمامي.">
-  <meta name="theme-color" content="#f8f6f3">
+  <!-- ═══ PWA Core ═══ -->
+  <meta name="theme-color" content="#8a6830" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a1517" media="(prefers-color-scheme: dark)">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="نور الحوزة">
+  <meta name="application-name" content="نور الحوزة">
+  <meta name="msapplication-TileColor" content="#8a6830">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="apple-touch-icon" href="https://hawza.netlify.app/Icon.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="https://hawza.netlify.app/Icon.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="https://hawza.netlify.app/Icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://hawza.netlify.app/Icon.png">
+  <link rel="manifest" id="pwa-manifest-link">
   <title>نور الحوزة - صوت العالم بين يديك</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,6 +41,11 @@
       --transition-fast:0.15s ease; --transition-normal:0.3s ease; --transition-smooth:0.4s cubic-bezier(0.4,0,0.2,1);
       --radius-sm:8px; --radius-md:12px; --radius-lg:16px; --radius-xl:24px; --radius-full:9999px;
       --header-height:64px; --font-ui:'Cairo',sans-serif; --font-heading:'Amiri',serif;
+      /* ═ PWA Safe Area ═ */
+      --sat: env(safe-area-inset-top, 0px);
+      --sar: env(safe-area-inset-right, 0px);
+      --sab: env(safe-area-inset-bottom, 0px);
+      --sal: env(safe-area-inset-left, 0px);
     }
     [data-theme="dark"] {
       --bg-primary:#0a1517; --bg-secondary:#0d1c1d; --bg-tertiary:#111f21;
@@ -319,7 +339,7 @@
       .card,.intro-box,.conclusion-box,.survey-box,.dua-box,.ask-box{padding:1.3rem 1.1rem}
       /* إخفاء الهيدر الرئيسي على الهاتف - شريط التنقل يحل محله */
       .header{display:none!important}
-      body{padding-top:86px;padding-bottom:12px}
+      body{padding-top:calc(86px + var(--sat));padding-bottom:calc(12px + var(--sab))}
       .menu-toggle{display:none!important}
       .card{box-shadow:0 2px 16px rgba(160,127,58,0.07),0 1px 4px rgba(0,0,0,0.04)}
       .btn-gold,.btn-tg,.btn-white,.btn-tg-w{box-shadow:0 3px 10px rgba(0,0,0,0.12)}
@@ -338,9 +358,12 @@
     .mob-brand-bar{
       display:flex;align-items:center;justify-content:space-between;
       padding:0 14px;
-      height:36px;
+      padding-top: var(--sat);
+      height: calc(36px + var(--sat));
       background:linear-gradient(135deg,var(--accent-gold-dark),var(--accent-gold));
       border-bottom:1px solid rgba(255,255,255,0.12);
+      padding-left: calc(14px + var(--sal));
+      padding-right: calc(14px + var(--sar));
     }
     .mob-brand-logo{
       display:flex;align-items:center;gap:8px;cursor:pointer;
@@ -376,6 +399,8 @@
       gap:4px;
       overflow-x:auto;
       scrollbar-width:none;
+      padding-left: calc(8px + var(--sal));
+      padding-right: calc(8px + var(--sar));
     }
     .mob-tabs-bar::-webkit-scrollbar { display: none; }
     .mob-tab{
@@ -443,6 +468,26 @@
     .mob-tab-chat span{position:relative;z-index:1}
     .mob-tab-chat:active{transform:scale(0.91);box-shadow:0 1px 6px rgba(160,127,58,0.2)}
     @media(max-width:640px){.mobile-nav{display:block}}
+
+    /* ══ PWA STANDALONE MODE ══ */
+    @media (display-mode: standalone) {
+      /* Prevent unwanted rubber-band scrolling */
+      html { overscroll-behavior: none; }
+      body { overscroll-behavior-y: contain; }
+      /* Ensure footer clears bottom nav on Android */
+      .footer { padding-bottom: calc(18px + var(--sab)); }
+    }
+
+    /* ══ تحسينات اللمس على Android ══ */
+    button, a, [onclick] {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    /* منع تحديد النص على العناصر التفاعلية */
+    .mob-tab, .mob-tab-chat, .mob-brand-bar, .sidebar-item, .nav-tab {
+      -webkit-user-select: none;
+      user-select: none;
+    }
   </style>
 </head>
 <body>
@@ -1028,6 +1073,203 @@
 
   /* ══ YEAR ══ */
   document.getElementById('yr').textContent = new Date().getFullYear();
+
+  /* ══════════════════════════════════════
+     PWA: Manifest + Service Worker
+  ══════════════════════════════════════ */
+
+  // ─── 1. Inject Web App Manifest ───
+  (function injectManifest() {
+    const manifest = {
+      name: "نور الحوزة - المكتبة الرقمية",
+      short_name: "نور الحوزة",
+      description: "المكتبة الرقمية الحوزوية - مكتبة تضم مجموعة من الكتب الحوزوية والإسلامية محدثة تلقائياً ومتاحة للجميع",
+      start_url: "./",
+      scope: "./",
+      display: "standalone",
+      display_override: ["standalone", "minimal-ui", "browser"],
+      orientation: "portrait-primary",
+      background_color: "#f8f6f3",
+      theme_color: "#8a6830",
+      lang: "ar",
+      dir: "rtl",
+      categories: ["education", "books", "religion"],
+      icons: [
+        { src: "https://hawza.netlify.app/Icon.png", sizes: "192x192", type: "image/png", purpose: "any maskable" },
+        { src: "https://hawza.netlify.app/Icon.png", sizes: "512x512", type: "image/png", purpose: "any maskable" }
+      ],
+      screenshots: [],
+      prefer_related_applications: false,
+      shortcuts: [
+        {
+          name: "المكتبة الرقمية",
+          short_name: "المكتبة",
+          description: "تصفح الكتب الحوزوية",
+          url: "https://hawza.netlify.app/book/",
+          icons: [{ src: "https://hawza.netlify.app/Icon.png", sizes: "96x96" }]
+        },
+        {
+          name: "ابدأ الحديث",
+          short_name: "الحديث",
+          description: "تحدث مع نموذج نور الحوزة",
+          url: "https://chatgpt.com/g/g-67d5f5a8c32c8191ab7bb16ed6a48bfa-nwr-lhwz",
+          icons: [{ src: "https://hawza.netlify.app/Icon.png", sizes: "96x96" }]
+        }
+      ]
+    };
+
+    try {
+      const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.getElementById('pwa-manifest-link');
+      if (link) { link.href = url; }
+      else {
+        const newLink = document.createElement('link');
+        newLink.rel = 'manifest'; newLink.href = url;
+        document.head.appendChild(newLink);
+      }
+    } catch(e) { console.warn('Manifest injection failed:', e); }
+  })();
+
+  // ─── 2. Register Service Worker (inline via Blob) ───
+  (function registerSW() {
+    if (!('serviceWorker' in navigator)) return;
+
+    const CACHE = 'noor-hawza-v3';
+    const OFFLINE_URL = location.href;
+
+    const swCode = `
+const CACHE_NAME = '${CACHE}';
+const STATIC_ASSETS = [
+  '${location.href}',
+  'https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
+  'https://hawza.netlify.app/Icon.png'
+];
+
+self.addEventListener('install', e => {
+  self.skipWaiting();
+  e.waitUntil(
+    caches.open(CACHE_NAME).then(c =>
+      Promise.allSettled(STATIC_ASSETS.map(u => c.add(u).catch(() => null)))
+    )
+  );
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    ).then(() => clients.claim())
+  );
+});
+
+self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return;
+  const url = new URL(e.request.url);
+  // Network-first for APIs and external resources
+  if (url.hostname !== location.hostname &&
+      !url.href.includes('fonts.googleapis') &&
+      !url.href.includes('fonts.gstatic') &&
+      !url.href.includes('cdnjs.cloudflare') &&
+      !url.href.includes('hawza.netlify')) {
+    return;
+  }
+  e.respondWith(
+    caches.match(e.request).then(cached => {
+      const fetchPromise = fetch(e.request).then(res => {
+        if (res && res.status === 200 && res.type !== 'opaque') {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
+        }
+        return res;
+      }).catch(() => null);
+      return cached || fetchPromise;
+    })
+  );
+});
+
+self.addEventListener('message', e => {
+  if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
+});
+`;
+
+    try {
+      const blob = new Blob([swCode], { type: 'application/javascript' });
+      const swUrl = URL.createObjectURL(blob);
+      navigator.serviceWorker.register(swUrl, { scope: '/' })
+        .then(reg => {
+          console.log('[PWA] Service Worker registered:', reg.scope);
+          // Check for updates every 60 seconds
+          setInterval(() => reg.update(), 60000);
+        })
+        .catch(err => {
+          // Fallback: try registering with page scope
+          navigator.serviceWorker.register(swUrl)
+            .then(reg => console.log('[PWA] SW registered (fallback scope):', reg.scope))
+            .catch(e2 => console.warn('[PWA] SW registration failed:', e2));
+        });
+    } catch(e) { console.warn('[PWA] SW setup failed:', e); }
+  })();
+
+  // ─── 3. Android Install Prompt (A2HS) ───
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Show a subtle install banner after 3 seconds if not already installed
+    setTimeout(() => {
+      if (!window.matchMedia('(display-mode: standalone)').matches && deferredPrompt) {
+        showInstallBanner();
+      }
+    }, 3000);
+  });
+
+  function showInstallBanner() {
+    if (document.getElementById('pwa-install-banner')) return;
+    const banner = document.createElement('div');
+    banner.id = 'pwa-install-banner';
+    banner.dir = 'rtl';
+    banner.style.cssText = `
+      position:fixed;bottom:calc(12px + var(--sab,0px));left:50%;transform:translateX(-50%);
+      background:linear-gradient(135deg,#8a6830,#a07f3a);color:#fff;
+      padding:10px 18px;border-radius:999px;
+      display:flex;align-items:center;gap:10px;
+      font-family:'Cairo',sans-serif;font-size:0.88rem;font-weight:700;
+      box-shadow:0 4px 20px rgba(0,0,0,0.25);
+      z-index:9999;cursor:pointer;white-space:nowrap;
+      animation:slideUp 0.4s cubic-bezier(0.34,1.4,0.64,1);
+    `;
+    banner.innerHTML = `<i class="fas fa-download" style="font-size:1rem"></i><span>ثبّت التطبيق على هاتفك</span><button style="background:rgba(255,255,255,0.2);border:none;color:#fff;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:0.75rem;display:flex;align-items:center;justify-content:center;font-family:Cairo,sans-serif" onclick="this.parentElement.remove();event.stopPropagation()">✕</button>`;
+    const style = document.createElement('style');
+    style.textContent = '@keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}';
+    document.head.appendChild(style);
+    banner.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        banner.remove();
+      }
+    });
+    document.body.appendChild(banner);
+    setTimeout(() => { if (banner.parentElement) banner.remove(); }, 15000);
+  }
+
+  window.addEventListener('appinstalled', () => {
+    deferredPrompt = null;
+    const b = document.getElementById('pwa-install-banner');
+    if (b) b.remove();
+    console.log('[PWA] App installed successfully');
+  });
+
+  // ─── 4. Standalone Mode Enhancements ───
+  if (window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone === true) {
+    document.documentElement.setAttribute('data-pwa', 'true');
+    // Prevent pull-to-refresh in standalone mode
+    document.body.style.overscrollBehaviorY = 'contain';
+  }
 </script>
 
 
