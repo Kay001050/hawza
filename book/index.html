@@ -9271,7 +9271,7 @@
         <div class="footer-qrs-wrapper">
           <div class="footer-dev-qr" onclick="openSupportModal()" style="cursor:pointer;">
             <img src="QRDev.jpg" alt="QR Code لدعم المطور">
-            <span>لدعم المطور</span>
+            <span>لدعم المطور عبر بينانس</span>
           </div>
           <div class="footer-dev-qr bp-qr" onclick="openBenefitPayModal()" style="cursor:pointer;">
             <img src="BP-qr.jpg" alt="QR BenefitPay لدعم المطور">
@@ -9323,7 +9323,7 @@
       <div class="support-modal-qr-wrap" style="cursor:default; border-color:#00b050;">
         <img src="BP-qr.jpg" alt="QR BenefitPay لدعم المطور">
       </div>
-      <div class="support-modal-qr-hint">امسح الكود لفتح تطبيق BenefitPay والدعم مباشرة</div>
+      <div class="support-modal-qr-hint">امسح الكود في تطبيق BenefitPay والدعم مباشرة</div>
       <div class="support-modal-phone-info">📞 رقم الجوال: <strong>66302585</strong></div>
       <br>
       <button class="support-modal-copy-iban" onclick="copyBpIban()">
@@ -9893,6 +9893,8 @@ ITEMS_PER_PAGE: 30
           showCategoriesProgress(rootFolders.length);
           renderCategoriesInitial(rootFolders.map(f => ({ ...f, id: getRealFolderId(f) })));
           updateStats();
+          // ✅ عرض المجلدات فوراً قبل تحميل محتوياتها
+          showRootFolder();
         }
         
         for (let i = 0; i < rootFolders.length; i++) {
@@ -9902,6 +9904,8 @@ ITEMS_PER_PAGE: 30
           if (isFirstLoad) {
             updateCategoriesProgress(folder.name);
             updateStats();
+            // ✅ تحديث أعداد الملفات في بطاقات المجلدات تدريجياً
+            updateFolderCountsInGrid();
           }
         }
         
@@ -10008,6 +10012,20 @@ ITEMS_PER_PAGE: 30
       
       DOM.categoriesGrid.appendChild(chip);
       chip.addEventListener('click', () => handleCategoryClick(category.id));
+    }
+
+    // ✅ تحديث أعداد الملفات في بطاقات المجلدات الظاهرة بدون إعادة رسم كامل
+    function updateFolderCountsInGrid() {
+      document.querySelectorAll('.folder-card').forEach(card => {
+        const folderId = card.dataset.id;
+        const catInfo = state.categories.find(c => c.id === folderId);
+        if (catInfo && catInfo.bookCount > 0) {
+          const countEl = card.querySelector('.folder-count');
+          if (countEl) {
+            countEl.innerHTML = `<i class="fas fa-file" style="font-size:0.65rem;opacity:0.6;"></i> ${catInfo.bookCount} ملف`;
+          }
+        }
+      });
     }
 
     function handleCategoryClick(id) {
@@ -10587,7 +10605,9 @@ ITEMS_PER_PAGE: 30
 
     function renderFolderCard(folder) {
       const folderInfo = state.categories.find(c => c.id === folder.id) || { bookCount: 0 };
-      const countLabel = folderInfo.bookCount > 0 ? `${folderInfo.bookCount} ملف` : 'مجلد';
+      const countLabel = state.isLoadingData
+        ? (folderInfo.bookCount > 0 ? `${folderInfo.bookCount} ملف` : '<span style="opacity:0.5;font-size:0.75rem;">جاري التحميل...</span>')
+        : (folderInfo.bookCount > 0 ? `${folderInfo.bookCount} ملف` : 'مجلد');
       return `
         <div class="folder-card folder-enter" data-id="${folder.id}" data-name="${folder.name}">
           <div class="folder-icon"><i class="fas fa-folder"></i></div>
