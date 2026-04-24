@@ -3730,6 +3730,49 @@
       transform: scale(1.03);
     }
 
+    /* تصغير بطاقات الدعم عمودياً للهواتف فقط */
+    @media (max-width: 480px) {
+      .support-modal {
+        padding: 18px 16px 16px;
+        max-width: 92%;
+      }
+      .support-modal-title {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+      }
+      .support-modal-msg {
+        font-size: 0.8rem;
+        padding: 10px 12px;
+        margin-bottom: 12px;
+        line-height: 1.6;
+      }
+      .support-modal-qr-wrap {
+        padding: 6px;
+        margin-bottom: 10px;
+      }
+      .support-modal-qr-wrap img {
+        width: 110px;
+        height: 110px;
+      }
+      .support-modal-qr-hint {
+        font-size: 0.7rem;
+        margin-bottom: 12px;
+      }
+      .support-modal-btn {
+        padding: 8px 20px;
+        font-size: 0.85rem;
+      }
+      .support-modal-phone-info {
+        font-size: 0.75rem;
+        margin: 6px 0 2px;
+      }
+      .support-modal-copy-iban {
+        padding: 8px 20px;
+        font-size: 0.65rem;
+        margin-top: 4px;
+      }
+    }
+
     /* Toast */
     .toast-container {
       position: fixed;
@@ -9324,7 +9367,7 @@
         <img src="BP-qr.jpg" alt="QR BenefitPay لدعم المطور">
       </div>
       <div class="support-modal-qr-hint">امسح الكود في تطبيق BenefitPay والدعم مباشرة</div>
-      <div class="support-modal-phone-info">📞 رقم البنفت: <strong>+973 6630 2585</strong></div>
+      <div class="support-modal-phone-info">📞 رقم البنفت: <strong>+973 66302585</strong></div>
       <br>
       <button class="support-modal-copy-iban" onclick="copyBpIban()">
         <i class="fas fa-copy">BH25ABCO91002016585516</i> نسخ رقم الآيبان
@@ -9421,10 +9464,18 @@
         poems: { id: '1l7zE8Q6B-2Iu_4I9fWBPfdp9ArMQklgE', name: 'قصائد ومجالس كاملة' },
         quds: { id: '1TLLTDDtUKmxWE1ZCHoC9g1WaLcdFNjBZ', name: 'صور القدس في عمامة' }
       },
+      // المجلدات الثقيلة التي يجب تأخير تحميلها
+      HEAVY_FOLDERS: [
+        '1-0waUgOgWMFyp3WHFlQkPvBwVogVjzNj', // مكتبة المهدي
+        '1l7zE8Q6B-2Iu_4I9fWBPfdp9ArMQklgE', // قصائد ومجالس
+        '1FFP-RfmgjBGQurA99nnMrwRUuOLsQ90_', // المكتبة الالكترونية
+        '1t5wlgrqFQyMOYAnKiGN-ee8nUaXoQSsl', // مكتبة الطفل الموالي
+        '18y7MZhorEYoKUxEXLD0J6qooPrF11_JL'  // مكتبة نون والقلم
+      ],
       PAGE_SIZE: 1000,
-CACHE_KEY: 'noor_library_v16',
-CACHE_TIME: 12 * 60 * 60 * 1000,
-ITEMS_PER_PAGE: 30
+      CACHE_KEY: 'noor_library_v17', // تحديث الإصدار لضمان تطبيق التغييرات
+      CACHE_TIME: 12 * 60 * 60 * 1000,
+      ITEMS_PER_PAGE: 30
     };
 
     const SUGGESTED_LIBRARIES = {
@@ -9486,7 +9537,12 @@ ITEMS_PER_PAGE: 30
       loadedFoldersCount: 0,
       isLoadingData: false,
       librariesLoaded: {},
-      currentLibraryType: 'websites'
+      currentLibraryType: 'websites',
+      // نظام إدارة الطوابير والتحميل
+      loadQueue: [],
+      isProcessingQueue: false,
+      loadedFolderIds: new Set(),
+      isFullyLoaded: false
     };
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -9859,93 +9915,149 @@ ITEMS_PER_PAGE: 30
       
       state.isLoading = true;
       state.isLoadingData = true;
-      state.allBooks = [];
-      state.allFolders = [];
-      state.categories = [];
-      state.totalSize = 0;
-      state.totalBooks = 0;
       
-      if (isFirstLoad) renderSkeletons(8);
+      // إذا لم يكن هناك بيانات محملة أصلاً، نبدأ من الصفر
+      if (state.allBooks.length === 0) {
+        state.allBooks = [];
+        state.allFolders = [];
+        state.categories = [];
+        state.totalSize = 0;
+        state.totalBooks = 0;
+        state.loadedFolderIds = new Set();
+        state.isFullyLoaded = false;
+      }
+      
+      if (isFirstLoad && state.allBooks.length === 0) renderSkeletons(8);
       
       try {
-        const rootData = await fetchFolderContents(rootFolderId);
-        const rootFolders = (rootData.files || []).filter(f => isFolder(f));
-        const rootFiles = (rootData.files || []).filter(f => !isFolder(f));
-        
-        rootFolders.forEach(folder => {
-          const realId = getRealFolderId(folder);
-          state.allFolders.push({ id: realId, name: folder.name, parentId: rootFolderId, isRoot: true, depth: 0 });
-        });
-        
-        rootFiles.forEach(file => {
-          state.allBooks.push({
-            id: file.id, name: file.name, mimeType: file.mimeType, size: parseInt(file.size) || 0,
-            createdTime: file.createdTime, thumbnailLink: file.thumbnailLink,
-            webViewLink: file.webViewLink, iconLink: file.iconLink,
-            folderId: rootFolderId, folderName: libraryName
+        // تحميل محتويات الجذر أولاً إذا لم تكن محملة
+        if (!state.loadedFolderIds.has(rootFolderId)) {
+          const rootData = await fetchFolderContents(rootFolderId);
+          const rootFolders = (rootData.files || []).filter(f => isFolder(f));
+          const rootFiles = (rootData.files || []).filter(f => !isFolder(f));
+          
+          rootFolders.forEach(folder => {
+            const realId = getRealFolderId(folder);
+            if (!state.allFolders.find(f => f.id === realId)) {
+              state.allFolders.push({ id: realId, name: folder.name, parentId: rootFolderId, isRoot: true, depth: 0 });
+            }
           });
-          state.totalSize += parseInt(file.size) || 0;
-        });
-        
-        state.totalBooks = state.allBooks.length;
-        
-        if (isFirstLoad) {
-          showCategoriesProgress(rootFolders.length);
-          renderCategoriesInitial(rootFolders.map(f => ({ ...f, id: getRealFolderId(f) })));
-          updateStats();
-          // ✅ عرض المجلدات فوراً قبل تحميل محتوياتها
-          showRootFolder();
-        }
-        
-        for (let i = 0; i < rootFolders.length; i++) {
-          const folder = rootFolders[i];
-          const realId = getRealFolderId(folder);
-          await loadFolderAndSubfoldersProgressive(realId, folder.name, rootFolderId, null, 0);
+          
+          rootFiles.forEach(file => {
+            if (!state.allBooks.find(b => b.id === file.id)) {
+              state.allBooks.push({
+                id: file.id, name: file.name, mimeType: file.mimeType, size: parseInt(file.size) || 0,
+                createdTime: file.createdTime, thumbnailLink: file.thumbnailLink,
+                webViewLink: file.webViewLink, iconLink: file.iconLink,
+                folderId: rootFolderId, folderName: libraryName
+              });
+              state.totalSize += parseInt(file.size) || 0;
+            }
+          });
+          
+          state.totalBooks = state.allBooks.length;
+          state.loadedFolderIds.add(rootFolderId);
+
           if (isFirstLoad) {
-            updateCategoriesProgress(folder.name);
+            showCategoriesProgress(rootFolders.length);
+            renderCategoriesInitial(rootFolders.map(f => ({ ...f, id: getRealFolderId(f) })));
             updateStats();
-            // ✅ تحديث أعداد الملفات في بطاقات المجلدات تدريجياً
-            updateFolderCountsInGrid();
+            showRootFolder();
           }
+
+          // إضافة المجلدات الجذرية إلى الطابور
+          // ترتيب المجلدات: الخفيفة أولاً، ثم الثقيلة
+          const sortedRootFolders = [...rootFolders].sort((a, b) => {
+            const aHeavy = CONFIG.HEAVY_FOLDERS.includes(getRealFolderId(a));
+            const bHeavy = CONFIG.HEAVY_FOLDERS.includes(getRealFolderId(b));
+            if (aHeavy && !bHeavy) return 1;
+            if (!aHeavy && bHeavy) return -1;
+            return 0;
+          });
+
+          sortedRootFolders.forEach(f => {
+            addToQueue(getRealFolderId(f), f.name, rootFolderId, null, 0);
+          });
         }
         
-        if (isFirstLoad) hideCategoriesProgress();
-        
-        state.isLoading = false;
-        state.isLoadingData = false;
-        state.totalCategories = state.categories.length;
-        state.librariesLoaded[state.currentLibrary] = true;
-        
-        updateStats();
-        renderCategories();
-        showRootFolder();
-        
-        saveToCache({
-          allBooks: state.allBooks, allFolders: state.allFolders,
-          categories: state.categories.map(c => ({ ...c, isNew: false })),
-          totalSize: state.totalSize, totalBooks: state.totalBooks, totalCategories: state.totalCategories
-        }, state.currentLibrary);
-        
-        if (isFirstLoad) showToast('تم التحميل', `تم تحميل ${state.totalBooks} كتاب`, 'success');
+        // بدء معالجة الطابور
+        processQueue();
         
       } catch (error) {
         console.error('Error loading library:', error);
         state.isLoading = false;
         state.isLoadingData = false;
-        if (isFirstLoad) {
-          hideCategoriesProgress();
-          renderStatusMessage('fa-exclamation-triangle', 'خطأ في التحميل', 'حدث خطأ أثناء تحميل المكتبة.');
+      }
+    }
+
+    function addToQueue(folderId, folderName, parentId, parentName, depth, priority = false) {
+      if (state.loadedFolderIds.has(folderId)) return;
+      
+      const item = { folderId, folderName, parentId, parentName, depth };
+      if (priority) {
+        // إزالة العنصر إذا كان موجوداً مسبقاً في الطابور ووضعه في المقدمة
+        state.loadQueue = state.loadQueue.filter(i => i.folderId !== folderId);
+        state.loadQueue.unshift(item);
+      } else {
+        if (!state.loadQueue.find(i => i.folderId === folderId)) {
+          state.loadQueue.push(item);
         }
       }
     }
 
-    async function loadFolderAndSubfoldersProgressive(folderId, folderName, parentId, parentName, depth) {
-      try {
-        const data = await fetchFolderContents(folderId);
-        const folders = (data.files || []).filter(f => isFolder(f));
-        const files = (data.files || []).filter(f => !isFolder(f));
+    async function processQueue() {
+      if (state.isProcessingQueue || state.loadQueue.length === 0) {
+        if (state.loadQueue.length === 0 && state.loadedFolderIds.size > 1) {
+          state.isFullyLoaded = true;
+          state.isLoading = false;
+          state.isLoadingData = false;
+          hideCategoriesProgress();
+          saveCurrentStateToCache();
+        }
+        return;
+      }
+
+      state.isProcessingQueue = true;
+      
+      while (state.loadQueue.length > 0) {
+        const item = state.loadQueue.shift();
+        if (state.loadedFolderIds.has(item.folderId)) continue;
+
+        try {
+          updateCategoriesProgress(item.folderName);
+          await loadFolderContentsToState(item.folderId, item.folderName, item.parentId, item.parentName, item.depth);
+          state.loadedFolderIds.add(item.folderId);
+          
+          updateStats();
+          updateFolderCountsInGrid();
+          
+          // حفظ الحالة دورياً (كل 5 مجلدات)
+          if (state.loadedFolderIds.size % 5 === 0) {
+            saveCurrentStateToCache();
+          }
+        } catch (e) {
+          console.warn(`Error loading folder ${item.folderName}:`, e);
+        }
         
-        files.forEach(file => {
+        // السماح بتحديث واجهة المستخدم بين التحميلات
+        await new Promise(resolve => setTimeout(resolve, 50));
+      }
+
+      state.isProcessingQueue = false;
+      state.isFullyLoaded = true;
+      state.isLoading = false;
+      state.isLoadingData = false;
+      hideCategoriesProgress();
+      saveCurrentStateToCache();
+    }
+
+    async function loadFolderContentsToState(folderId, folderName, parentId, parentName, depth) {
+      const data = await fetchFolderContents(folderId);
+      const folders = (data.files || []).filter(f => isFolder(f));
+      const files = (data.files || []).filter(f => !isFolder(f));
+      
+      files.forEach(file => {
+        if (!state.allBooks.find(b => b.id === file.id)) {
           state.allBooks.push({
             id: file.id, name: file.name, mimeType: file.mimeType, size: parseInt(file.size) || 0,
             createdTime: file.createdTime, thumbnailLink: file.thumbnailLink,
@@ -9953,34 +10065,42 @@ ITEMS_PER_PAGE: 30
             folderId: folderId, folderName: folderName
           });
           state.totalSize += parseInt(file.size) || 0;
-        });
-        
-        state.totalBooks = state.allBooks.length;
-        
-        let category = state.categories.find(c => c.id === folderId);
-        if (!category) {
-          category = { id: folderId, name: folderName, parentId: parentId, parentName: parentName, bookCount: files.length, isNew: true };
-          state.categories.push(category);
-        } else {
-          category.bookCount = files.length;
-          category.isNew = true;
         }
-        
-        folders.forEach(subFolder => {
-          const realId = getRealFolderId(subFolder);
-          state.allFolders.push({ id: realId, name: subFolder.name, parentId: folderId, depth: depth + 1 });
-        });
-        
-        addCategoryToGrid(category);
-        
-        for (const subFolder of folders) {
-          const realId = getRealFolderId(subFolder);
-          await loadFolderAndSubfoldersProgressive(realId, subFolder.name, folderId, folderName, depth + 1);
-        }
-        
-      } catch (e) {
-        console.warn(`Error loading folder ${folderName}:`, e);
+      });
+      
+      state.totalBooks = state.allBooks.length;
+      
+      let category = state.categories.find(c => c.id === folderId);
+      if (!category) {
+        category = { id: folderId, name: folderName, parentId: parentId, parentName: parentName, bookCount: files.length, isNew: true };
+        state.categories.push(category);
+      } else {
+        category.bookCount = files.length;
       }
+      
+      folders.forEach(subFolder => {
+        const realId = getRealFolderId(subFolder);
+        if (!state.allFolders.find(f => f.id === realId)) {
+          state.allFolders.push({ id: realId, name: subFolder.name, parentId: folderId, depth: depth + 1 });
+        }
+        // إضافة المجلدات الفرعية للطابور (الخفيفة أولاً)
+        addToQueue(realId, subFolder.name, folderId, folderName, depth + 1);
+      });
+      
+      addCategoryToGrid(category);
+    }
+
+    function saveCurrentStateToCache() {
+      saveToCache({
+        allBooks: state.allBooks, 
+        allFolders: state.allFolders,
+        categories: state.categories.map(c => ({ ...c, isNew: false })),
+        totalSize: state.totalSize, 
+        totalBooks: state.totalBooks, 
+        totalCategories: state.categories.length,
+        loadedFolderIds: Array.from(state.loadedFolderIds),
+        isFullyLoaded: state.isFullyLoaded
+      }, state.currentLibrary);
     }
 
     function renderCategoriesInitial(rootFolders) {
@@ -10026,6 +10146,25 @@ ITEMS_PER_PAGE: 30
           }
         }
       });
+
+      // إذا كان المستخدم داخل مجلد يتم تحميله حالياً، نقوم بتحديث العرض
+      if (state.currentFolderId && !state.loadedFolderIds.has(state.currentFolderId)) {
+        // لا نفعل شيئاً هنا، سيتم التحديث عند اكتمال تحميل المجلد في processQueue
+      } else if (state.currentFolderId) {
+        // تحديث العناصر الحالية إذا تغيرت
+        const subFolders = state.allFolders.filter(f => f.parentId === state.currentFolderId);
+        const files = state.allBooks.filter(b => b.folderId === state.currentFolderId);
+        
+        const newItems = [
+          ...subFolders.map(f => ({ id: f.id, name: f.name, mimeType: 'application/vnd.google-apps.folder' })),
+          ...files
+        ];
+
+        if (newItems.length !== state.currentItems.length) {
+          state.currentItems = newItems;
+          filterAndRender();
+        }
+      }
     }
 
     function handleCategoryClick(id) {
@@ -10062,12 +10201,26 @@ ITEMS_PER_PAGE: 30
         state.totalSize = cachedData.totalSize || 0;
         state.totalBooks = cachedData.totalBooks || 0;
         state.totalCategories = cachedData.totalCategories || 0;
+        state.loadedFolderIds = new Set(cachedData.loadedFolderIds || []);
+        state.isFullyLoaded = cachedData.isFullyLoaded || false;
+        
         state.isLoading = false;
         state.librariesLoaded[state.currentLibrary] = true;
         
         updateStats();
         renderCategories();
         showRootFolder();
+
+        // إذا لم يكتمل التحميل، نستأنفه في الخلفية
+        if (!state.isFullyLoaded) {
+          // إعادة بناء الطابور للمجلدات التي لم تُحمل بعد
+          state.allFolders.forEach(f => {
+            if (!state.loadedFolderIds.has(f.id)) {
+              addToQueue(f.id, f.name, f.parentId, null, f.depth || 0);
+            }
+          });
+          loadAllDataProgressive(false);
+        }
         return;
       }
       
@@ -10117,6 +10270,15 @@ ITEMS_PER_PAGE: 30
     }
 
     function openFolder(folderId, folderName) {
+      // إعطاء الأولوية للمجلد الحالي إذا لم يكن قد حُمل بعد
+      if (!state.loadedFolderIds.has(folderId)) {
+        addToQueue(folderId, folderName, null, null, 0, true);
+        if (!state.isProcessingQueue) processQueue();
+        
+        // إظهار رسالة تحميل للمستخدم
+        renderStatusMessage('fa-spinner fa-spin', 'جاري تحميل المجلد...', 'يرجى الانتظار قليلاً بينما نقوم بجلب محتويات هذا المجلد.');
+      }
+
       // --- Transition: fade out grid, show progress bar ---
       DOM.booksGrid.classList.add('navigating');
       if (DOM.navProgressBar) {
@@ -10157,7 +10319,12 @@ ITEMS_PER_PAGE: 30
           ...files
         ];
 
-        filterAndRender();
+        // إذا كان المجلد فارغاً وما زال يحمل، لا نعرض "المجلد فارغ" بل ننتظر
+        if (state.currentItems.length === 0 && !state.loadedFolderIds.has(folderId)) {
+          // سيتم التحديث تلقائياً عند اكتمال تحميل المجلد عبر processQueue
+        } else {
+          filterAndRender();
+        }
 
         // Fade grid back in
         DOM.booksGrid.classList.remove('navigating');
