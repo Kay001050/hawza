@@ -14376,5 +14376,688 @@
     document.addEventListener('DOMContentLoaded', () => setTimeout(updateFavShelfCount, 600));
 
 </script>
+
+<!-- ══════════════ AI Assistant Floating Button & Modal ══════════════ -->
+<style>
+  .ai-float-btn {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-emerald));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 8998;
+    border: 2px solid rgba(255,255,255,0.25);
+    animation: aiFloatPulse 3s ease-in-out infinite;
+    transition: transform 0.22s ease;
+  }
+  .ai-float-btn:hover { transform: scale(1.1); }
+  @keyframes aiFloatPulse {
+    0%,100% { box-shadow: 0 4px 18px rgba(160,127,58,0.5), 0 0 0 0 rgba(160,127,58,0.25); }
+    50%      { box-shadow: 0 4px 18px rgba(160,127,58,0.5), 0 0 0 10px rgba(160,127,58,0); }
+  }
+
+  .ai-modal-overlay {
+    position: fixed; inset: 0;
+    z-index: 9005;
+    pointer-events: none;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.28s ease, visibility 0.28s ease;
+  }
+  .ai-modal-overlay.active { opacity: 1; visibility: visible; }
+
+  .ai-modal-box {
+    position: fixed;
+    bottom: 96px;
+    right: 24px;
+    width: min(400px, calc(100vw - 32px));
+    height: min(620px, calc(100vh - 120px));
+    background: var(--bg-card);
+    border: 1px solid var(--border-medium);
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    pointer-events: all;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.12);
+    transform: translateY(18px) scale(0.96);
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1),
+                width 0.3s ease, height 0.3s ease,
+                bottom 0.3s ease, right 0.3s ease,
+                border-radius 0.3s ease;
+    user-select: none;
+  }
+  .ai-modal-overlay.active .ai-modal-box { transform: translateY(0) scale(1); }
+
+  /* Fullscreen state — يبدأ من أسفل الهيدر */
+  .ai-modal-box.ai-fullscreen {
+    top: var(--header-height) !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: calc(100vh - var(--header-height)) !important;
+    border-radius: 0 !important;
+    transform: none !important;
+  }
+
+  .ai-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--bg-secondary);
+    flex-shrink: 0;
+    z-index: 2;
+    cursor: grab;
+  }
+  .ai-modal-header:active { cursor: grabbing; }
+  .ai-modal-box.ai-fullscreen .ai-modal-header { cursor: default; }
+  .ai-modal-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.88rem; font-weight: 800;
+    color: var(--text-primary);
+  }
+  .ai-modal-title-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-gold), var(--accent-emerald));
+    flex-shrink: 0;
+  }
+  .ai-hdr-btns { display: flex; gap: 7px; align-items: center; }
+  .ai-hdr-btn {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-muted);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.78rem; cursor: pointer;
+    transition: 0.2s;
+  }
+  .ai-hdr-btn:hover { background: var(--accent-gold); color: #fff; border-color: var(--accent-gold); }
+  #aiBackBtn { display: none; }
+
+  /* ── Model Select Screen ── */
+  .ai-select-screen {
+    flex: 1; overflow-y: auto;
+    padding: 22px 18px 18px;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 18px;
+  }
+  .ai-select-screen::-webkit-scrollbar { width: 4px; }
+  .ai-select-screen::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 4px; }
+  .ai-select-intro { text-align: center; }
+  .ai-select-intro h3 {
+    font-size: 1rem; font-weight: 800;
+    color: var(--text-primary); margin-bottom: 5px;
+  }
+  .ai-select-intro p { font-size: 0.78rem; color: var(--text-muted); }
+
+  .ai-primary-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 11px; width: 100%;
+  }
+  .ai-model-card {
+    background: var(--bg-secondary);
+    border: 1.5px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 18px 10px 14px;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 9px;
+    cursor: pointer;
+    transition: all 0.24s ease;
+  }
+  .ai-model-card:hover {
+    border-color: var(--accent-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(160,127,58,0.13);
+  }
+  .ai-model-logo { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
+  .ai-model-name { font-size: 0.78rem; font-weight: 700; color: var(--text-primary); text-align: center; line-height: 1.45; }
+  .ai-model-sub { font-size: 0.67rem; font-weight: 600; color: var(--text-muted); }
+  .ai-model-badge {
+    font-size: 0.63rem; font-weight: 700;
+    color: var(--accent-emerald);
+    background: rgba(30,107,84,0.1);
+    padding: 2px 9px; border-radius: 20px;
+  }
+
+  .ai-more-section { width: 100%; }
+  .ai-more-toggle {
+    width: 100%;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    font-size: 0.8rem; font-weight: 700;
+    color: var(--text-secondary);
+    cursor: pointer; transition: 0.2s;
+  }
+  .ai-more-toggle:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+  .ai-more-toggle .toggle-arrow { transition: transform 0.25s; }
+  .ai-more-toggle.open .toggle-arrow { transform: rotate(180deg); }
+  .ai-more-list {
+    display: none; flex-direction: column;
+    gap: 6px; margin-top: 8px;
+  }
+  .ai-more-list.open { display: flex; }
+  .ai-more-item {
+    display: flex; align-items: center; gap: 11px;
+    padding: 9px 13px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    cursor: pointer; transition: 0.2s;
+  }
+  .ai-more-item:hover { border-color: var(--accent-gold); background: rgba(160,127,58,0.05); }
+  .ai-more-logo { width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .ai-more-name { font-size: 0.8rem; font-weight: 600; color: var(--text-primary); flex: 1; }
+  .ai-more-arrow { color: var(--text-muted); font-size: 0.68rem; }
+
+  /* ── Logo Transition Screen ── */
+  .ai-logo-transition {
+    position: absolute; inset: 0;
+    background: var(--bg-card);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 20;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.2s;
+    overflow: hidden;
+  }
+  .ai-logo-transition.active { opacity: 1; visibility: visible; }
+  .ai-logo-anim { will-change: transform, opacity; }
+  .ai-logo-anim.go {
+    animation: aiLogoGrow 1.15s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  @keyframes aiLogoGrow {
+    0%   { transform: scale(0.4); opacity: 0; }
+    20%  { transform: scale(1);   opacity: 1; }
+    68%  { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(9);   opacity: 0; }
+  }
+
+  /* ── iframe Screen ── */
+  .ai-iframe-screen {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+    border-radius: 24px;
+    overflow: hidden;
+  }
+  .ai-iframe-screen.active { opacity: 1; visibility: visible; }
+  .ai-iframe-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--bg-secondary);
+    flex-shrink: 0;
+  }
+  .ai-iframe-info { display: flex; align-items: center; gap: 7px; }
+  .ai-iframe-info .mini-logo { width: 20px; height: 20px; display:flex; align-items:center; justify-content:center; }
+  .ai-iframe-info span { font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); }
+  .ai-iframe-back {
+    display: flex; align-items: center; gap: 5px;
+    padding: 4px 11px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    font-size: 0.73rem; font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer; transition: 0.2s;
+  }
+  .ai-iframe-back:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+  .ai-frame { flex: 1; width: 100%; border: none; background: #fff; }
+  .ai-blocked {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 13px; padding: 22px; text-align: center;
+    display: none;
+  }
+  .ai-blocked .blk-icon { font-size: 2.2rem; color: var(--text-muted); opacity: 0.45; }
+  .ai-blocked p { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.65; }
+  .ai-ext-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 9px 18px;
+    background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-emerald));
+    color: #fff; border-radius: 11px;
+    font-size: 0.82rem; font-weight: 700;
+    text-decoration: none; transition: 0.2s;
+  }
+  .ai-ext-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  @media (max-width: 480px) {
+    .ai-float-btn { bottom: 18px; right: 16px; width: 50px; height: 50px; }
+    .ai-modal-box { 
+      bottom: 82px; right: 8px;
+      width: calc(100vw - 16px) !important;
+      height: min(540px, calc(100vh - 100px));
+      border-radius: 16px;
+    }
+    .ai-modal-box.ai-fullscreen {
+      top: var(--header-height-mobile) !important;
+      bottom: 0 !important; right: 0 !important; left: 0 !important;
+      width: 100vw !important;
+      height: calc(100vh - var(--header-height-mobile)) !important;
+      border-radius: 0 !important;
+    }
+    .ai-primary-grid { grid-template-columns: 1fr 1fr; gap: 9px; }
+  }
+</style>
+
+<!-- Floating AI Button -->
+<button class="ai-float-btn" id="aiFloatBtn" onclick="openAIAssistant()" title="مساعد الذكاء الاصطناعي - نور الحوزة">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+    <path d="M12 2 L13.2 8.5 L20 10 L13.2 11.5 L12 18 L10.8 11.5 L4 10 L10.8 8.5 Z" fill="white" opacity="0.95"/>
+    <path d="M19.5 14 L20.2 16.8 L23 17.5 L20.2 18.2 L19.5 21 L18.8 18.2 L16 17.5 L18.8 16.8 Z" fill="white" opacity="0.65"/>
+    <path d="M5 3 L5.6 5 L8 5.6 L5.6 6.2 L5 8 L4.4 6.2 L2 5.6 L4.4 5 Z" fill="white" opacity="0.5"/>
+  </svg>
+</button>
+
+<!-- AI Assistant Modal -->
+<div class="ai-modal-overlay" id="aiModalOverlay">
+  <div class="ai-modal-box">
+    <!-- Header -->
+    <div class="ai-modal-header">
+      <div class="ai-modal-title">
+        <span class="ai-modal-title-dot"></span>
+        <span id="aiModalTitleText">مساعد نور الحوزة الذكي</span>
+      </div>
+      <div class="ai-hdr-btns">
+        <button class="ai-hdr-btn" id="aiBackBtn" onclick="backToAISelect()" title="رجوع">
+          <i class="fas fa-arrow-right"></i>
+        </button>
+        <button class="ai-hdr-btn" id="aiExpandBtn" onclick="toggleAIFullscreen()" title="توسيع">
+          <i class="fas fa-expand-alt" id="aiExpandIcon"></i>
+        </button>
+        <button class="ai-hdr-btn" onclick="closeAIAssistant()" title="إغلاق">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Model Selection Screen -->
+    <div class="ai-select-screen" id="aiSelectScreen">
+      <div class="ai-select-intro">
+        <h3>✨ اختر نموذج الذكاء الاصطناعي</h3>
+        <p>نماذج مدرَّبة خصيصاً على المحتوى الإسلامي والحوزوي</p>
+      </div>
+
+      <div class="ai-primary-grid">
+        <div class="ai-model-card" onclick="selectAIModel('gemini')">
+          <div class="ai-model-logo" id="geminiCardLogo"></div>
+          <div class="ai-model-name">نور الحوزة<br><span class="ai-model-sub">Gemini</span></div>
+          <div class="ai-model-badge">✦ مُوصى به</div>
+        </div>
+        <div class="ai-model-card" onclick="selectAIModel('chatgpt')">
+          <div class="ai-model-logo" id="chatgptCardLogo"></div>
+          <div class="ai-model-name">نور الحوزة<br><span class="ai-model-sub">ChatGPT</span></div>
+          <div class="ai-model-badge">✦ مُوصى به</div>
+        </div>
+      </div>
+
+      <div class="ai-more-section">
+        <button class="ai-more-toggle" id="aiMoreToggle" onclick="toggleAIMore()">
+          <span>نماذج متخصصة أخرى</span>
+          <i class="fas fa-chevron-down toggle-arrow"></i>
+        </button>
+        <div class="ai-more-list" id="aiMoreList">
+          <div class="ai-more-item" onclick="selectAIModel('quran')">
+            <div class="ai-more-logo" id="quranItemLogo"></div>
+            <div class="ai-more-name">نور القرآن</div>
+            <i class="fas fa-chevron-left ai-more-arrow"></i>
+          </div>
+          <div class="ai-more-item" onclick="selectAIModel('khataba')">
+            <div class="ai-more-logo" id="khatabaItemLogo"></div>
+            <div class="ai-more-name">نور الخطابة</div>
+            <i class="fas fa-chevron-left ai-more-arrow"></i>
+          </div>
+          <div class="ai-more-item" onclick="selectAIModel('mahdi')">
+            <div class="ai-more-logo" id="mahdiItemLogo"></div>
+            <div class="ai-more-name">نور المهدي (عج)</div>
+            <i class="fas fa-chevron-left ai-more-arrow"></i>
+          </div>
+          <div class="ai-more-item" onclick="selectAIModel('qaim')">
+            <div class="ai-more-logo" id="qaimItemLogo"></div>
+            <div class="ai-more-name">مرشد جنود القائم (عج)</div>
+            <i class="fas fa-chevron-left ai-more-arrow"></i>
+          </div>
+          <div class="ai-more-item" onclick="selectAIModel('usra')">
+            <div class="ai-more-logo" id="usraItemLogo"></div>
+            <div class="ai-more-name">نور الأسرة والزواج</div>
+            <i class="fas fa-chevron-left ai-more-arrow"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logo Transition Screen -->
+    <div class="ai-logo-transition" id="aiLogoTransition">
+      <div class="ai-logo-anim" id="aiLogoAnim"></div>
+    </div>
+
+    <!-- iframe Screen -->
+    <div class="ai-iframe-screen" id="aiIframeScreen">
+      <div class="ai-iframe-bar">
+        <div class="ai-iframe-info">
+          <div class="mini-logo" id="aiMiniLogo"></div>
+          <span id="aiFrameTitle">—</span>
+        </div>
+        <button class="ai-iframe-back" onclick="backToAISelect()">
+          <i class="fas fa-arrow-right"></i>
+          <span>تغيير النموذج</span>
+        </button>
+      </div>
+      <iframe class="ai-frame" id="aiChatFrame" src=""
+        sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation allow-popups-to-escape-sandbox"
+        allow="microphone; camera; clipboard-write"
+        loading="lazy"></iframe>
+      <div class="ai-blocked" id="aiBlockedMsg">
+        <div class="blk-icon"><i class="fas fa-external-link-square-alt"></i></div>
+        <p>هذا النموذج يحتاج إلى فتحه في نافذة مستقلة<br>للحصول على تجربة كاملة</p>
+        <a id="aiExtLink" href="#" target="_blank" rel="noopener" class="ai-ext-btn">
+          <i class="fas fa-external-link-alt"></i>
+          فتح في نافذة جديدة
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  /* ────── SVG Logos ────── */
+  function geminiSVG(size) {
+    return `<svg width="${size}" height="${size}" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="gG1_${size}" x1="14" y1="1" x2="14" y2="27" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#1A73E8"/>
+          <stop offset="50%" stop-color="#9334E6"/>
+          <stop offset="100%" stop-color="#FA7B17"/>
+        </linearGradient>
+        <linearGradient id="gG2_${size}" x1="1" y1="14" x2="27" y2="14" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#1A73E8"/>
+          <stop offset="50%" stop-color="#9334E6"/>
+          <stop offset="100%" stop-color="#FA7B17"/>
+        </linearGradient>
+      </defs>
+      <path d="M14 1.5 Q15.5 8 15.5 14 Q15.5 20 14 26.5 Q12.5 20 12.5 14 Q12.5 8 14 1.5Z"
+        fill="url(#gG1_${size})"/>
+      <path d="M1.5 14 Q8 12.5 14 12.5 Q20 12.5 26.5 14 Q20 15.5 14 15.5 Q8 15.5 1.5 14Z"
+        fill="url(#gG2_${size})"/>
+    </svg>`;
+  }
+
+  function openaiSVG(size, color) {
+    color = color || 'currentColor';
+    return `<svg width="${size}" height="${size}" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill="${color}" d="M37.532 16.87a9.963 9.963 0 00-.856-8.184 10.078 10.078 0 00-10.855-4.835 9.964 9.964 0 00-7.505-3.348 10.079 10.079 0 00-9.612 6.977 9.967 9.967 0 00-6.664 4.834 10.08 10.08 0 001.24 11.817 9.965 9.965 0 00.856 8.185 10.079 10.079 0 0010.855 4.835 9.965 9.965 0 007.504 3.348 10.08 10.08 0 009.617-6.981 9.967 9.967 0 006.663-4.834 10.079 10.079 0 00-1.243-11.814zM22.498 37.886a7.474 7.474 0 01-4.799-1.735c.061-.033.168-.091.237-.134l7.964-4.6a1.294 1.294 0 00.655-1.134V19.054l3.366 1.944a.12.12 0 01.066.092v9.299a7.505 7.505 0 01-7.49 7.496zM6.392 31.006a7.471 7.471 0 01-.894-5.023c.06.036.162.099.237.141l7.964 4.6a1.297 1.297 0 001.308 0l9.724-5.614v3.888a.12.12 0 01-.048.103l-8.051 4.649a7.504 7.504 0 01-10.24-2.744zM4.297 13.62A7.469 7.469 0 018.2 10.333c0 .068-.004.19-.004.274v9.201a1.294 1.294 0 00.654 1.132l9.723 5.614-3.366 1.944a.12.12 0 01-.114.012L7.044 23.86a7.504 7.504 0 01-2.747-10.24zm27.658 6.437l-9.724-5.615 3.367-1.943a.121.121 0 01.114-.012l8.048 4.648a7.498 7.498 0 01-1.158 13.528v-9.476a1.293 1.293 0 00-.647-1.13zm3.35-5.043c-.059-.037-.162-.099-.236-.141l-7.965-4.6a1.298 1.298 0 00-1.308 0l-9.723 5.614v-3.888a.12.12 0 01.048-.103l8.05-4.645a7.497 7.497 0 0111.135 7.763zm-21.063 6.929l-3.367-1.944a.12.12 0 01-.065-.092v-9.299a7.497 7.497 0 0112.293-5.756 6.94 6.94 0 00-.236.134l-7.965 4.6a1.294 1.294 0 00-.654 1.132l-.006 11.225zm1.829-3.943l4.33-2.501 4.332 2.497v4.998l-4.331 2.5-4.331-2.5V18z"/>
+    </svg>`;
+  }
+
+  /* ────── Models Data ────── */
+  var AI_MODELS = {
+    gemini:  { name: 'نور الحوزة — Gemini',         url: 'https://gemini.google.com/gem/104i1VgdD4g9j1FMWH4bIz5WKjDEjYz9_?usp=sharing', provider: 'gemini' },
+    chatgpt: { name: 'نور الحوزة — ChatGPT',        url: 'https://chatgpt.com/g/g-67d5f5a8c32c8191ab7bb16ed6a48bfa-nwr-lhwz',          provider: 'openai' },
+    quran:   { name: 'نور القرآن',                  url: 'https://chatgpt.com/g/g-68691f3f9f0481919c239cac0c600889-nwr-lqrn-tb-lnwr-lhwz',  provider: 'openai' },
+    khataba: { name: 'نور الخطابة',                 url: 'https://chatgpt.com/g/g-68671d2b8ff08191baea198580e2747a-nwr-lkhtb-tb-lnwr-lhwz', provider: 'openai' },
+    mahdi:   { name: 'نور المهدي (عج)',              url: 'https://chatgpt.com/g/g-68692935aaa881918dd24264162517a9-nwr-lmhdy-lyh-lslm-tb-lnwr-lhwz', provider: 'openai' },
+    qaim:    { name: 'مرشد جنود القائم (عج)',        url: 'https://chatgpt.com/g/g-68cd23956fc08191a928e05db83033d9-mrshd-jnwd-lqym-j-tb-lnwr-lhwz', provider: 'openai' },
+    usra:    { name: 'نور الأسرة والزواج',           url: 'https://chatgpt.com/g/g-68b9c083b3f08191b4058bb8ac9a2f5c-nwr-lsr-wlzwj-tb-lnwr-lhwz', provider: 'openai' }
+  };
+
+  /* ────── Inject logos into cards/items ────── */
+  function initLogos() {
+    var pairs = [
+      ['geminiCardLogo',   geminiSVG(48)],
+      ['chatgptCardLogo',  openaiSVG(44, '#10a37f')],
+      ['quranItemLogo',    openaiSVG(28, '#10a37f')],
+      ['khatabaItemLogo',  openaiSVG(28, '#10a37f')],
+      ['mahdiItemLogo',    openaiSVG(28, '#10a37f')],
+      ['qaimItemLogo',     openaiSVG(28, '#10a37f')],
+      ['usraItemLogo',     openaiSVG(28, '#10a37f')]
+    ];
+    pairs.forEach(function(p) {
+      var el = document.getElementById(p[0]);
+      if (el) el.innerHTML = p[1];
+    });
+  }
+
+  /* ────── Open / Close ────── */
+  function openAIAssistant() {
+    document.getElementById('aiModalOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeAIAssistant() {
+    document.getElementById('aiModalOverlay').classList.remove('active');
+    setTimeout(function() {
+      document.body.style.overflow = '';
+      resetAIModal();
+    }, 320);
+  }
+  window.openAIAssistant  = openAIAssistant;
+  window.closeAIAssistant = closeAIAssistant;
+
+  /* ────── Toggle more models ────── */
+  function toggleAIMore() {
+    var toggle = document.getElementById('aiMoreToggle');
+    var list   = document.getElementById('aiMoreList');
+    toggle.classList.toggle('open');
+    list.classList.toggle('open');
+  }
+  window.toggleAIMore = toggleAIMore;
+
+  /* ────── Select Model ────── */
+  function selectAIModel(key) {
+    var model = AI_MODELS[key];
+    if (!model) return;
+
+    var transition = document.getElementById('aiLogoTransition');
+    var logoAnim   = document.getElementById('aiLogoAnim');
+
+    /* inject big logo */
+    logoAnim.innerHTML = model.provider === 'gemini'
+      ? geminiSVG(90)
+      : openaiSVG(80, '#10a37f');
+
+    /* show transition layer */
+    transition.classList.add('active');
+    logoAnim.classList.remove('go');
+
+    /* start animation */
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        logoAnim.classList.add('go');
+      });
+    });
+
+    /* after animation → load iframe */
+    setTimeout(function() {
+      transition.classList.remove('active');
+      logoAnim.classList.remove('go');
+      loadAIFrame(model);
+    }, 1250);
+  }
+  window.selectAIModel = selectAIModel;
+
+  /* ────── Load iframe ────── */
+  function loadAIFrame(model) {
+    var iframeScreen = document.getElementById('aiIframeScreen');
+    var frame        = document.getElementById('aiChatFrame');
+    var miniLogo     = document.getElementById('aiMiniLogo');
+    var titleEl      = document.getElementById('aiFrameTitle');
+    var blockedMsg   = document.getElementById('aiBlockedMsg');
+    var extLink      = document.getElementById('aiExtLink');
+    var backBtn      = document.getElementById('aiBackBtn');
+    var titleText    = document.getElementById('aiModalTitleText');
+
+    /* set mini logo & title */
+    miniLogo.innerHTML = model.provider === 'gemini'
+      ? geminiSVG(20)
+      : openaiSVG(18, '#10a37f');
+    titleEl.textContent = model.name;
+    titleText.textContent = model.name;
+    backBtn.style.display = 'flex';
+    extLink.href = model.url;
+
+    /* show iframe screen */
+    frame.style.display = 'block';
+    blockedMsg.style.display = 'none';
+    iframeScreen.classList.add('active');
+
+    /* load url */
+    frame.src = model.url;
+
+    /* detect block (X-Frame-Options etc.) */
+    frame.onerror = function() {
+      frame.style.display = 'none';
+      blockedMsg.style.display = 'flex';
+    };
+    /* fallback: if load fires but body is empty (cross-origin block) show fallback */
+    frame.onload = function() {
+      try {
+        var doc = frame.contentDocument || frame.contentWindow.document;
+        if (!doc || !doc.body) throw new Error();
+      } catch(e) {
+        /* cross-origin — normal, just leave iframe as-is; browser shows the page */
+      }
+    };
+  }
+
+  /* ────── Back to select ────── */
+  function backToAISelect(silent) {
+    var iframeScreen = document.getElementById('aiIframeScreen');
+    var frame        = document.getElementById('aiChatFrame');
+    var transition   = document.getElementById('aiLogoTransition');
+    var backBtn      = document.getElementById('aiBackBtn');
+    var titleText    = document.getElementById('aiModalTitleText');
+
+    iframeScreen.classList.remove('active');
+    transition.classList.remove('active');
+    frame.src = '';
+    backBtn.style.display = 'none';
+    titleText.textContent = 'مساعد نور الحوزة الذكي';
+  }
+  window.backToAISelect = backToAISelect;
+
+  function resetAIModal() {
+    backToAISelect(true);
+    var toggle = document.getElementById('aiMoreToggle');
+    var list   = document.getElementById('aiMoreList');
+    if (toggle) toggle.classList.remove('open');
+    if (list)   list.classList.remove('open');
+  }
+
+  /* close on overlay click */
+  document.getElementById('aiModalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeAIAssistant();
+  });
+
+  /* ────── Dragging ────── */
+  (function() {
+    var box = null, isDragging = false, startX, startY, origRight, origBottom;
+    function getBox() { return document.querySelector('.ai-modal-box'); }
+
+    function onMouseDown(e) {
+      box = getBox();
+      if (!box || box.classList.contains('ai-fullscreen')) return;
+      if (e.target.closest('button') || e.target.closest('input')) return;
+      isDragging = true;
+      var rect = box.getBoundingClientRect();
+      startX = e.clientX;
+      startY = e.clientY;
+      origRight  = window.innerWidth  - rect.right;
+      origBottom = window.innerHeight - rect.bottom;
+      box.style.transition = 'none';
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+      e.preventDefault();
+    }
+    function onMouseMove(e) {
+      if (!isDragging || !box) return;
+      var dx = e.clientX - startX;
+      var dy = e.clientY - startY;
+      var newRight  = Math.max(0, Math.min(window.innerWidth  - 100, origRight  - dx));
+      var newBottom = Math.max(0, Math.min(window.innerHeight - 60,  origBottom - dy));
+      box.style.right  = newRight  + 'px';
+      box.style.bottom = newBottom + 'px';
+    }
+    function onMouseUp() {
+      if (!box) return;
+      isDragging = false;
+      box.style.transition = '';
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    }
+
+    /* Touch drag */
+    function onTouchStart(e) {
+      box = getBox();
+      if (!box || box.classList.contains('ai-fullscreen')) return;
+      if (e.target.closest('button') || e.target.closest('input')) return;
+      var t = e.touches[0];
+      isDragging = true;
+      var rect = box.getBoundingClientRect();
+      startX = t.clientX; startY = t.clientY;
+      origRight  = window.innerWidth  - rect.right;
+      origBottom = window.innerHeight - rect.bottom;
+      box.style.transition = 'none';
+    }
+    function onTouchMove(e) {
+      if (!isDragging || !box) return;
+      var t = e.touches[0];
+      var dx = t.clientX - startX;
+      var dy = t.clientY - startY;
+      var newRight  = Math.max(0, Math.min(window.innerWidth  - 100, origRight  - dx));
+      var newBottom = Math.max(0, Math.min(window.innerHeight - 60,  origBottom - dy));
+      box.style.right  = newRight  + 'px';
+      box.style.bottom = newBottom + 'px';
+      e.preventDefault();
+    }
+    function onTouchEnd() {
+      isDragging = false;
+      if (box) box.style.transition = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var hdr = document.querySelector('.ai-modal-header');
+      if (!hdr) return;
+      hdr.addEventListener('mousedown', onMouseDown);
+      hdr.addEventListener('touchstart', onTouchStart, { passive: false });
+      hdr.addEventListener('touchmove', onTouchMove, { passive: false });
+      hdr.addEventListener('touchend', onTouchEnd);
+    });
+  })();
+
+  /* ────── Fullscreen Toggle ────── */
+  function toggleAIFullscreen() {
+    var box  = document.querySelector('.ai-modal-box');
+    var icon = document.getElementById('aiExpandIcon');
+    if (!box) return;
+    var isFs = box.classList.toggle('ai-fullscreen');
+    if (icon) {
+      icon.className = isFs ? 'fas fa-compress-alt' : 'fas fa-expand-alt';
+    }
+    var expandBtn = document.getElementById('aiExpandBtn');
+    if (expandBtn) expandBtn.title = isFs ? 'تصغير' : 'توسيع';
+  }
+  window.toggleAIFullscreen = toggleAIFullscreen;
+
+  /* init logos on DOM ready */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLogos);
+  } else {
+    initLogos();
+  }
+})();
+</script>
 </body>
 </html>
