@@ -14583,28 +14583,27 @@
     100% { transform: scale(9);   opacity: 0; }
   }
 
-  /* ── iframe Screen ── */
-  .ai-iframe-screen {
+  /* ── Popup Confirmation Screen ── */
+  .ai-popup-screen {
     position: absolute; inset: 0;
     display: flex; flex-direction: column;
     opacity: 0; visibility: hidden;
     transition: opacity 0.3s ease;
     z-index: 10;
-    border-radius: 24px;
     overflow: hidden;
   }
-  .ai-iframe-screen.active { opacity: 1; visibility: visible; }
-  .ai-iframe-bar {
+  .ai-popup-screen.active { opacity: 1; visibility: visible; }
+  .ai-popup-bar {
     display: flex; align-items: center; justify-content: space-between;
     padding: 9px 14px;
     border-bottom: 1px solid var(--border-subtle);
     background: var(--bg-secondary);
     flex-shrink: 0;
   }
-  .ai-iframe-info { display: flex; align-items: center; gap: 7px; }
-  .ai-iframe-info .mini-logo { width: 20px; height: 20px; display:flex; align-items:center; justify-content:center; }
-  .ai-iframe-info span { font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); }
-  .ai-iframe-back {
+  .ai-popup-info { display: flex; align-items: center; gap: 7px; }
+  .ai-popup-info .mini-logo { width: 20px; height: 20px; display:flex; align-items:center; justify-content:center; }
+  .ai-popup-info span { font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); }
+  .ai-popup-back {
     display: flex; align-items: center; gap: 5px;
     padding: 4px 11px;
     background: var(--bg-tertiary);
@@ -14614,25 +14613,44 @@
     color: var(--text-muted);
     cursor: pointer; transition: 0.2s;
   }
-  .ai-iframe-back:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
-  .ai-frame { flex: 1; width: 100%; border: none; background: #fff; }
-  .ai-blocked {
+  .ai-popup-back:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+  .ai-popup-body {
     flex: 1; display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    gap: 13px; padding: 22px; text-align: center;
-    display: none;
+    gap: 18px; padding: 28px 22px; text-align: center;
   }
-  .ai-blocked .blk-icon { font-size: 2.2rem; color: var(--text-muted); opacity: 0.45; }
-  .ai-blocked p { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.65; }
-  .ai-ext-btn {
-    display: inline-flex; align-items: center; gap: 7px;
-    padding: 9px 18px;
+  .ai-popup-icon-wrap {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: var(--bg-tertiary);
+    border: 1.5px solid var(--border-subtle);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ai-popup-status {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 0.78rem; font-weight: 700;
+    color: var(--accent-emerald);
+    background: rgba(30,107,84,0.1);
+    padding: 5px 14px; border-radius: 20px;
+  }
+  .ai-popup-status i { font-size: 0.72rem; }
+  .ai-popup-title { font-size: 0.95rem; font-weight: 800; color: var(--text-primary); }
+  .ai-popup-desc { font-size: 0.78rem; color: var(--text-muted); line-height: 1.7; max-width: 260px; }
+  .ai-popup-actions { display: flex; flex-direction: column; gap: 9px; width: 100%; max-width: 260px; }
+  .ai-popup-reopen {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 11px 18px;
     background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-emerald));
-    color: #fff; border-radius: 11px;
-    font-size: 0.82rem; font-weight: 700;
-    text-decoration: none; transition: 0.2s;
+    color: #fff; border-radius: 12px;
+    font-size: 0.83rem; font-weight: 700;
+    cursor: pointer; border: none;
+    transition: opacity 0.2s, transform 0.2s;
+    width: 100%;
   }
-  .ai-ext-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .ai-popup-reopen:hover { opacity: 0.9; transform: translateY(-1px); }
+  .ai-popup-note {
+    font-size: 0.7rem; color: var(--text-muted);
+    line-height: 1.5;
+  }
 
   @media (max-width: 480px) {
     .ai-float-btn { bottom: 18px; right: 16px; width: 50px; height: 50px; }
@@ -14745,28 +14763,37 @@
     </div>
 
     <!-- iframe Screen -->
-    <div class="ai-iframe-screen" id="aiIframeScreen">
-      <div class="ai-iframe-bar">
-        <div class="ai-iframe-info">
+    <div class="ai-popup-screen" id="aiPopupScreen">
+      <div class="ai-popup-bar">
+        <div class="ai-popup-info">
           <div class="mini-logo" id="aiMiniLogo"></div>
-          <span id="aiFrameTitle">—</span>
+          <span id="aiPopupTitle">—</span>
         </div>
-        <button class="ai-iframe-back" onclick="backToAISelect()">
+        <button class="ai-popup-back" onclick="backToAISelect()">
           <i class="fas fa-arrow-right"></i>
           <span>تغيير النموذج</span>
         </button>
       </div>
-      <iframe class="ai-frame" id="aiChatFrame" src=""
-        sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation allow-popups-to-escape-sandbox"
-        allow="microphone; camera; clipboard-write"
-        loading="lazy"></iframe>
-      <div class="ai-blocked" id="aiBlockedMsg">
-        <div class="blk-icon"><i class="fas fa-external-link-square-alt"></i></div>
-        <p>هذا النموذج يحتاج إلى فتحه في نافذة مستقلة<br>للحصول على تجربة كاملة</p>
-        <a id="aiExtLink" href="#" target="_blank" rel="noopener" class="ai-ext-btn">
-          <i class="fas fa-external-link-alt"></i>
-          فتح في نافذة جديدة
-        </a>
+      <div class="ai-popup-body">
+        <div class="ai-popup-icon-wrap" id="aiPopupIconWrap"></div>
+        <div class="ai-popup-status">
+          <i class="fas fa-check-circle"></i>
+          <span>تم الفتح بنجاح</span>
+        </div>
+        <div class="ai-popup-title" id="aiPopupModelName">—</div>
+        <p class="ai-popup-desc">
+          تم فتح النموذج في نافذة منفصلة مرتبطة بهذه الصفحة.<br>
+          يمكنك التنقل بين المكتبة والنموذج بحرية.
+        </p>
+        <div class="ai-popup-actions">
+          <button class="ai-popup-reopen" id="aiReopenBtn" onclick="reopenAIPopup()">
+            <i class="fas fa-external-link-alt"></i>
+            إعادة فتح النافذة
+          </button>
+        </div>
+        <p class="ai-popup-note">
+          إذا لم تظهر النافذة، تأكد من السماح بالنوافذ المنبثقة<br>لهذا الموقع في إعدادات المتصفح
+        </p>
       </div>
     </div>
   </div>
@@ -14888,63 +14915,71 @@
   }
   window.selectAIModel = selectAIModel;
 
-  /* ────── Load iframe ────── */
+  /* ────── Open Popup ────── */
+  var _currentPopup = null;
+  var _currentModel = null;
+
   function loadAIFrame(model) {
-    var iframeScreen = document.getElementById('aiIframeScreen');
-    var frame        = document.getElementById('aiChatFrame');
-    var miniLogo     = document.getElementById('aiMiniLogo');
-    var titleEl      = document.getElementById('aiFrameTitle');
-    var blockedMsg   = document.getElementById('aiBlockedMsg');
-    var extLink      = document.getElementById('aiExtLink');
-    var backBtn      = document.getElementById('aiBackBtn');
-    var titleText    = document.getElementById('aiModalTitleText');
+    _currentModel = model;
+    var popupScreen   = document.getElementById('aiPopupScreen');
+    var miniLogo      = document.getElementById('aiMiniLogo');
+    var popupTitle    = document.getElementById('aiPopupTitle');
+    var popupName     = document.getElementById('aiPopupModelName');
+    var popupIcon     = document.getElementById('aiPopupIconWrap');
+    var backBtn       = document.getElementById('aiBackBtn');
+    var titleText     = document.getElementById('aiModalTitleText');
 
-    /* set mini logo & title */
-    miniLogo.innerHTML = model.provider === 'gemini'
-      ? geminiSVG(20)
-      : openaiSVG(18, '#10a37f');
-    titleEl.textContent = model.name;
-    titleText.textContent = model.name;
-    backBtn.style.display = 'flex';
-    extLink.href = model.url;
+    /* fill UI */
+    var logoSm = model.provider === 'gemini' ? geminiSVG(20) : openaiSVG(18, '#10a37f');
+    var logoLg = model.provider === 'gemini' ? geminiSVG(38) : openaiSVG(34, '#10a37f');
+    miniLogo.innerHTML  = logoSm;
+    popupIcon.innerHTML = logoLg;
+    popupTitle.textContent = model.name;
+    popupName.textContent  = model.name;
+    titleText.textContent  = model.name;
+    backBtn.style.display  = 'flex';
 
-    /* show iframe screen */
-    frame.style.display = 'block';
-    blockedMsg.style.display = 'none';
-    iframeScreen.classList.add('active');
+    /* show confirmation screen */
+    popupScreen.classList.add('active');
 
-    /* load url */
-    frame.src = model.url;
+    /* calculate popup position — centred on screen */
+    var pw = 520, ph = 720;
+    var pl = Math.max(0, Math.round((screen.width  - pw) / 2));
+    var pt = Math.max(0, Math.round((screen.height - ph) / 2));
+    var features = 'width='+pw+',height='+ph+',left='+pl+',top='+pt+
+                   ',resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=yes,status=no';
 
-    /* detect block (X-Frame-Options etc.) */
-    frame.onerror = function() {
-      frame.style.display = 'none';
-      blockedMsg.style.display = 'flex';
-    };
-    /* fallback: if load fires but body is empty (cross-origin block) show fallback */
-    frame.onload = function() {
-      try {
-        var doc = frame.contentDocument || frame.contentWindow.document;
-        if (!doc || !doc.body) throw new Error();
-      } catch(e) {
-        /* cross-origin — normal, just leave iframe as-is; browser shows the page */
-      }
-    };
+    _currentPopup = window.open(model.url, 'noorAIAssistant', features);
+
+    /* if blocked by browser — keep reopen button visible */
+    if (!_currentPopup || _currentPopup.closed || typeof _currentPopup.closed === 'undefined') {
+      _currentPopup = null;
+    }
   }
+
+  function reopenAIPopup() {
+    if (!_currentModel) return;
+    var pw = 520, ph = 720;
+    var pl = Math.max(0, Math.round((screen.width  - pw) / 2));
+    var pt = Math.max(0, Math.round((screen.height - ph) / 2));
+    var features = 'width='+pw+',height='+ph+',left='+pl+',top='+pt+
+                   ',resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=yes,status=no';
+    _currentPopup = window.open(_currentModel.url, 'noorAIAssistant', features);
+    if (_currentPopup) _currentPopup.focus();
+  }
+  window.reopenAIPopup = reopenAIPopup;
 
   /* ────── Back to select ────── */
   function backToAISelect(silent) {
-    var iframeScreen = document.getElementById('aiIframeScreen');
-    var frame        = document.getElementById('aiChatFrame');
-    var transition   = document.getElementById('aiLogoTransition');
-    var backBtn      = document.getElementById('aiBackBtn');
-    var titleText    = document.getElementById('aiModalTitleText');
+    var popupScreen = document.getElementById('aiPopupScreen');
+    var transition  = document.getElementById('aiLogoTransition');
+    var backBtn     = document.getElementById('aiBackBtn');
+    var titleText   = document.getElementById('aiModalTitleText');
 
-    iframeScreen.classList.remove('active');
-    transition.classList.remove('active');
-    frame.src = '';
-    backBtn.style.display = 'none';
-    titleText.textContent = 'مساعد نور الحوزة الذكي';
+    if (popupScreen) popupScreen.classList.remove('active');
+    if (transition)  transition.classList.remove('active');
+    if (backBtn)     backBtn.style.display = 'none';
+    if (titleText)   titleText.textContent = 'مساعد نور الحوزة الذكي';
   }
   window.backToAISelect = backToAISelect;
 
