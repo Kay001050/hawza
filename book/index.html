@@ -3566,6 +3566,57 @@
       letter-spacing: 0.3px;
     }
 
+    /* Footer QRs wrapper - side by side */
+    .footer-qrs-wrapper {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    /* BenefitPay QR - green accent */
+    .footer-dev-qr.bp-qr {
+      border-bottom-color: #00b050;
+    }
+    .footer-dev-qr.bp-qr span { color: #00b050; }
+    .footer-dev-qr.bp-qr:hover { border-color: #00b050; }
+
+    /* BenefitPay Modal specific */
+    .support-modal.bp-modal {
+      border-bottom-color: #00b050;
+    }
+    .support-modal.bp-modal .support-modal-title { color: #00b050; }
+    .support-modal.bp-modal .support-modal-msg { border-right-color: #00b050; }
+    .support-modal-copy-iban {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #00b050;
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-full);
+      padding: 10px 24px;
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      margin-top: 6px;
+    }
+    .support-modal-copy-iban:hover {
+      background: #007a38;
+      transform: scale(1.03);
+    }
+    .support-modal-phone-info {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin: 8px 0 4px;
+      direction: ltr;
+      letter-spacing: 0.5px;
+    }
+
     /* Support Modal */
     .support-modal-overlay {
       position: fixed;
@@ -8325,7 +8376,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <header class="header" id="header">
     <div class="container nav-container">
-      <a href="https://hawza.netlify.app/" onclick="loadExternalPage('https://hawza.netlify.app/book/', 'navLibrary')" class="brand">
+      <a href="#" onclick="event.preventDefault(); showLibraryPage();" class="brand">
         <div class="brand-icon">
           <i class="fas fa-book-open"></i>
         </div>
@@ -8336,7 +8387,7 @@
       </a>
 
       <nav class="nav-actions">
-        <a href="https://hawza.netlify.app/" onclick="loadExternalPage('https://hawza.netlify.app/book/', 'navLibrary')" class="nav-link">
+        <a href="#" onclick="event.preventDefault(); showLibraryPage();" class="nav-link">
           <i class="fas fa-home"></i>
           <span>الرئيسية</span>
         </a>
@@ -8639,7 +8690,7 @@
   <section class="categories-section" id="categoriesSection">
     <div class="container">
       <div class="categories-header">
-        <button class="categories-toggle collapsed" id="categoriesToggle">
+        <button class="categories-toggle" id="categoriesToggle">
           <i class="fas fa-layer-group"></i>
           <span>التصنيفات</span>
           <i class="fas fa-chevron-down"></i>
@@ -8675,7 +8726,7 @@
         </div>
       </div>
       
-      <div class="categories-panel collapsed" id="categoriesPanel">
+      <div class="categories-panel" id="categoriesPanel">
         <div class="categories-grid" id="categoriesGrid"></div>
       </div>
     </div>
@@ -9200,7 +9251,7 @@
         <div class="footer-column">
           <h4>روابط مهمة</h4>
           <ul class="footer-links">
-            <li><a href="https://hawza.netlify.app/" onclick="loadExternalPage('https://hawza.netlify.app/book/', 'navLibrary')"><i class="fas fa-globe"></i> الموقع الرسمي</a></li>
+            <li><a href="#" onclick="event.preventDefault(); showLibraryPage();"><i class="fas fa-globe"></i> الموقع الرسمي</a></li>
             <li><a href="https://hawza.netlify.app/r-1447"><i class="fas fa-star"></i> المفكرة الرمضانية</a></li>
             <li><a href="https://forms.office.com/r/32uLvS3Ykx/" target="_blank"><i class="fas fa-poll"></i> استبيان تقييم المكتبة</a></li>
           </ul>
@@ -9217,9 +9268,15 @@
       <div class="footer-bottom">
         جميع الحقوق محفوظة © <span id="currentYear"></span> نور الحوزة
         <br>
-        <div class="footer-dev-qr" onclick="openSupportModal()" style="cursor:pointer;">
-          <img src="QRDev.jpg" alt="QR Code لدعم المطور">
-          <span>لدعم المطور</span>
+        <div class="footer-qrs-wrapper">
+          <div class="footer-dev-qr" onclick="openSupportModal()" style="cursor:pointer;">
+            <img src="QRDev.jpg" alt="QR Code لدعم المطور">
+            <span>لدعم المطور</span>
+          </div>
+          <div class="footer-dev-qr bp-qr" onclick="openBenefitPayModal()" style="cursor:pointer;">
+            <img src="BP-qr.jpg" alt="QR BenefitPay لدعم المطور">
+            <span>دعم عبر BenefitPay</span>
+          </div>
         </div>
       </div>
     </div>
@@ -9250,6 +9307,31 @@
   </div>
 
 
+  <!-- BenefitPay Support Modal -->
+  <div class="support-modal-overlay" id="bpModalOverlay" onclick="closeBpModalOutside(event)">
+    <div class="support-modal bp-modal" role="dialog" aria-modal="true">
+      <button class="support-modal-close" onclick="closeBenefitPayModal()" aria-label="إغلاق">✕</button>
+      <div class="support-modal-title">💚 دعم المطور عبر BenefitPay</div>
+      <div class="support-modal-msg">
+        عزيزي الداعم نحيطكم علماً<br>
+        هذا الدعم يشمل:<br><br>
+        • المساهمة في المشاريع القادمة...<br>
+        • دعم معنوي طيب للمطورين...<br>
+        • مساندة عامة للمطورين في شؤونهم...<br><br>
+        وإنا كخدامكم في نور الحوزة حتى وإن لم يصلنا فإنا بإذن الله مستمرون في مشاريعنا فلا تنسونا من دعائكم 🤲🏻
+      </div>
+      <div class="support-modal-qr-wrap" style="cursor:default; border-color:#00b050;">
+        <img src="BP-qr.jpg" alt="QR BenefitPay لدعم المطور">
+      </div>
+      <div class="support-modal-qr-hint">امسح الكود لفتح تطبيق BenefitPay والدعم مباشرة</div>
+      <div class="support-modal-phone-info">📞 رقم الجوال: <strong>66302585</strong></div>
+      <br>
+      <button class="support-modal-copy-iban" onclick="copyBpIban()">
+        <i class="fas fa-copy"></i> نسخ رقم الآيبان
+      </button>
+    </div>
+  </div>
+
   <script>
     // دوال مودال دعم المطور
     function openSupportModal() {
@@ -9264,8 +9346,39 @@
       if (e.target === document.getElementById('supportModalOverlay')) closeSupportModal();
     }
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closeSupportModal();
+      if (e.key === 'Escape') { closeSupportModal(); closeBenefitPayModal(); }
     });
+
+    // دوال مودال BenefitPay
+    const BP_IBAN = 'no-iban';
+    function openBenefitPayModal() {
+      document.getElementById('bpModalOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeBenefitPayModal() {
+      document.getElementById('bpModalOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    function closeBpModalOutside(e) {
+      if (e.target === document.getElementById('bpModalOverlay')) closeBenefitPayModal();
+    }
+    function copyBpIban() {
+      navigator.clipboard.writeText(BP_IBAN).then(() => {
+        if (typeof showToast === 'function') {
+          showToast('تم النسخ', 'تم نسخ رقم الآيبان بنجاح', 'success');
+        } else {
+          alert('تم نسخ رقم الآيبان: ' + BP_IBAN);
+        }
+      }).catch(() => {
+        const el = document.createElement('textarea');
+        el.value = BP_IBAN;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        if (typeof showToast === 'function') showToast('تم النسخ', 'تم نسخ رقم الآيبان', 'success');
+      });
+    }
   </script>
 
   <script>
@@ -9309,7 +9422,7 @@
         quds: { id: '1TLLTDDtUKmxWE1ZCHoC9g1WaLcdFNjBZ', name: 'صور القدس في عمامة' }
       },
       PAGE_SIZE: 1000,
-CACHE_KEY: 'noor_library_v15',
+CACHE_KEY: 'noor_library_v16',
 CACHE_TIME: 12 * 60 * 60 * 1000,
 ITEMS_PER_PAGE: 30
     };
@@ -9368,7 +9481,7 @@ ITEMS_PER_PAGE: 30
       totalSize: 0,
       totalBooks: 0,
       totalCategories: 0,
-      categoriesCollapsed: true,
+      categoriesCollapsed: false,
       totalFoldersToLoad: 0,
       loadedFoldersCount: 0,
       isLoadingData: false,
@@ -9699,10 +9812,26 @@ ITEMS_PER_PAGE: 30
     async function fetchFolderContents(folderId) {
       return fetchFromAPI('files', {
         q: `'${folderId}' in parents and trashed = false`,
-        fields: 'files(id, name, mimeType, size, createdTime, thumbnailLink, webViewLink, iconLink)',
+        fields: 'files(id, name, mimeType, size, createdTime, thumbnailLink, webViewLink, iconLink, shortcutDetails)',
         orderBy: 'folder,name',
         pageSize: CONFIG.PAGE_SIZE
       });
+    }
+
+    // ── مساعد: هل العنصر مجلد (أو اختصار يشير لمجلد)؟ ──
+    function isFolder(file) {
+      if (file.mimeType === 'application/vnd.google-apps.folder') return true;
+      if (file.mimeType === 'application/vnd.google-apps.shortcut' &&
+          file.shortcutDetails?.targetMimeType === 'application/vnd.google-apps.folder') return true;
+      return false;
+    }
+
+    // ── مساعد: المعرف الحقيقي للمجلد (اختصار → targetId) ──
+    function getRealFolderId(file) {
+      if (file.mimeType === 'application/vnd.google-apps.shortcut' && file.shortcutDetails?.targetId) {
+        return file.shortcutDetails.targetId;
+      }
+      return file.id;
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -9740,11 +9869,12 @@ ITEMS_PER_PAGE: 30
       
       try {
         const rootData = await fetchFolderContents(rootFolderId);
-        const rootFolders = (rootData.files || []).filter(f => f.mimeType === 'application/vnd.google-apps.folder');
-        const rootFiles = (rootData.files || []).filter(f => f.mimeType !== 'application/vnd.google-apps.folder');
+        const rootFolders = (rootData.files || []).filter(f => isFolder(f));
+        const rootFiles = (rootData.files || []).filter(f => !isFolder(f));
         
         rootFolders.forEach(folder => {
-          state.allFolders.push({ id: folder.id, name: folder.name, parentId: rootFolderId, isRoot: true, depth: 0 });
+          const realId = getRealFolderId(folder);
+          state.allFolders.push({ id: realId, name: folder.name, parentId: rootFolderId, isRoot: true, depth: 0 });
         });
         
         rootFiles.forEach(file => {
@@ -9761,13 +9891,14 @@ ITEMS_PER_PAGE: 30
         
         if (isFirstLoad) {
           showCategoriesProgress(rootFolders.length);
-          renderCategoriesInitial(rootFolders);
+          renderCategoriesInitial(rootFolders.map(f => ({ ...f, id: getRealFolderId(f) })));
           updateStats();
         }
         
         for (let i = 0; i < rootFolders.length; i++) {
           const folder = rootFolders[i];
-          await loadFolderAndSubfoldersProgressive(folder.id, folder.name, rootFolderId, null, 0);
+          const realId = getRealFolderId(folder);
+          await loadFolderAndSubfoldersProgressive(realId, folder.name, rootFolderId, null, 0);
           if (isFirstLoad) {
             updateCategoriesProgress(folder.name);
             updateStats();
@@ -9807,8 +9938,8 @@ ITEMS_PER_PAGE: 30
     async function loadFolderAndSubfoldersProgressive(folderId, folderName, parentId, parentName, depth) {
       try {
         const data = await fetchFolderContents(folderId);
-        const folders = (data.files || []).filter(f => f.mimeType === 'application/vnd.google-apps.folder');
-        const files = (data.files || []).filter(f => f.mimeType !== 'application/vnd.google-apps.folder');
+        const folders = (data.files || []).filter(f => isFolder(f));
+        const files = (data.files || []).filter(f => !isFolder(f));
         
         files.forEach(file => {
           state.allBooks.push({
@@ -9832,13 +9963,15 @@ ITEMS_PER_PAGE: 30
         }
         
         folders.forEach(subFolder => {
-          state.allFolders.push({ id: subFolder.id, name: subFolder.name, parentId: folderId, depth: depth + 1 });
+          const realId = getRealFolderId(subFolder);
+          state.allFolders.push({ id: realId, name: subFolder.name, parentId: folderId, depth: depth + 1 });
         });
         
         addCategoryToGrid(category);
         
         for (const subFolder of folders) {
-          await loadFolderAndSubfoldersProgressive(subFolder.id, subFolder.name, folderId, folderName, depth + 1);
+          const realId = getRealFolderId(subFolder);
+          await loadFolderAndSubfoldersProgressive(realId, subFolder.name, folderId, folderName, depth + 1);
         }
         
       } catch (e) {
@@ -10708,10 +10841,19 @@ ITEMS_PER_PAGE: 30
         tab.addEventListener('click', () => switchLibrary(tab.dataset.library));
       });
       
+      // استعادة حالة التصنيفات من localStorage (الافتراضي: مفتوح)
+      const savedCatState = localStorage.getItem('noor_categories_collapsed');
+      if (savedCatState !== null) {
+        state.categoriesCollapsed = savedCatState === 'true';
+        DOM.categoriesToggle.classList.toggle('collapsed', state.categoriesCollapsed);
+        DOM.categoriesPanel.classList.toggle('collapsed', state.categoriesCollapsed);
+      }
+
       DOM.categoriesToggle.addEventListener('click', () => {
         state.categoriesCollapsed = !state.categoriesCollapsed;
         DOM.categoriesToggle.classList.toggle('collapsed', state.categoriesCollapsed);
         DOM.categoriesPanel.classList.toggle('collapsed', state.categoriesCollapsed);
+        localStorage.setItem('noor_categories_collapsed', state.categoriesCollapsed);
       });
       
       DOM.showAllBtn.addEventListener('click', () => {
@@ -13537,14 +13679,19 @@ ITEMS_PER_PAGE: 30
     }
     function restoreLastPage() {
       // أولاً: التحقق من وجود صفحة خارجية محفوظة (حقيبة / زاد / قرآن)
+      // ملاحظة: لا نعيد تحميل الصفحة الرئيسية ذاتها في iframe لتفادي التكرار
       try {
         const externalData = localStorage.getItem('noor_external_page');
         if (externalData) {
           const { url, navId } = JSON.parse(externalData);
-          if (url) {
+          // تجاهل إذا كان الرابط هو الصفحة الرئيسية نفسها
+          const isMainPage = !url || url.replace(/[?#].*/, '').replace(/\/$/, '').endsWith('/book');
+          if (url && !isMainPage) {
             setTimeout(() => loadExternalPage(url, navId), 300);
             return;
           }
+          // مسح إذا كان رابط الصفحة الرئيسية
+          localStorage.removeItem('noor_external_page');
         }
       } catch(e) {}
       // ثانياً: استعادة الصفحات الداخلية
