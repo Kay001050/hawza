@@ -322,8 +322,21 @@
       background-size: 200% 100%;
       border-radius: var(--radius-full);
       width: 0%;
-      transition: width 0.4s ease;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       animation: shimmer 2s linear infinite;
+      box-shadow: 0 0 10px rgba(160, 127, 58, 0.3);
+      position: relative;
+    }
+    .categories-progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: progress-shine 1.5s infinite;
+    }
+    @keyframes progress-shine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
     }
 
     @keyframes shimmer {
@@ -2470,18 +2483,18 @@
     }
 
     .categories-panel {
-      max-height: 600px;
-      overflow-y: auto;
-      transition: max-height var(--transition-smooth), opacity var(--transition-smooth), padding var(--transition-smooth);
-      opacity: 1;
-      padding-bottom: 20px;
-    }
-
-    .categories-panel.collapsed {
       max-height: 0;
       opacity: 0;
       padding-bottom: 0;
       overflow: hidden;
+      transition: max-height var(--transition-smooth), opacity var(--transition-smooth), padding var(--transition-smooth);
+    }
+
+    .categories-panel.active {
+      max-height: 600px;
+      opacity: 1;
+      padding-bottom: 20px;
+      overflow-y: auto;
     }
 
     .categories-panel::-webkit-scrollbar {
@@ -9532,7 +9545,7 @@
       totalSize: 0,
       totalBooks: 0,
       totalCategories: 0,
-      categoriesCollapsed: false,
+      categoriesCollapsed: true,
       totalFoldersToLoad: 0,
       loadedFoldersCount: 0,
       isLoadingData: false,
@@ -9629,8 +9642,7 @@
         }
       });
 
-      // تحميل تفضيل العرض المحفوظ
-      const isMobile = window.innerWidth <= 480;
+      // تحميل تفضيل العرض المحفوظ (الافتراضي: العرض المضغوط لجميع الأجهزة)
       const savedView = localStorage.getItem('noor_view_pref') || 'compact-grid';
       state.currentView = savedView;
       document.querySelectorAll('.view-btn').forEach(b => {
@@ -10078,13 +10090,14 @@
         category.bookCount = files.length;
       }
       
+      // إضافة المجلدات الفرعية للطابور مباشرة بعد الانتهاء من المجلد الحالي لضمان الترتيب المتسلسل
       folders.forEach(subFolder => {
         const realId = getRealFolderId(subFolder);
         if (!state.allFolders.find(f => f.id === realId)) {
           state.allFolders.push({ id: realId, name: subFolder.name, parentId: folderId, depth: depth + 1 });
         }
-        // إضافة المجلدات الفرعية للطابور (الخفيفة أولاً)
-        addToQueue(realId, subFolder.name, folderId, folderName, depth + 1);
+        // وضع المجلدات الفرعية في مقدمة الطابور لضمان معالجتها فوراً بعد المجلد الأب
+        addToQueue(realId, subFolder.name, folderId, folderName, depth + 1, true);
       });
       
       addCategoryToGrid(category);
@@ -11028,18 +11041,21 @@
         tab.addEventListener('click', () => switchLibrary(tab.dataset.library));
       });
       
-      // استعادة حالة التصنيفات من localStorage (الافتراضي: مفتوح)
+      // استعادة حالة التصنيفات من localStorage (الافتراضي: مغلق)
       const savedCatState = localStorage.getItem('noor_categories_collapsed');
       if (savedCatState !== null) {
         state.categoriesCollapsed = savedCatState === 'true';
-        DOM.categoriesToggle.classList.toggle('collapsed', state.categoriesCollapsed);
-        DOM.categoriesPanel.classList.toggle('collapsed', state.categoriesCollapsed);
+      } else {
+        state.categoriesCollapsed = true; // افتراضياً مغلق
       }
+      
+      DOM.categoriesToggle.classList.toggle('collapsed', state.categoriesCollapsed);
+      if (!state.categoriesCollapsed) DOM.categoriesPanel.classList.add('active');
 
       DOM.categoriesToggle.addEventListener('click', () => {
         state.categoriesCollapsed = !state.categoriesCollapsed;
         DOM.categoriesToggle.classList.toggle('collapsed', state.categoriesCollapsed);
-        DOM.categoriesPanel.classList.toggle('collapsed', state.categoriesCollapsed);
+        DOM.categoriesPanel.classList.toggle('active', !state.categoriesCollapsed);
         localStorage.setItem('noor_categories_collapsed', state.categoriesCollapsed);
       });
       
