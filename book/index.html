@@ -10940,38 +10940,32 @@
     // ═══════════════════════════════════════════════════════════════════════════
     // Library Switching
     // ═══════════════════════════════════════════════════════════════════════════
+    // مخزن للحفاظ على حالة كل مكتبة في الذاكرة أثناء التنقل
+    const libraryStates = {};
+
     async function switchLibrary(library) {
-      if (state.isLoadingData) return;
+      // حفظ حالة المكتبة الحالية قبل الانتقال
+      if (state.currentLibrary) {
+        libraryStates[state.currentLibrary] = {
+          allBooks: [...state.allBooks],
+          allFolders: [...state.allFolders],
+          categories: [...state.categories],
+          totalSize: state.totalSize,
+          totalBooks: state.totalBooks,
+          loadedFolderIds: new Set(state.loadedFolderIds),
+          loadQueue: [...state.loadQueue],
+          isFullyLoaded: state.isFullyLoaded,
+          totalFoldersToLoad: state.totalFoldersToLoad,
+          loadedFoldersCount: state.loadedFoldersCount
+        };
+      }
+
+      // إيقاف عمليات التحميل الحالية مؤقتاً
+      state.isProcessingQueue = false;
       
       document.querySelectorAll('.library-tab').forEach(tab => {
         tab.classList.toggle('active', tab.dataset.library === library);
       });
-      
-      const cachedData = loadFromCache(library);
-      
-      if (cachedData && cachedData.allBooks && cachedData.allBooks.length > 0) {
-        state.currentLibrary = library;
-        state.folderHistory = [];
-        state.currentPage = 1;
-        state.searchQuery = '';
-        state.selectedCategory = null;
-        state.showingAllBooks = false;
-        DOM.searchInput.value = '';
-        
-        state.allBooks = cachedData.allBooks || [];
-        state.allFolders = cachedData.allFolders || [];
-        state.categories = cachedData.categories || [];
-        state.totalSize = cachedData.totalSize || 0;
-        state.totalBooks = cachedData.totalBooks || 0;
-        state.totalCategories = cachedData.totalCategories || 0;
-        state.isLoading = false;
-        state.librariesLoaded[library] = true;
-        
-        updateStats();
-        renderCategories();
-        showRootFolder();
-        return;
-      }
       
       state.currentLibrary = library;
       state.folderHistory = [];
@@ -10980,7 +10974,74 @@
       state.selectedCategory = null;
       state.showingAllBooks = false;
       DOM.searchInput.value = '';
+
+      // 1. محاولة الاسترجاع من الذاكرة (Memory State) أولاً
+      if (libraryStates[library]) {
+        const s = libraryStates[library];
+        state.allBooks = s.allBooks;
+        state.allFolders = s.allFolders;
+        state.categories = s.categories;
+        state.totalSize = s.totalSize;
+        state.totalBooks = s.totalBooks;
+        state.loadedFolderIds = s.loadedFolderIds;
+        state.loadQueue = s.loadQueue;
+        state.isFullyLoaded = s.isFullyLoaded;
+        state.totalFoldersToLoad = s.totalFoldersToLoad;
+        state.loadedFoldersCount = s.loadedFoldersCount;
+        state.isLoading = false;
+        state.isLoadingData = false;
+        
+        updateStats();
+        renderCategories();
+        showRootFolder();
+
+        // استئناف التحميل إذا لم يكتمل
+        if (!state.isFullyLoaded) {
+          loadAllDataProgressive(false);
+        }
+        return;
+      }
+
+      // 2. محاولة الاسترجاع من الكاش (LocalStorage) إذا لم تكن في الذاكرة
+      const cachedData = loadFromCache(library);
+      if (cachedData && cachedData.allBooks && cachedData.allBooks.length > 0) {
+        state.allBooks = cachedData.allBooks || [];
+        state.allFolders = cachedData.allFolders || [];
+        state.categories = cachedData.categories || [];
+        state.totalSize = cachedData.totalSize || 0;
+        state.totalBooks = cachedData.totalBooks || 0;
+        state.totalCategories = cachedData.totalCategories || 0;
+        state.loadedFolderIds = new Set(cachedData.loadedFolderIds || []);
+        state.isFullyLoaded = cachedData.isFullyLoaded || false;
+        state.isLoading = false;
+        state.isLoadingData = false;
+        state.librariesLoaded[library] = true;
+        
+        updateStats();
+        renderCategories();
+        showRootFolder();
+
+        if (!state.isFullyLoaded) {
+          state.allFolders.forEach(f => {
+            if (!state.loadedFolderIds.has(f.id)) {
+              addToQueue(f.id, f.name, f.parentId, null, f.depth || 0);
+            }
+          });
+          loadAllDataProgressive(false);
+        }
+        return;
+      }
       
+      // 3. تحميل جديد إذا لم يتوفر كاش أو حالة مخزنة
+      state.allBooks = [];
+      state.allFolders = [];
+      state.categories = [];
+      state.totalSize = 0;
+      state.totalBooks = 0;
+      state.loadedFolderIds = new Set();
+      state.loadQueue = [];
+      state.isFullyLoaded = false;
+
       const activeTab = document.querySelector(`.library-tab[data-library="${library}"]`);
       if (activeTab) activeTab.classList.add('loading');
       
