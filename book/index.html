@@ -14591,6 +14591,7 @@
     transition: opacity 0.3s ease;
     z-index: 10;
     overflow: hidden;
+    background: var(--bg-card);
   }
   .ai-popup-screen.active { opacity: 1; visibility: visible; }
   .ai-popup-bar {
@@ -14769,10 +14770,15 @@
           <div class="mini-logo" id="aiMiniLogo"></div>
           <span id="aiPopupTitle">—</span>
         </div>
-        <button class="ai-popup-back" onclick="backToAISelect()">
-          <i class="fas fa-arrow-right"></i>
-          <span>تغيير النموذج</span>
-        </button>
+        <div style="display: flex; gap: 8px;">
+          <button class="ai-popup-back" onclick="backToAISelect()">
+            <i class="fas fa-arrow-right"></i>
+            <span>تغيير النموذج</span>
+          </button>
+          <button class="ai-popup-back" onclick="closeAIAssistant()" title="إغلاق">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
       </div>
       <div class="ai-popup-body">
         <div class="ai-popup-icon-wrap" id="aiPopupIconWrap"></div>
