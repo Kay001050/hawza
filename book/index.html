@@ -3590,37 +3590,120 @@
       margin-top: 4px;
     }
 
-    /* BenefitPay QR - green accent */
+    /* BenefitPay QR - red accent */
     .footer-dev-qr.bp-qr {
-      border-bottom-color: #00b050;
+      border-bottom-color: #ec0b33;
     }
-    .footer-dev-qr.bp-qr span { color: #00b050; }
-    .footer-dev-qr.bp-qr:hover { border-color: #00b050; }
+    .footer-dev-qr.bp-qr span { color: #ec0b33; }
+    .footer-dev-qr.bp-qr:hover { border-color: #ec0b33; }
 
     /* BenefitPay Modal specific */
     .support-modal.bp-modal {
-      border-bottom-color: #00b050;
+      border-bottom-color: #ec0b33;
     }
-    .support-modal.bp-modal .support-modal-title { color: #00b050; }
-    .support-modal.bp-modal .support-modal-msg { border-right-color: #00b050; }
+    .support-modal.bp-modal .support-modal-title { color: #ec0b33; }
+    .support-modal.bp-modal .support-modal-msg { border-right-color: #ec0b33; }
+
+    /* PayPal Support specific */
+    .footer-dev-qr.paypal-qr {
+      border-bottom-color: #0070ba;
+      flex-direction: row-reverse;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 280px;
+      padding: 12px 20px;
+    }
+    .footer-dev-qr.paypal-qr span { 
+      color: #0070ba; 
+      font-size: 0.9rem;
+    }
+    .footer-dev-qr.paypal-qr:hover { border-color: #0070ba; }
+    .footer-dev-qr.paypal-qr i {
+      font-size: 24px;
+      color: #0070ba;
+      margin: 0;
+    }
+
+    .support-modal.paypal-modal {
+      border-bottom-color: #0070ba;
+    }
+    .support-modal.paypal-modal .support-modal-title { color: #0070ba; }
+    .support-modal.paypal-modal .support-modal-msg { 
+      border-right-color: #0070ba; 
+      white-space: normal;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      display: block;
+      width: 100%;
+    }
+    
+    .paypal-button-container {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+    .pp-RJB2MRYKQW746 {
+      text-align: center;
+      border: none;
+      border-radius: var(--radius-full);
+      min-width: 11.625rem;
+      padding: 0 2rem;
+      height: 2.8rem;
+      font-weight: bold;
+      background-color: #FFD140;
+      color: #000000;
+      font-family: var(--font-ui);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .pp-RJB2MRYKQW746:hover {
+      background-color: #ffc400;
+      transform: scale(1.03);
+    }
+    .paypal-cards-img {
+      height: 26px;
+      margin: 5px 0;
+    }
+    .paypal-powered-by {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .paypal-powered-by img {
+      height: 0.875rem;
+      display: inline-block;
+      vertical-align: middle;
+    }
     .support-modal-copy-iban {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      background: #00b050;
+      justify-content: center;
+      gap: 10px;
+      background: #ec0b33;
       color: #fff;
       border: none;
       border-radius: var(--radius-full);
-      padding: 10px 30px;
+      padding: 12px 20px;
       font-family: var(--font-ui);
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       font-weight: 800;
       cursor: pointer;
       transition: background 0.2s, transform 0.15s;
       margin-top: 6px;
+      width: 100%;
+      max-width: 340px;
     }
     .support-modal-copy-iban:hover {
-      background: #007a38;
+      background: #c0092a;
       transform: scale(1.02);
     }
     .support-modal-phone-info {
@@ -9334,6 +9417,10 @@
             <img src="BP-qr.jpg" alt="QR BenefitPay لدعم المطور">
             <span>دعم عبر BenefitPay</span>
           </div>
+          <div class="footer-dev-qr paypal-qr" onclick="openPaypalModal()" style="cursor:pointer;">
+            <i class="fab fa-paypal"></i>
+            <span>دعم عبر PayPal</span>
+          </div>
         </div>
       </div>
     </div>
@@ -9368,7 +9455,7 @@
   <div class="support-modal-overlay" id="bpModalOverlay" onclick="closeBpModalOutside(event)">
     <div class="support-modal bp-modal" role="dialog" aria-modal="true">
       <button class="support-modal-close" onclick="closeBenefitPayModal()" aria-label="إغلاق">✕</button>
-      <div class="support-modal-title">💚 دعم المطور عبر BenefitPay</div>
+      <div class="support-modal-title"><img src="https://benefit.bh/MediaManager/Media/icons/2023/benefit.svg" alt="BenefitPay" style="height: 24px; vertical-align: middle; margin-left: 8px;"> دعم المطور عبر BenefitPay</div>
       <div class="support-modal-msg">
         عزيزي الداعم نحيطكم علماً<br>
         هذا الدعم يشمل:<br><br>
@@ -9377,17 +9464,48 @@
         • مساندة عامة للمطورين في شؤونهم...<br><br>
         وإنا كخدامكم في نور الحوزة حتى وإن لم يصلنا فإنا بإذن الله مستمرون في مشاريعنا فلا تنسونا من دعائكم 🤲🏻
       </div>
-      <div class="support-modal-qr-wrap" style="cursor:default; border-color:#00b050;">
+      <div class="support-modal-qr-wrap" style="cursor:default; border-color:#ec0b33;">
         <img src="BP-qr.jpg" alt="QR BenefitPay لدعم المطور">
       </div>
       <div class="support-modal-qr-hint">امسح الكود في تطبيق BenefitPay والدعم مباشرة</div>
       <div class="support-modal-phone-info">📞 رقم البنفت: <strong>+973 66302585</strong></div>
       <br>
       <button class="support-modal-copy-iban" onclick="copyBpIban()">
-        <i class="fas fa-copy">BH25ABCO91002016585516</i> نسخ رقم الآيبان
+        <i class="fas fa-copy"></i> <span>BH25ABCO91002016585516</span>
       </button>
     </div>
   </div>
+
+  <!-- PayPal Support Modal -->
+  <div class="support-modal-overlay" id="paypalModalOverlay" onclick="closePaypalModalOutside(event)">
+    <div class="support-modal paypal-modal" role="dialog" aria-modal="true">
+      <button class="support-modal-close" onclick="closePaypalModal()" aria-label="إغلاق">✕</button>
+      <div class="support-modal-title">💙 دعم المطور عبر PayPal</div>
+      <div class="support-modal-msg">
+        عزيزي الداعم نحيطكم علماً<br>
+        هذا الدعم يشمل:<br><br>
+        • المساهمة في المشاريع القادمة...<br>
+        • دعم معنوي طيب للمطورين...<br>
+        • مساندة عامة للمطورين في شؤونهم...<br><br>
+        وإنا كخدامكم في نور الحوزة حتى وإن لم يصلنا فإنا بإذن الله مستمرون في مشاريعنا فلا تنسونا من دعائكم 🤲🏻
+      </div>
+      
+      <div class="paypal-button-container">
+        <div id="paypal-container-RJB2MRYKQW746" style="width: 100%; max-width: 300px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.paypal.com/sdk/js?client-id=BAA5iE0z4bcoUgZdSheR0WcSyJX2o8kyN_PqTrBadLu0irNRWRZtRk01fbNRM6mZHKwmhADTbZfGLaxLLI&components=hosted-buttons&disable-funding=venmo&currency=USD"></script>
+  <script>
+    window.addEventListener('load', function() {
+      if (window.paypal && window.paypal.HostedButtons) {
+        paypal.HostedButtons({
+          hostedButtonId: "RJB2MRYKQW746",
+        }).render("#paypal-container-RJB2MRYKQW746");
+      }
+    });
+  </script>
 
   <script>
     // دوال مودال دعم المطور
@@ -9403,7 +9521,7 @@
       if (e.target === document.getElementById('supportModalOverlay')) closeSupportModal();
     }
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') { closeSupportModal(); closeBenefitPayModal(); }
+      if (e.key === 'Escape') { closeSupportModal(); closeBenefitPayModal(); closePaypalModal(); }
     });
 
     // دوال مودال BenefitPay
@@ -9435,6 +9553,19 @@
         document.body.removeChild(el);
         if (typeof showToast === 'function') showToast('تم النسخ', 'تم نسخ رقم الآيبان', 'success');
       });
+    }
+
+    // دوال مودال PayPal
+    function openPaypalModal() {
+      document.getElementById('paypalModalOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closePaypalModal() {
+      document.getElementById('paypalModalOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    function closePaypalModalOutside(e) {
+      if (e.target === document.getElementById('paypalModalOverlay')) closePaypalModal();
     }
   </script>
 
@@ -14382,7 +14513,7 @@
 <style>
   .ai-float-btn {
     position: fixed;
-    bottom: 28px;
+    bottom: 45px;
     right: 28px;
     width: 56px;
     height: 56px;
