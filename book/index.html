@@ -11932,6 +11932,9 @@
       }
 
       let filtered = allMediaData.filter(item => {
+        // إخفاء المحتوى المحذوف من يوتيوب
+        if (item.unavailable) return false;
+
         let matchTab = false;
         if (activeTab === 'channels') matchTab = (item.type === 'channel');
         else if (activeTab === 'videos') matchTab = (item.type === 'video');
@@ -12196,21 +12199,55 @@
     // جلب البيانات الحقيقية من يوتيوب في الخلفية
     // ───────────────────────────────────────────────────────────────────────────
     async function fetchRealDataInBackground() {
-      for (let i = 0; i < allMediaData.length; i++) {
-        const item = allMediaData[i];
-        if (item.nameProvided && item.title && item.title !== 'جاري التحميل...') {
-          if ((item.type === 'video' || item.type === 'playlist') && !item.author) {
-            await fetchVideoAuthor(item);
-            // تحديث كل 5 عناصر لتجنب إعادة الرسم المتكررة
-            if (i % 5 === 0 || i === allMediaData.length - 1) renderMediaGrid();
-          }
-          continue;
-        }
-        if (item.type === 'video' || item.type === 'playlist') await fetchVideoData(item);
-        else await fetchChannelData(item);
-        // تحديث تدريجي كل 5 عناصر لتقليل عمليات الرسم
-        if (i % 5 === 0 || i === allMediaData.length - 1) renderMediaGrid();
+      const BATCH_SIZE = 5; // عدد الطلبات المتوازية في كل دفعة
+
+      // ── تحديد العناصر ذات الأولوية (أحدث فيديو + أحدث قائمة) ──
+      const allVideos    = allMediaData.filter(i => i.type === 'video');
+      const allPlaylists = allMediaData.filter(i => i.type === 'playlist');
+      const latestVideo    = allVideos.length    > 0 ? allVideos[allVideos.length - 1]       : null;
+      const latestPlaylist = allPlaylists.length > 0 ? allPlaylists[allPlaylists.length - 1] : null;
+      const prioritySet  = new Set([latestVideo, latestPlaylist].filter(Boolean));
+
+      // ── 1. جلب الأولويات أولاً وعرضها فوراً ──
+      await Promise.all([...prioritySet].map(item => _fetchOneItem(item)));
+      if (prioritySet.size > 0) renderMediaGrid();
+
+      // ── 2. جلب الباقي بالتوازي دفعةً دفعة ──
+      const rest = allMediaData.filter(i => !prioritySet.has(i));
+      for (let i = 0; i < rest.length; i += BATCH_SIZE) {
+        const batch = rest.slice(i, i + BATCH_SIZE);
+        await Promise.all(batch.map(item => _fetchOneItem(item)));
+        renderMediaGrid();
       }
+    }
+
+    // جلب / فحص عنصر واحد (مساعد داخلي)
+    async function _fetchOneItem(item) {
+      if (!item) return;
+      if (item.nameProvided && item.title && item.title !== 'جاري التحميل...') {
+        if ((item.type === 'video' || item.type === 'playlist') && !item.author) {
+          await fetchVideoAuthor(item);
+        } else if (!item._availChecked) {
+          await checkYtAvailability(item);
+        }
+      } else if (item.type === 'video' || item.type === 'playlist') {
+        await fetchVideoData(item);
+      } else {
+        await fetchChannelData(item);
+      }
+    }
+    // ملاحظة: يتخطى القنوات لأن oembed لا يدعم روابط القنوات
+    async function checkYtAvailability(item) {
+      item._availChecked = true;
+      if (item.type === 'channel') return; // oembed لا يدعم القنوات → لا نحكم عليها
+      try {
+        const isPlaylist = item.type === 'playlist' || (item.url && item.url.includes('list='));
+        const embedUrl = isPlaylist
+          ? `https://www.youtube.com/playlist?list=${item.vId}`
+          : `https://www.youtube.com/watch?v=${item.vId}`;
+        const res = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(embedUrl)}&format=json`);
+        if (res.status === 404) item.unavailable = true;
+      } catch (e) {}
     }
 
     async function fetchVideoAuthor(item) {
@@ -12219,14 +12256,18 @@
         const embedUrl = isPlaylist ? `https://www.youtube.com/playlist?list=${item.vId}` : `https://www.youtube.com/watch?v=${item.vId}`;
         const res = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(embedUrl)}&format=json`);
         if (res.ok) { const d = await res.json(); item.author = d.author_name || ''; }
+        else if (res.status === 404) { item.unavailable = true; }
       } catch (e) {}
     }
 
     async function fetchVideoData(item) {
       const isPlaylist = item.type === 'playlist' || item.url.includes('list=');
       const embedUrl = isPlaylist ? `https://www.youtube.com/playlist?list=${item.vId}` : `https://www.youtube.com/watch?v=${item.vId}`;
+
+      let oembedStatus = null;
       try {
         let res = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(embedUrl)}&format=json`);
+        oembedStatus = res.status;
         if (res.ok) {
           const d = await res.json();
           item.title  = d.title       || item.title;
@@ -12236,10 +12277,20 @@
           return;
         }
       } catch (e) {}
+
+      // 404 من oembed = المحتوى محذوف أو خاص بشكل دائم
+      if (oembedStatus === 404) {
+        item.unavailable = true;
+        return;
+      }
+
+      // جرّب noembed كبديل
       try {
         let res = await fetch(`https://noembed.com/embed?url=${encodeURIComponent(embedUrl)}`);
         if (res.ok) {
           const d = await res.json();
+          // noembed يُعيد حقل error للمحتوى غير المتاح
+          if (d.error) { item.unavailable = true; return; }
           item.title  = d.title       || item.title;
           item.author = d.author_name || '';
           if (isPlaylist && d.thumbnail_url) item.thumbnail = d.thumbnail_url;
@@ -12247,6 +12298,7 @@
           return;
         }
       } catch (e) {}
+
       if (!item.title || item.title === 'جاري التحميل...')
         item.title = (isPlaylist ? `قائمة - ` : `فيديو - `) + item.vId.substring(0, 8);
       await fetchPublishedDate(item);
@@ -12265,6 +12317,7 @@
           if (d.thumbnail_url) item.thumbnail = d.thumbnail_url;
           return;
         }
+        // ملاحظة: oembed لا يدعم روابط القنوات بشكل كامل، لذلك لا نعتبر الفشل هنا حذفاً
       } catch (e) {}
       item.title  = item.title || item.handle;
       item.author = item.handle;
