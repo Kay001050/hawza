@@ -913,6 +913,58 @@
       border-radius: 50%;
     }
 
+    /* ── Lazy Loading للصور ── */
+    .lazy-img {
+      transition: opacity 0.4s ease;
+      opacity: 0;
+    }
+    .lazy-img.lazy-loaded {
+      opacity: 1;
+    }
+
+    /* ── مؤشر التحميل (نقاط متحركة) ── */
+    .yt-img-loader {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      z-index: 3;
+      pointer-events: none;
+      background: var(--skeleton-base);
+      transition: opacity 0.3s ease;
+    }
+    .yt-img-loader span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 0, 0, 0.55);
+      animation: ytDotBounce 1.3s ease-in-out infinite;
+      display: block;
+    }
+    .yt-img-loader span:nth-child(1) { animation-delay: 0s; }
+    .yt-img-loader span:nth-child(2) { animation-delay: 0.22s; }
+    .yt-img-loader span:nth-child(3) { animation-delay: 0.44s; }
+    @keyframes ytDotBounce {
+      0%, 80%, 100% { transform: scale(0.5); opacity: 0.3; }
+      40%            { transform: scale(1);   opacity: 1;   }
+    }
+    /* إخفاء المؤشر بعد تحميل الصورة */
+    .media-thumbnail.img-loaded > .yt-img-loader {
+      opacity: 0;
+      pointer-events: none;
+    }
+    /* للقنوات: خلفية دائرية */
+    .media-card.channel-card .yt-img-loader {
+      border-radius: 50%;
+      background: rgba(0,0,0,0.08);
+    }
+    /* للفيديوهات: خلفية داكنة */
+    .media-card.video-card .yt-img-loader {
+      background: #111;
+    }
+
     /* ── بطاقة الفيديو (Flat Design & Modern) ── */
     .media-card.video-card {
       display: flex;
@@ -11987,6 +12039,7 @@
         }
       });
       grid.appendChild(frag);
+      initYtLazyImages();
     }
 
     function buildMediaCard(item, idx, latestVideoUrl) {
@@ -12011,12 +12064,19 @@
       const subBadge = (isChannel && isSub) ? `<span class="yt-subscribed-badge"><i class="fas fa-check"></i> مشترك</span>` : '';
 
       if (isChannel) {
-        const imgSrc = `https://unavatar.io/youtube/${item.handle}?fallback=https://ui-avatars.com/api/?name=${encodeURIComponent(item.title)}&background=ff0000&color=fff&size=130`;        return `
-          <div class="media-card channel-card" style="animation-delay:${idx * 0.05}s">
+        const imgSrc = `https://unavatar.io/youtube/${item.handle}?fallback=https://ui-avatars.com/api/?name=${encodeURIComponent(item.title)}&background=ff0000&color=fff&size=130`;
+        const alreadyLoaded = _ytLoadedSrcs.has(imgSrc);
+        const thumbClass = alreadyLoaded ? 'media-thumbnail img-loaded' : 'media-thumbnail';
+        const imgTag = alreadyLoaded
+          ? `<img src="${imgSrc}" alt="${item.title}" class="lazy-img lazy-loaded">`
+          : `<img data-src="${imgSrc}" src="" alt="${item.title}" class="lazy-img" loading="lazy">`;
+        return `
+          <div class="media-card channel-card" style="animation-delay:${Math.min(idx * 0.05, 0.5)}s">
             ${actionsHtml}
             ${subBadge}
-            <div class="media-thumbnail">
-              <img src="${imgSrc}" alt="${item.title}" loading="lazy">
+            <div class="${thumbClass}">
+              <div class="yt-img-loader"><span></span><span></span><span></span></div>
+              ${imgTag}
             </div>
             <div class="media-info">
               <div class="media-title">${item.title}</div>
@@ -12029,14 +12089,21 @@
       const duration = item.duration || (isPlaylist ? 'قائمة تشغيل' : '--:--');
       const views = item.views || Math.floor(Math.random() * 5000) + 100;
       const date = item.publishedDate ? new Date(item.publishedDate).toLocaleDateString('ar-SA') : 'منذ فترة';
+      const thumbSrc = item.thumbnail;
+      const fallbackSrc = `https://img.youtube.com/vi/${item.vId}/mqdefault.jpg`;
+      const vAlreadyLoaded = _ytLoadedSrcs.has(thumbSrc);
+      const vThumbClass = vAlreadyLoaded ? 'media-thumbnail img-loaded' : 'media-thumbnail';
+      const vImgTag = vAlreadyLoaded
+        ? `<img src="${thumbSrc}" alt="${item.title}" class="lazy-img lazy-loaded">`
+        : `<img data-src="${thumbSrc}" src="" alt="${item.title}" class="lazy-img" loading="lazy" data-fallback="${fallbackSrc}">`;
 
       return `
-        <div class="media-card video-card" style="animation-delay:${idx * 0.05}s">
+        <div class="media-card video-card" style="animation-delay:${Math.min(idx * 0.05, 0.5)}s">
           ${actionsHtml}
           ${newBadge}
-          <div class="media-thumbnail">
-            <img src="${item.thumbnail}" alt="${item.title}" loading="lazy" 
-                 onerror="this.src='https://img.youtube.com/vi/${item.vId}/mqdefault.jpg'">
+          <div class="${vThumbClass}">
+            <div class="yt-img-loader"><span></span><span></span><span></span></div>
+            ${vImgTag}
             <div class="media-play-overlay">
               <i class="fas ${isPlaylist ? 'fa-list' : 'fa-play' }"></i>
             </div>
@@ -12061,6 +12128,71 @@
     }
 
     // ───────────────────────────────────────────────────────────────────────────
+    // IntersectionObserver Lazy Loading للصور - يحمّل فقط ما يظهر في الشاشة
+    // ───────────────────────────────────────────────────────────────────────────
+    let _ytLazyObserver = null;
+    const _ytLoadedSrcs = new Set(); // كاش للصور المحملة مسبقاً لتجنب إعادة التحميل عند إعادة الرسم
+
+    function initYtLazyImages() {
+      // تنظيف المراقب القديم
+      if (_ytLazyObserver) {
+        _ytLazyObserver.disconnect();
+        _ytLazyObserver = null;
+      }
+
+      const lazyImgs = document.querySelectorAll('#ytPageGrid .lazy-img:not(.lazy-loaded)');
+      if (!lazyImgs.length) return;
+
+      // إذا المتصفح لا يدعم IntersectionObserver — تحميل مباشر
+      if (!('IntersectionObserver' in window)) {
+        lazyImgs.forEach(img => _ytLoadLazyImg(img));
+        return;
+      }
+
+      _ytLazyObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            _ytLoadLazyImg(entry.target);
+            _ytLazyObserver.unobserve(entry.target);
+          }
+        });
+      }, {
+        rootMargin: '250px 0px', // ابدأ التحميل قبل 250px من الظهور
+        threshold: 0.01
+      });
+
+      lazyImgs.forEach(img => _ytLazyObserver.observe(img));
+    }
+
+    function _ytLoadLazyImg(img) {
+      const src = img.getAttribute('data-src');
+      if (!src) return;
+      const fallback = img.getAttribute('data-fallback');
+
+      function onSuccess(finalSrc) {
+        img.src = finalSrc;
+        img.classList.add('lazy-loaded');
+        _ytLoadedSrcs.add(finalSrc); // حفظ في الكاش
+        // إخفاء مؤشر التحميل
+        if (img.parentElement) img.parentElement.classList.add('img-loaded');
+      }
+
+      const newImg = new Image();
+      newImg.onload = function() { onSuccess(src); };
+      newImg.onerror = function() {
+        if (fallback) {
+          const fb = new Image();
+          fb.onload = function() { onSuccess(fallback); };
+          fb.onerror = function() { onSuccess(fallback); }; // حتى لو فشل الـ fallback
+          fb.src = fallback;
+        } else {
+          onSuccess(src);
+        }
+      };
+      newImg.src = src;
+    }
+
+    // ───────────────────────────────────────────────────────────────────────────
     // جلب البيانات الحقيقية من يوتيوب في الخلفية
     // ───────────────────────────────────────────────────────────────────────────
     async function fetchRealDataInBackground() {
@@ -12069,15 +12201,15 @@
         if (item.nameProvided && item.title && item.title !== 'جاري التحميل...') {
           if ((item.type === 'video' || item.type === 'playlist') && !item.author) {
             await fetchVideoAuthor(item);
-            // تحديث لكل عنصر بعد جلب مؤلفه
-            renderMediaGrid();
+            // تحديث كل 5 عناصر لتجنب إعادة الرسم المتكررة
+            if (i % 5 === 0 || i === allMediaData.length - 1) renderMediaGrid();
           }
           continue;
         }
         if (item.type === 'video' || item.type === 'playlist') await fetchVideoData(item);
         else await fetchChannelData(item);
-        // تحديث تدريجي بعد كل عنصر
-        renderMediaGrid();
+        // تحديث تدريجي كل 5 عناصر لتقليل عمليات الرسم
+        if (i % 5 === 0 || i === allMediaData.length - 1) renderMediaGrid();
       }
     }
 
