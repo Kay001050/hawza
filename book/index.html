@@ -20,16 +20,16 @@
   <link rel="manifest" href="/book/manifest.json">
 
   <!-- Favicon sizes -->
-  <link rel="icon" type="image/png" sizes="16x16"  href="/book/icons/icon-16.png">
-  <link rel="icon" type="image/png" sizes="32x32"  href="/book/icons/icon-32.png">
-  <link rel="icon" type="image/png" sizes="96x96"  href="/book/icons/icon-96.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="/book/icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="16x16"  href="https://hawza.netlify.app/book/Icons/512.png">
+  <link rel="icon" type="image/png" sizes="32x32"  href="https://hawza.netlify.app/book/Icons/512.png">
+  <link rel="icon" type="image/png" sizes="96x96"  href="https://hawza.netlify.app/book/Icons/512.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="https://hawza.netlify.app/book/Icons/512.png">
 
   <!-- Apple PWA -->
-  <link rel="apple-touch-icon" sizes="152x152" href="/book/icons/icon-152.png">
-  <link rel="apple-touch-icon" sizes="167x167" href="/book/icons/icon-167.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/book/icons/icon-180.png">
-  <link rel="apple-touch-icon" sizes="192x192" href="/book/icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="https://hawza.netlify.app/book/Icons/512.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="https://hawza.netlify.app/book/Icons/512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://hawza.netlify.app/book/Icons/512.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="https://hawza.netlify.app/book/Icons/512.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="نور الحوزة">
@@ -8408,6 +8408,201 @@
     .yt-header-tabs { padding: 0 32px 0; }
   }
 
+  /* ═══════════════════════════════════════════════════════════════════════
+     بانر Google Play — يظهر لمستخدمي أندرويد مرة واحدة فقط خارج التطبيق
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  #gplay-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 99999;
+    background: var(--bg-card);
+    border-top: 2px solid rgba(1, 135, 61, 0.35);
+    padding: 14px 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.18);
+    transform: translateY(110%);
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    direction: rtl;
+    will-change: transform;
+  }
+
+  #gplay-banner.visible {
+    transform: translateY(0);
+  }
+
+  #gplay-banner.hiding {
+    transform: translateY(110%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* أيقونة التطبيق */
+  #gplay-banner .gplay-app-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, #0a1517 0%, #1e6b54 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid var(--border-medium);
+    overflow: hidden;
+  }
+
+  #gplay-banner .gplay-app-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+
+  #gplay-banner .gplay-app-icon .gplay-icon-fallback {
+    font-size: 1.6rem;
+    color: var(--accent-gold);
+    line-height: 1;
+  }
+
+  /* نص المعلومات */
+  #gplay-banner .gplay-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  #gplay-banner .gplay-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+  }
+
+  #gplay-banner .gplay-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    line-height: 1.3;
+  }
+
+  #gplay-banner .gplay-subtitle .gplay-stars {
+    color: #fbbc04;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+  }
+
+  #gplay-banner .gplay-subtitle .gplay-free-badge {
+    background: rgba(1, 135, 61, 0.12);
+    color: #01873d;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 0.68rem;
+    font-weight: 700;
+  }
+
+  /* زر التثبيت */
+  #gplay-banner .gplay-install-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: #01873d;
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 9px 14px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    font-family: var(--font-ui);
+    cursor: pointer;
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: background 0.2s ease, transform 0.15s ease;
+    white-space: nowrap;
+  }
+
+  #gplay-banner .gplay-install-btn:hover,
+  #gplay-banner .gplay-install-btn:active {
+    background: #017a37;
+    transform: scale(0.97);
+  }
+
+  #gplay-banner .gplay-install-btn svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  /* زر الإغلاق */
+  #gplay-banner .gplay-close-btn {
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    width: 26px;
+    height: 26px;
+    background: var(--bg-tertiary);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: background 0.15s ease, color 0.15s ease;
+    padding: 0;
+    line-height: 1;
+  }
+
+  #gplay-banner .gplay-close-btn:hover {
+    background: var(--border-medium);
+    color: var(--text-primary);
+  }
+
+  /* شريط العد التنازلي */
+  #gplay-banner .gplay-progress-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--bg-tertiary);
+    overflow: hidden;
+  }
+
+  #gplay-banner .gplay-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #01873d, #34a853);
+    width: 100%;
+    transform-origin: right center;
+    transform: scaleX(1);
+    transition: none;
+  }
+
+  #gplay-banner .gplay-progress-fill.counting {
+    animation: gplayCountdown 10s linear forwards;
+  }
+
+  @keyframes gplayCountdown {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+  }
+
+  /* تحسينات للشاشات الصغيرة جداً */
+  @media (max-width: 360px) {
+    #gplay-banner .gplay-title { font-size: 0.82rem; }
+    #gplay-banner .gplay-install-btn { padding: 9px 10px; font-size: 0.78rem; }
+  }
+
   </style>
 
   <script>
@@ -8426,6 +8621,54 @@
 </head>
 <body>
   <div class="bg-pattern"></div>
+
+  <!-- ══════════════ Google Play Banner (Android / Browser Only) ══════════════ -->
+  <div id="gplay-banner" role="banner" aria-label="تطبيق نور الحوزة على Google Play" aria-hidden="true">
+    <!-- شريط العد التنازلي -->
+    <div class="gplay-progress-track">
+      <div class="gplay-progress-fill" id="gplayProgressFill"></div>
+    </div>
+    <!-- زر الإغلاق -->
+    <button class="gplay-close-btn" id="gplayCloseBtn" aria-label="إغلاق">
+      <i class="fas fa-times"></i>
+    </button>
+    <!-- أيقونة التطبيق -->
+    <div class="gplay-app-icon">
+      <img src="https://hawza.netlify.app/book/Icons/512.png" alt="نور الحوزة"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <span class="gplay-icon-fallback" style="display:none;">
+        <i class="fas fa-book-open"></i>
+      </span>
+    </div>
+    <!-- معلومات التطبيق -->
+    <div class="gplay-info">
+      <div class="gplay-title">نور الحوزة — المكتبة الرقمية</div>
+      <div class="gplay-subtitle">
+        <span class="gplay-stars">★★★★★</span>
+        <span>متاح على</span>
+        <svg viewBox="0 0 24 24" fill="none" width="13" height="13" style="display:inline-block;vertical-align:middle;">
+          <path d="M3.18 23.76c.3.17.65.2.98.08l12.65-7.3-2.83-2.83L3.18 23.76z" fill="#EA4335"/>
+          <path d="M22.3 10.37l-3.06-1.76-3.17 3.17 3.17 3.17 3.09-1.78c.88-.51.88-1.79-.03-2.8z" fill="#FBBC04"/>
+          <path d="M2.18.24C1.84.44 1.6.82 1.6 1.3v21.4c0 .48.24.86.58 1.06l.1.05 12-12v-.28L2.18.24z" fill="#4285F4"/>
+          <path d="M16.12 20.54l-3.17-3.17-12 12.01c.35.19.77.2 1.14 0l14.03-8.1-.0-.74z" fill="#34A853"/>
+        </svg>
+        <span>Google Play</span>
+        <span class="gplay-free-badge">مجاناً</span>
+      </div>
+    </div>
+    <!-- زر التثبيت -->
+    <a href="https://play.google.com/store/apps/details?id=net.hawza.twa"
+       target="_blank" rel="noopener noreferrer"
+       class="gplay-install-btn"
+       id="gplayInstallBtn"
+       aria-label="تثبيت تطبيق نور الحوزة من Google Play">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+        <path d="M12 16l-6-6h4V4h4v6h4l-6 6zm-8 4v-2h16v2H4z"/>
+      </svg>
+      تثبيت
+    </a>
+  </div>
+  <!-- ══════════════ End Google Play Banner ══════════════ -->
 
   <!-- Header -->
   <!-- Sidebar Overlay -->
@@ -14618,6 +14861,99 @@
           .catch(err => console.log('SW error', err));
       });
     }
+
+  // ════════════════════════════════════════════════════
+  // بانر Google Play — لمستخدمي أندرويد (مرة واحدة فقط، خارج التطبيق)
+  // ════════════════════════════════════════════════════
+  (function () {
+    var STORAGE_KEY = 'noor_gplay_banner_shown';
+    var AUTO_CLOSE_MS = 10000; // 10 ثوانٍ
+
+    // ── 1. التحقق من أننا خارج وضع التطبيق المثبّت (standalone/TWA) ──
+    var isStandalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.matchMedia('(display-mode: minimal-ui)').matches ||
+      window.matchMedia('(display-mode: fullscreen)').matches ||
+      navigator.standalone === true ||
+      document.referrer.startsWith('android-app://');
+
+    if (isStandalone) return; // داخل التطبيق المثبّت → لا تُظهر البانر
+
+    // ── 2. التحقق من أن المستخدم أندرويد ──
+    var ua = navigator.userAgent || '';
+    var isAndroid = /android/i.test(ua);
+
+    if (!isAndroid) return; // ليس أندرويد → لا تُظهر البانر
+
+    // ── 3. التحقق من أنه لم يُعرض من قبل ──
+    try {
+      if (localStorage.getItem(STORAGE_KEY) === '1') return;
+    } catch (e) { /* localStorage غير متاح → نكمل ونُظهر */ }
+
+    // ── 4. إظهار البانر بعد تحميل الصفحة ──
+    var banner       = document.getElementById('gplay-banner');
+    var closeBtn     = document.getElementById('gplayCloseBtn');
+    var installBtn   = document.getElementById('gplayInstallBtn');
+    var progressFill = document.getElementById('gplayProgressFill');
+    var autoTimer    = null;
+
+    if (!banner) return;
+
+    function hideBanner() {
+      if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+      banner.classList.remove('visible');
+      banner.classList.add('hiding');
+      banner.setAttribute('aria-hidden', 'true');
+      try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+      setTimeout(function () {
+        banner.style.display = 'none';
+      }, 400);
+    }
+
+    function showBanner() {
+      banner.style.display = 'flex';
+      banner.setAttribute('aria-hidden', 'false');
+      // تأخير بسيط يسمح للـ CSS transition بالعمل
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          banner.classList.add('visible');
+          // تشغيل شريط العد التنازلي
+          if (progressFill) {
+            progressFill.classList.add('counting');
+          }
+          // إغلاق تلقائي بعد 10 ثوانٍ
+          autoTimer = setTimeout(hideBanner, AUTO_CLOSE_MS);
+        });
+      });
+    }
+
+    // ── ربط الأحداث ──
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        hideBanner();
+      });
+    }
+
+    if (installBtn) {
+      installBtn.addEventListener('click', function () {
+        try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+        if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+        // إخفاء بعد فتح الرابط
+        setTimeout(hideBanner, 300);
+      });
+    }
+
+    // ── إظهار البانر بعد 1.5 ثانية من تحميل الصفحة ──
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () {
+        setTimeout(showBanner, 1500);
+      });
+    } else {
+      setTimeout(showBanner, 1500);
+    }
+  })();
   
     // ════════════════════════════════════════════════════
     // رف المفضلة
