@@ -2205,11 +2205,12 @@
     }
 
     /* ── عداد الزوار ── */
+    /* ══ زائر للمكتبة — pill بسيط + بطاقة منبثقة ══ */
     .visitors-pill {
       display: inline-flex;
       align-items: center;
       gap: 9px;
-      padding: 8px 20px;
+      padding: 8px 18px;
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 14px;
@@ -2218,28 +2219,145 @@
       margin-bottom: 16px;
       animation: fadeInDown 0.5s ease-out;
       position: relative;
+      user-select: none;
+      transition: border-color var(--transition-fast), background var(--transition-fast);
     }
-    .visitors-pill .vp-dot {
-      width: 7px;
-      height: 7px;
+    .visitors-pill:hover {
+      border-color: var(--border-medium);
+      background: var(--bg-card-hover);
+    }
+    .visitors-pill.open {
+      border-color: var(--accent-gold);
+    }
+    .vp-dot {
+      width: 7px; height: 7px;
       border-radius: 50%;
       background: #27ae60;
       flex-shrink: 0;
-      animation: vp-pulse 2s ease-in-out infinite;
+      box-shadow: 0 0 0 0 rgba(39,174,96,0.5);
+      animation: vp-pulse 1.8s ease-in-out infinite;
     }
     @keyframes vp-pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.75); }
+      0%   { box-shadow: 0 0 0 0   rgba(39,174,96,0.55); }
+      60%  { box-shadow: 0 0 0 7px rgba(39,174,96,0);    }
+      100% { box-shadow: 0 0 0 0   rgba(39,174,96,0);    }
     }
-    .visitors-pill .vp-num {
+    .vp-num {
       font-weight: 800;
       color: var(--text-primary);
       font-size: 0.88rem;
       min-width: 20px;
       display: inline-block;
     }
-    .visitors-pill .vp-label {
+    .vp-label { color: var(--text-muted); }
+    .vp-chevron {
+      font-size: 0.65rem;
       color: var(--text-muted);
+      transition: transform 0.3s ease;
+      margin-right: 2px;
+    }
+    .visitors-pill.open .vp-chevron { transform: rotate(180deg); }
+
+    /* ── البطاقة المنبثقة ── */
+    .visitors-popup-card {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 50%;
+      transform: translateX(50%) translateY(-6px);
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: 16px;
+      padding: 16px;
+      width: 280px;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    }
+    .visitors-popup-card.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(50%) translateY(0);
+    }
+    .vpc-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .vpc-stat {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      border-radius: 10px;
+      background: var(--bg-tertiary);
+    }
+    .vpc-icon-wrap {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      background: var(--bg-secondary);
+      color: var(--text-muted);
+    }
+    .live-wrap  { background: rgba(39,174,96,0.12); color: #27ae60; }
+    .views-wrap { background: rgba(52,152,219,0.12); color: #3498db; }
+    .dl-wrap    { background: rgba(39,174,96,0.10);  color: #27ae60; }
+    .vpc-live-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: #27ae60;
+      box-shadow: 0 0 0 0 rgba(39,174,96,0.5);
+      animation: vp-pulse 1.8s ease-in-out infinite;
+    }
+    .vpc-icon-wrap i { font-size: 0.82rem; }
+    .vpc-info { display: flex; flex-direction: column; gap: 1px; }
+    .vpc-num {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .vpc-lbl {
+      font-size: 0.67rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .vpc-sep {
+      width: 1px; height: 40px;
+      background: var(--border-subtle);
+      flex-shrink: 0;
+    }
+    .vpc-divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 10px 0;
+    }
+    .vpc-footer {
+      text-align: center;
+      margin-top: 6px;
+    }
+    .vpc-refresh-hint {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .vpc-refresh-hint i { font-size: 0.6rem; color: var(--accent-gold); }
+
+    /* wrapper نسبي للـ pill + بطاقة */
+    .visitors-pill-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+    .visitors-pill-wrapper .visitors-pill { margin-bottom: 0; }
+
+    @media (max-width: 420px) {
+      .visitors-popup-card { width: 240px; }
+      .vpc-num { font-size: 0.88rem; }
     }
 
     .hero-title {
@@ -9116,10 +9234,55 @@
     <div class="container hero-content">
 
       <!-- عداد الزوار -->
-      <div class="visitors-pill">
-        <span class="vp-dot"></span>
-        <span class="vp-num" id="visitorCount">...</span>
-        <span class="vp-label">زائر للمكتبة</span>
+      <div class="visitors-pill-wrapper">
+        <div class="visitors-pill" id="visitorsPill" onclick="toggleVisitorsCard()" title="اضغط لمزيد من التفاصيل" style="cursor:pointer;">
+          <span class="vp-dot"></span>
+          <span class="vp-num" id="visitorCount">...</span>
+          <span class="vp-label">زائر للمكتبة</span>
+          <i class="fas fa-chevron-down vp-chevron" id="vpChevron"></i>
+        </div>
+
+        <!-- البطاقة المنبثقة للإحصائيات -->
+        <div class="visitors-popup-card" id="visitorsPopupCard">
+          <div class="vpc-row">
+            <div class="vpc-stat">
+              <div class="vpc-icon-wrap live-wrap"><span class="vpc-live-dot"></span></div>
+              <div class="vpc-info">
+                <span class="vpc-num" id="liveCount">—</span>
+                <span class="vpc-lbl">متواجد الآن</span>
+              </div>
+            </div>
+            <div class="vpc-sep"></div>
+            <div class="vpc-stat">
+              <div class="vpc-icon-wrap" style="background:rgba(160,127,58,0.12);color:var(--accent-gold);"><i class="fas fa-users"></i></div>
+              <div class="vpc-info">
+                <span class="vpc-num" id="visitorCountDetail">—</span>
+                <span class="vpc-lbl">إجمالي الزوار</span>
+              </div>
+            </div>
+          </div>
+          <div class="vpc-divider"></div>
+          <div class="vpc-row">
+            <div class="vpc-stat">
+              <div class="vpc-icon-wrap views-wrap"><i class="fas fa-eye"></i></div>
+              <div class="vpc-info">
+                <span class="vpc-num" id="totalViewsPopup">—</span>
+                <span class="vpc-lbl">مشاهدات الكتب</span>
+              </div>
+            </div>
+            <div class="vpc-sep"></div>
+            <div class="vpc-stat">
+              <div class="vpc-icon-wrap dl-wrap"><i class="fas fa-download"></i></div>
+              <div class="vpc-info">
+                <span class="vpc-num" id="totalDownloadsPopup">—</span>
+                <span class="vpc-lbl">تحميلات الكتب</span>
+              </div>
+            </div>
+          </div>
+          <div class="vpc-footer">
+            <span class="vpc-refresh-hint"><i class="fas fa-sync-alt"></i> يتجدد كل 30 ثانية</span>
+          </div>
+        </div>
       </div>
 
       <div class="hero-badge">
@@ -10360,14 +10523,12 @@
     };
 
     DOM.currentYear.textContent = new Date().getFullYear();
-    // تحميل إجمالي المشاهدات والتنزيلات من Firebase عند بدء الصفحة
-    _loadGlobalStats();
-    // تهيئة عداد الزوار
+    // تهيئة نظام الزوار المتطور (يُحمّل الإحصائيات الكلية أيضاً)
     initVisitorCounter();
     // تهيئة قسم استئناف القراءة (من localStorage مباشرة)
     renderResumeReading();
     // تهيئة قسم الأكثر مشاهدة (من Firebase)
-    setTimeout(renderMostViewed, 800);
+    setTimeout(renderMostViewed, 1200);
 
     // ═══════════════════════════════════════════════════════════════════════════
     // Theme Management - Light is default
@@ -11652,21 +11813,61 @@
     async function _fbGet(path) {
       if (!FIREBASE_DB_URL) return null;
       try {
-        const r = await fetch(`${FIREBASE_DB_URL}/${path}.json`, { cache: 'no-store' });
+        const r = await fetch(`${FIREBASE_DB_URL}/${path}.json?t=${Date.now()}`, {
+          cache: 'no-store',
+          headers: { 'Accept': 'application/json' }
+        });
+        if (!r.ok) return null;
+        const d = await r.json();
+        return d;
+      } catch(e) { return null; }
+    }
+
+    async function _fbSet(path, value) {
+      if (!FIREBASE_DB_URL) return null;
+      try {
+        const r = await fetch(`${FIREBASE_DB_URL}/${path}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(value)
+        });
         return r.ok ? await r.json() : null;
       } catch(e) { return null; }
     }
-    async function _fbIncrement(path, fields) {
+
+    async function _fbPatch(path, obj) {
       if (!FIREBASE_DB_URL) return null;
       try {
-        const body = {};
-        fields.forEach(f => { body[f] = { '.sv': { 'increment': 1 } }; });
         const r = await fetch(`${FIREBASE_DB_URL}/${path}.json`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
+          body: JSON.stringify(obj)
         });
         return r.ok ? await r.json() : null;
+      } catch(e) { return null; }
+    }
+
+    // زيادة حقول عددية بشكل صحيح: اقرأ ثم اكتب (read-modify-write)
+    async function _fbIncrement(path, fields, by) {
+      if (!FIREBASE_DB_URL) return null;
+      by = by || 1;
+      try {
+        // اقرأ القيم الحالية
+        const current = await _fbGet(path) || {};
+        const update = {};
+        fields.forEach(f => {
+          const prev = typeof current[f] === 'number' ? current[f] : 0;
+          update[f] = prev + by;
+        });
+        // اكتب القيم المحدَّثة
+        const r = await fetch(`${FIREBASE_DB_URL}/${path}.json`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(update)
+        });
+        if (!r.ok) return null;
+        // ادمج وأعد
+        return Object.assign({}, current, update);
       } catch(e) { return null; }
     }
 
@@ -11877,25 +12078,15 @@
       }
     }
 
-    // ── تحميل إجمالي المشاهدات والتنزيلات للهيرو ──
+    // ── تحميل إجمالي المشاهدات والتنزيلات (توافق) ──
     async function _loadGlobalStats() {
-      // كاش فوري
-      const cached = _cacheGet(STATS_CACHE_GLOBAL);
-      if (cached) {
-        if (DOM.totalViews)     DOM.totalViews.textContent     = _formatStatNum(cached.totalViews || 0);
-        if (DOM.totalDownloads) DOM.totalDownloads.textContent = _formatStatNum(cached.totalDownloads || 0);
-      }
-      // Firebase
       const data = await _fbGet('stats/global');
-      if (data) {
+      if (data && typeof data === 'object') {
         _cacheSet(STATS_CACHE_GLOBAL, data);
-        if (DOM.totalViews)     DOM.totalViews.textContent     = _formatStatNum(data.totalViews || 0);
-        if (DOM.totalDownloads) DOM.totalDownloads.textContent = _formatStatNum(data.totalDownloads || 0);
       }
     }
 
-    // للتوافق مع استدعاءات قديمة
-    function _refreshHeroStats() { _loadGlobalStats(); }
+    function _refreshHeroStats() { _refreshAllStats && _refreshAllStats(); }
 
     // ── شارات "رائج" على البطاقات (من Firebase) ──
     async function _applyHotBadges() {
@@ -11936,35 +12127,191 @@
       });
     }
 
-    // ── عداد الزوار (يُسجّل زيارة واحدة لكل مستخدم خلال 24 ساعة) ──
-    async function initVisitorCounter() {
-      const el = document.getElementById('visitorCount');
-      if (!el) return;
+    // ══════════════════════════════════════════════════════════════════════
+    // نظام الزوار المتطور — Advanced Visitor System
+    // ══════════════════════════════════════════════════════════════════════
 
-      // عرض آخر قيمة محفوظة فوراً
-      const cached = localStorage.getItem('noor_visitors_cached');
-      if (cached) el.textContent = _formatStatNum(Number(cached));
-
-      if (!FIREBASE_DB_URL) { el.textContent = '—'; return; }
-
-      // سجّل زيارة مرة واحدة فقط لكل مستخدم خلال 24 ساعة
-      const lastVisitTs = localStorage.getItem('noor_last_visit_ts');
-      const alreadyCounted = lastVisitTs && (Date.now() - Number(lastVisitTs)) < 24 * 60 * 60 * 1000;
-
-      if (!alreadyCounted) {
-        // تسجيل الزيارة فوراً وحفظ الوقت
-        localStorage.setItem('noor_last_visit_ts', String(Date.now()));
-        await _fbIncrement('stats/global', ['totalVisitors']);
+    // معرف المستخدم الفريد لهذا المتصفح (دائم)
+    function _getOrCreateUID() {
+      let uid = localStorage.getItem('noor_uid');
+      if (!uid) {
+        uid = 'u_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+        localStorage.setItem('noor_uid', uid);
       }
+      return uid;
+    }
 
-      // اقرأ الرقم الحقيقي من Firebase وحدّث العرض مباشرة
-      const data = await _fbGet('stats/global');
-      if (data && data.totalVisitors) {
-        const n = data.totalVisitors;
-        localStorage.setItem('noor_visitors_cached', n);
-        el.textContent = _formatStatNum(n);
+    // رسوم متحركة — عدّ تصاعدي للأرقام
+    function _animateCount(el, from, to, durationMs) {
+      if (!el || from === to) { if (el) el.textContent = _formatStatNum(to); return; }
+      const start  = performance.now();
+      const diff   = to - from;
+      function step(now) {
+        const elapsed = Math.min(now - start, durationMs);
+        const progress = elapsed / durationMs;
+        // easing: ease-out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(from + diff * eased);
+        el.textContent = _formatStatNum(current);
+        if (elapsed < durationMs) requestAnimationFrame(step);
+        else { el.textContent = _formatStatNum(to); el.classList.add('updated'); setTimeout(() => el.classList.remove('updated'), 500); }
+      }
+      requestAnimationFrame(step);
+    }
+
+    // تحديث عنصر رقم بأنيميشن
+    function _updateStatEl(id, newVal) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const prev = parseInt(el.dataset.rawVal || '0', 10) || 0;
+      el.dataset.rawVal = newVal;
+      if (prev === 0 && newVal > 0) {
+        _animateCount(el, 0, newVal, 1200);
+      } else if (prev !== newVal) {
+        _animateCount(el, prev, newVal, 600);
+      } else {
+        el.textContent = _formatStatNum(newVal);
       }
     }
+
+    // تسجيل "الحضور الآني" في Firebase (timestamp) — ينتهي تلقائياً بعد 5 دقائق
+    const PRESENCE_TTL = 5 * 60 * 1000; // 5 دقائق
+    async function _pushPresence(uid) {
+      if (!FIREBASE_DB_URL) return;
+      // استخدم PUT لكتابة الـ timestamp مباشرة لهذا المستخدم
+      await _fbSet(`presence/${uid}`, Date.now());
+    }
+
+    // حساب المتواجدين الآن (timestamp > Date.now() - 5 دقائق)
+    async function _countLiveUsers() {
+      if (!FIREBASE_DB_URL) return null;
+      const data = await _fbGet('presence');
+      if (!data || typeof data !== 'object') return 0;
+      const cutoff = Date.now() - PRESENCE_TTL;
+      let count = 0;
+      Object.values(data).forEach(ts => {
+        if (typeof ts === 'number' && ts > cutoff) count++;
+      });
+      return count;
+    }
+
+    // تنظيف الـ presence القديم (أكثر من 10 دقائق)
+    async function _cleanOldPresence() {
+      if (!FIREBASE_DB_URL) return;
+      const data = await _fbGet('presence');
+      if (!data || typeof data !== 'object') return;
+      const cutoff = Date.now() - 10 * 60 * 1000;
+      const toDelete = Object.entries(data)
+        .filter(([, ts]) => typeof ts !== 'number' || ts < cutoff)
+        .map(([k]) => k);
+      if (toDelete.length === 0) return;
+      const patch = {};
+      toDelete.forEach(k => { patch[k] = null; }); // null = حذف في Firebase REST
+      await _fbPatch('presence', patch);
+    }
+
+    // الحالة الداخلية للإحصائيات
+    let _visitorSystemReady = false;
+
+    async function initVisitorCounter() {
+      const uid = _getOrCreateUID();
+
+      // ── 1. عرض القيم المخزنة محلياً فوراً (UX سريع) ──
+      const cachedGlobal = (() => {
+        try { return JSON.parse(localStorage.getItem('noor_vsb_cache') || 'null'); } catch(e) { return null; }
+      })();
+      if (cachedGlobal) {
+        const tv = cachedGlobal.totalVisitors  || 0;
+        const vi = cachedGlobal.totalViews     || 0;
+        const dl = cachedGlobal.totalDownloads || 0;
+        const pillNum = document.getElementById('visitorCount');
+        if (pillNum) { pillNum.textContent = _formatStatNum(tv); pillNum.dataset.rawVal = tv; }
+        const _sc = (id, val) => { const el = document.getElementById(id); if (el) { el.textContent = _formatStatNum(val); el.dataset.rawVal = val; } };
+        _sc('visitorCountDetail',  tv);
+        _sc('totalViewsPopup',     vi);
+        _sc('totalDownloadsPopup', dl);
+      }
+
+      // ── 2. سجّل الزيارة (مرة واحدة/24 ساعة) ──
+      const lastVisitTs = localStorage.getItem('noor_last_visit_ts');
+      const shouldCount = !lastVisitTs || (Date.now() - Number(lastVisitTs)) > 24 * 60 * 60 * 1000;
+      if (shouldCount) {
+        localStorage.setItem('noor_last_visit_ts', String(Date.now()));
+        // increment بطريقة آمنة (read-modify-write)
+        _fbIncrement('stats/global', ['totalVisitors']);
+      }
+
+      // ── 3. سجّل الحضور الآني ──
+      await _pushPresence(uid);
+
+      // ── 4. اقرأ كل الأرقام من Firebase ──
+      await _refreshAllStats();
+
+      // ── 5. دورة التحديث التلقائي كل 30 ثانية ──
+      setInterval(async () => {
+        await _pushPresence(uid);   // جدّد الحضور
+        await _refreshAllStats();   // حدّث الأرقام
+      }, 30 * 1000);
+
+      // ── 6. تنظيف دوري للـ presence القديم (كل 5 دقائق) ──
+      setTimeout(_cleanOldPresence, 5 * 60 * 1000);
+      setInterval(_cleanOldPresence, 5 * 60 * 1000);
+
+      _visitorSystemReady = true;
+    }
+
+    async function _refreshAllStats() {
+      // اقرأ الإحصائيات الكلية
+      const global = await _fbGet('stats/global');
+      if (global && typeof global === 'object') {
+        const tv = typeof global.totalVisitors  === 'number' ? global.totalVisitors  : 0;
+        const vi = typeof global.totalViews     === 'number' ? global.totalViews     : 0;
+        const dl = typeof global.totalDownloads === 'number' ? global.totalDownloads : 0;
+
+        // عداد الـ pill الرئيسي
+        const pillNum = document.getElementById('visitorCount');
+        if (pillNum) { _animateCount(pillNum, parseInt(pillNum.dataset.rawVal||'0')||0, tv, 800); pillNum.dataset.rawVal = tv; }
+
+        // عناصر البطاقة المنبثقة
+        const _s = (id, val) => { const el = document.getElementById(id); if (el) { _animateCount(el, parseInt(el.dataset.rawVal||'0')||0, val, 700); el.dataset.rawVal = val; } };
+        _s('visitorCountDetail',  tv);
+        _s('totalViewsPopup',     vi);
+        _s('totalDownloadsPopup', dl);
+
+        // حفّظ في cache
+        try { localStorage.setItem('noor_vsb_cache', JSON.stringify({ totalVisitors: tv, totalViews: vi, totalDownloads: dl, _ts: Date.now() })); } catch(e) {}
+      }
+
+      // المتواجدون الآن
+      const live = await _countLiveUsers();
+      if (live !== null) {
+        const liveEl = document.getElementById('liveCount');
+        if (liveEl) { _animateCount(liveEl, parseInt(liveEl.dataset.rawVal||'0')||0, live, 500); liveEl.dataset.rawVal = live; }
+      }
+    }
+
+    // ── فتح/إغلاق البطاقة المنبثقة ──
+    function toggleVisitorsCard() {
+      const card  = document.getElementById('visitorsPopupCard');
+      const pill  = document.getElementById('visitorsPill');
+      if (!card) return;
+      const isOpen = card.classList.toggle('visible');
+      pill && pill.classList.toggle('open', isOpen);
+    }
+    window.toggleVisitorsCard = toggleVisitorsCard;
+
+    // إغلاق البطاقة عند الضغط خارجها
+    document.addEventListener('click', function(e) {
+      const wrapper = e.target.closest('.visitors-pill-wrapper');
+      if (!wrapper) {
+        const card = document.getElementById('visitorsPopupCard');
+        const pill = document.getElementById('visitorsPill');
+        if (card && card.classList.contains('visible')) {
+          card.classList.remove('visible');
+          pill && pill.classList.remove('open');
+        }
+      }
+    });
 
     function openModal(bookId) {
       const book = state.allBooks.find(b => b.id === bookId);
