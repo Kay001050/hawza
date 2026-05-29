@@ -2268,7 +2268,7 @@
       border: 1px solid var(--border-medium);
       border-radius: 16px;
       padding: 16px;
-      width: 280px;
+      width: 310px;
       z-index: 999;
       opacity: 0;
       pointer-events: none;
@@ -2358,6 +2358,155 @@
     @media (max-width: 420px) {
       .visitors-popup-card { width: 240px; }
       .vpc-num { font-size: 0.88rem; }
+    }
+
+    /* ── قسم إحصائيات المستخدم الشخصية في البطاقة المنبثقة ── */
+    .vpc-user-section {
+      margin-top: 4px;
+    }
+    .vpc-user-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      text-align: center;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .vpc-user-title::before,
+    .vpc-user-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-subtle);
+    }
+    .vpc-user-stats-row {
+      display: flex;
+      align-items: stretch;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .vpc-user-stat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 8px 4px;
+      border-radius: 10px;
+      background: var(--bg-tertiary);
+      text-align: center;
+    }
+    .vpc-user-stat-icon {
+      font-size: 0.85rem;
+      margin-bottom: 1px;
+    }
+    .vpc-user-stat-num {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .vpc-user-stat-lbl {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ── آخر الكتب المقروءة داخل البطاقة ── */
+    .vpc-last-books-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .vpc-last-books-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      max-height: 140px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-medium) transparent;
+    }
+    .vpc-last-books-list::-webkit-scrollbar { width: 3px; }
+    .vpc-last-books-list::-webkit-scrollbar-track { background: transparent; }
+    .vpc-last-books-list::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 4px; }
+
+    .vpc-book-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      background: var(--bg-tertiary);
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+    .vpc-book-row:hover { background: var(--bg-card-hover); }
+    .vpc-book-thumb {
+      width: 30px;
+      height: 40px;
+      border-radius: 4px;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: var(--bg-secondary);
+    }
+    .vpc-book-thumb-fallback {
+      width: 30px;
+      height: 40px;
+      border-radius: 4px;
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+    .vpc-book-meta {
+      flex: 1;
+      min-width: 0;
+    }
+    .vpc-book-name {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .vpc-book-time {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .vpc-book-resume-btn {
+      font-size: 0.6rem;
+      padding: 3px 7px;
+      border-radius: 6px;
+      background: var(--accent-gold);
+      color: #fff;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-ui);
+      transition: background var(--transition-fast);
+    }
+    .vpc-book-resume-btn:hover { background: var(--accent-gold-dark); }
+    .vpc-no-history {
+      text-align: center;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      padding: 12px 0;
     }
 
     .hero-title {
@@ -9282,6 +9431,40 @@
           <div class="vpc-footer">
             <span class="vpc-refresh-hint"><i class="fas fa-sync-alt"></i> يتجدد كل 30 ثانية</span>
           </div>
+
+          <!-- ═══ قسم إحصائيات المستخدم الشخصية ═══ -->
+          <div class="vpc-divider"></div>
+          <div class="vpc-user-section">
+            <div class="vpc-user-title"><i class="fas fa-user-circle"></i> إحصائياتك الشخصية</div>
+            <div class="vpc-user-stats-row">
+              <div class="vpc-user-stat">
+                <span class="vpc-user-stat-icon" style="color:#27ae60;"><i class="fas fa-calendar-check"></i></span>
+                <span class="vpc-user-stat-num" id="userVisitCount">0</span>
+                <span class="vpc-user-stat-lbl">زيارة</span>
+              </div>
+              <div class="vpc-user-stat">
+                <span class="vpc-user-stat-icon" style="color:var(--accent-gold);"><i class="fas fa-book-open"></i></span>
+                <span class="vpc-user-stat-num" id="userReadCount">0</span>
+                <span class="vpc-user-stat-lbl">قراءة</span>
+              </div>
+              <div class="vpc-user-stat">
+                <span class="vpc-user-stat-icon" style="color:#3498db;"><i class="fas fa-download"></i></span>
+                <span class="vpc-user-stat-num" id="userDlCount">0</span>
+                <span class="vpc-user-stat-lbl">تحميل</span>
+              </div>
+            </div>
+
+            <!-- آخر الكتب المقروءة مع استئناف -->
+            <div id="vpcLastBooksWrap" style="display:none;">
+              <div class="vpc-last-books-title">
+                <i class="fas fa-history"></i> آخر الكتب المقروءة
+              </div>
+              <div class="vpc-last-books-list" id="vpcLastBooksList"></div>
+            </div>
+            <div id="vpcNoHistory" class="vpc-no-history" style="display:none;">
+              <i class="fas fa-book"></i><br>لم تبدأ أي قراءة بعد
+            </div>
+          </div>
         </div>
       </div>
 
@@ -11924,6 +12107,7 @@
 
     // ── تسجيل تحميل كتاب ──
     async function recordBookDownload(bookId) {
+      _incrementUserDl(); // زيادة عداد التحميلات الشخصي
       const [bookRes] = await Promise.all([
         _fbIncrement(`stats/books/${bookId}`, ['downloads']),
         _fbIncrement('stats/global', ['totalDownloads'])
@@ -12210,6 +12394,82 @@
       await _fbPatch('presence', patch);
     }
 
+    // ══════════════════════════════════════════════════════════════════════
+    // إحصائيات المستخدم الشخصية — تُخزَّن في localStorage
+    // ══════════════════════════════════════════════════════════════════════
+    const USER_VISIT_COUNT_KEY = 'noor_user_visit_count';
+    const USER_DL_COUNT_KEY    = 'noor_user_dl_count';
+
+    function _getUserVisitCount() {
+      return parseInt(localStorage.getItem(USER_VISIT_COUNT_KEY) || '0', 10);
+    }
+    function _incrementUserVisit() {
+      const n = _getUserVisitCount() + 1;
+      try { localStorage.setItem(USER_VISIT_COUNT_KEY, String(n)); } catch(e) {}
+      return n;
+    }
+    function _getUserDlCount() {
+      return parseInt(localStorage.getItem(USER_DL_COUNT_KEY) || '0', 10);
+    }
+    function _incrementUserDl() {
+      const n = _getUserDlCount() + 1;
+      try { localStorage.setItem(USER_DL_COUNT_KEY, String(n)); } catch(e) {}
+      return n;
+    }
+
+    // عرض إحصائيات المستخدم وآخر الكتب في البطاقة المنبثقة
+    function _renderUserStats() {
+      // الأعداد
+      const visits  = _getUserVisitCount();
+      const history = _loadReadingHistory();
+      const reads   = history.length;
+      const dls     = _getUserDlCount();
+
+      const _setNum = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val.toLocaleString('ar-EG');
+      };
+      _setNum('userVisitCount', visits);
+      _setNum('userReadCount',  reads);
+      _setNum('userDlCount',    dls);
+
+      // آخر الكتب
+      const wrap    = document.getElementById('vpcLastBooksWrap');
+      const list    = document.getElementById('vpcLastBooksList');
+      const noHist  = document.getElementById('vpcNoHistory');
+      if (!list) return;
+
+      if (history.length === 0) {
+        if (wrap)   wrap.style.display   = 'none';
+        if (noHist) noHist.style.display = 'block';
+        return;
+      }
+      if (noHist) noHist.style.display = 'none';
+      if (wrap)   wrap.style.display   = 'block';
+
+      const recent = history.slice(0, 5);
+      list.innerHTML = recent.map(item => {
+        const cleanName = item.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '');
+        const shortName = cleanName.length > 22 ? cleanName.substring(0, 22) + '…' : cleanName;
+        const daysAgo   = Math.floor((Date.now() - item.ts) / (24*60*60*1000));
+        const timeLabel = daysAgo === 0 ? 'اليوم' : daysAgo === 1 ? 'أمس' : `منذ ${daysAgo} أيام`;
+        const thumbUrl  = item.cover || `https://drive.google.com/thumbnail?sz=w60&id=${item.id}`;
+        return `<div class="vpc-book-row" onclick="openModal('${item.id}');toggleVisitorsCard();">
+          <img class="vpc-book-thumb" src="${thumbUrl}" alt="${shortName}"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="vpc-book-thumb-fallback" style="display:none"><i class="fas fa-book"></i></div>
+          <div class="vpc-book-meta">
+            <div class="vpc-book-name">${shortName}</div>
+            <div class="vpc-book-time"><i class="fas fa-clock"></i> ${timeLabel}</div>
+          </div>
+          <button class="vpc-book-resume-btn" onclick="event.stopPropagation();openModal('${item.id}');toggleVisitorsCard();">
+            <i class="fas fa-play"></i> استئناف
+          </button>
+        </div>`;
+      }).join('');
+    }
+    window._renderUserStats = _renderUserStats;
+
     // الحالة الداخلية للإحصائيات
     let _visitorSystemReady = false;
 
@@ -12220,16 +12480,27 @@
       const cachedGlobal = (() => {
         try { return JSON.parse(localStorage.getItem('noor_vsb_cache') || 'null'); } catch(e) { return null; }
       })();
+      const _sc = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) { el.textContent = _formatStatNum(val); el.dataset.rawVal = val; }
+      };
       if (cachedGlobal) {
         const tv = cachedGlobal.totalVisitors  || 0;
         const vi = cachedGlobal.totalViews     || 0;
         const dl = cachedGlobal.totalDownloads || 0;
         const pillNum = document.getElementById('visitorCount');
         if (pillNum) { pillNum.textContent = _formatStatNum(tv); pillNum.dataset.rawVal = tv; }
-        const _sc = (id, val) => { const el = document.getElementById(id); if (el) { el.textContent = _formatStatNum(val); el.dataset.rawVal = val; } };
         _sc('visitorCountDetail',  tv);
         _sc('totalViewsPopup',     vi);
         _sc('totalDownloadsPopup', dl);
+      } else {
+        // لا يوجد كاش — أظهر 0 مؤقتاً بدلاً من ... أو —
+        const pillNum = document.getElementById('visitorCount');
+        if (pillNum && pillNum.textContent === '...') { pillNum.textContent = '0'; pillNum.dataset.rawVal = '0'; }
+        _sc('visitorCountDetail',  0);
+        _sc('totalViewsPopup',     0);
+        _sc('totalDownloadsPopup', 0);
+        _sc('liveCount',           0);
       }
 
       // ── 2. سجّل الزيارة (مرة واحدة/24 ساعة) ──
@@ -12237,6 +12508,7 @@
       const shouldCount = !lastVisitTs || (Date.now() - Number(lastVisitTs)) > 24 * 60 * 60 * 1000;
       if (shouldCount) {
         localStorage.setItem('noor_last_visit_ts', String(Date.now()));
+        _incrementUserVisit(); // زيادة عداد الزيارات الشخصي
         // increment بطريقة آمنة (read-modify-write)
         _fbIncrement('stats/global', ['totalVisitors']);
       }
@@ -12263,30 +12535,54 @@
     async function _refreshAllStats() {
       // اقرأ الإحصائيات الكلية
       const global = await _fbGet('stats/global');
-      if (global && typeof global === 'object') {
-        const tv = typeof global.totalVisitors  === 'number' ? global.totalVisitors  : 0;
-        const vi = typeof global.totalViews     === 'number' ? global.totalViews     : 0;
-        const dl = typeof global.totalDownloads === 'number' ? global.totalDownloads : 0;
 
-        // عداد الـ pill الرئيسي
-        const pillNum = document.getElementById('visitorCount');
-        if (pillNum) { _animateCount(pillNum, parseInt(pillNum.dataset.rawVal||'0')||0, tv, 800); pillNum.dataset.rawVal = tv; }
+      // استخرج القيم — عرض 0 دائماً بدلاً من — أو ...
+      const tv = (global && typeof global.totalVisitors  === 'number') ? global.totalVisitors  : (global ? 0 : null);
+      const vi = (global && typeof global.totalViews     === 'number') ? global.totalViews     : (global ? 0 : null);
+      const dl = (global && typeof global.totalDownloads === 'number') ? global.totalDownloads : (global ? 0 : null);
 
-        // عناصر البطاقة المنبثقة
-        const _s = (id, val) => { const el = document.getElementById(id); if (el) { _animateCount(el, parseInt(el.dataset.rawVal||'0')||0, val, 700); el.dataset.rawVal = val; } };
-        _s('visitorCountDetail',  tv);
-        _s('totalViewsPopup',     vi);
-        _s('totalDownloadsPopup', dl);
+      // عداد الـ pill الرئيسي — يُحدَّث دائماً حتى لو القيمة 0
+      const pillNum = document.getElementById('visitorCount');
+      if (pillNum && tv !== null) {
+        const prev = parseInt(pillNum.dataset.rawVal || '0') || 0;
+        _animateCount(pillNum, prev, tv, 800);
+        pillNum.dataset.rawVal = tv;
+      } else if (pillNum && tv === null) {
+        // Firebase لم يُعِد بيانات — احتفظ بما هو معروض أو أظهر 0
+        if (pillNum.textContent === '...') pillNum.textContent = '0';
+      }
 
-        // حفّظ في cache
-        try { localStorage.setItem('noor_vsb_cache', JSON.stringify({ totalVisitors: tv, totalViews: vi, totalDownloads: dl, _ts: Date.now() })); } catch(e) {}
+      // عناصر البطاقة المنبثقة
+      const _s = (id, val) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (val !== null) {
+          const prev = parseInt(el.dataset.rawVal || '0') || 0;
+          _animateCount(el, prev, val, 700);
+          el.dataset.rawVal = val;
+        } else if (el.textContent === '—') {
+          el.textContent = '0';
+        }
+      };
+      _s('visitorCountDetail',  tv);
+      _s('totalViewsPopup',     vi);
+      _s('totalDownloadsPopup', dl);
+
+      // حفّظ في cache إذا نجحت القراءة
+      if (tv !== null) {
+        try { localStorage.setItem('noor_vsb_cache', JSON.stringify({ totalVisitors: tv, totalViews: vi || 0, totalDownloads: dl || 0, _ts: Date.now() })); } catch(e) {}
       }
 
       // المتواجدون الآن
       const live = await _countLiveUsers();
-      if (live !== null) {
-        const liveEl = document.getElementById('liveCount');
-        if (liveEl) { _animateCount(liveEl, parseInt(liveEl.dataset.rawVal||'0')||0, live, 500); liveEl.dataset.rawVal = live; }
+      const liveEl = document.getElementById('liveCount');
+      if (liveEl) {
+        if (live !== null) {
+          _animateCount(liveEl, parseInt(liveEl.dataset.rawVal||'0')||0, live, 500);
+          liveEl.dataset.rawVal = live;
+        } else if (liveEl.textContent === '—') {
+          liveEl.textContent = '1'; // على الأقل الزائر الحالي
+        }
       }
     }
 
@@ -12297,6 +12593,7 @@
       if (!card) return;
       const isOpen = card.classList.toggle('visible');
       pill && pill.classList.toggle('open', isOpen);
+      if (isOpen) _renderUserStats(); // حدّث إحصائيات المستخدم عند الفتح
     }
     window.toggleVisitorsCard = toggleVisitorsCard;
 
