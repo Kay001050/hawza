@@ -2204,6 +2204,44 @@
       animation: fadeInDown 0.6s ease-out;
     }
 
+    /* ── عداد الزوار ── */
+    .visitors-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      animation: fadeInDown 0.5s ease-out;
+      position: relative;
+    }
+    .visitors-pill .vp-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #27ae60;
+      flex-shrink: 0;
+      animation: vp-pulse 2s ease-in-out infinite;
+    }
+    @keyframes vp-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.75); }
+    }
+    .visitors-pill .vp-num {
+      font-weight: 800;
+      color: var(--text-primary);
+      font-size: 0.88rem;
+      min-width: 20px;
+      display: inline-block;
+    }
+    .visitors-pill .vp-label {
+      color: var(--text-muted);
+    }
+
     .hero-title {
       font-family: var(--font-heading);
       font-size: clamp(2rem, 5vw, 3.2rem);
@@ -7358,6 +7396,75 @@
     .meta-item i { color: var(--accent-gold); width: auto; font-size: 0.7rem; }
     .meta-sep { color: var(--border-medium); }
 
+    /* ── إحصائيات الكتاب في الموديل ── */
+    .modal-book-stats {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+    }
+    .modal-book-stat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+    .modal-book-stat i {
+      font-size: 0.78rem;
+      width: 16px;
+      text-align: center;
+    }
+    .modal-book-stat.views-stat i { color: #3498db; }
+    .modal-book-stat.downloads-stat i { color: #27ae60; }
+    .modal-book-stat .stat-val {
+      font-weight: 800;
+      color: var(--text-primary);
+      font-size: 0.88rem;
+      min-width: 18px;
+    }
+    .modal-book-stat-sep {
+      width: 1px;
+      height: 18px;
+      background: var(--border-subtle);
+    }
+
+    /* ── شارة الأكثر مشاهدةً على بطاقات الكتب ── */
+    .book-hot-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 800;
+      padding: 3px 7px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      z-index: 5;
+      letter-spacing: 0.3px;
+      box-shadow: 0 2px 6px rgba(231,76,60,0.4);
+      pointer-events: none;
+      animation: pulse-badge 2s ease-in-out infinite;
+    }
+    .book-hot-badge i { font-size: 0.55rem; }
+    @keyframes pulse-badge {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+
+    /* ── إجمالي المشاهدات والتنزيلات في الهيرو ── */
+    .stat-item.views-total .stat-number { color: #3498db; }
+    .stat-item.downloads-total .stat-number { color: #27ae60; }
+
     /* ── Preview Area (flex-grow) ── */
     .modal-preview-main {
       flex: 1; padding: 14px 18px;
@@ -8847,6 +8954,14 @@
     <div class="hero-glow hero-glow-2"></div>
     
     <div class="container hero-content">
+
+      <!-- عداد الزوار -->
+      <div class="visitors-pill">
+        <span class="vp-dot"></span>
+        <span class="vp-num" id="visitorCount">...</span>
+        <span class="vp-label">زائر للمكتبة</span>
+      </div>
+
       <div class="hero-badge">
         <i class="fas fa-sync-alt"></i>
         <span>مكتبة محدثة تلقائياً من البيانات السحابية</span>
@@ -9400,6 +9515,21 @@
               <i class="fas fa-eye"></i>
               <span>قراءة مباشرة</span>
             </span>
+          </div>
+
+          <!-- إحصائيات المشاهدة والتحميل للكتاب -->
+          <div class="modal-book-stats" id="modalBookStats">
+            <div class="modal-book-stat views-stat" title="عدد مرات فتح الكتاب">
+              <i class="fas fa-eye"></i>
+              <span>مشاهدة:</span>
+              <span class="stat-val" id="modalViewCount">0</span>
+            </div>
+            <div class="modal-book-stat-sep"></div>
+            <div class="modal-book-stat downloads-stat" title="عدد مرات التحميل">
+              <i class="fas fa-download"></i>
+              <span>تحميل:</span>
+              <span class="stat-val" id="modalDlCount">0</span>
+            </div>
           </div>
         </div>
       </div>
@@ -10035,10 +10165,16 @@
       themeToggle: document.getElementById('themeToggle'),
       librariesGridDisplay: document.getElementById('librariesGridDisplay'),
       suggestedToggleBtn: document.getElementById('suggestedToggleBtn'),
-      suggestedContent: document.getElementById('suggestedContent')
+      suggestedContent: document.getElementById('suggestedContent'),
+      modalViewCount: document.getElementById('modalViewCount'),
+      modalDlCount: document.getElementById('modalDlCount')
     };
 
     DOM.currentYear.textContent = new Date().getFullYear();
+    // تحميل إجمالي المشاهدات والتنزيلات من Firebase عند بدء الصفحة
+    _loadGlobalStats();
+    // تهيئة عداد الزوار
+    initVisitorCounter();
 
     // ═══════════════════════════════════════════════════════════════════════════
     // Theme Management - Light is default
@@ -11175,6 +11311,8 @@
       
       DOM.booksGrid.innerHTML = html;
       attachItemListeners();
+      // تطبيق شارات "رائج" بعد رسم البطاقات
+      requestAnimationFrame(_applyHotBadges);
     }
 
     function attachItemListeners() {
@@ -11285,6 +11423,203 @@
     // ═══════════════════════════════════════════════════════════════════════════
     // Modal
     // ═══════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
+    // نظام إحصائيات المشاهدة والتحميل — مشترك بين جميع المستخدمين
+    // يستخدم Firebase Realtime Database لتخزين الإحصائيات على السحابة
+    //
+    // ► خطوات الإعداد (مرة واحدة فقط):
+    //   1. اذهب إلى https://console.firebase.google.com وأنشئ مشروعاً جديداً
+    //   2. أنشئ Realtime Database (اختر "Start in test mode")
+    //   3. انسخ رابط قاعدة البيانات (يبدأ بـ https://...-default-rtdb.firebaseio.com)
+    //   4. ضعه في المتغير FIREBASE_DB_URL أدناه
+    // ═══════════════════════════════════════════════════════════════════════════
+    const FIREBASE_DB_URL = 'https://nwr-alhawza-default-rtdb.europe-west1.firebasedatabase.app';
+
+    // مفاتيح الكاش المحلي (للعرض الفوري قبل وصول البيانات من السحابة)
+    const STATS_CACHE_VIEWS  = 'noor_cache_views';
+    const STATS_CACHE_DLS    = 'noor_cache_dls';
+    const STATS_CACHE_GLOBAL = 'noor_cache_global';
+    const STATS_CACHE_TTL    = 60 * 1000; // تحديث الكاش كل دقيقة
+
+    // ── مساعدات الكاش المحلي ──
+    function _cacheGet(key) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+        const obj = JSON.parse(raw);
+        if (obj._ts && Date.now() - obj._ts > STATS_CACHE_TTL) return null;
+        return obj.data;
+      } catch(e) { return null; }
+    }
+    function _cacheSet(key, data) {
+      try { localStorage.setItem(key, JSON.stringify({ data, _ts: Date.now() })); } catch(e) {}
+    }
+
+    // ── Firebase REST API ──
+    async function _fbGet(path) {
+      if (!FIREBASE_DB_URL) return null;
+      try {
+        const r = await fetch(`${FIREBASE_DB_URL}/${path}.json`, { cache: 'no-store' });
+        return r.ok ? await r.json() : null;
+      } catch(e) { return null; }
+    }
+    async function _fbIncrement(path, fields) {
+      if (!FIREBASE_DB_URL) return null;
+      try {
+        const body = {};
+        fields.forEach(f => { body[f] = { '.sv': { 'increment': 1 } }; });
+        const r = await fetch(`${FIREBASE_DB_URL}/${path}.json`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        return r.ok ? await r.json() : null;
+      } catch(e) { return null; }
+    }
+
+    // ── تنسيق الأرقام ──
+    function _formatStatNum(n) {
+      if (!n || n === 0) return '0';
+      if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'م';
+      if (n >= 1000)    return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'ك';
+      return n.toLocaleString('ar-EG');
+    }
+
+    // ── تسجيل مشاهدة كتاب ──
+    async function recordBookView(bookId) {
+      // 1. تحديث تفاؤلي فوري من الكاش
+      const cachedBook = _cacheGet(STATS_CACHE_VIEWS + bookId) || { views: 0, downloads: 0 };
+      cachedBook.views = (cachedBook.views || 0) + 1;
+      _cacheSet(STATS_CACHE_VIEWS + bookId, cachedBook);
+
+      // 2. تحديث السحابة وإعادة قراءة الأرقام الحقيقية
+      const [bookRes] = await Promise.all([
+        _fbIncrement(`stats/books/${bookId}`, ['views']),
+        _fbIncrement('stats/global', ['totalViews'])
+      ]);
+
+      if (bookRes) {
+        _cacheSet(STATS_CACHE_VIEWS + bookId, bookRes);
+        if (DOM.modalViewCount) DOM.modalViewCount.textContent = _formatStatNum(bookRes.views || 0);
+      }
+      _loadGlobalStats();
+    }
+
+    // ── تسجيل تحميل كتاب ──
+    async function recordBookDownload(bookId) {
+      const [bookRes] = await Promise.all([
+        _fbIncrement(`stats/books/${bookId}`, ['downloads']),
+        _fbIncrement('stats/global', ['totalDownloads'])
+      ]);
+      if (bookRes) {
+        if (DOM.modalDlCount) DOM.modalDlCount.textContent = _formatStatNum(bookRes.downloads || 0);
+      }
+      _loadGlobalStats();
+    }
+
+    // ── قراءة إحصائيات كتاب واحد ──
+    async function getBookStats(bookId) {
+      // اعرض الكاش فوراً
+      const cached = _cacheGet(STATS_CACHE_VIEWS + bookId);
+      if (cached) {
+        if (DOM.modalViewCount) DOM.modalViewCount.textContent = _formatStatNum(cached.views || 0);
+        if (DOM.modalDlCount)   DOM.modalDlCount.textContent   = _formatStatNum(cached.downloads || 0);
+      }
+      // ثم جلب البيانات الحقيقية من Firebase
+      const data = await _fbGet(`stats/books/${bookId}`);
+      if (data) {
+        _cacheSet(STATS_CACHE_VIEWS + bookId, data);
+        if (DOM.modalViewCount) DOM.modalViewCount.textContent = _formatStatNum(data.views || 0);
+        if (DOM.modalDlCount)   DOM.modalDlCount.textContent   = _formatStatNum(data.downloads || 0);
+      }
+    }
+
+    // ── تحميل إجمالي المشاهدات والتنزيلات للهيرو ──
+    async function _loadGlobalStats() {
+      // كاش فوري
+      const cached = _cacheGet(STATS_CACHE_GLOBAL);
+      if (cached) {
+        if (DOM.totalViews)     DOM.totalViews.textContent     = _formatStatNum(cached.totalViews || 0);
+        if (DOM.totalDownloads) DOM.totalDownloads.textContent = _formatStatNum(cached.totalDownloads || 0);
+      }
+      // Firebase
+      const data = await _fbGet('stats/global');
+      if (data) {
+        _cacheSet(STATS_CACHE_GLOBAL, data);
+        if (DOM.totalViews)     DOM.totalViews.textContent     = _formatStatNum(data.totalViews || 0);
+        if (DOM.totalDownloads) DOM.totalDownloads.textContent = _formatStatNum(data.totalDownloads || 0);
+      }
+    }
+
+    // للتوافق مع استدعاءات قديمة
+    function _refreshHeroStats() { _loadGlobalStats(); }
+
+    // ── شارات "رائج" على البطاقات (من Firebase) ──
+    async function _applyHotBadges() {
+      let topIds = [];
+      if (FIREBASE_DB_URL) {
+        try {
+          const r = await fetch(
+            `${FIREBASE_DB_URL}/stats/books.json?orderBy="views"&limitToLast=10`,
+            { cache: 'no-store' }
+          );
+          if (r.ok) {
+            const data = await r.json();
+            if (data) {
+              topIds = Object.entries(data)
+                .filter(([, v]) => (v.views || 0) >= 3)
+                .sort((a, b) => (b[1].views || 0) - (a[1].views || 0))
+                .map(([id]) => id);
+            }
+          }
+        } catch(e) {}
+      }
+      document.querySelectorAll('.book-card').forEach(card => {
+        const bookId = card.dataset.id || card.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+        if (!bookId) return;
+        const existing = card.querySelector('.book-hot-badge');
+        const isHot = topIds.includes(bookId);
+        if (isHot && !existing) {
+          const wrapper = card.querySelector('.book-cover-wrapper');
+          if (wrapper) {
+            const badge = document.createElement('div');
+            badge.className = 'book-hot-badge';
+            badge.innerHTML = '<i class="fas fa-fire"></i>رائج';
+            wrapper.appendChild(badge);
+          }
+        } else if (!isHot && existing) {
+          existing.remove();
+        }
+      });
+    }
+
+    // ── عداد الزوار (يُسجّل زيارة واحدة لكل جلسة) ──
+    async function initVisitorCounter() {
+      const el = document.getElementById('visitorCount');
+      if (!el) return;
+
+      // عرض آخر قيمة محفوظة فوراً
+      const cached = localStorage.getItem('noor_visitors_cached');
+      if (cached) el.textContent = _formatStatNum(Number(cached));
+
+      if (!FIREBASE_DB_URL) { el.textContent = '—'; return; }
+
+      // سجّل زيارة مرة واحدة فقط لكل جلسة مستخدم
+      const alreadyCounted = sessionStorage.getItem('noor_visit_counted');
+      if (!alreadyCounted) {
+        sessionStorage.setItem('noor_visit_counted', '1');
+        await _fbIncrement('stats/global', ['totalVisitors']);
+      }
+
+      // اقرأ الرقم الحقيقي من Firebase
+      const data = await _fbGet('stats/global');
+      if (data && data.totalVisitors) {
+        const n = data.totalVisitors;
+        localStorage.setItem('noor_visitors_cached', n);
+        el.textContent = _formatStatNum(n);
+      }
+    }
+
     function openModal(bookId) {
       const book = state.allBooks.find(b => b.id === bookId);
       if (!book) return;
@@ -11344,6 +11679,14 @@
 
       DOM.bookModal.classList.add('active');
       document.body.style.overflow = 'hidden';
+
+      // ── تسجيل المشاهدة وعرض إحصائيات الكتاب من السحابة ──
+      if (DOM.modalViewCount) DOM.modalViewCount.textContent = '...';
+      if (DOM.modalDlCount)   DOM.modalDlCount.textContent   = '...';
+      getBookStats(bookId); // يعرض الكاش فوراً ثم يحدّث من Firebase
+      recordBookView(bookId); // يُسجّل المشاهدة ويُحدّث العداد
+      // تحديث شارات "رائج" بعد كل مشاهدة
+      setTimeout(_applyHotBadges, 400);
     }
 
     function closeModal() {
@@ -11567,6 +11910,12 @@
       
       DOM.modalClose.addEventListener('click', closeModal);
       DOM.bookModal.addEventListener('click', (e) => { if (e.target === DOM.bookModal) closeModal(); });
+
+      // ── تسجيل إحصائية التحميل عند الضغط على زر التحميل ──
+      DOM.modalDownload.addEventListener('click', () => {
+        const bookId = DOM.modalFavBtn?.dataset?.favId;
+        if (bookId) recordBookDownload(bookId);
+      });
       
       DOM.themeToggle.addEventListener('click', toggleTheme);
       
