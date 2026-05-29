@@ -12136,21 +12136,28 @@
     function startReadingTracker(bookId, bookName, coverUrl) {
       stopReadingTracker(); // أوقف أي جلسة سابقة
       _readingBookId = bookId;
-      _readingTimer = setTimeout(() => {
-        // سجّل الكتاب في سجل القراءة بعد دقيقة
-        let history = _loadReadingHistory();
-        // أزل المدخل القديم إن وُجد
-        history = history.filter(h => h.id !== bookId);
-        // أضف في المقدمة
-        history.unshift({
-          id: bookId,
-          name: bookName,
-          cover: coverUrl,
-          ts: Date.now()
-        });
-        _saveReadingHistory(history);
-        renderResumeReading(); // أعد رسم القسم
-      }, READING_MIN_SECONDS * 1000);
+
+      // ── حفظ فوري عند فتح الكتاب ──
+      _addToReadingHistory(bookId, bookName, coverUrl);
+    }
+
+    // حفظ الكتاب في سجل القراءة فوراً
+    function _addToReadingHistory(bookId, bookName, coverUrl) {
+      let history = _loadReadingHistory();
+      // أزل المدخل القديم إن وُجد (لتحديث الـ timestamp)
+      history = history.filter(h => h.id !== bookId);
+      // أضف في المقدمة
+      history.unshift({
+        id: bookId,
+        name: bookName,
+        cover: coverUrl,
+        ts: Date.now()
+      });
+      _saveReadingHistory(history);
+      renderResumeReading(); // أعد رسم قسم استئناف القراءة
+      // حدّث البطاقة المنبثقة إن كانت مفتوحة
+      const card = document.getElementById('visitorsPopupCard');
+      if (card && card.classList.contains('visible')) _renderUserStats();
     }
 
     function stopReadingTracker() {
@@ -12503,13 +12510,18 @@
         _sc('liveCount',           0);
       }
 
-      // ── 2. سجّل الزيارة (مرة واحدة/24 ساعة) ──
+      // ── 2. سجّل الزيارة الشخصية (مرة واحدة لكل جلسة/تبويب جديد) ──
+      // sessionStorage تنتهي عند إغلاق التبويب، فكل تبويب جديد = زيارة جديدة
+      if (!sessionStorage.getItem('noor_session_visited')) {
+        sessionStorage.setItem('noor_session_visited', '1');
+        _incrementUserVisit();
+      }
+
+      // ── 2b. سجّل الزوار العامّين في Firebase (مرة واحدة/24 ساعة لتجنب التكرار) ──
       const lastVisitTs = localStorage.getItem('noor_last_visit_ts');
       const shouldCount = !lastVisitTs || (Date.now() - Number(lastVisitTs)) > 24 * 60 * 60 * 1000;
       if (shouldCount) {
         localStorage.setItem('noor_last_visit_ts', String(Date.now()));
-        _incrementUserVisit(); // زيادة عداد الزيارات الشخصي
-        // increment بطريقة آمنة (read-modify-write)
         _fbIncrement('stats/global', ['totalVisitors']);
       }
 
