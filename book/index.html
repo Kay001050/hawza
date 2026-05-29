@@ -12403,24 +12403,22 @@
 
     // ══════════════════════════════════════════════════════════════════════
     // إحصائيات المستخدم الشخصية — تُخزَّن في localStorage
+    // ملاحظة: نستخدم نصوصاً مباشرة بدلاً من const لتجنب TDZ عند الاستدعاء المبكر
     // ══════════════════════════════════════════════════════════════════════
-    const USER_VISIT_COUNT_KEY = 'noor_user_visit_count';
-    const USER_DL_COUNT_KEY    = 'noor_user_dl_count';
-
     function _getUserVisitCount() {
-      return parseInt(localStorage.getItem(USER_VISIT_COUNT_KEY) || '0', 10);
+      return parseInt(localStorage.getItem('noor_user_visit_count') || '0', 10);
     }
     function _incrementUserVisit() {
-      const n = _getUserVisitCount() + 1;
-      try { localStorage.setItem(USER_VISIT_COUNT_KEY, String(n)); } catch(e) {}
+      var n = _getUserVisitCount() + 1;
+      try { localStorage.setItem('noor_user_visit_count', String(n)); } catch(e) {}
       return n;
     }
     function _getUserDlCount() {
-      return parseInt(localStorage.getItem(USER_DL_COUNT_KEY) || '0', 10);
+      return parseInt(localStorage.getItem('noor_user_dl_count') || '0', 10);
     }
     function _incrementUserDl() {
-      const n = _getUserDlCount() + 1;
-      try { localStorage.setItem(USER_DL_COUNT_KEY, String(n)); } catch(e) {}
+      var n = _getUserDlCount() + 1;
+      try { localStorage.setItem('noor_user_dl_count', String(n)); } catch(e) {}
       return n;
     }
 
