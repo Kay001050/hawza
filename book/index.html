@@ -7465,6 +7465,166 @@
     .stat-item.views-total .stat-number { color: #3498db; }
     .stat-item.downloads-total .stat-number { color: #27ae60; }
 
+    /* ══════════════════════════════════════════════════════
+       أقسام ذكية: استئناف القراءة + الأكثر مشاهدة
+       ══════════════════════════════════════════════════════ */
+    .smart-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding: 18px 0 0 0;
+    }
+    .smart-section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-heading);
+    }
+    .smart-section-title i { font-size: 1rem; }
+    .smart-section-clear {
+      background: none;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      padding: 5px 10px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .smart-section-clear:hover { border-color: #e74c3c; color: #e74c3c; }
+
+    /* ── استئناف القراءة ── */
+    .resume-reading-grid {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-gold) transparent;
+    }
+    .resume-reading-grid::-webkit-scrollbar { height: 4px; }
+    .resume-reading-grid::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 4px; }
+    .resume-book-card {
+      flex: 0 0 130px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+    .resume-book-card:hover { border-color: var(--accent-emerald); transform: translateY(-2px); }
+    .resume-book-cover {
+      position: relative;
+      width: 100%;
+      height: 100px;
+      background: var(--bg-tertiary);
+      overflow: hidden;
+    }
+    .resume-book-cover img { width: 100%; height: 100%; object-fit: cover; }
+    .resume-book-nocover {
+      width: 100%; height: 100%;
+      display: none; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 1.8rem;
+    }
+    .resume-book-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.35);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.2s;
+      color: white; font-size: 1.6rem;
+    }
+    .resume-book-card:hover .resume-book-overlay { opacity: 1; }
+    .resume-book-info {
+      padding: 8px 10px;
+    }
+    .resume-book-title {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+      margin-bottom: 4px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .resume-book-time {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      display: flex; align-items: center; gap: 4px;
+    }
+    .resume-book-time i { color: var(--accent-emerald); font-size: 0.62rem; }
+
+    /* ── الأكثر مشاهدة ── */
+    .most-viewed-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    @media (max-width: 600px) {
+      .most-viewed-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    }
+    .mv-book-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      position: relative;
+    }
+    .mv-book-card:hover { border-color: var(--accent-gold); transform: translateY(-2px); }
+    .mv-rank {
+      position: absolute;
+      top: 6px; right: 6px;
+      background: rgba(0,0,0,0.55);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      z-index: 2;
+      backdrop-filter: blur(4px);
+    }
+    .mv-cover {
+      width: 100%; height: 110px;
+      background: var(--bg-tertiary);
+      overflow: hidden;
+      position: relative;
+    }
+    .mv-cover img { width: 100%; height: 100%; object-fit: cover; }
+    .mv-nocover {
+      width: 100%; height: 100%;
+      display: none; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 2rem;
+    }
+    .mv-info { padding: 9px 10px; }
+    .mv-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+      margin-bottom: 5px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .mv-views {
+      font-size: 0.7rem;
+      color: #3498db;
+      font-weight: 600;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .mv-views i { font-size: 0.62rem; }
+
     /* ── Preview Area (flex-grow) ── */
     .modal-preview-main {
       flex: 1; padding: 14px 18px;
@@ -9328,6 +9488,35 @@
     <iframe id="externalIframe" src=""></iframe>
   </section>
 
+  <!-- ═══ قسم استئناف القراءة ═══ -->
+  <section id="resumeReadingSection" style="display:none; padding: 0 0 4px 0;">
+    <div class="container">
+      <div class="smart-section-header">
+        <div class="smart-section-title">
+          <i class="fas fa-book-reader" style="color: var(--accent-emerald);"></i>
+          <span>استئناف القراءة</span>
+        </div>
+        <button class="smart-section-clear" onclick="clearReadingHistory()" title="مسح السجل">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </div>
+      <div class="resume-reading-grid" id="resumeReadingGrid"></div>
+    </div>
+  </section>
+
+  <!-- ═══ قسم الأكثر مشاهدة ═══ -->
+  <section id="mostViewedSection" style="display:none; padding: 0 0 4px 0;">
+    <div class="container">
+      <div class="smart-section-header">
+        <div class="smart-section-title">
+          <i class="fas fa-fire" style="color: #e74c3c;"></i>
+          <span>الأكثر مشاهدة</span>
+        </div>
+      </div>
+      <div class="most-viewed-grid" id="mostViewedGrid"></div>
+    </div>
+  </section>
+
   <!-- Library Section -->
   <section class="library-section" id="page-library">
     <div class="nav-progress-bar" id="navProgressBar"></div>
@@ -10175,6 +10364,10 @@
     _loadGlobalStats();
     // تهيئة عداد الزوار
     initVisitorCounter();
+    // تهيئة قسم استئناف القراءة (من localStorage مباشرة)
+    renderResumeReading();
+    // تهيئة قسم الأكثر مشاهدة (من Firebase)
+    setTimeout(renderMostViewed, 800);
 
     // ═══════════════════════════════════════════════════════════════════════════
     // Theme Management - Light is default
@@ -11485,14 +11678,37 @@
       return n.toLocaleString('ar-EG');
     }
 
-    // ── تسجيل مشاهدة كتاب ──
+    // ── تحقق من مشاهدة الكتاب خلال 24 ساعة ──
+    function _hasViewedBookToday(bookId) {
+      try {
+        const key = 'noor_bv_' + bookId;
+        const ts = localStorage.getItem(key);
+        if (!ts) return false;
+        return (Date.now() - Number(ts)) < 24 * 60 * 60 * 1000;
+      } catch(e) { return false; }
+    }
+    function _markBookViewedToday(bookId) {
+      try { localStorage.setItem('noor_bv_' + bookId, String(Date.now())); } catch(e) {}
+    }
+
+    // ── تسجيل مشاهدة كتاب (مرة واحدة لكل مستخدم لكل كتاب خلال 24 ساعة) ──
     async function recordBookView(bookId) {
-      // 1. تحديث تفاؤلي فوري من الكاش
+      // جلب الإحصائيات الحالية دائماً (لعرضها في المودال)
+      // لكن تسجيل المشاهدة فقط إذا لم يشاهد المستخدم هذا الكتاب خلال 24 ساعة
+      if (_hasViewedBookToday(bookId)) {
+        // فقط نحدّث العرض بلا تسجيل مشاهدة جديدة
+        return;
+      }
+
+      // 1. وضع علامة فورية قبل الطلب لمنع التكرار
+      _markBookViewedToday(bookId);
+
+      // 2. تحديث تفاؤلي فوري من الكاش
       const cachedBook = _cacheGet(STATS_CACHE_VIEWS + bookId) || { views: 0, downloads: 0 };
       cachedBook.views = (cachedBook.views || 0) + 1;
       _cacheSet(STATS_CACHE_VIEWS + bookId, cachedBook);
 
-      // 2. تحديث السحابة وإعادة قراءة الأرقام الحقيقية
+      // 3. تحديث السحابة وإعادة قراءة الأرقام الحقيقية
       const [bookRes] = await Promise.all([
         _fbIncrement(`stats/books/${bookId}`, ['views']),
         _fbIncrement('stats/global', ['totalViews'])
@@ -11517,7 +11733,134 @@
       _loadGlobalStats();
     }
 
-    // ── قراءة إحصائيات كتاب واحد ──
+    // ══════════════════════════════════════════════════════════════════════════
+    // نظام استئناف القراءة — يُسجّل كتاباً عندما يبقى المستخدم فيه أكثر من دقيقة
+    // ══════════════════════════════════════════════════════════════════════════
+    const READING_HISTORY_KEY = 'noor_reading_history';
+    const READING_MIN_SECONDS = 60; // دقيقة كاملة قبل الحفظ
+    let _readingTimer = null;
+    let _readingBookId = null;
+
+    function _loadReadingHistory() {
+      try { return JSON.parse(localStorage.getItem(READING_HISTORY_KEY) || '[]'); } catch(e) { return []; }
+    }
+    function _saveReadingHistory(arr) {
+      try { localStorage.setItem(READING_HISTORY_KEY, JSON.stringify(arr.slice(0, 20))); } catch(e) {}
+    }
+
+    function startReadingTracker(bookId, bookName, coverUrl) {
+      stopReadingTracker(); // أوقف أي جلسة سابقة
+      _readingBookId = bookId;
+      _readingTimer = setTimeout(() => {
+        // سجّل الكتاب في سجل القراءة بعد دقيقة
+        let history = _loadReadingHistory();
+        // أزل المدخل القديم إن وُجد
+        history = history.filter(h => h.id !== bookId);
+        // أضف في المقدمة
+        history.unshift({
+          id: bookId,
+          name: bookName,
+          cover: coverUrl,
+          ts: Date.now()
+        });
+        _saveReadingHistory(history);
+        renderResumeReading(); // أعد رسم القسم
+      }, READING_MIN_SECONDS * 1000);
+    }
+
+    function stopReadingTracker() {
+      if (_readingTimer) { clearTimeout(_readingTimer); _readingTimer = null; }
+      _readingBookId = null;
+    }
+
+    // ══════════════════════════════════════════════════════════════════════════
+    // قسم استئناف القراءة — يظهر إذا كان لديك كتب مقروءة سابقاً
+    // ══════════════════════════════════════════════════════════════════════════
+    function renderResumeReading() {
+      const section = document.getElementById('resumeReadingSection');
+      if (!section) return;
+      const history = _loadReadingHistory();
+      if (history.length === 0) { section.style.display = 'none'; return; }
+      section.style.display = 'block';
+      const grid = document.getElementById('resumeReadingGrid');
+      if (!grid) return;
+      grid.innerHTML = history.map(item => {
+        const cleanName = item.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '');
+        const shortName = cleanName.length > 30 ? cleanName.substring(0, 30) + '…' : cleanName;
+        const daysAgo = Math.floor((Date.now() - item.ts) / (24*60*60*1000));
+        const timeLabel = daysAgo === 0 ? 'اليوم' : daysAgo === 1 ? 'أمس' : `منذ ${daysAgo} أيام`;
+        return `<div class="resume-book-card" onclick="openModal('${item.id}')">
+          <div class="resume-book-cover">
+            <img src="${item.cover}" alt="${shortName}"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="resume-book-nocover" style="display:none"><i class="fas fa-book"></i></div>
+            <div class="resume-book-overlay"><i class="fas fa-play-circle"></i></div>
+          </div>
+          <div class="resume-book-info">
+            <div class="resume-book-title">${shortName}</div>
+            <div class="resume-book-time"><i class="fas fa-clock"></i> ${timeLabel}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // ══════════════════════════════════════════════════════════════════════════
+    // قسم الأكثر مشاهدة — يجلب من Firebase أعلى الكتب مشاهدةً
+    // ══════════════════════════════════════════════════════════════════════════
+    async function renderMostViewed() {
+      const section = document.getElementById('mostViewedSection');
+      if (!section || !FIREBASE_DB_URL) return;
+      try {
+        const r = await fetch(
+          `${FIREBASE_DB_URL}/stats/books.json?orderBy="views"&limitToLast=12`,
+          { cache: 'no-store' }
+        );
+        if (!r.ok) return;
+        const data = await r.json();
+        if (!data) return;
+
+        // رتّب تنازلياً حسب المشاهدات
+        const sorted = Object.entries(data)
+          .filter(([, v]) => (v.views || 0) >= 1)
+          .sort((a, b) => (b[1].views || 0) - (a[1].views || 0))
+          .slice(0, 10);
+
+        if (sorted.length === 0) { section.style.display = 'none'; return; }
+
+        section.style.display = 'block';
+        const grid = document.getElementById('mostViewedGrid');
+        if (!grid) return;
+
+        grid.innerHTML = sorted.map(([id, stats], idx) => {
+          // حاول العثور على الكتاب في الحالة المحلية
+          const book = state.allBooks.find(b => b.id === id);
+          const name = book ? book.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '') : id;
+          const shortName = name.length > 28 ? name.substring(0, 28) + '…' : name;
+          const cover = `https://drive.google.com/thumbnail?sz=w200&id=${id}`;
+          const viewCount = _formatStatNum(stats.views || 0);
+          const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx+1}`;
+          return `<div class="mv-book-card" onclick="openModal('${id}')">
+            <div class="mv-rank">${medal}</div>
+            <div class="mv-cover">
+              <img src="${cover}" alt="${shortName}"
+                   onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="mv-nocover" style="display:none"><i class="fas fa-book"></i></div>
+            </div>
+            <div class="mv-info">
+              <div class="mv-title">${shortName}</div>
+              <div class="mv-views"><i class="fas fa-eye"></i> ${viewCount} مشاهدة</div>
+            </div>
+          </div>`;
+        }).join('');
+      } catch(e) {}
+    }
+
+    // ── مسح سجل القراءة ──
+    function clearReadingHistory() {
+      try { localStorage.removeItem(READING_HISTORY_KEY); } catch(e) {}
+      renderResumeReading();
+    }
+    window.clearReadingHistory = clearReadingHistory;
     async function getBookStats(bookId) {
       // اعرض الكاش فوراً
       const cached = _cacheGet(STATS_CACHE_VIEWS + bookId);
@@ -11593,7 +11936,7 @@
       });
     }
 
-    // ── عداد الزوار (يُسجّل زيارة واحدة لكل جلسة) ──
+    // ── عداد الزوار (يُسجّل زيارة واحدة لكل مستخدم خلال 24 ساعة) ──
     async function initVisitorCounter() {
       const el = document.getElementById('visitorCount');
       if (!el) return;
@@ -11604,14 +11947,17 @@
 
       if (!FIREBASE_DB_URL) { el.textContent = '—'; return; }
 
-      // سجّل زيارة مرة واحدة فقط لكل جلسة مستخدم
-      const alreadyCounted = sessionStorage.getItem('noor_visit_counted');
+      // سجّل زيارة مرة واحدة فقط لكل مستخدم خلال 24 ساعة
+      const lastVisitTs = localStorage.getItem('noor_last_visit_ts');
+      const alreadyCounted = lastVisitTs && (Date.now() - Number(lastVisitTs)) < 24 * 60 * 60 * 1000;
+
       if (!alreadyCounted) {
-        sessionStorage.setItem('noor_visit_counted', '1');
+        // تسجيل الزيارة فوراً وحفظ الوقت
+        localStorage.setItem('noor_last_visit_ts', String(Date.now()));
         await _fbIncrement('stats/global', ['totalVisitors']);
       }
 
-      // اقرأ الرقم الحقيقي من Firebase
+      // اقرأ الرقم الحقيقي من Firebase وحدّث العرض مباشرة
       const data = await _fbGet('stats/global');
       if (data && data.totalVisitors) {
         const n = data.totalVisitors;
@@ -11684,12 +12030,15 @@
       if (DOM.modalViewCount) DOM.modalViewCount.textContent = '...';
       if (DOM.modalDlCount)   DOM.modalDlCount.textContent   = '...';
       getBookStats(bookId); // يعرض الكاش فوراً ثم يحدّث من Firebase
-      recordBookView(bookId); // يُسجّل المشاهدة ويُحدّث العداد
-      // تحديث شارات "رائج" بعد كل مشاهدة
-      setTimeout(_applyHotBadges, 400);
+      recordBookView(bookId); // يُسجّل المشاهدة ويُحدّث العداد (مرة واحدة/24 ساعة)
+      // تتبع وقت القراءة لاستئناف القراءة لاحقاً
+      startReadingTracker(bookId, book.name, `https://drive.google.com/thumbnail?sz=w400&id=${book.id}`);
+      // تحديث شارات "رائج" بعد كل مشاهدة + تحديث قائمة الأكثر مشاهدة
+      setTimeout(() => { _applyHotBadges(); renderMostViewed(); }, 400);
     }
 
     function closeModal() {
+      stopReadingTracker(); // أوقف عداد القراءة عند إغلاق المودال
       DOM.bookModal.classList.remove('active');
       document.body.style.overflow = 'auto';
       setTimeout(() => {
@@ -13279,7 +13628,9 @@
         document.querySelector('.categories-section'),
         document.querySelector('.breadcrumbs-section'),
         document.querySelector('.controls-section'),
-        document.querySelector('.library-section')
+        document.querySelector('.library-section'),
+        document.getElementById('resumeReadingSection'),
+        document.getElementById('mostViewedSection')
       ],
       youtube: document.getElementById('page-youtube'),
       summaries: document.getElementById('page-summaries'),
@@ -13329,6 +13680,9 @@
       MAIN_PAGES.library.forEach(el => { if (el) el.style.display = ''; });
       const breadcrumbs = document.getElementById('breadcrumbsSection');
       if (breadcrumbs && state.folderHistory.length > 0) breadcrumbs.style.display = '';
+      // أعد تقييم الأقسام الذكية بناءً على وجود بيانات
+      renderResumeReading();
+      renderMostViewed();
       currentPage = 'library';
       updateSidebarActive('navLibrary');
       localStorage.setItem('noor_last_page', 'library');
