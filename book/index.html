@@ -10706,6 +10706,8 @@
     };
 
     DOM.currentYear.textContent = new Date().getFullYear();
+    // ══ FIREBASE_DB_URL يُعلَن هنا بـ var لضمان توفره قبل أي استدعاء ══
+    var FIREBASE_DB_URL = 'https://nwr-alhawza-default-rtdb.europe-west1.firebasedatabase.app';
     // تهيئة نظام الزوار المتطور (يُحمّل الإحصائيات الكلية أيضاً)
     initVisitorCounter();
     // تهيئة قسم استئناف القراءة (من localStorage مباشرة)
@@ -11970,7 +11972,8 @@
     //   3. انسخ رابط قاعدة البيانات (يبدأ بـ https://...-default-rtdb.firebaseio.com)
     //   4. ضعه في المتغير FIREBASE_DB_URL أدناه
     // ═══════════════════════════════════════════════════════════════════════════
-    const FIREBASE_DB_URL = 'https://nwr-alhawza-default-rtdb.europe-west1.firebasedatabase.app';
+    // FIREBASE_DB_URL مُعرَّف مسبقاً أعلى الصفحة كـ var لضمان التهيئة المبكرة
+    // const FIREBASE_DB_URL = 'https://nwr-alhawza-default-rtdb.europe-west1.firebasedatabase.app';
 
     // مفاتيح الكاش المحلي (للعرض الفوري قبل وصول البيانات من السحابة)
     const STATS_CACHE_VIEWS  = 'noor_cache_views';
@@ -12546,10 +12549,16 @@
       // اقرأ الإحصائيات الكلية
       const global = await _fbGet('stats/global');
 
+      // إذا وُجدت البيانات لكن totalVisitors غائب (كما في قاعدة البيانات الحالية)، هيِّئه بـ 0
+      if (global && typeof global.totalVisitors !== 'number') {
+        await _fbSet('stats/global/totalVisitors', 0);
+        global.totalVisitors = 0;
+      }
+
       // استخرج القيم — عرض 0 دائماً بدلاً من — أو ...
-      const tv = (global && typeof global.totalVisitors  === 'number') ? global.totalVisitors  : (global ? 0 : null);
-      const vi = (global && typeof global.totalViews     === 'number') ? global.totalViews     : (global ? 0 : null);
-      const dl = (global && typeof global.totalDownloads === 'number') ? global.totalDownloads : (global ? 0 : null);
+      const tv = (global && typeof global.totalVisitors  === 'number') ? global.totalVisitors  : 0;
+      const vi = (global && typeof global.totalViews     === 'number') ? global.totalViews     : 0;
+      const dl = (global && typeof global.totalDownloads === 'number') ? global.totalDownloads : 0;
 
       // عداد الـ pill الرئيسي — يُحدَّث دائماً حتى لو القيمة 0
       const pillNum = document.getElementById('visitorCount');
