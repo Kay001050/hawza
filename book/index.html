@@ -12357,7 +12357,7 @@
     function _formatStatNum(n) {
       if (!n || n === 0) return '0';
       if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'م';
-      if (n >= 1000)    return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'ك';
+      if (n >= 1000)    return (n / 1000).toFixed(1).replace(/\.0$/, '') + ' ألف';
       return n.toLocaleString('ar-EG');
     }
 
@@ -12585,7 +12585,7 @@
     // ── درج الأكثر مشاهدة ──
     function _formatMvNum(n) {
       if (!n) return '0';
-      if (n >= 1000) return (n/1000).toFixed(1).replace(/\.0$/,'') + 'K';
+      if (n >= 1000) return (n/1000).toFixed(1).replace(/\.0$/,'')  + ' ألف';
       return String(n);
     }
 
