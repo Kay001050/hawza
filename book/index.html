@@ -2273,14 +2273,14 @@
     /* ── البطاقة الأساسية — position:fixed لتجاوز overflow:hidden ── */
     .visitors-popup-card {
       position: fixed;
-      /* top/left تُحسَب بـ JS عند الفتح */
-      top: 0; left: 0;
+      /* top/left تُحسَب بـ JS عند الفتح بدقة */
+      top: -9999px; left: -9999px;
       background: var(--bg-card);
       border: 1px solid var(--border-medium);
       border-radius: 20px;
       padding: 20px;
       width: clamp(300px, 92vw, 480px);
-      max-height: 85vh;
+      max-height: 80vh;
       overflow-y: auto;
       overflow-x: hidden;
       scrollbar-width: thin;
@@ -2288,9 +2288,8 @@
       z-index: 99999;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.25s ease, transform 0.18s ease;
+      transition: opacity 0.25s ease;
       box-shadow: 0 20px 60px rgba(0,0,0,0.22), 0 6px 20px rgba(0,0,0,0.1);
-      transform: translateY(-8px);
     }
     .visitors-popup-card::-webkit-scrollbar { width: 4px; }
     .visitors-popup-card::-webkit-scrollbar-track { background: transparent; }
@@ -2298,7 +2297,6 @@
     .visitors-popup-card.visible {
       opacity: 1;
       pointer-events: auto;
-      transform: translateY(0);
     }
 
     /* ── صفوف الإحصائيات ── */
@@ -2434,60 +2432,72 @@
       align-items: center;
       gap: 6px;
     }
+    /* ── شريط أفقي قابل للتمرير لآخر الكتب ── */
     .vpc-last-books-list {
       display: flex;
-      flex-direction: column;
-      gap: 6px;
-      /* بلا max-height هنا — البطاقة كاملة تملك overflow */
+      flex-direction: row;
+      gap: 8px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-gold) transparent;
     }
-    .vpc-last-books-list::-webkit-scrollbar { width: 3px; }
+    .vpc-last-books-list::-webkit-scrollbar { height: 4px; }
     .vpc-last-books-list::-webkit-scrollbar-track { background: transparent; }
-    .vpc-last-books-list::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 4px; }
+    .vpc-last-books-list::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 4px; }
     .vpc-book-row {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 10px;
-      padding: 8px 10px;
+      gap: 6px;
+      padding: 8px 8px 6px;
       border-radius: 12px;
       background: var(--bg-tertiary);
       cursor: pointer;
       transition: background var(--transition-fast);
+      flex: 0 0 80px;
+      width: 80px;
+      text-align: center;
     }
     .vpc-book-row:hover { background: var(--bg-card-hover); }
     .vpc-book-thumb {
-      width: 36px; height: 48px;
-      border-radius: 6px;
+      width: 52px; height: 68px;
+      border-radius: 7px;
       object-fit: cover;
       flex-shrink: 0;
       background: var(--bg-secondary);
     }
     .vpc-book-thumb-fallback {
-      width: 36px; height: 48px;
-      border-radius: 6px;
+      width: 52px; height: 68px;
+      border-radius: 7px;
       background: var(--bg-secondary);
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
       color: var(--text-muted);
-      font-size: 0.85rem;
+      font-size: 1rem;
     }
-    .vpc-book-meta { flex: 1; min-width: 0; }
+    .vpc-book-meta { width: 100%; }
     .vpc-book-name {
-      font-size: 0.75rem;
+      font-size: 0.66rem;
       font-weight: 600;
       color: var(--text-primary);
-      white-space: nowrap;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
       overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1.3;
+      margin-bottom: 4px;
     }
     .vpc-book-time {
-      font-size: 0.63rem;
+      font-size: 0.58rem;
       color: var(--text-muted);
-      margin-top: 3px;
+      margin-bottom: 5px;
     }
     .vpc-book-resume-btn {
-      font-size: 0.65rem;
-      padding: 5px 10px;
-      border-radius: 8px;
+      font-size: 0.6rem;
+      padding: 4px 7px;
+      border-radius: 7px;
       background: var(--accent-gold);
       color: #fff;
       font-weight: 700;
@@ -2497,6 +2507,7 @@
       cursor: pointer;
       font-family: var(--font-ui);
       transition: background var(--transition-fast);
+      width: 100%;
     }
     .vpc-book-resume-btn:hover { background: var(--accent-gold-dark); }
     .vpc-no-history {
@@ -2511,15 +2522,12 @@
     /* الجوال الصغير < 480px */
     @media (max-width: 479px) {
       .visitors-popup-card {
-        /* تمتد بالكامل مع هوامش 10px من كل جانب */
-        left: 50%;
+        /* JS يتولى left — نضبط فقط الحجم والمظهر */
         width: calc(100vw - 20px);
-        transform: translateX(-50%) translateY(-8px);
         padding: 14px;
         border-radius: 16px;
         max-height: 80vh;
       }
-      .visitors-popup-card.visible { transform: translateX(-50%) translateY(0); }
       .vpc-num { font-size: 1rem; }
       .vpc-stat { padding: 10px; gap: 8px; }
       .vpc-icon-wrap { width: 34px; height: 34px; }
@@ -2544,9 +2552,6 @@
       .vpc-icon-wrap { width: 44px; height: 44px; }
       .vpc-user-stat { padding: 14px 8px; }
       .vpc-user-stat-num { font-size: 1.2rem; }
-      .vpc-book-thumb { width: 40px; height: 54px; }
-      .vpc-book-name { font-size: 0.8rem; }
-      .vpc-book-resume-btn { font-size: 0.7rem; padding: 6px 12px; }
     }
 
     .hero-title {
@@ -7911,6 +7916,47 @@
       .mv-views { justify-content: center; }
     }
 
+    /* ══ شريحة الأكثر مشاهدة في رأس التصنيفات (مكان المربع الأحمر) ══ */
+    .mv-header-chip {
+      display: none; /* تظهر عبر JS بعد تحميل البيانات */
+      align-items: center;
+      gap: 7px;
+      padding: 10px 15px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: var(--transition-fast);
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      user-select: none;
+      flex: 1;
+      min-width: 0;
+      justify-content: center;
+    }
+    .mv-header-chip:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(231,76,60,0.3);
+    }
+    .mv-header-chip .mv-chip-fire { color: #e74c3c; font-size: 0.78rem; }
+    .mv-header-chip-label { white-space: nowrap; }
+    .mv-header-covers {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .mv-hcover {
+      width: 22px; height: 30px;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-tertiary);
+      flex-shrink: 0;
+    }
+    .mv-hcover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
     /* ══ استئناف القراءة — شريط أفقي ذكي ══ */
     .resume-strip-section {
       padding: 0;
@@ -8240,6 +8286,16 @@
     .fav-shelf-btn.has-items {
       border-color: var(--accent-gold);
       color: var(--accent-gold);
+    }
+    /* زر الأكثر مشاهدة — أيقونة نار */
+    .fav-shelf-btn.mv-icon-btn {
+      color: #e74c3c;
+      border-color: rgba(231,76,60,0.25);
+    }
+    .fav-shelf-btn.mv-icon-btn:hover {
+      border-color: #e74c3c;
+      background: rgba(231,76,60,0.08);
+      color: #e74c3c;
     }
     .fav-shelf-count {
       position: absolute;
@@ -9815,10 +9871,22 @@
           <span>التصنيفات</span>
           <i class="fas fa-chevron-down"></i>
         </button>
+
+        <!-- شريحة الأكثر مشاهدة — تملأ المساحة الحمراء يسار التصنيفات -->
+        <div class="mv-header-chip" id="mvHeaderChip" onclick="scrollToMostViewed()" title="الأكثر مشاهدة">
+          <i class="fas fa-fire mv-chip-fire"></i>
+          <span class="mv-header-chip-label">الأكثر مشاهدة</span>
+          <div class="mv-header-covers" id="mvHeaderCovers"></div>
+        </div>
+
         <div class="categories-header-actions">
           <button class="show-all-btn" id="showAllBtn">
             <i class="fas fa-books"></i>
             <span>عرض جميع الكتب</span>
+          </button>
+          <!-- زر الأكثر مشاهدة بجانب الحفظ -->
+          <button class="fav-shelf-btn mv-icon-btn" id="mvIconBtn" onclick="scrollToMostViewed()" title="الأكثر مشاهدة">
+            <i class="fas fa-fire"></i>
           </button>
           <button class="fav-shelf-btn" id="favShelfBtn" onclick="openFavShelf()" title="الكتب المفضلة">
             <i class="far fa-bookmark"></i>
@@ -12314,6 +12382,16 @@
             </div>
           </div>`;
         }).join('');
+
+        // ── تعبئة شريحة الرأس بأغلفة الكتب الثلاثة الأولى ──
+        const headerChip   = document.getElementById('mvHeaderChip');
+        const headerCovers = document.getElementById('mvHeaderCovers');
+        if (headerChip && headerCovers) {
+          headerCovers.innerHTML = sorted.slice(0, 3).map(([id]) =>
+            `<div class="mv-hcover"><img src="https://drive.google.com/thumbnail?sz=w80&id=${id}" alt="" onerror="this.parentElement.style.display='none'"></div>`
+          ).join('');
+          headerChip.style.display = 'flex';
+        }
       } catch(e) {}
     }
 
@@ -12323,6 +12401,15 @@
       renderResumeReading();
     }
     window.clearReadingHistory = clearReadingHistory;
+
+    // ── الانتقال إلى قسم الأكثر مشاهدة ──
+    function scrollToMostViewed() {
+      const mv = document.getElementById('mostViewedSection');
+      if (mv && mv.style.display !== 'none') {
+        mv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+    window.scrollToMostViewed = scrollToMostViewed;
     async function getBookStats(bookId) {
       // اعرض الكاش فوراً
       const cached = _cacheGet(STATS_CACHE_VIEWS + bookId);
@@ -12800,16 +12887,34 @@
       const pr     = pill.getBoundingClientRect();
       const margin = 10;
       const vw     = window.innerWidth;
-      const cardW  = card.offsetWidth || 360;
+      const vh     = window.innerHeight;
 
-      // ابدأ من منتصف الـ pill
+      /* احصل على أبعاد البطاقة — اجعلها مرئية لحظياً لقياسها */
+      const prevTop  = card.style.top;
+      const prevLeft = card.style.left;
+      card.style.top  = '-9999px';
+      card.style.left = '-9999px';
+      card.style.opacity = '0';
+      card.style.pointerEvents = 'none';
+      /* اقرأ الأبعاد مع الفلبك الآمن */
+      const cardW = card.offsetWidth  || Math.min(340, vw - margin * 2);
+      const cardH = card.offsetHeight || 380;
+
+      /* تمركز أفقي تحت منتصف الـ pill */
       let left = pr.left + pr.width / 2 - cardW / 2;
-      // اضمن ألا تخرج من حواف الشاشة
       left = Math.max(margin, Math.min(left, vw - cardW - margin));
 
-      const top = pr.bottom + window.scrollY + 10;
-      card.style.left = left + 'px';
-      card.style.top  = top  + 'px';
+      /* ضع تحت الـ pill أو فوقه إن لم تكفِ المساحة */
+      let top = pr.bottom + 8;
+      if (top + cardH > vh - margin) {
+        top = pr.top - cardH - 8;
+      }
+      top = Math.max(margin, top);
+
+      card.style.left  = left + 'px';
+      card.style.top   = top  + 'px';
+      card.style.opacity = '';
+      card.style.pointerEvents = '';
     }
 
     function toggleVisitorsCard() {
