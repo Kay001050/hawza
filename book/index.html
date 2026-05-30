@@ -2258,94 +2258,9 @@
     }
     .visitors-pill.open .vp-chevron { transform: rotate(180deg); }
 
-    /* ── البطاقة المنبثقة ── */
-    .visitors-popup-card {
-      position: absolute;
-      top: calc(100% + 10px);
-      right: 50%;
-      transform: translateX(50%) translateY(-6px);
-      background: var(--bg-card);
-      border: 1px solid var(--border-medium);
-      border-radius: 16px;
-      padding: 16px;
-      width: 310px;
-      z-index: 999;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.22s ease, transform 0.22s ease;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-    }
-    .visitors-popup-card.visible {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateX(50%) translateY(0);
-    }
-    .vpc-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .vpc-stat {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px;
-      border-radius: 10px;
-      background: var(--bg-tertiary);
-    }
-    .vpc-icon-wrap {
-      width: 32px; height: 32px;
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem;
-      flex-shrink: 0;
-      background: var(--bg-secondary);
-      color: var(--text-muted);
-    }
-    .live-wrap  { background: rgba(39,174,96,0.12); color: #27ae60; }
-    .views-wrap { background: rgba(52,152,219,0.12); color: #3498db; }
-    .dl-wrap    { background: rgba(39,174,96,0.10);  color: #27ae60; }
-    .vpc-live-dot {
-      width: 9px; height: 9px;
-      border-radius: 50%;
-      background: #27ae60;
-      box-shadow: 0 0 0 0 rgba(39,174,96,0.5);
-      animation: vp-pulse 1.8s ease-in-out infinite;
-    }
-    .vpc-icon-wrap i { font-size: 0.82rem; }
-    .vpc-info { display: flex; flex-direction: column; gap: 1px; }
-    .vpc-num {
-      font-size: 1rem;
-      font-weight: 800;
-      color: var(--text-primary);
-      line-height: 1;
-    }
-    .vpc-lbl {
-      font-size: 0.67rem;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-    .vpc-sep {
-      width: 1px; height: 40px;
-      background: var(--border-subtle);
-      flex-shrink: 0;
-    }
-    .vpc-divider {
-      height: 1px;
-      background: var(--border-subtle);
-      margin: 10px 0;
-    }
-    .vpc-footer {
-      text-align: center;
-      margin-top: 6px;
-    }
-    .vpc-refresh-hint {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-      display: inline-flex; align-items: center; gap: 5px;
-    }
-    .vpc-refresh-hint i { font-size: 0.6rem; color: var(--accent-gold); }
+    /* ══════════════════════════════════════════════════════════════
+       البطاقة المنبثقة — متجاوبة لكل الأجهزة، لا تنقطع
+    ══════════════════════════════════════════════════════════════ */
 
     /* wrapper نسبي للـ pill + بطاقة */
     .visitors-pill-wrapper {
@@ -2355,25 +2270,122 @@
     }
     .visitors-pill-wrapper .visitors-pill { margin-bottom: 0; }
 
-    @media (max-width: 420px) {
-      .visitors-popup-card { width: 240px; }
-      .vpc-num { font-size: 0.88rem; }
+    /* ── البطاقة الأساسية ── */
+    .visitors-popup-card {
+      position: absolute;
+      top: calc(100% + 12px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-8px);
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: 20px;
+      padding: 20px;
+      /* عرض متجاوب: 92vw على الجوال، 400px على الكمبيوتر */
+      width: clamp(300px, 92vw, 480px);
+      max-height: 85vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-medium) transparent;
+      z-index: 1100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      box-shadow: 0 16px 56px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08);
+    }
+    .visitors-popup-card::-webkit-scrollbar { width: 4px; }
+    .visitors-popup-card::-webkit-scrollbar-track { background: transparent; }
+    .visitors-popup-card::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 4px; }
+    .visitors-popup-card.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
     }
 
-    /* ── قسم إحصائيات المستخدم الشخصية في البطاقة المنبثقة ── */
-    .vpc-user-section {
-      margin-top: 4px;
+    /* ── صفوف الإحصائيات ── */
+    .vpc-row {
+      display: flex;
+      align-items: stretch;
+      gap: 10px;
     }
-    .vpc-user-title {
+    .vpc-stat {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: var(--bg-tertiary);
+      min-width: 0;
+    }
+    .vpc-icon-wrap {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      background: var(--bg-secondary);
+      color: var(--text-muted);
+    }
+    .live-wrap  { background: rgba(39,174,96,0.14);  color: #27ae60; }
+    .views-wrap { background: rgba(52,152,219,0.14); color: #3498db; }
+    .dl-wrap    { background: rgba(160,127,58,0.14); color: var(--accent-gold); }
+    .vpc-live-dot {
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: #27ae60;
+      box-shadow: 0 0 0 0 rgba(39,174,96,0.5);
+      animation: vp-pulse 1.8s ease-in-out infinite;
+    }
+    .vpc-icon-wrap i { font-size: 0.9rem; }
+    .vpc-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .vpc-num {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .vpc-lbl {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .vpc-sep {
+      width: 1px;
+      background: var(--border-subtle);
+      flex-shrink: 0;
+      align-self: stretch;
+      margin: 4px 0;
+    }
+    .vpc-divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 14px 0;
+    }
+    .vpc-footer {
+      text-align: center;
+      margin-top: 8px;
+    }
+    .vpc-refresh-hint {
       font-size: 0.7rem;
+      color: var(--text-muted);
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .vpc-refresh-hint i { font-size: 0.62rem; color: var(--accent-gold); }
+
+    /* ── قسم إحصائيات المستخدم الشخصية ── */
+    .vpc-user-section { margin-top: 2px; }
+    .vpc-user-title {
+      font-size: 0.75rem;
       font-weight: 700;
       color: var(--accent-gold);
       text-align: center;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
+      gap: 6px;
     }
     .vpc-user-title::before,
     .vpc-user-title::after {
@@ -2385,8 +2397,8 @@
     .vpc-user-stats-row {
       display: flex;
       align-items: stretch;
-      gap: 6px;
-      margin-bottom: 8px;
+      gap: 8px;
+      margin-bottom: 12px;
     }
     .vpc-user-stat {
       flex: 1;
@@ -2394,88 +2406,74 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
-      padding: 8px 4px;
-      border-radius: 10px;
+      gap: 4px;
+      padding: 12px 6px;
+      border-radius: 14px;
       background: var(--bg-tertiary);
       text-align: center;
     }
-    .vpc-user-stat-icon {
-      font-size: 0.85rem;
-      margin-bottom: 1px;
-    }
+    .vpc-user-stat-icon { font-size: 1rem; margin-bottom: 2px; }
     .vpc-user-stat-num {
-      font-size: 0.92rem;
+      font-size: 1.1rem;
       font-weight: 800;
       color: var(--text-primary);
       line-height: 1;
     }
     .vpc-user-stat-lbl {
-      font-size: 0.6rem;
+      font-size: 0.65rem;
       color: var(--text-muted);
       font-weight: 500;
     }
 
-    /* ── آخر الكتب المقروءة داخل البطاقة ── */
+    /* ── آخر الكتب المقروءة ── */
     .vpc-last-books-title {
-      font-size: 0.68rem;
+      font-size: 0.73rem;
       font-weight: 700;
       color: var(--text-muted);
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
     .vpc-last-books-list {
       display: flex;
       flex-direction: column;
-      gap: 5px;
-      max-height: 140px;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: var(--border-medium) transparent;
+      gap: 6px;
+      /* بلا max-height هنا — البطاقة كاملة تملك overflow */
     }
     .vpc-last-books-list::-webkit-scrollbar { width: 3px; }
     .vpc-last-books-list::-webkit-scrollbar-track { background: transparent; }
     .vpc-last-books-list::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 4px; }
-
     .vpc-book-row {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 8px;
-      border-radius: 8px;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 12px;
       background: var(--bg-tertiary);
       cursor: pointer;
       transition: background var(--transition-fast);
     }
     .vpc-book-row:hover { background: var(--bg-card-hover); }
     .vpc-book-thumb {
-      width: 30px;
-      height: 40px;
-      border-radius: 4px;
+      width: 36px; height: 48px;
+      border-radius: 6px;
       object-fit: cover;
       flex-shrink: 0;
       background: var(--bg-secondary);
     }
     .vpc-book-thumb-fallback {
-      width: 30px;
-      height: 40px;
-      border-radius: 4px;
+      width: 36px; height: 48px;
+      border-radius: 6px;
       background: var(--bg-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
       color: var(--text-muted);
-      font-size: 0.75rem;
+      font-size: 0.85rem;
     }
-    .vpc-book-meta {
-      flex: 1;
-      min-width: 0;
-    }
+    .vpc-book-meta { flex: 1; min-width: 0; }
     .vpc-book-name {
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       font-weight: 600;
       color: var(--text-primary);
       white-space: nowrap;
@@ -2483,17 +2481,17 @@
       text-overflow: ellipsis;
     }
     .vpc-book-time {
-      font-size: 0.6rem;
+      font-size: 0.63rem;
       color: var(--text-muted);
-      margin-top: 2px;
+      margin-top: 3px;
     }
     .vpc-book-resume-btn {
-      font-size: 0.6rem;
-      padding: 3px 7px;
-      border-radius: 6px;
+      font-size: 0.65rem;
+      padding: 5px 10px;
+      border-radius: 8px;
       background: var(--accent-gold);
       color: #fff;
-      font-weight: 600;
+      font-weight: 700;
       white-space: nowrap;
       flex-shrink: 0;
       border: none;
@@ -2504,9 +2502,52 @@
     .vpc-book-resume-btn:hover { background: var(--accent-gold-dark); }
     .vpc-no-history {
       text-align: center;
-      font-size: 0.68rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
-      padding: 12px 0;
+      padding: 16px 0;
+    }
+
+    /* ══ Responsive breakpoints للبطاقة ══ */
+
+    /* الجوال الصغير < 480px */
+    @media (max-width: 479px) {
+      .visitors-popup-card {
+        /* تمتد بالكامل مع هوامش 10px من كل جانب */
+        left: 50%;
+        width: calc(100vw - 20px);
+        transform: translateX(-50%) translateY(-8px);
+        padding: 14px;
+        border-radius: 16px;
+        max-height: 80vh;
+      }
+      .visitors-popup-card.visible { transform: translateX(-50%) translateY(0); }
+      .vpc-num { font-size: 1rem; }
+      .vpc-stat { padding: 10px; gap: 8px; }
+      .vpc-icon-wrap { width: 34px; height: 34px; }
+    }
+
+    /* الجوال المتوسط 480–767px */
+    @media (min-width: 480px) and (max-width: 767px) {
+      .visitors-popup-card { width: clamp(300px, 88vw, 420px); padding: 16px; }
+    }
+
+    /* التابلت 768–1023px */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .visitors-popup-card { width: 440px; padding: 20px; }
+      .vpc-num { font-size: 1.25rem; }
+    }
+
+    /* الكمبيوتر ≥ 1024px */
+    @media (min-width: 1024px) {
+      .visitors-popup-card { width: 480px; padding: 24px; border-radius: 22px; }
+      .vpc-num { font-size: 1.35rem; }
+      .vpc-lbl { font-size: 0.78rem; }
+      .vpc-icon-wrap { width: 44px; height: 44px; }
+      .vpc-user-stat { padding: 14px 8px; }
+      .vpc-user-stat-num { font-size: 1.2rem; }
+      .vpc-book-thumb { width: 40px; height: 54px; }
+      .vpc-book-name { font-size: 0.8rem; }
+      .vpc-book-resume-btn { font-size: 0.7rem; padding: 6px 12px; }
     }
 
     .hero-title {
@@ -10706,8 +10747,9 @@
     };
 
     DOM.currentYear.textContent = new Date().getFullYear();
-    // ══ FIREBASE_DB_URL يُعلَن هنا بـ var لضمان توفره قبل أي استدعاء ══
+    // ══ المتغيرات الأساسية تُعلَن هنا بـ var لضمان توفرها قبل أي استدعاء ══
     var FIREBASE_DB_URL = 'https://nwr-alhawza-default-rtdb.europe-west1.firebasedatabase.app';
+    var PRESENCE_TTL    = 5 * 60 * 1000; // 5 دقائق
     // تهيئة نظام الزوار المتطور (يُحمّل الإحصائيات الكلية أيضاً)
     initVisitorCounter();
     // تهيئة قسم استئناف القراءة (من localStorage مباشرة)
@@ -12369,7 +12411,7 @@
     }
 
     // تسجيل "الحضور الآني" في Firebase (timestamp) — ينتهي تلقائياً بعد 5 دقائق
-    const PRESENCE_TTL = 5 * 60 * 1000; // 5 دقائق
+    // PRESENCE_TTL مُعرَّف مسبقاً أعلى الصفحة كـ var
     async function _pushPresence(uid) {
       if (!FIREBASE_DB_URL) return;
       // استخدم PUT لكتابة الـ timestamp مباشرة لهذا المستخدم
@@ -12612,7 +12654,27 @@
       if (!card) return;
       const isOpen = card.classList.toggle('visible');
       pill && pill.classList.toggle('open', isOpen);
-      if (isOpen) _renderUserStats(); // حدّث إحصائيات المستخدم عند الفتح
+      if (isOpen) {
+        _renderUserStats();
+        // اضبط الموقع الأفقي حتى لا تخرج البطاقة عن حدود الشاشة
+        requestAnimationFrame(() => {
+          const rect    = card.getBoundingClientRect();
+          const margin  = 10;
+          const vw      = window.innerWidth;
+          // هل تخرج من اليمين؟
+          if (rect.right > vw - margin) {
+            const overflow = rect.right - (vw - margin);
+            card.style.left = `calc(50% - ${overflow}px)`;
+          }
+          // هل تخرج من اليسار؟
+          if (rect.left < margin) {
+            const overflow = margin - rect.left;
+            card.style.left = `calc(50% + ${overflow}px)`;
+          }
+        });
+      } else {
+        card.style.left = ''; // أعد التموضع الافتراضي عند الإغلاق
+      }
     }
     window.toggleVisitorsCard = toggleVisitorsCard;
 
