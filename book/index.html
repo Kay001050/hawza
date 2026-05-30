@@ -10020,12 +10020,6 @@
           <i class="fas fa-chevron-down"></i>
         </button>
 
-        <!-- شريحة الأكثر مشاهدة — تملأ المساحة الحمراء يسار التصنيفات -->
-        <div class="mv-header-chip" id="mvHeaderChip" onclick="scrollToMostViewed()" title="الأكثر مشاهدة">
-          <i class="fas fa-fire mv-chip-fire"></i>
-          <span class="mv-header-chip-label">الأكثر مشاهدة</span>
-          <div class="mv-header-covers" id="mvHeaderCovers"></div>
-        </div>
 
         <div class="categories-header-actions">
           <button class="show-all-btn" id="showAllBtn">
@@ -10068,14 +10062,6 @@
           <div class="categories-grid" id="categoriesGrid"></div>
         </div>
 
-        <!-- ═══ الأكثر مشاهدة — sidebar ═══ -->
-        <div class="mv-sidebar" id="mostViewedSection" style="display:none;">
-          <div class="mv-sidebar-header">
-            <i class="fas fa-fire"></i>
-            <span>الأكثر مشاهدة</span>
-          </div>
-          <div class="mv-sidebar-list" id="mostViewedGrid"></div>
-        </div>
       </div>
     </div>
   </section>
@@ -12345,24 +12331,26 @@
     async function _fbIncrement(path, fields, by) {
       if (!FIREBASE_DB_URL) return null;
       by = by || 1;
-      try {
-        // اقرأ القيم الحالية
-        const current = await _fbGet(path) || {};
-        const update = {};
-        fields.forEach(f => {
-          const prev = typeof current[f] === 'number' ? current[f] : 0;
-          update[f] = prev + by;
-        });
-        // اكتب القيم المحدَّثة
-        const r = await fetch(`${FIREBASE_DB_URL}/${path}.json`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(update)
-        });
-        if (!r.ok) return null;
-        // ادمج وأعد
-        return Object.assign({}, current, update);
-      } catch(e) { return null; }
+      // محاولتان لتقليل خطر التعارض (read-modify-write)
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          const current = await _fbGet(path) || {};
+          const update = {};
+          fields.forEach(f => {
+            const prev = typeof current[f] === 'number' ? current[f] : 0;
+            update[f] = prev + by;
+          });
+          const r = await fetch(`${FIREBASE_DB_URL}/${path}.json`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(update)
+          });
+          if (r.ok) return Object.assign({}, current, update);
+          // إن فشل الطلب انتظر قليلاً قبل الإعادة
+          await new Promise(res => setTimeout(res, 300));
+        } catch(e) { await new Promise(res => setTimeout(res, 300)); }
+      }
+      return null;
     }
 
     // ── تنسيق الأرقام ──
@@ -12391,7 +12379,21 @@
       // جلب الإحصائيات الحالية دائماً (لعرضها في المودال)
       // لكن تسجيل المشاهدة فقط إذا لم يشاهد المستخدم هذا الكتاب خلال 24 ساعة
       if (_hasViewedBookToday(bookId)) {
-        // فقط نحدّث العرض بلا تسجيل مشاهدة جديدة
+        // فقط نُحدّث أرقام المودال بلا تسجيل مشاهدة جديدة
+        const cached = _cacheGet(STATS_CACHE_VIEWS + bookId);
+        if (cached) {
+          if (DOM.modalViewCount) DOM.modalViewCount.textContent = _formatStatNum(cached.views || 0);
+          if (DOM.modalDlCount)   DOM.modalDlCount.textContent   = _formatStatNum(cached.downloads || 0);
+        } else {
+          // جلب من Firebase إن لم يوجد كاش
+          _fbGet(`stats/books/${bookId}`).then(data => {
+            if (data) {
+              _cacheSet(STATS_CACHE_VIEWS + bookId, data);
+              if (DOM.modalViewCount) DOM.modalViewCount.textContent = _formatStatNum(data.views || 0);
+              if (DOM.modalDlCount)   DOM.modalDlCount.textContent   = _formatStatNum(data.downloads || 0);
+            }
+          });
+        }
         return;
       }
 
@@ -12515,12 +12517,17 @@
       const section = document.getElementById('mostViewedSection');
       if (!section || !FIREBASE_DB_URL) return;
       try {
-        const r = await fetch(
-          `${FIREBASE_DB_URL}/stats/books.json?orderBy="views"&limitToLast=12`,
-          { cache: 'no-store' }
-        );
-        if (!r.ok) return;
-        const data = await r.json();
+        let data = null;
+        // حاول مع orderBy أولاً — قد يفشل إن لم تكن Firebase rules مفعّلة
+        try {
+          const r = await fetch(
+            `${FIREBASE_DB_URL}/stats/books.json?orderBy="views"&limitToLast=12`,
+            { cache: 'no-store' }
+          );
+          if (r.ok) data = await r.json();
+        } catch(e) {}
+        // fallback: جلب كل الكتب وترتيبها محلياً
+        if (!data) data = await _fbGet('stats/books');
         if (!data) return;
 
         // رتّب تنازلياً حسب المشاهدات
@@ -12711,18 +12718,20 @@
       let topIds = [];
       if (FIREBASE_DB_URL) {
         try {
-          const r = await fetch(
-            `${FIREBASE_DB_URL}/stats/books.json?orderBy="views"&limitToLast=10`,
-            { cache: 'no-store' }
-          );
-          if (r.ok) {
-            const data = await r.json();
-            if (data) {
-              topIds = Object.entries(data)
-                .filter(([, v]) => (v.views || 0) >= 3)
-                .sort((a, b) => (b[1].views || 0) - (a[1].views || 0))
-                .map(([id]) => id);
-            }
+          let data = null;
+          try {
+            const r = await fetch(
+              `${FIREBASE_DB_URL}/stats/books.json?orderBy="views"&limitToLast=10`,
+              { cache: 'no-store' }
+            );
+            if (r.ok) data = await r.json();
+          } catch(e) {}
+          if (!data) data = await _fbGet('stats/books');
+          if (data) {
+            topIds = Object.entries(data)
+              .filter(([, v]) => (v.views || 0) >= 3)
+              .sort((a, b) => (b[1].views || 0) - (a[1].views || 0))
+              .map(([id]) => id);
           }
         } catch(e) {}
       }
@@ -13040,6 +13049,9 @@
       _s('visitorCountDetail',  tv);
       _s('totalViewsPopup',     vi);
       _s('totalDownloadsPopup', dl);
+      // حدّث liveCount أيضاً إن كانت البطاقة مفتوحة
+      const lcEl = document.getElementById('liveCount');
+      if (lcEl && lcEl.textContent === '—') lcEl.textContent = '0';
 
       // حفّظ في cache إذا نجحت القراءة
       if (tv !== null) {
@@ -13195,11 +13207,25 @@
       if (!card) return;
       const isOpen = !card.classList.contains('visible');
       if (isOpen) {
+        // ── عبّئ الأرقام من الكاش فوراً قبل العرض ──
+        try {
+          const cached = JSON.parse(localStorage.getItem('noor_vsb_cache') || 'null');
+          if (cached) {
+            const _fc = (id, val) => {
+              const el = document.getElementById(id);
+              if (el && el.textContent === '—') { el.textContent = _formatStatNum(val); el.dataset.rawVal = val; }
+            };
+            _fc('visitorCountDetail',  cached.totalVisitors  || 0);
+            _fc('totalViewsPopup',     cached.totalViews     || 0);
+            _fc('totalDownloadsPopup', cached.totalDownloads || 0);
+          }
+        } catch(e) {}
         _positionPopupCard();
         card.classList.add('visible');
         pill && pill.classList.add('open');
         _renderUserStats();
-        // حدّث أيضاً الأرقام التي قد تكون تحدّثت
+        // حدّث الأرقام من Firebase في الخلفية
+        _refreshAllStats && _refreshAllStats();
         const lc = document.getElementById('liveCount');
         if (lc && lc.textContent === '—') lc.textContent = '0';
       } else {
@@ -13208,6 +13234,7 @@
       }
     }
     window.toggleVisitorsCard = toggleVisitorsCard;
+    window._refreshAllStats   = _refreshAllStats;
 
     // أعد تموضع البطاقة عند تغيير حجم النافذة أو التمرير
     window.addEventListener('resize', () => {
