@@ -12581,33 +12581,46 @@
       if (n >= 1000) return (n/1000).toFixed(1).replace(/\.0$/,'') + 'K';
       return String(n);
     }
+
+    // جلب اسم كتاب من Drive API بـ ID
+    async function _fetchBookName(id) {
+      try {
+        const r = await fetch(
+          `https://www.googleapis.com/drive/v3/files/${id}?fields=id,name&key=${CONFIG.API_KEY}`
+        );
+        if (!r.ok) return null;
+        const d = await r.json();
+        return d.name || null;
+      } catch(e) { return null; }
+    }
+
     async function openMostViewedShelf() {
-      const overlay = document.getElementById('mvShelfOverlay');
+      const overlay  = document.getElementById('mvShelfOverlay');
       if (!overlay) return;
       overlay.classList.add('active');
       document.body.style.overflow = 'hidden';
 
-      const body    = document.getElementById('mvShelfBody');
-      const empty   = document.getElementById('mvShelfEmpty');
-      const subtitle= document.getElementById('mvShelfSubtitle');
+      const body     = document.getElementById('mvShelfBody');
+      const empty    = document.getElementById('mvShelfEmpty');
+      const subtitle = document.getElementById('mvShelfSubtitle');
       if (!body) return;
 
-      // مؤشر تحميل
       if (empty) { empty.innerHTML = '<i class="fas fa-spinner fa-spin"></i><p>جاري التحميل...</p>'; empty.style.display = 'flex'; }
 
       try {
-        if (!FIREBASE_DB_URL) throw new Error('no db');
+        // جلب إحصائيات المشاهدات
         const r = await fetch(
           `${FIREBASE_DB_URL}/stats/books.json?orderBy="views"&limitToLast=20`,
-          { cache: 'no-store' }
+          { cache: 'no-store', headers: { 'Accept': 'application/json' } }
         );
-        if (!r.ok) throw new Error('fetch failed');
-        const data = await r.json();
-        if (!data) throw new Error('no data');
+        let data = null;
+        if (r.ok) data = await r.json();
+        if (!data) data = await _fbGet('stats/books');
+        if (!data || typeof data !== 'object') throw new Error('no data');
 
         const sorted = Object.entries(data)
-          .filter(([,v]) => (v.views || 0) >= 1)
-          .sort((a,b) => (b[1].views||0) - (a[1].views||0))
+          .filter(([, v]) => v && (v.views || 0) >= 1)
+          .sort((a, b) => (b[1].views || 0) - (a[1].views || 0))
           .slice(0, 20);
 
         if (sorted.length === 0) {
@@ -12615,31 +12628,43 @@
           return;
         }
 
+        // جلب الأسماء: من state.allBooks أولاً ثم Drive API للباقي
+        const ids = sorted.map(([id]) => id);
+        const nameMap = {};
+        ids.forEach(id => {
+          const b = state.allBooks.find(x => x.id === id);
+          if (b) nameMap[id] = b.name;
+        });
+        const missing = ids.filter(id => !nameMap[id]);
+        if (missing.length > 0) {
+          const driveResults = await Promise.all(missing.map(id => _fetchBookName(id)));
+          missing.forEach((id, i) => { if (driveResults[i]) nameMap[id] = driveResults[i]; });
+        }
+
         if (subtitle) subtitle.textContent = `أشهر ${sorted.length} كتاب في المكتبة`;
         if (empty) empty.style.display = 'none';
 
         const medals = ['🥇','🥈','🥉'];
         body.innerHTML = sorted.map(([id, stats], idx) => {
-          const book = state.allBooks.find(b => b.id === id);
-          const name = book
-            ? book.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '')
-            : (stats.name || id);
-          const cover   = `https://drive.google.com/thumbnail?sz=w200&id=${id}`;
-          const views   = _formatMvNum(stats.views || 0);
-          const rank    = idx < 3
+          const raw  = nameMap[id] || '';
+          const name = raw ? raw.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '') : '—';
+          const cover = `https://drive.google.com/thumbnail?sz=w200&id=${id}`;
+          const views = _formatMvNum(stats.views || 0);
+          const rank  = idx < 3
             ? `<span style="font-size:1.2rem">${medals[idx]}</span>`
             : `<span style="color:var(--text-muted);font-size:0.9rem;font-weight:800">#${idx+1}</span>`;
           return `
           <div class="mv-shelf-book-card" onclick="closeMostViewedShelf();setTimeout(()=>openModal('${id}'),220)">
             <div class="mv-shelf-rank">${rank}</div>
-            <img class="mv-shelf-cover" src="${cover}" alt="${name}"
-                 onerror="this.style.background='var(--bg-tertiary)';this.style.opacity='0.5'">
+            <img class="mv-shelf-cover" src="${cover}" alt=""
+                 onerror="this.style.background='var(--bg-tertiary)';this.style.opacity='0.4'">
             <div class="mv-shelf-info">
               <div class="mv-shelf-book-name">${name}</div>
               <div class="mv-shelf-views"><i class="fas fa-eye"></i> ${views} مشاهدة</div>
             </div>
           </div>`;
         }).join('');
+
       } catch(e) {
         if (empty) { empty.innerHTML = '<i class="fas fa-exclamation-circle"></i><p>تعذّر تحميل البيانات</p>'; empty.style.display = 'flex'; }
       }
