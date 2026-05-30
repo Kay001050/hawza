@@ -2270,28 +2270,27 @@
     }
     .visitors-pill-wrapper .visitors-pill { margin-bottom: 0; }
 
-    /* ── البطاقة الأساسية ── */
+    /* ── البطاقة الأساسية — position:fixed لتجاوز overflow:hidden ── */
     .visitors-popup-card {
-      position: absolute;
-      top: calc(100% + 12px);
-      left: 50%;
-      transform: translateX(-50%) translateY(-8px);
+      position: fixed;
+      /* top/left تُحسَب بـ JS عند الفتح */
+      top: 0; left: 0;
       background: var(--bg-card);
       border: 1px solid var(--border-medium);
       border-radius: 20px;
       padding: 20px;
-      /* عرض متجاوب: 92vw على الجوال، 400px على الكمبيوتر */
       width: clamp(300px, 92vw, 480px);
       max-height: 85vh;
       overflow-y: auto;
       overflow-x: hidden;
       scrollbar-width: thin;
       scrollbar-color: var(--border-medium) transparent;
-      z-index: 1100;
+      z-index: 99999;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.25s ease, transform 0.25s ease;
-      box-shadow: 0 16px 56px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08);
+      transition: opacity 0.25s ease, transform 0.18s ease;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.22), 0 6px 20px rgba(0,0,0,0.1);
+      transform: translateY(-8px);
     }
     .visitors-popup-card::-webkit-scrollbar { width: 4px; }
     .visitors-popup-card::-webkit-scrollbar-track { background: transparent; }
@@ -2299,7 +2298,7 @@
     .visitors-popup-card.visible {
       opacity: 1;
       pointer-events: auto;
-      transform: translateX(-50%) translateY(0);
+      transform: translateY(0);
     }
 
     /* ── صفوف الإحصائيات ── */
@@ -7776,23 +7775,6 @@
     /* ══════════════════════════════════════════════════════
        أقسام ذكية: استئناف القراءة + الأكثر مشاهدة
        ══════════════════════════════════════════════════════ */
-    .smart-section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-      padding: 18px 0 0 0;
-    }
-    .smart-section-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      font-family: var(--font-heading);
-    }
-    .smart-section-title i { font-size: 1rem; }
     .smart-section-clear {
       background: none;
       border: 1px solid var(--border-subtle);
@@ -7806,132 +7788,247 @@
     }
     .smart-section-clear:hover { border-color: #e74c3c; color: #e74c3c; }
 
-    /* ── استئناف القراءة ── */
-    .resume-reading-grid {
+    /* ══ صف الاكتشاف: التصنيفات + الأكثر مشاهدة جنباً إلى جنب ══ */
+    .discovery-row {
       display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      padding-bottom: 10px;
-      scrollbar-width: thin;
-      scrollbar-color: var(--accent-gold) transparent;
+      align-items: flex-start;
+      gap: 16px;
     }
-    .resume-reading-grid::-webkit-scrollbar { height: 4px; }
-    .resume-reading-grid::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 4px; }
-    .resume-book-card {
-      flex: 0 0 130px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      cursor: pointer;
-      transition: var(--transition-fast);
-    }
-    .resume-book-card:hover { border-color: var(--accent-emerald); transform: translateY(-2px); }
-    .resume-book-cover {
-      position: relative;
-      width: 100%;
-      height: 100px;
-      background: var(--bg-tertiary);
-      overflow: hidden;
-    }
-    .resume-book-cover img { width: 100%; height: 100%; object-fit: cover; }
-    .resume-book-nocover {
-      width: 100%; height: 100%;
-      display: none; align-items: center; justify-content: center;
-      color: var(--text-muted); font-size: 1.8rem;
-    }
-    .resume-book-overlay {
-      position: absolute; inset: 0;
-      background: rgba(0,0,0,0.35);
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; transition: opacity 0.2s;
-      color: white; font-size: 1.6rem;
-    }
-    .resume-book-card:hover .resume-book-overlay { opacity: 1; }
-    .resume-book-info {
-      padding: 8px 10px;
-    }
-    .resume-book-title {
-      font-size: 0.76rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      line-height: 1.4;
-      margin-bottom: 4px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .resume-book-time {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-      display: flex; align-items: center; gap: 4px;
-    }
-    .resume-book-time i { color: var(--accent-emerald); font-size: 0.62rem; }
+    .discovery-row .categories-panel { flex: 1; min-width: 0; }
 
-    /* ── الأكثر مشاهدة ── */
-    .most-viewed-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 12px;
-      margin-bottom: 8px;
-    }
-    @media (max-width: 600px) {
-      .most-viewed-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    }
-    .mv-book-card {
+    /* ── Sidebar الأكثر مشاهدة ── */
+    .mv-sidebar {
+      flex: 0 0 210px;
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-lg);
       overflow: hidden;
-      cursor: pointer;
-      transition: var(--transition-fast);
-      position: relative;
+      align-self: flex-start;
     }
-    .mv-book-card:hover { border-color: var(--accent-gold); transform: translateY(-2px); }
+    .mv-sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 13px 9px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-tertiary);
+    }
+    .mv-sidebar-header i { color: #e74c3c; font-size: 0.8rem; }
+    .mv-sidebar-list {
+      display: flex;
+      flex-direction: column;
+      max-height: 400px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-medium) transparent;
+    }
+    .mv-sidebar-list::-webkit-scrollbar { width: 3px; }
+    .mv-sidebar-list::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 4px; }
+
+    /* بطاقة الكتاب كصف في الـ sidebar */
+    .mv-book-card {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: background var(--transition-fast);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .mv-book-card:last-child { border-bottom: none; }
+    .mv-book-card:hover { background: var(--bg-tertiary); }
     .mv-rank {
-      position: absolute;
-      top: 6px; right: 6px;
-      background: rgba(0,0,0,0.55);
-      color: #fff;
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       font-weight: 800;
-      padding: 2px 7px;
-      border-radius: var(--radius-full);
-      z-index: 2;
-      backdrop-filter: blur(4px);
+      color: var(--text-muted);
+      min-width: 22px;
+      text-align: center;
+      flex-shrink: 0;
     }
     .mv-cover {
-      width: 100%; height: 110px;
+      width: 34px; height: 46px;
+      border-radius: 5px;
       background: var(--bg-tertiary);
       overflow: hidden;
+      flex-shrink: 0;
       position: relative;
     }
     .mv-cover img { width: 100%; height: 100%; object-fit: cover; }
     .mv-nocover {
       width: 100%; height: 100%;
       display: none; align-items: center; justify-content: center;
-      color: var(--text-muted); font-size: 2rem;
+      color: var(--text-muted); font-size: 1rem;
     }
-    .mv-info { padding: 9px 10px; }
+    .mv-info { flex: 1; min-width: 0; }
     .mv-title {
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       font-weight: 600;
       color: var(--text-primary);
       line-height: 1.4;
-      margin-bottom: 5px;
+      margin-bottom: 3px;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
     .mv-views {
-      font-size: 0.7rem;
+      font-size: 0.64rem;
       color: #3498db;
       font-weight: 600;
-      display: flex; align-items: center; gap: 4px;
+      display: flex; align-items: center; gap: 3px;
     }
-    .mv-views i { font-size: 0.62rem; }
+    .mv-views i { font-size: 0.58rem; }
+
+    /* جوال: الـ sidebar يصبح شريط أفقي */
+    @media (max-width: 720px) {
+      .discovery-row { flex-direction: column; gap: 10px; }
+      .mv-sidebar { flex: none; width: 100%; }
+      .mv-sidebar-list {
+        flex-direction: row;
+        max-height: none;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 6px 4px;
+        scrollbar-width: thin;
+        scrollbar-color: var(--accent-gold) transparent;
+      }
+      .mv-book-card {
+        flex-direction: column;
+        align-items: center;
+        flex: 0 0 74px;
+        padding: 7px 5px;
+        border-bottom: none;
+        border-left: 1px solid var(--border-subtle);
+        text-align: center;
+        gap: 4px;
+      }
+      .mv-book-card:last-child { border-left: none; }
+      .mv-cover { width: 44px; height: 58px; }
+      .mv-title { font-size: 0.62rem; -webkit-line-clamp: 2; }
+      .mv-views { justify-content: center; }
+    }
+
+    /* ══ استئناف القراءة — شريط أفقي ذكي ══ */
+    .resume-strip-section {
+      padding: 0;
+      background: linear-gradient(to left,
+        transparent,
+        color-mix(in srgb, var(--accent-emerald) 6%, transparent),
+        transparent);
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .resume-strip-inner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+    }
+    .resume-strip-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent-emerald);
+      white-space: nowrap;
+      flex-shrink: 0;
+      padding: 5px 11px;
+      background: color-mix(in srgb, var(--accent-emerald) 8%, transparent);
+      border-radius: var(--radius-full);
+      border: 1px solid color-mix(in srgb, var(--accent-emerald) 22%, transparent);
+    }
+    .resume-strip-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      flex-shrink: 0;
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-emerald) 25%, transparent);
+    }
+    .resume-strip-clear { flex-shrink: 0; border: none; background: none; padding: 5px 7px; }
+
+    /* الـ grid في شريط الاستئناف */
+    .resume-reading-grid {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      flex: 1;
+      padding: 4px 2px 6px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-emerald) transparent;
+    }
+    .resume-reading-grid::-webkit-scrollbar { height: 3px; }
+    .resume-reading-grid::-webkit-scrollbar-thumb { background: var(--accent-emerald); border-radius: 4px; }
+
+    /* بطاقة في الشريط — أفقية مضغوطة */
+    .resume-book-card {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 5px 10px 5px 5px;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      min-width: 160px;
+      max-width: 195px;
+    }
+    .resume-book-card:hover {
+      border-color: var(--accent-emerald);
+      background: var(--bg-card-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+    }
+    .resume-book-cover {
+      position: relative;
+      width: 38px; height: 52px;
+      border-radius: 5px;
+      background: var(--bg-tertiary);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .resume-book-cover img { width: 100%; height: 100%; object-fit: cover; }
+    .resume-book-nocover {
+      width: 100%; height: 100%;
+      display: none; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 1.1rem;
+    }
+    .resume-book-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.2s;
+      color: white; font-size: 1rem;
+    }
+    .resume-book-card:hover .resume-book-overlay { opacity: 1; }
+    .resume-book-info { flex: 1; min-width: 0; }
+    .resume-book-title {
+      font-size: 0.73rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+      margin-bottom: 3px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .resume-book-time {
+      font-size: 0.63rem;
+      color: var(--text-muted);
+      display: flex; align-items: center; gap: 3px;
+    }
+    .resume-book-time i { color: var(--accent-emerald); font-size: 0.57rem; }
+
+    @media (max-width: 480px) {
+      .resume-strip-label span:last-child { display: none; }
+      .resume-book-card { min-width: 145px; }
+    }
 
     /* ── Preview Area (flex-grow) ── */
     .modal-preview-main {
@@ -9432,81 +9529,7 @@
           <i class="fas fa-chevron-down vp-chevron" id="vpChevron"></i>
         </div>
 
-        <!-- البطاقة المنبثقة للإحصائيات -->
-        <div class="visitors-popup-card" id="visitorsPopupCard">
-          <div class="vpc-row">
-            <div class="vpc-stat">
-              <div class="vpc-icon-wrap live-wrap"><span class="vpc-live-dot"></span></div>
-              <div class="vpc-info">
-                <span class="vpc-num" id="liveCount">—</span>
-                <span class="vpc-lbl">متواجد الآن</span>
-              </div>
-            </div>
-            <div class="vpc-sep"></div>
-            <div class="vpc-stat">
-              <div class="vpc-icon-wrap" style="background:rgba(160,127,58,0.12);color:var(--accent-gold);"><i class="fas fa-users"></i></div>
-              <div class="vpc-info">
-                <span class="vpc-num" id="visitorCountDetail">—</span>
-                <span class="vpc-lbl">إجمالي الزوار</span>
-              </div>
-            </div>
-          </div>
-          <div class="vpc-divider"></div>
-          <div class="vpc-row">
-            <div class="vpc-stat">
-              <div class="vpc-icon-wrap views-wrap"><i class="fas fa-eye"></i></div>
-              <div class="vpc-info">
-                <span class="vpc-num" id="totalViewsPopup">—</span>
-                <span class="vpc-lbl">مشاهدات الكتب</span>
-              </div>
-            </div>
-            <div class="vpc-sep"></div>
-            <div class="vpc-stat">
-              <div class="vpc-icon-wrap dl-wrap"><i class="fas fa-download"></i></div>
-              <div class="vpc-info">
-                <span class="vpc-num" id="totalDownloadsPopup">—</span>
-                <span class="vpc-lbl">تحميلات الكتب</span>
-              </div>
-            </div>
-          </div>
-          <div class="vpc-footer">
-            <span class="vpc-refresh-hint"><i class="fas fa-sync-alt"></i> يتجدد كل 30 ثانية</span>
-          </div>
-
-          <!-- ═══ قسم إحصائيات المستخدم الشخصية ═══ -->
-          <div class="vpc-divider"></div>
-          <div class="vpc-user-section">
-            <div class="vpc-user-title"><i class="fas fa-user-circle"></i> إحصائياتك الشخصية</div>
-            <div class="vpc-user-stats-row">
-              <div class="vpc-user-stat">
-                <span class="vpc-user-stat-icon" style="color:#27ae60;"><i class="fas fa-calendar-check"></i></span>
-                <span class="vpc-user-stat-num" id="userVisitCount">0</span>
-                <span class="vpc-user-stat-lbl">زيارة</span>
-              </div>
-              <div class="vpc-user-stat">
-                <span class="vpc-user-stat-icon" style="color:var(--accent-gold);"><i class="fas fa-book-open"></i></span>
-                <span class="vpc-user-stat-num" id="userReadCount">0</span>
-                <span class="vpc-user-stat-lbl">قراءة</span>
-              </div>
-              <div class="vpc-user-stat">
-                <span class="vpc-user-stat-icon" style="color:#3498db;"><i class="fas fa-download"></i></span>
-                <span class="vpc-user-stat-num" id="userDlCount">0</span>
-                <span class="vpc-user-stat-lbl">تحميل</span>
-              </div>
-            </div>
-
-            <!-- آخر الكتب المقروءة مع استئناف -->
-            <div id="vpcLastBooksWrap" style="display:none;">
-              <div class="vpc-last-books-title">
-                <i class="fas fa-history"></i> آخر الكتب المقروءة
-              </div>
-              <div class="vpc-last-books-list" id="vpcLastBooksList"></div>
-            </div>
-            <div id="vpcNoHistory" class="vpc-no-history" style="display:none;">
-              <i class="fas fa-book"></i><br>لم تبدأ أي قراءة بعد
-            </div>
-          </div>
-        </div>
+        <!-- البطاقة المنبثقة — تُنشأ في body عبر JS لتجاوز overflow:hidden -->
       </div>
 
       <div class="hero-badge">
@@ -9823,8 +9846,20 @@
         </div>
       </div>
       
-      <div class="categories-panel" id="categoriesPanel">
-        <div class="categories-grid" id="categoriesGrid"></div>
+      <!-- صف الاكتشاف: التصنيفات + الأكثر مشاهدة جنباً إلى جنب -->
+      <div class="discovery-row" id="discoveryRow">
+        <div class="categories-panel" id="categoriesPanel">
+          <div class="categories-grid" id="categoriesGrid"></div>
+        </div>
+
+        <!-- ═══ الأكثر مشاهدة — sidebar ═══ -->
+        <div class="mv-sidebar" id="mostViewedSection" style="display:none;">
+          <div class="mv-sidebar-header">
+            <i class="fas fa-fire"></i>
+            <span>الأكثر مشاهدة</span>
+          </div>
+          <div class="mv-sidebar-list" id="mostViewedGrid"></div>
+        </div>
       </div>
     </div>
   </section>
@@ -9875,34 +9910,24 @@
     <iframe id="externalIframe" src=""></iframe>
   </section>
 
-  <!-- ═══ قسم استئناف القراءة ═══ -->
-  <section id="resumeReadingSection" style="display:none; padding: 0 0 4px 0;">
+  <!-- ═══ استئناف القراءة — شريط ذكي بين التصنيفات والمكتبة ═══ -->
+  <section id="resumeReadingSection" class="resume-strip-section" style="display:none;">
     <div class="container">
-      <div class="smart-section-header">
-        <div class="smart-section-title">
-          <i class="fas fa-book-reader" style="color: var(--accent-emerald);"></i>
+      <div class="resume-strip-inner">
+        <div class="resume-strip-label">
+          <span class="resume-strip-dot"></span>
+          <i class="fas fa-book-reader"></i>
           <span>استئناف القراءة</span>
         </div>
-        <button class="smart-section-clear" onclick="clearReadingHistory()" title="مسح السجل">
+        <div class="resume-reading-grid" id="resumeReadingGrid"></div>
+        <button class="smart-section-clear resume-strip-clear" onclick="clearReadingHistory()" title="مسح السجل">
           <i class="fas fa-trash-alt"></i>
         </button>
       </div>
-      <div class="resume-reading-grid" id="resumeReadingGrid"></div>
     </div>
   </section>
 
-  <!-- ═══ قسم الأكثر مشاهدة ═══ -->
-  <section id="mostViewedSection" style="display:none; padding: 0 0 4px 0;">
-    <div class="container">
-      <div class="smart-section-header">
-        <div class="smart-section-title">
-          <i class="fas fa-fire" style="color: #e74c3c;"></i>
-          <span>الأكثر مشاهدة</span>
-        </div>
-      </div>
-      <div class="most-viewed-grid" id="mostViewedGrid"></div>
-    </div>
-  </section>
+  <!-- mostViewedSection انتقل داخل categories-section -->
 
   <!-- Library Section -->
   <section class="library-section" id="page-library">
@@ -12223,12 +12248,13 @@
       if (!grid) return;
       grid.innerHTML = history.map(item => {
         const cleanName = item.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '');
-        const shortName = cleanName.length > 30 ? cleanName.substring(0, 30) + '…' : cleanName;
+        const shortName = cleanName.length > 28 ? cleanName.substring(0, 28) + '…' : cleanName;
         const daysAgo = Math.floor((Date.now() - item.ts) / (24*60*60*1000));
-        const timeLabel = daysAgo === 0 ? 'اليوم' : daysAgo === 1 ? 'أمس' : `منذ ${daysAgo} أيام`;
+        const timeLabel = daysAgo === 0 ? 'اليوم' : daysAgo === 1 ? 'أمس' : `منذ ${daysAgo} يوم`;
+        const cover = item.cover || `https://drive.google.com/thumbnail?sz=w120&id=${item.id}`;
         return `<div class="resume-book-card" onclick="openModal('${item.id}')">
           <div class="resume-book-cover">
-            <img src="${item.cover}" alt="${shortName}"
+            <img src="${cover}" alt="${shortName}"
                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="resume-book-nocover" style="display:none"><i class="fas fa-book"></i></div>
             <div class="resume-book-overlay"><i class="fas fa-play-circle"></i></div>
@@ -12264,18 +12290,17 @@
 
         if (sorted.length === 0) { section.style.display = 'none'; return; }
 
-        section.style.display = 'block';
+        section.style.display = 'flex'; // flex لأنه .mv-sidebar
         const grid = document.getElementById('mostViewedGrid');
         if (!grid) return;
 
         grid.innerHTML = sorted.map(([id, stats], idx) => {
-          // حاول العثور على الكتاب في الحالة المحلية
           const book = state.allBooks.find(b => b.id === id);
           const name = book ? book.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '') : id;
-          const shortName = name.length > 28 ? name.substring(0, 28) + '…' : name;
-          const cover = `https://drive.google.com/thumbnail?sz=w200&id=${id}`;
+          const shortName = name.length > 26 ? name.substring(0, 26) + '…' : name;
+          const cover = `https://drive.google.com/thumbnail?sz=w120&id=${id}`;
           const viewCount = _formatStatNum(stats.views || 0);
-          const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx+1}`;
+          const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `<span style="color:var(--text-muted)">#${idx+1}</span>`;
           return `<div class="mv-book-card" onclick="openModal('${id}')">
             <div class="mv-rank">${medal}</div>
             <div class="mv-cover">
@@ -12285,7 +12310,7 @@
             </div>
             <div class="mv-info">
               <div class="mv-title">${shortName}</div>
-              <div class="mv-views"><i class="fas fa-eye"></i> ${viewCount} مشاهدة</div>
+              <div class="mv-views"><i class="fas fa-eye"></i> ${viewCount}</div>
             </div>
           </div>`;
         }).join('');
@@ -12412,38 +12437,68 @@
 
     // تسجيل "الحضور الآني" في Firebase (timestamp) — ينتهي تلقائياً بعد 5 دقائق
     // PRESENCE_TTL مُعرَّف مسبقاً أعلى الصفحة كـ var
+
+    // ── كتابة الحضور: نكتب { ts, uid } لضمان القراءة الصحيحة ──
     async function _pushPresence(uid) {
       if (!FIREBASE_DB_URL) return;
-      // استخدم PUT لكتابة الـ timestamp مباشرة لهذا المستخدم
-      await _fbSet(`presence/${uid}`, Date.now());
+      try {
+        const safeUid = uid.replace(/[.#$\[\]]/g, '_');
+        await fetch(`${FIREBASE_DB_URL}/presence/${safeUid}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ts: Date.now(), uid: safeUid })
+        });
+      } catch(e) {}
     }
 
-    // حساب المتواجدين الآن (timestamp > Date.now() - 5 دقائق)
+    // ── حساب المتواجدين الآن (كل من كتب presence خلال آخر 5 دقائق) ──
     async function _countLiveUsers() {
-      if (!FIREBASE_DB_URL) return null;
-      const data = await _fbGet('presence');
-      if (!data || typeof data !== 'object') return 0;
-      const cutoff = Date.now() - PRESENCE_TTL;
-      let count = 0;
-      Object.values(data).forEach(ts => {
-        if (typeof ts === 'number' && ts > cutoff) count++;
-      });
-      return count;
+      if (!FIREBASE_DB_URL) return 0;
+      try {
+        const r = await fetch(`${FIREBASE_DB_URL}/presence.json`, {
+          headers: { 'Accept': 'application/json' }
+        });
+        if (!r.ok) return 1; // على الأقل الزائر الحالي
+        const data = await r.json();
+        if (!data || typeof data !== 'object') return 1;
+        const cutoff = Date.now() - PRESENCE_TTL;
+        let count = 0;
+        Object.values(data).forEach(entry => {
+          // يدعم الصيغتين: رقم مباشر أو { ts: رقم }
+          const ts = (typeof entry === 'object' && entry !== null) ? entry.ts : entry;
+          if (typeof ts === 'number' && ts > cutoff) count++;
+        });
+        return Math.max(count, 1); // على الأقل 1 (الزائر الحالي)
+      } catch(e) { return 1; }
     }
 
-    // تنظيف الـ presence القديم (أكثر من 10 دقائق)
+    // ── تنظيف presence القديم (أكثر من 10 دقائق) ──
     async function _cleanOldPresence() {
       if (!FIREBASE_DB_URL) return;
-      const data = await _fbGet('presence');
-      if (!data || typeof data !== 'object') return;
-      const cutoff = Date.now() - 10 * 60 * 1000;
-      const toDelete = Object.entries(data)
-        .filter(([, ts]) => typeof ts !== 'number' || ts < cutoff)
-        .map(([k]) => k);
-      if (toDelete.length === 0) return;
-      const patch = {};
-      toDelete.forEach(k => { patch[k] = null; }); // null = حذف في Firebase REST
-      await _fbPatch('presence', patch);
+      try {
+        const r = await fetch(`${FIREBASE_DB_URL}/presence.json`, {
+          headers: { 'Accept': 'application/json' }
+        });
+        if (!r.ok) return;
+        const data = await r.json();
+        if (!data || typeof data !== 'object') return;
+        const cutoff = Date.now() - 10 * 60 * 1000;
+        const patch = {};
+        let hasDeletes = false;
+        Object.entries(data).forEach(([k, entry]) => {
+          const ts = (typeof entry === 'object' && entry !== null) ? entry.ts : entry;
+          if (typeof ts !== 'number' || ts < cutoff) {
+            patch[k] = null; hasDeletes = true;
+          }
+        });
+        if (hasDeletes) {
+          await fetch(`${FIREBASE_DB_URL}/presence.json`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(patch)
+          });
+        }
+      } catch(e) {}
     }
 
     // ══════════════════════════════════════════════════════════════════════
@@ -12550,7 +12605,7 @@
         _sc('visitorCountDetail',  0);
         _sc('totalViewsPopup',     0);
         _sc('totalDownloadsPopup', 0);
-        _sc('liveCount',           0);
+        // لا نضع 0 للـ liveCount — سيُحدَّث بعد _pushPresence
       }
 
       // ── 2. سجّل الزيارة الشخصية (مرة واحدة لكل جلسة/تبويب جديد) ──
@@ -12638,58 +12693,157 @@
       const live = await _countLiveUsers();
       const liveEl = document.getElementById('liveCount');
       if (liveEl) {
-        if (live !== null) {
-          _animateCount(liveEl, parseInt(liveEl.dataset.rawVal||'0')||0, live, 500);
-          liveEl.dataset.rawVal = live;
-        } else if (liveEl.textContent === '—') {
-          liveEl.textContent = '1'; // على الأقل الزائر الحالي
+        const liveVal = (typeof live === 'number' && live >= 0) ? live : 1;
+        const prevVal = parseInt(liveEl.dataset.rawVal || '0') || 0;
+        if (liveVal !== prevVal) {
+          _animateCount(liveEl, prevVal, liveVal, 500);
+          liveEl.dataset.rawVal = liveVal;
+        } else if (liveEl.textContent === '—' || liveEl.textContent === '0') {
+          liveEl.textContent = String(liveVal);
+          liveEl.dataset.rawVal = liveVal;
         }
       }
     }
 
     // ── فتح/إغلاق البطاقة المنبثقة ──
+    // ── حقن البطاقة في body (مرة واحدة) لتجاوز overflow:hidden على .hero ──
+    function _ensurePopupCard() {
+      if (document.getElementById('visitorsPopupCard')) return;
+      const card = document.createElement('div');
+      card.className = 'visitors-popup-card';
+      card.id = 'visitorsPopupCard';
+      card.innerHTML = `
+        <div class="vpc-row">
+          <div class="vpc-stat">
+            <div class="vpc-icon-wrap live-wrap"><span class="vpc-live-dot"></span></div>
+            <div class="vpc-info">
+              <span class="vpc-num" id="liveCount">—</span>
+              <span class="vpc-lbl">متواجد الآن</span>
+            </div>
+          </div>
+          <div class="vpc-sep"></div>
+          <div class="vpc-stat">
+            <div class="vpc-icon-wrap" style="background:rgba(160,127,58,0.12);color:var(--accent-gold);"><i class="fas fa-users"></i></div>
+            <div class="vpc-info">
+              <span class="vpc-num" id="visitorCountDetail">—</span>
+              <span class="vpc-lbl">إجمالي الزوار</span>
+            </div>
+          </div>
+        </div>
+        <div class="vpc-divider"></div>
+        <div class="vpc-row">
+          <div class="vpc-stat">
+            <div class="vpc-icon-wrap views-wrap"><i class="fas fa-eye"></i></div>
+            <div class="vpc-info">
+              <span class="vpc-num" id="totalViewsPopup">—</span>
+              <span class="vpc-lbl">مشاهدات الكتب</span>
+            </div>
+          </div>
+          <div class="vpc-sep"></div>
+          <div class="vpc-stat">
+            <div class="vpc-icon-wrap dl-wrap"><i class="fas fa-download"></i></div>
+            <div class="vpc-info">
+              <span class="vpc-num" id="totalDownloadsPopup">—</span>
+              <span class="vpc-lbl">تحميلات الكتب</span>
+            </div>
+          </div>
+        </div>
+        <div class="vpc-footer">
+          <span class="vpc-refresh-hint"><i class="fas fa-sync-alt"></i> يتجدد كل 30 ثانية</span>
+        </div>
+        <div class="vpc-divider"></div>
+        <div class="vpc-user-section">
+          <div class="vpc-user-title"><i class="fas fa-user-circle"></i> إحصائياتك الشخصية</div>
+          <div class="vpc-user-stats-row">
+            <div class="vpc-user-stat">
+              <span class="vpc-user-stat-icon" style="color:#27ae60;"><i class="fas fa-calendar-check"></i></span>
+              <span class="vpc-user-stat-num" id="userVisitCount">0</span>
+              <span class="vpc-user-stat-lbl">زيارة</span>
+            </div>
+            <div class="vpc-user-stat">
+              <span class="vpc-user-stat-icon" style="color:var(--accent-gold);"><i class="fas fa-book-open"></i></span>
+              <span class="vpc-user-stat-num" id="userReadCount">0</span>
+              <span class="vpc-user-stat-lbl">قراءة</span>
+            </div>
+            <div class="vpc-user-stat">
+              <span class="vpc-user-stat-icon" style="color:#3498db;"><i class="fas fa-download"></i></span>
+              <span class="vpc-user-stat-num" id="userDlCount">0</span>
+              <span class="vpc-user-stat-lbl">تحميل</span>
+            </div>
+          </div>
+          <div id="vpcLastBooksWrap" style="display:none;">
+            <div class="vpc-last-books-title"><i class="fas fa-history"></i> آخر الكتب المقروءة</div>
+            <div class="vpc-last-books-list" id="vpcLastBooksList"></div>
+          </div>
+          <div id="vpcNoHistory" class="vpc-no-history" style="display:none;">
+            <i class="fas fa-book"></i><br>لم تبدأ أي قراءة بعد
+          </div>
+        </div>`;
+      document.body.appendChild(card);
+
+      // إغلاق عند الضغط خارج البطاقة أو الـ pill
+      document.addEventListener('click', function(e) {
+        const pill = document.getElementById('visitorsPill');
+        const card = document.getElementById('visitorsPopupCard');
+        if (!card || !card.classList.contains('visible')) return;
+        if (!card.contains(e.target) && !e.target.closest('#visitorsPill') && !e.target.closest('.visitors-pill')) {
+          card.classList.remove('visible');
+          pill && pill.classList.remove('open');
+        }
+      }, true);
+    }
+
+    function _positionPopupCard() {
+      const card = document.getElementById('visitorsPopupCard');
+      const pill = document.getElementById('visitorsPill');
+      if (!card || !pill) return;
+      const pr     = pill.getBoundingClientRect();
+      const margin = 10;
+      const vw     = window.innerWidth;
+      const cardW  = card.offsetWidth || 360;
+
+      // ابدأ من منتصف الـ pill
+      let left = pr.left + pr.width / 2 - cardW / 2;
+      // اضمن ألا تخرج من حواف الشاشة
+      left = Math.max(margin, Math.min(left, vw - cardW - margin));
+
+      const top = pr.bottom + window.scrollY + 10;
+      card.style.left = left + 'px';
+      card.style.top  = top  + 'px';
+    }
+
     function toggleVisitorsCard() {
-      const card  = document.getElementById('visitorsPopupCard');
-      const pill  = document.getElementById('visitorsPill');
+      _ensurePopupCard();
+      const card = document.getElementById('visitorsPopupCard');
+      const pill = document.getElementById('visitorsPill');
       if (!card) return;
-      const isOpen = card.classList.toggle('visible');
-      pill && pill.classList.toggle('open', isOpen);
+      const isOpen = !card.classList.contains('visible');
       if (isOpen) {
+        _positionPopupCard();
+        card.classList.add('visible');
+        pill && pill.classList.add('open');
         _renderUserStats();
-        // اضبط الموقع الأفقي حتى لا تخرج البطاقة عن حدود الشاشة
-        requestAnimationFrame(() => {
-          const rect    = card.getBoundingClientRect();
-          const margin  = 10;
-          const vw      = window.innerWidth;
-          // هل تخرج من اليمين؟
-          if (rect.right > vw - margin) {
-            const overflow = rect.right - (vw - margin);
-            card.style.left = `calc(50% - ${overflow}px)`;
-          }
-          // هل تخرج من اليسار؟
-          if (rect.left < margin) {
-            const overflow = margin - rect.left;
-            card.style.left = `calc(50% + ${overflow}px)`;
-          }
-        });
+        // حدّث أيضاً الأرقام التي قد تكون تحدّثت
+        const lc = document.getElementById('liveCount');
+        if (lc && lc.textContent === '—') lc.textContent = '0';
       } else {
-        card.style.left = ''; // أعد التموضع الافتراضي عند الإغلاق
+        card.classList.remove('visible');
+        pill && pill.classList.remove('open');
       }
     }
     window.toggleVisitorsCard = toggleVisitorsCard;
 
-    // إغلاق البطاقة عند الضغط خارجها
-    document.addEventListener('click', function(e) {
-      const wrapper = e.target.closest('.visitors-pill-wrapper');
-      if (!wrapper) {
-        const card = document.getElementById('visitorsPopupCard');
-        const pill = document.getElementById('visitorsPill');
-        if (card && card.classList.contains('visible')) {
-          card.classList.remove('visible');
-          pill && pill.classList.remove('open');
-        }
-      }
+    // أعد تموضع البطاقة عند تغيير حجم النافذة أو التمرير
+    window.addEventListener('resize', () => {
+      const card = document.getElementById('visitorsPopupCard');
+      if (card && card.classList.contains('visible')) _positionPopupCard();
     });
+    window.addEventListener('scroll', () => {
+      const card = document.getElementById('visitorsPopupCard');
+      if (card && card.classList.contains('visible')) _positionPopupCard();
+    }, { passive: true });
+
+    // إغلاق البطاقة عند الضغط خارجها — الـ listener الرئيسي في _ensurePopupCard
 
     function openModal(bookId) {
       const book = state.allBooks.find(b => b.id === bookId);
