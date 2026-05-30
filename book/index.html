@@ -2291,6 +2291,23 @@
       transition: opacity 0.25s ease;
       box-shadow: 0 20px 60px rgba(0,0,0,0.22), 0 6px 20px rgba(0,0,0,0.1);
     }
+    /* ── زر إغلاق البطاقة ── */
+    .vpc-close-btn {
+      position: absolute;
+      top: 12px; left: 12px;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: 0.2s ease;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+    .vpc-close-btn:hover { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
     .visitors-popup-card::-webkit-scrollbar { width: 4px; }
     .visitors-popup-card::-webkit-scrollbar-track { background: transparent; }
     .visitors-popup-card::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 4px; }
@@ -8457,6 +8474,137 @@
       .fav-shelf-handle { display: none; }
     }
 
+    /* ══ درج الأكثر مشاهدة — نفس هيكل المفضلة ══ */
+    .mv-shelf-overlay {
+      position: fixed; inset: 0;
+      background: rgba(15,23,42,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 9998;
+      display: flex; align-items: flex-end; justify-content: center;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+    .mv-shelf-overlay.active { opacity: 1; visibility: visible; }
+    .mv-shelf {
+      background: var(--bg-card);
+      width: 100%; max-width: 600px;
+      max-height: 88vh;
+      border-radius: 32px 32px 0 0;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.16);
+      display: flex; flex-direction: column;
+      position: relative;
+      transform: translateY(100%);
+      transition: transform 0.48s cubic-bezier(0.2,0.8,0.2,1);
+      border: 1px solid var(--border-subtle);
+      border-bottom: none;
+      overflow: hidden;
+    }
+    .mv-shelf-overlay.active .mv-shelf { transform: translateY(0); }
+    .mv-shelf-handle {
+      width: 40px; height: 5px;
+      background: var(--border-medium);
+      border-radius: 10px;
+      margin: 12px auto 0; flex-shrink: 0;
+    }
+    .mv-shelf-close {
+      position: absolute; top: 16px; left: 20px;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary); font-size: 0.9rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: 0.2s ease; z-index: 5;
+    }
+    .mv-shelf-close:hover { background: #fee2e2; color: #ef4444; }
+    .mv-shelf-header {
+      padding: 14px 22px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      flex-shrink: 0;
+    }
+    .mv-shelf-title-row {
+      display: flex; align-items: center; gap: 14px;
+      padding-left: 44px;
+    }
+    .mv-shelf-icon {
+      width: 46px; height: 46px; border-radius: 14px;
+      background: rgba(231,76,60,0.1);
+      color: #e74c3c;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .mv-shelf-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem; font-weight: 700;
+      color: var(--text-primary); margin-bottom: 3px;
+    }
+    .mv-shelf-sub {
+      font-size: 0.78rem; color: var(--text-muted); font-weight: 500;
+    }
+    .mv-shelf-body {
+      flex: 1; overflow-y: auto;
+      padding: 14px 16px 20px;
+      display: flex; flex-direction: column; gap: 0;
+    }
+    /* بطاقة كتاب في درج الأكثر مشاهدة */
+    .mv-shelf-book-card {
+      display: flex; align-items: center;
+      gap: 14px; padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-secondary);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+    .mv-shelf-book-card:hover {
+      border-color: rgba(231,76,60,0.35);
+      background: rgba(231,76,60,0.04);
+    }
+    .mv-shelf-book-card:active { transform: scale(0.98); }
+    .mv-shelf-rank {
+      font-size: 1.2rem; font-weight: 800;
+      min-width: 32px; text-align: center; flex-shrink: 0;
+    }
+    .mv-shelf-cover {
+      width: 46px; height: 64px; border-radius: 7px;
+      object-fit: cover; flex-shrink: 0;
+      background: var(--bg-tertiary);
+      box-shadow: 3px 5px 12px rgba(0,0,0,0.1);
+    }
+    .mv-shelf-info { flex: 1; min-width: 0; }
+    .mv-shelf-book-name {
+      font-size: 0.88rem; font-weight: 700;
+      color: var(--text-primary); line-height: 1.35;
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+      margin-bottom: 4px;
+    }
+    .mv-shelf-views {
+      font-size: 0.72rem; color: #3498db;
+      font-weight: 600;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .mv-shelf-empty {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 10px; padding: 50px 20px;
+      color: var(--text-muted); text-align: center;
+    }
+    .mv-shelf-empty i { font-size: 2.5rem; color: var(--border-medium); margin-bottom: 6px; }
+    .mv-shelf-empty p { font-size: 1rem; font-weight: 600; color: var(--text-secondary); }
+    @media (min-width: 769px) {
+      .mv-shelf-overlay { align-items: center; padding: 20px; }
+      .mv-shelf {
+        border-radius: 28px; border-bottom: 1px solid var(--border-subtle);
+        transform: scale(0.9) translateY(20px);
+        transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        max-height: 80vh;
+      }
+      .mv-shelf-overlay.active .mv-shelf { transform: scale(1) translateY(0); }
+      .mv-shelf-handle { display: none; }
+    }
+
 
     /* Iframe Container Styles */
     
@@ -10267,6 +10415,31 @@
 
   <!-- Toast -->
   <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ═══ درج الأكثر مشاهدة ═══ -->
+  <div class="mv-shelf-overlay" id="mvShelfOverlay" onclick="if(event.target===this)closeMostViewedShelf()">
+    <div class="mv-shelf">
+      <div class="mv-shelf-handle"></div>
+      <button class="mv-shelf-close" onclick="closeMostViewedShelf()">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="mv-shelf-header">
+        <div class="mv-shelf-title-row">
+          <div class="mv-shelf-icon"><i class="fas fa-fire"></i></div>
+          <div>
+            <h3 class="mv-shelf-title">الأكثر مشاهدة</h3>
+            <p class="mv-shelf-sub" id="mvShelfSubtitle">أشهر الكتب في المكتبة</p>
+          </div>
+        </div>
+      </div>
+      <div class="mv-shelf-body" id="mvShelfBody">
+        <div class="mv-shelf-empty" id="mvShelfEmpty">
+          <i class="fas fa-fire"></i>
+          <p>جاري التحميل...</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 
@@ -12402,14 +12575,86 @@
     }
     window.clearReadingHistory = clearReadingHistory;
 
-    // ── الانتقال إلى قسم الأكثر مشاهدة ──
-    function scrollToMostViewed() {
-      const mv = document.getElementById('mostViewedSection');
-      if (mv && mv.style.display !== 'none') {
-        mv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    // ── درج الأكثر مشاهدة ──
+    function _formatMvNum(n) {
+      if (!n) return '0';
+      if (n >= 1000) return (n/1000).toFixed(1).replace(/\.0$/,'') + 'K';
+      return String(n);
+    }
+    async function openMostViewedShelf() {
+      const overlay = document.getElementById('mvShelfOverlay');
+      if (!overlay) return;
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      const body    = document.getElementById('mvShelfBody');
+      const empty   = document.getElementById('mvShelfEmpty');
+      const subtitle= document.getElementById('mvShelfSubtitle');
+      if (!body) return;
+
+      // مؤشر تحميل
+      if (empty) { empty.innerHTML = '<i class="fas fa-spinner fa-spin"></i><p>جاري التحميل...</p>'; empty.style.display = 'flex'; }
+
+      try {
+        if (!FIREBASE_DB_URL) throw new Error('no db');
+        const r = await fetch(
+          `${FIREBASE_DB_URL}/stats/books.json?orderBy="views"&limitToLast=20`,
+          { cache: 'no-store' }
+        );
+        if (!r.ok) throw new Error('fetch failed');
+        const data = await r.json();
+        if (!data) throw new Error('no data');
+
+        const sorted = Object.entries(data)
+          .filter(([,v]) => (v.views || 0) >= 1)
+          .sort((a,b) => (b[1].views||0) - (a[1].views||0))
+          .slice(0, 20);
+
+        if (sorted.length === 0) {
+          if (empty) { empty.innerHTML = '<i class="fas fa-fire"></i><p>لا توجد بيانات مشاهدة بعد</p>'; empty.style.display = 'flex'; }
+          return;
+        }
+
+        if (subtitle) subtitle.textContent = `أشهر ${sorted.length} كتاب في المكتبة`;
+        if (empty) empty.style.display = 'none';
+
+        const medals = ['🥇','🥈','🥉'];
+        body.innerHTML = sorted.map(([id, stats], idx) => {
+          const book = state.allBooks.find(b => b.id === id);
+          const name = book
+            ? book.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '')
+            : (stats.name || id);
+          const cover   = `https://drive.google.com/thumbnail?sz=w200&id=${id}`;
+          const views   = _formatMvNum(stats.views || 0);
+          const rank    = idx < 3
+            ? `<span style="font-size:1.2rem">${medals[idx]}</span>`
+            : `<span style="color:var(--text-muted);font-size:0.9rem;font-weight:800">#${idx+1}</span>`;
+          return `
+          <div class="mv-shelf-book-card" onclick="closeMostViewedShelf();setTimeout(()=>openModal('${id}'),220)">
+            <div class="mv-shelf-rank">${rank}</div>
+            <img class="mv-shelf-cover" src="${cover}" alt="${name}"
+                 onerror="this.style.background='var(--bg-tertiary)';this.style.opacity='0.5'">
+            <div class="mv-shelf-info">
+              <div class="mv-shelf-book-name">${name}</div>
+              <div class="mv-shelf-views"><i class="fas fa-eye"></i> ${views} مشاهدة</div>
+            </div>
+          </div>`;
+        }).join('');
+      } catch(e) {
+        if (empty) { empty.innerHTML = '<i class="fas fa-exclamation-circle"></i><p>تعذّر تحميل البيانات</p>'; empty.style.display = 'flex'; }
       }
     }
-    window.scrollToMostViewed = scrollToMostViewed;
+    function closeMostViewedShelf() {
+      const overlay = document.getElementById('mvShelfOverlay');
+      if (overlay) { overlay.classList.remove('active'); document.body.style.overflow = 'auto'; }
+    }
+    // scrollToMostViewed → يفتح الدرج
+    function scrollToMostViewed() {
+      openMostViewedShelf();
+    }
+    window.scrollToMostViewed   = scrollToMostViewed;
+    window.openMostViewedShelf  = openMostViewedShelf;
+    window.closeMostViewedShelf = closeMostViewedShelf;
     async function getBookStats(bookId) {
       // اعرض الكاش فوراً
       const cached = _cacheGet(STATS_CACHE_VIEWS + bookId);
@@ -12800,6 +13045,7 @@
       card.className = 'visitors-popup-card';
       card.id = 'visitorsPopupCard';
       card.innerHTML = `
+        <button class="vpc-close-btn" onclick="toggleVisitorsCard()" title="إغلاق"><i class="fas fa-times"></i></button>
         <div class="vpc-row">
           <div class="vpc-stat">
             <div class="vpc-icon-wrap live-wrap"><span class="vpc-live-dot"></span></div>
@@ -12905,9 +13151,9 @@
       left = Math.max(margin, Math.min(left, vw - cardW - margin));
 
       /* ضع تحت الـ pill أو فوقه إن لم تكفِ المساحة */
-      let top = pr.bottom + 8;
+      let top = pr.bottom + 24;
       if (top + cardH > vh - margin) {
-        top = pr.top - cardH - 8;
+        top = pr.top - cardH - 24;
       }
       top = Math.max(margin, top);
 
