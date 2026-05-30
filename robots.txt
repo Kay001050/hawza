@@ -1,55 +1,36 @@
 # =====================================================
 # robots.txt | موقع "نور الحوزة"
-# إعداد لتوجيه محركات البحث وGooglebot بذكاء
+# تم تحسينه لتحسين الزحف والأرشفة لدى محركات البحث
 # =====================================================
 
-User-agent: *
-Disallow:
+# توجيه محركات البحث إلى خرائط الموقع المعتمدة
+Sitemap: https://hawza.netlify.app/sitemap.xml
+Sitemap: https://hawza.netlify.app/sitemap-google.xml
+Sitemap: https://hawza.netlify.app/sitemap-1.xml
+Sitemap: https://hawza.netlify.app/sitemap-google-1.xml
+Sitemap: https://hawza.netlify.app/book/sitemap.xml
 
-# -------------------------------------
-# السماح الكامل بالزحف إلى الموقع
-# -------------------------------------
+# تعليمات لجميع روبوتات البحث (Googlebot, Bingbot, etc.)
+User-agent: *
+
+# منع الزحف إلى الملفات الحساسة أو البرمجية التي لا حاجة لأرشفتها
+Disallow: /netlify/
+Disallow: /data/
+Disallow: /server.js
+Disallow: /package.json
+Disallow: /package-lock.json
+Disallow: /.env.example
+Disallow: /.gitignore
+Disallow: /README.md
+Disallow: /admin.html
+
+# السماح العام بكل ما هو ضروري للأرشفة
 Allow: /
 Allow: /book/
 Allow: /privacy/
-
-# -------------------------------------
-# دعم الزحف لملفات الصور (تحسين العرض على المنصات)
-# -------------------------------------
+Allow: /*.css$
+Allow: /*.js$
 Allow: /*.png$
 Allow: /*.jpg$
 Allow: /*.jpeg$
 Allow: /*.webp$
-Allow: /images/
-
-# -------------------------------------
-# السماح بفهرسة الصفحات الأساسية
-# -------------------------------------
-Allow: /$
-Allow: /about
-Allow: /about.html
-Allow: /masadir
-Allow: /masadir.html
-
-# -------------------------------------
-# الصفحات الثانوية (غير ذات أولوية عالية، لكن متاحة)
-# -------------------------------------
-Allow: /offline
-Allow: /offline.html
-Allow: /custom-404
-Allow: /custom-404.html
-
-# -------------------------------------
-# خريطة الموقع الأساسية لمحركات البحث
-# -------------------------------------
-Sitemap: https://hawza.netlify.app/sitemap.xml
-
-# خريطة مخصصة لـ Googlebot (تحوي صفحات محددة بدقة)
-Sitemap: https://hawza.netlify.app/sitemap-google.xml
-
-# -------------------------------------
-# ملاحظات هامة:
-# - لا يوجد حظر لأي مسار، الزحف الكامل مسموح.
-# - تأكد من أن ملفات Sitemap تُخدم بـ content-type الصحيح (application/xml).
-# - Googlebot يتجاهل Crawl-delay، لذلك لم يُدرج.
-# -------------------------------------
