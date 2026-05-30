@@ -2148,7 +2148,7 @@
       position: relative;
       padding: calc(var(--header-height) + 50px) 0 40px;
       background: linear-gradient(165deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-      overflow: hidden;
+      overflow: visible;
     }
 
     .hero-glow {
@@ -2739,6 +2739,83 @@
     .search-qf-btn:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
     .search-qf-btn i { font-size: 0.68rem; }
 
+    /* ── زر الخيارات داخل مربع البحث ── */
+    .search-options-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; flex-shrink: 0;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border-subtle);
+      background: var(--bg-secondary);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      transition: var(--transition-fast);
+      cursor: pointer;
+      position: relative;
+    }
+    .search-options-btn:hover,
+    .search-options-btn.open {
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+      background: rgba(160,127,58,0.08);
+    }
+    .search-options-btn .options-dot {
+      position: absolute; top: 5px; right: 5px;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent-gold);
+      display: none;
+    }
+    .search-options-btn.has-active .options-dot { display: block; }
+
+    /* قائمة الخيارات المنسدلة */
+    .search-options-dropdown {
+      position: absolute; top: calc(100% + 10px); left: 0;
+      min-width: 220px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+      z-index: 99999;
+      display: none;
+      overflow: hidden;
+      animation: fadeInDown 0.18s ease;
+    }
+    .search-options-dropdown.open { display: block; }
+
+    .options-dropdown-title {
+      padding: 10px 14px 6px;
+      font-size: 0.68rem; font-weight: 800;
+      color: var(--text-muted); letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .options-dropdown-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px;
+      font-size: 0.82rem; font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background var(--transition-fast);
+      border-bottom: 1px solid var(--border-subtle);
+      user-select: none;
+    }
+    .options-dropdown-item:last-child { border-bottom: none; }
+    .options-dropdown-item:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+    .options-dropdown-item.active { color: var(--accent-gold); }
+    .options-dropdown-item.active i.opt-check { opacity: 1; }
+    .options-dropdown-item i.opt-icon { width: 18px; text-align: center; color: var(--accent-gold); font-size: 0.8rem; }
+    .options-dropdown-item i.opt-check { margin-right: auto; opacity: 0; color: var(--accent-emerald); font-size: 0.78rem; transition: opacity 0.15s; }
+    .options-dropdown-item span.opt-shortcut {
+      margin-right: auto;
+      font-size: 0.68rem; color: var(--text-muted);
+      background: var(--bg-secondary); border: 1px solid var(--border-subtle);
+      border-radius: 4px; padding: 1px 5px; font-family: monospace;
+    }
+
+    .options-dropdown-sep {
+      height: 1px; background: var(--border-subtle); margin: 2px 0;
+    }
+
     /* Suggestions dropdown */
     .search-suggestions {
       position: absolute; top: calc(100% + 8px); right: 0; left: 0;
@@ -2746,7 +2823,7 @@
       border: 1px solid var(--border-medium);
       border-radius: var(--radius-md);
       box-shadow: 0 12px 40px rgba(0,0,0,0.18);
-      z-index: 999;
+      z-index: 99999;
       display: none;
       overflow: hidden;
       max-height: 360px;
@@ -9958,6 +10035,44 @@
           <input type="text" class="search-input" id="searchInput"
                  placeholder="ابحث عن كتاب أو موضوع..." autocomplete="off"
                  aria-label="البحث في المكتبة" aria-autocomplete="list" aria-controls="searchSuggestions">
+          <!-- زر الخيارات — يسار مربع البحث -->
+          <div style="position:relative;">
+            <button class="search-options-btn" id="searchOptionsBtn" title="خيارات البحث">
+              <i class="fas fa-sliders-h"></i>
+              <span class="options-dot"></span>
+            </button>
+            <div class="search-options-dropdown" id="searchOptionsDropdown">
+              <div class="options-dropdown-title">خيارات البحث</div>
+              <!-- نطاق البحث -->
+              <div class="options-dropdown-item active" id="optScopeAll" data-opt="scope-all">
+                <i class="fas fa-globe-asia opt-icon"></i>
+                <span>كل المكتبة</span>
+                <i class="fas fa-check opt-check"></i>
+              </div>
+              <div class="options-dropdown-item" id="optScopeFolder" data-opt="scope-folder">
+                <i class="fas fa-folder-open opt-icon"></i>
+                <span>القسم الحالي فقط</span>
+                <i class="fas fa-check opt-check"></i>
+              </div>
+              <div class="options-dropdown-sep"></div>
+              <!-- فلاتر سريعة -->
+              <div class="options-dropdown-item" id="optFilterPdf" data-opt="filter-pdf">
+                <i class="fas fa-file-pdf opt-icon"></i>
+                <span>PDF فقط</span>
+                <span class="opt-shortcut">pdf:</span>
+              </div>
+              <div class="options-dropdown-item" id="optFilterFolder" data-opt="filter-folder">
+                <i class="fas fa-folder opt-icon"></i>
+                <span>مجلدات فقط</span>
+                <span class="opt-shortcut">مجلد:</span>
+              </div>
+              <div class="options-dropdown-item" id="optFilterExact" data-opt="filter-exact">
+                <i class="fas fa-quote-right opt-icon"></i>
+                <span>عبارة دقيقة</span>
+                <span class="opt-shortcut">"..."</span>
+              </div>
+            </div>
+          </div>
           <button class="search-btn" id="searchBtn" title="بحث (Enter)">
             <i class="fas fa-search"></i>
             <span>بحث</span>
@@ -12584,7 +12699,7 @@
     // filterAndRender
     function filterAndRender() {
       let items = [];
-      const currentScope = 'all';
+      const currentScope = (typeof _searchScope !== 'undefined') ? _searchScope : 'all';
       
       // إذا كان هناك بحث نشط → ابحث في المكتبة (كل أو القسم الحالي)
       if (state.searchQuery.trim()) {
@@ -14086,7 +14201,72 @@
         }
       });
 
-      // ── Scope always = 'all' ─────────────────────────────────────────────
+      // ── Scope always = 'all' (يُحدَّث ديناميكياً عبر زر الخيارات) ──────
+      let _searchScope = 'all';
+
+      // ── زر الخيارات ─────────────────────────────────────────────────────
+      const optBtn  = document.getElementById('searchOptionsBtn');
+      const optDrop = document.getElementById('searchOptionsDropdown');
+
+      function closeOptionsDropdown() {
+        if (optDrop) optDrop.classList.remove('open');
+        if (optBtn)  optBtn.classList.remove('open');
+      }
+
+      if (optBtn && optDrop) {
+        optBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = optDrop.classList.toggle('open');
+          optBtn.classList.toggle('open', isOpen);
+          if (isOpen) hideSearchSuggestions();
+        });
+
+        // نطاق البحث
+        document.getElementById('optScopeAll').addEventListener('click', () => {
+          _searchScope = 'all';
+          document.getElementById('optScopeAll').classList.add('active');
+          document.getElementById('optScopeFolder').classList.remove('active');
+          optBtn.classList.remove('has-active');
+          if (state.searchQuery.trim()) { state.currentPage = 1; filterAndRender(); }
+          closeOptionsDropdown();
+        });
+        document.getElementById('optScopeFolder').addEventListener('click', () => {
+          _searchScope = 'folder';
+          document.getElementById('optScopeFolder').classList.add('active');
+          document.getElementById('optScopeAll').classList.remove('active');
+          optBtn.classList.add('has-active');
+          if (state.searchQuery.trim()) { state.currentPage = 1; filterAndRender(); }
+          closeOptionsDropdown();
+        });
+
+        // فلاتر سريعة
+        document.getElementById('optFilterPdf').addEventListener('click', () => {
+          const cur = DOM.searchInput.value.replace(/^(pdf:|مجلد:)\s*/, '');
+          DOM.searchInput.value = 'pdf:' + cur;
+          DOM.searchInput.focus();
+          triggerSearch(DOM.searchInput.value);
+          closeOptionsDropdown();
+        });
+        document.getElementById('optFilterFolder').addEventListener('click', () => {
+          const cur = DOM.searchInput.value.replace(/^(pdf:|مجلد:)\s*/, '');
+          DOM.searchInput.value = 'مجلد:' + cur;
+          DOM.searchInput.focus();
+          triggerSearch(DOM.searchInput.value);
+          closeOptionsDropdown();
+        });
+        document.getElementById('optFilterExact').addEventListener('click', () => {
+          const cur = DOM.searchInput.value.replace(/^"(.*)"$/, '$1').replace(/^"|"$/g, '');
+          DOM.searchInput.value = `"${cur}"`;
+          DOM.searchInput.focus();
+          triggerSearch(DOM.searchInput.value);
+          closeOptionsDropdown();
+        });
+
+        // إغلاق عند الضغط خارجه
+        document.addEventListener('click', (e) => {
+          if (!optBtn.contains(e.target) && !optDrop.contains(e.target)) closeOptionsDropdown();
+        });
+      }
       
       DOM.sortSelect.addEventListener('change', (e) => { 
         state.currentSort = e.target.value; 
