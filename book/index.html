@@ -2689,6 +2689,194 @@
       transform: scale(1.02);
     }
 
+    /* ═══ Enhanced Search UI ═══ */
+    .search-container { position: relative; }
+
+    /* Search scope toggle */
+    .search-scope-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .search-scope-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 5px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.78rem; font-weight: 600;
+      border: 1.5px solid var(--border-subtle);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      transition: var(--transition-fast);
+      cursor: pointer;
+    }
+    .search-scope-btn.active {
+      background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
+      color: var(--bg-primary);
+      border-color: transparent;
+    }
+    .search-scope-btn i { font-size: 0.75rem; }
+
+    /* Quick filters row */
+    .search-quick-filters {
+      display: flex; align-items: center; gap: 6px;
+      justify-content: center; flex-wrap: wrap; margin-top: 8px;
+    }
+    .search-qf-label { font-size: 0.72rem; color: var(--text-muted); }
+    .search-qf-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 0.73rem; font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+    .search-qf-btn:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+    .search-qf-btn i { font-size: 0.68rem; }
+
+    /* Suggestions dropdown */
+    .search-suggestions {
+      position: absolute; top: calc(100% + 8px); right: 0; left: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+      z-index: 999;
+      display: none;
+      overflow: hidden;
+      max-height: 360px;
+      overflow-y: auto;
+    }
+    .search-suggestions.visible { display: block; animation: fadeInDown 0.18s ease; }
+    @keyframes fadeInDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+
+    .suggestions-section-title {
+      padding: 8px 16px 4px;
+      font-size: 0.7rem; font-weight: 700;
+      color: var(--text-muted); letter-spacing: 0.04em;
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .suggestions-section-title i { color: var(--accent-gold); }
+
+    .suggestion-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 16px;
+      cursor: pointer;
+      transition: background var(--transition-fast);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .suggestion-item:last-child { border-bottom: none; }
+    .suggestion-item:hover { background: var(--bg-card-hover); }
+    .suggestion-item.active { background: rgba(160,127,58,0.08); }
+
+    .suggestion-icon {
+      width: 32px; height: 32px; border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; flex-shrink: 0;
+    }
+    .suggestion-icon.history { background: var(--bg-tertiary); color: var(--text-muted); }
+    .suggestion-icon.result-folder { background: rgba(160,127,58,0.12); color: var(--accent-gold); }
+    .suggestion-icon.result-book { background: rgba(30,107,84,0.12); color: var(--accent-emerald); }
+
+    .suggestion-text { flex: 1; min-width: 0; }
+    .suggestion-name { font-size: 0.88rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .suggestion-name mark { background: rgba(160,127,58,0.25); color: var(--accent-gold-dark); border-radius: 3px; padding: 0 2px; }
+    .suggestion-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 1px; }
+    .suggestion-badge {
+      font-size: 0.65rem; padding: 2px 7px; border-radius: var(--radius-full); font-weight: 700; flex-shrink: 0;
+    }
+    .suggestion-badge.exact { background: rgba(30,107,84,0.15); color: var(--accent-emerald); }
+    .suggestion-badge.similar { background: rgba(160,127,58,0.15); color: var(--accent-gold-dark); }
+    .suggestion-badge.phonetic { background: rgba(52,152,219,0.15); color: var(--accent-blue); }
+
+    .suggestions-footer {
+      padding: 8px 16px;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-subtle);
+      font-size: 0.75rem; color: var(--text-muted);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .suggestions-footer kbd {
+      background: var(--bg-card); border: 1px solid var(--border-medium);
+      border-radius: 4px; padding: 1px 5px; font-size: 0.7rem;
+      font-family: monospace;
+    }
+    .suggestions-clear-history {
+      margin-right: auto; cursor: pointer; color: var(--accent-gold);
+      font-size: 0.72rem; font-weight: 600;
+    }
+    .suggestions-clear-history:hover { text-decoration: underline; }
+
+    /* Search result badges (shown on book cards during search) */
+    .search-match-badge {
+      position: absolute; bottom: 6px; left: 6px;
+      font-size: 0.6rem; padding: 2px 6px;
+      border-radius: var(--radius-full); font-weight: 800;
+      backdrop-filter: blur(4px); z-index: 2;
+    }
+    .search-match-badge.exact { background: rgba(30,107,84,0.85); color: #fff; }
+    .search-match-badge.similar { background: rgba(160,127,58,0.85); color: #fff; }
+    .search-match-badge.phonetic { background: rgba(52,152,219,0.85); color: #fff; }
+
+    /* Highlight in book/folder name */
+    .search-highlight mark {
+      background: rgba(160,127,58,0.22); color: var(--accent-gold-dark);
+      border-radius: 3px; padding: 0 2px; font-weight: 700;
+    }
+
+    /* Search stats bar */
+    .search-stats-bar {
+      display: none; align-items: center; gap: 12px; flex-wrap: wrap;
+      padding: 8px 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      margin-bottom: 12px;
+      font-size: 0.8rem; color: var(--text-secondary);
+      animation: fadeIn 0.3s ease;
+    }
+    .search-stats-bar.visible { display: flex; }
+    .search-stats-bar strong { color: var(--accent-gold); }
+    .search-stat-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: var(--radius-full);
+      font-size: 0.72rem; font-weight: 700;
+    }
+    .search-stat-pill.exact { background: rgba(30,107,84,0.12); color: var(--accent-emerald); }
+    .search-stat-pill.similar { background: rgba(160,127,58,0.12); color: var(--accent-gold-dark); }
+    .search-stat-pill.phonetic { background: rgba(52,152,219,0.12); color: var(--accent-blue); }
+    .search-clear-btn {
+      margin-right: auto; cursor: pointer; color: var(--text-muted);
+      display: flex; align-items: center; gap: 5px;
+      font-size: 0.75rem; transition: color var(--transition-fast);
+    }
+    .search-clear-btn:hover { color: var(--accent-gold); }
+
+    /* Did-you-mean */
+    .search-did-you-mean {
+      display: none; padding: 6px 16px 10px;
+      font-size: 0.82rem; color: var(--text-secondary);
+    }
+    .search-did-you-mean.visible { display: block; }
+    .search-did-you-mean a { color: var(--accent-gold); cursor: pointer; font-weight: 600; text-decoration: underline dotted; }
+
+    /* No-results helper */
+    .search-no-results-tips {
+      margin-top: 12px; text-align: center; color: var(--text-muted); font-size: 0.82rem;
+    }
+    .search-no-results-tips ul { list-style: none; margin-top: 8px; }
+    .search-no-results-tips li::before { content: '• '; color: var(--accent-gold); }
+    .search-no-results-tips code {
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      border-radius: 4px; padding: 1px 5px; font-size: 0.78rem;
+    }
+
     /* Library Switcher */
     .library-switcher {
       position: relative;
@@ -9764,14 +9952,21 @@
         </div>
       </div>
 
-      <div class="search-container">
+      <div class="search-container" id="searchContainer">
         <div class="search-box" id="searchBox">
-          <i class="fas fa-search search-icon"></i>
-          <input type="text" class="search-input" id="searchInput" placeholder="ابحث عن كتاب أو موضوع..." autocomplete="off">
-          <button class="search-btn" id="searchBtn">
+          <i class="fas fa-search search-icon" id="searchIconEl"></i>
+          <input type="text" class="search-input" id="searchInput"
+                 placeholder="ابحث عن كتاب أو موضوع..." autocomplete="off"
+                 aria-label="البحث في المكتبة" aria-autocomplete="list" aria-controls="searchSuggestions">
+          <button class="search-btn" id="searchBtn" title="بحث (Enter)">
             <i class="fas fa-search"></i>
             <span>بحث</span>
           </button>
+        </div>
+
+        <!-- Suggestions Dropdown -->
+        <div class="search-suggestions" id="searchSuggestions" role="listbox">
+          <!-- injected by JS -->
         </div>
       </div>
     </div>
@@ -10140,6 +10335,10 @@
           <i class="fas fa-folder-open"></i>
           <span id="sectionTitleText">جميع الأقسام</span>
         </h2>
+      </div>
+      <!-- شريط إحصاءات البحث -->
+      <div class="search-stats-bar" id="searchStatsBar">
+        <!-- injected by JS -->
       </div>
       <div class="books-grid" id="booksGrid"></div>
       <div class="pagination" id="pagination"></div>
@@ -11852,242 +12051,569 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // ✨ محرك البحث الذكي — Smart Hybrid Search Engine
-    //    (Arabizi Transliteration + Fuse.js Fuzzy Search)
-    //    يعمل بالكامل على جهة العميل — Client-Side Only
+    // ✨✨✨ محرك البحث الذكي المتطور v2.0 — Advanced Hybrid Search Engine ✨✨✨
+    //   الأولوية 1 → تطابق دقيق (Exact Match)
+    //   الأولوية 2 → يبدأ بـ (Starts-With)
+    //   الأولوية 3 → يحتوي على (Contains)
+    //   الأولوية 4 → تطابق دقيق بعد التطبيع العربي (Normalized Exact)
+    //   الأولوية 5 → يبدأ بـ بعد التطبيع (Normalized Starts-With)
+    //   الأولوية 6 → يحتوي على بعد التطبيع (Normalized Contains)
+    //   الأولوية 7 → تطبيق كلمة بكلمة (Word-by-Word)
+    //   الأولوية 8 → Fuse.js ضبابي (Fuzzy Matching)
+    //   الأولوية 9 → عربيزي / إنجليزي (Phonetic Transliteration)
+    //   + مشغّلات: "عبارة دقيقة"، -استثناء، pdf:، مجلد:
     // ═══════════════════════════════════════════════════════════════════════════
 
     /**
      * قاموس شامل لتحويل الحروف العربية إلى مقابلاتها في العربيزي (فرانكو)
-     * لكل حرف: المرادف الأكثر شيوعاً أولاً
      */
     const ARABIZI_MAP = {
-      'ا': ['a', 'e', 'i', 'aa', '2'],
-      'أ': ['a', 'e', '2'],
-      'إ': ['i', 'e', '2'],
-      'آ': ['aa', 'a', '2'],
-      'ء': ['a', "'", '2'],
-      'ؤ': ['o', 'u', '2'],
-      'ئ': ['y', 'i', '2'],
-      'ب': ['b'],
-      'ت': ['t'],
-      'ث': ['th', 's', 't'],
-      'ج': ['j', 'g'],
-      'ح': ['h', '7'],
-      'خ': ['kh', 'k', 'x', '5'],
-      'د': ['d'],
-      'ذ': ['th', 'z', 'd', '3z'],
-      'ر': ['r'],
-      'ز': ['z'],
-      'س': ['s'],
-      'ش': ['sh', 'ch', '3s'],
-      'ص': ['s', 'ss', 'S', '9'],
-      'ض': ['d', 'dh', '9', 'z'],
-      'ط': ['t', 'tt', '6', 'T'],
-      'ظ': ['z', 'dh', '6'],
-      'ع': ['a', 'aa', 'e', 'i', '3', "'"],
-      'غ': ['gh', 'g', '3'],
-      'ف': ['f'],
-      'ق': ['q', 'g', 'k', '8'],
-      'ك': ['k', 'c'],
-      'ل': ['l'],
-      'م': ['m'],
-      'ن': ['n'],
-      'ه': ['h', 'a', 'e'],
-      'ة': ['a', 'h', 'e', 'at'],
-      'و': ['w', 'o', 'u', 'oo', 'ou'],
-      'ي': ['y', 'i', 'ee', 'e'],
-      'ى': ['a', 'y', 'i'],
-      'ال': ['al', 'el'],
-      'لا': ['la'],
+      'ا': ['a', 'e', 'i', 'aa', '2'], 'أ': ['a', 'e', '2'], 'إ': ['i', 'e', '2'],
+      'آ': ['aa', 'a', '2'],           'ء': ["a", "'", '2'], 'ؤ': ['o', 'u', '2'],
+      'ئ': ['y', 'i', '2'],            'ب': ['b'],           'ت': ['t'],
+      'ث': ['th', 's', 't'],           'ج': ['j', 'g'],      'ح': ['h', '7'],
+      'خ': ['kh', 'k', 'x', '5'],      'د': ['d'],           'ذ': ['th', 'z', 'd'],
+      'ر': ['r'],  'ز': ['z'],         'س': ['s'],           'ش': ['sh', 'ch'],
+      'ص': ['s', 'ss', '9'],           'ض': ['d', 'dh', '9'],'ط': ['t', 'tt', '6'],
+      'ظ': ['z', 'dh', '6'],           'ع': ['a', 'aa', 'e', 'i', '3'],
+      'غ': ['gh', 'g', '3'],           'ف': ['f'],           'ق': ['q', 'g', 'k', '8'],
+      'ك': ['k', 'c'],                 'ل': ['l'],           'م': ['m'],
+      'ن': ['n'],  'ه': ['h', 'a', 'e'],'ة': ['a', 'h', 'e', 'at'],
+      'و': ['w', 'o', 'u', 'oo'],      'ي': ['y', 'i', 'ee', 'e'],
+      'ى': ['a', 'y', 'i'],            'ال': ['al', 'el'],   'لا': ['la'],
     };
 
-    /** تطبيع النص العربي: توحيد أشكال الألف، تاء مربوطة، ياء */
+    /** تطبيع عربي شامل: الألفات + التاء المربوطة + الياء + التشكيل + الهمزات */
     function normalizeArabic(text) {
+      if (!text) return '';
       return text
-        .replace(/[أإآ]/g, 'ا')
+        .replace(/[أإآٱ]/g, 'ا')
         .replace(/ة/g, 'ه')
-        .replace(/ى/g, 'ي')
-        .replace(/ؤ/g, 'و')
+        .replace(/[ىي]/g, 'ي')
+        .replace(/[ؤو]/g, 'و')
         .replace(/ئ/g, 'ي')
-        .replace(/[\u064B-\u065F\u0670]/g, '') // إزالة التشكيل
-        .trim()
-        .replace(/\s+/g, ' ');
+        .replace(/[\u064B-\u065F\u0670\u0640]/g, '') // تشكيل + كشيدة
+        .replace(/ّ/g, '')                             // شدة
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    /** تطبيع أقوى: يزيل "ال" التعريف أيضاً */
+    function deepNormalize(text) {
+      return normalizeArabic(text)
+        .replace(/^ال/, '')
+        .replace(/ ال/g, ' ');
     }
 
     /** هل النص يحتوي على عربي؟ */
-    function isArabicText(text) {
-      return /[\u0600-\u06FF]/.test(text);
-    }
+    function isArabicText(text) { return /[\u0600-\u06FF]/.test(text); }
 
     /**
-     * تحويل كلمة عربية إلى مصفوفة من النسخ الصوتية المحتملة (عربيزي)
-     * تولّد حتى 3 متغيرات مختلفة بناءً على أولويات القاموس
+     * تحويل كلمة عربية إلى متغيرات عربيزي متعددة
      */
     function arabicToArabiziVariants(arabicWord) {
       const normalized = normalizeArabic(arabicWord);
       const variants = new Set();
-
       const buildVariant = (priority) => {
-        let result = '';
-        // معالجة "ال" التعريف كوحدة
-        let i = 0;
+        let result = '', i = 0;
         while (i < normalized.length) {
-          const twoChar = normalized.slice(i, i + 2);
-          if (ARABIZI_MAP[twoChar]) {
-            const opts = ARABIZI_MAP[twoChar];
+          const two = normalized.slice(i, i + 2);
+          if (ARABIZI_MAP[two]) {
+            const opts = ARABIZI_MAP[two];
             result += opts[Math.min(priority, opts.length - 1)];
             i += 2;
           } else {
             const ch = normalized[i];
             if (ch === ' ') { result += ' '; i++; continue; }
             const opts = ARABIZI_MAP[ch];
-            if (opts) {
-              result += opts[Math.min(priority, opts.length - 1)];
-            } else {
-              result += ch;
-            }
+            result += opts ? opts[Math.min(priority, opts.length - 1)] : ch;
             i++;
           }
         }
         return result;
       };
-
-      for (let p = 0; p < 4; p++) {
-        const v = buildVariant(p);
-        if (v) variants.add(v.toLowerCase());
-      }
-
+      for (let p = 0; p < 4; p++) { const v = buildVariant(p); if (v) variants.add(v.toLowerCase()); }
       return [...variants];
     }
 
     /**
-     * البحث الهجين الذكي (Hybrid Smart Search)
-     * يجمع بين: التطبيع العربي + التحويل الصوتي + Fuse.js الضبابي
-     *
-     * @param {string} query   - نص البحث الذي أدخله المستخدم
-     * @param {Array}  items   - العناصر الحالية المراد البحث فيها
-     * @returns {Array}        - نتائج مرتّبة حسب الأولوية
+     * تحليل استعلام البحث واستخراج المشغّلات الخاصة
+     * يدعم: "عبارة دقيقة", -استثناء, pdf:, مجلد:, كتاب:
      */
-    function hybridSearch(query, items) {
+    function parseSearchQuery(rawQuery) {
+      let query = rawQuery.trim();
+      const operators = { exactPhrases: [], exclude: [], typeFilter: null, isExactMode: false };
+
+      // مشغّل النوع: pdf: أو مجلد: أو كتاب:
+      const typeMatch = query.match(/^(pdf|PDF|مجلد|كتاب|فولدر):\s*/);
+      if (typeMatch) {
+        const t = typeMatch[1].toLowerCase();
+        operators.typeFilter = (t === 'pdf') ? 'pdf' : (t === 'مجلد' || t === 'فولدر') ? 'folder' : 'book';
+        query = query.slice(typeMatch[0].length);
+      }
+
+      // عبارات دقيقة بين علامتي اقتباس: "كلمة"
+      const phraseRe = /"([^"]+)"/g;
+      let m;
+      while ((m = phraseRe.exec(query)) !== null) {
+        operators.exactPhrases.push(m[1].trim());
+        operators.isExactMode = true;
+      }
+      query = query.replace(/"[^"]*"/g, '').trim();
+
+      // استثناءات: -كلمة
+      const excludeRe = /(?:^|\s)-(\S+)/g;
+      while ((m = excludeRe.exec(query)) !== null) { operators.exclude.push(m[1]); }
+      query = query.replace(/(?:^|\s)-\S+/g, '').trim();
+
+      return { cleanQuery: query, ...operators };
+    }
+
+    /**
+     * تمييز (highlight) مصطلح البحث داخل نص
+     */
+    function highlightText(text, queries) {
+      if (!text || !queries || !queries.length) return text;
+      let result = text;
+      const escaped = queries
+        .filter(q => q && q.length >= 2)
+        .map(q => q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+      if (!escaped.length) return text;
+      const pattern = new RegExp(`(${escaped.join('|')})`, 'gi');
+      result = result.replace(pattern, '<mark>$1</mark>');
+      return result;
+    }
+
+    // ─── سجل البحث ───────────────────────────────────────────────────────────
+    const SEARCH_HISTORY_KEY = 'noor_search_history_v2';
+    const MAX_HISTORY        = 12;
+
+    function getSearchHistory() {
+      try { return JSON.parse(localStorage.getItem(SEARCH_HISTORY_KEY) || '[]'); } catch(e) { return []; }
+    }
+    function addToSearchHistory(query) {
+      if (!query || query.length < 2) return;
+      let h = getSearchHistory().filter(q => q !== query);
+      h.unshift(query);
+      h = h.slice(0, MAX_HISTORY);
+      try { localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(h)); } catch(e) {}
+    }
+    function clearSearchHistory() {
+      try { localStorage.removeItem(SEARCH_HISTORY_KEY); } catch(e) {}
+    }
+
+    // ─── كائن يحمل آخر نتائج بحث مع بيانات التطابق ──────────────────────────
+    let _lastSearchMeta = { exact: 0, similar: 0, phonetic: 0, total: 0, query: '' };
+
+    /**
+     * ══════════════════════════════════════════════════════════════════════════
+     * hybridSearch — المحرك الرئيسي
+     * ══════════════════════════════════════════════════════════════════════════
+     * @param {string} query   - نص البحث
+     * @param {Array}  items   - العناصر (مجلدات + كتب)
+     * @param {string} scope   - 'all' | 'folder' (البحث في القسم الحالي فقط)
+     * @returns {Array}        - نتائج مرتّبة بالأولوية + حقل _matchType
+     */
+    function hybridSearch(query, items, scope) {
+      _lastSearchMeta = { exact: 0, similar: 0, phonetic: 0, total: 0, query };
       if (!query || !query.trim() || !items.length) return items;
 
-      // التحقق من وجود مكتبة Fuse
-      if (typeof Fuse === 'undefined') {
-        // Fallback بسيط مع التطبيع فقط
-        const q = normalizeArabic(query).toLowerCase();
-        return items.filter(it =>
-          normalizeArabic(it.name).toLowerCase().includes(q) ||
-          (it.folderName && normalizeArabic(it.folderName).toLowerCase().includes(q))
-        );
+      // ── تحليل الاستعلام ──────────────────────────────────────────────────
+      const parsed    = parseSearchQuery(query);
+      const cleanQ    = parsed.cleanQuery;
+      const isArabic  = isArabicText(cleanQ) || parsed.exactPhrases.some(p => isArabicText(p));
+
+      // فلتر النوع (pdf / مجلد / كتاب)
+      let pool = items;
+      if (parsed.typeFilter === 'folder') {
+        pool = items.filter(it => it.mimeType === 'application/vnd.google-apps.folder');
+      } else if (parsed.typeFilter === 'pdf') {
+        pool = items.filter(it => (it.mimeType || '').includes('pdf') || (it.name || '').toLowerCase().endsWith('.pdf'));
+      } else if (parsed.typeFilter === 'book') {
+        pool = items.filter(it => it.mimeType !== 'application/vnd.google-apps.folder');
       }
 
-      const raw = query.trim();
-      const isArabic = isArabicText(raw);
-      const normalizedQuery = isArabic ? normalizeArabic(raw) : raw.toLowerCase();
+      // وضع "عبارة دقيقة فقط" — كل المصطلحات بين علامات اقتباس
+      if (parsed.isExactMode && cleanQ === '') {
+        const matched = pool.filter(it => {
+          const name = it.name || '';
+          return parsed.exactPhrases.every(ph =>
+            name.includes(ph) || normalizeArabic(name).includes(normalizeArabic(ph))
+          );
+        });
+        const excluded = applyExclusions(matched, parsed.exclude);
+        excluded.forEach(it => it._matchType = 'exact');
+        _lastSearchMeta.exact = excluded.length; _lastSearchMeta.total = excluded.length;
+        return excluded;
+      }
 
-      // إعدادات Fuse.js المثلى
-      const fuseOptions = {
-        threshold: 0.38,
-        ignoreLocation: true,
-        includeScore: true,
-        minMatchCharLength: 2,
-        shouldSort: true,
-        keys: [
-          { name: 'name',       weight: 0.75 },
-          { name: 'folderName', weight: 0.25 }
-        ]
-      };
+      // النص الفعلي للبحث (قد يكون cleanQ وحده أو + exactPhrases مدمجة)
+      const effectiveQuery = [cleanQ, ...parsed.exactPhrases].filter(Boolean).join(' ');
+      if (!effectiveQuery) return applyExclusions(pool, parsed.exclude);
 
-      // تطبيع أسماء العناصر للبحث المحسّن
-      const normalizedItems = items.map(it => ({
+      const raw        = effectiveQuery.trim();
+      const normQ      = isArabic ? normalizeArabic(raw)  : raw.toLowerCase();
+      const deepQ      = isArabic ? deepNormalize(raw)     : raw.toLowerCase();
+
+      // ── إعداد العناصر الموسّعة ────────────────────────────────────────────
+      const ext = pool.map(it => ({
         ...it,
-        _normName: normalizeArabic(it.name).toLowerCase(),
-        _normFolder: it.folderName ? normalizeArabic(it.folderName).toLowerCase() : ''
+        _normName:   normalizeArabic(it.name || '').toLowerCase(),
+        _deepName:   deepNormalize(it.name || '').toLowerCase(),
+        _normFolder: normalizeArabic(it.folderName || '').toLowerCase(),
+        _rawLower:   (it.name || '').toLowerCase(),
       }));
 
-      const fuseNorm = new Fuse(normalizedItems, {
-        ...fuseOptions,
-        keys: [
-          { name: '_normName',   weight: 0.75 },
-          { name: '_normFolder', weight: 0.25 }
-        ]
-      });
+      // خريطة: id → { score, matchType }
+      const scoreMap = new Map(); // id → { sc, type }
 
-      const fuse = new Fuse(normalizedItems, {
-        ...fuseOptions,
-        keys: [
-          { name: 'name',       weight: 0.75 },
-          { name: 'folderName', weight: 0.25 }
-        ]
-      });
-
-      // خريطة: id → أفضل score (الأقل = أفضل)
-      const scores = new Map();
-
-      const addResults = (results, bonusPriority = 0) => {
-        results.forEach(r => {
-          const id = r.item.id;
-          const sc = (r.score || 0) - bonusPriority; // إعطاء أولوية أعلى
-          if (!scores.has(id) || scores.get(id) > sc) {
-            scores.set(id, sc);
-          }
-        });
+      const setScore = (id, sc, type) => {
+        if (!scoreMap.has(id) || scoreMap.get(id).sc > sc) {
+          scoreMap.set(id, { sc, type });
+        }
       };
 
-      if (isArabic) {
-        // 1. بحث بالنص العربي المطبّع (أعلى أولوية)
-        addResults(fuseNorm.search(normalizedQuery), 0.1);
-        // 2. بحث بالنص العربي الأصلي
-        if (normalizedQuery !== raw) addResults(fuse.search(raw));
-        // 3. تحويل كل كلمة إلى عربيزي والبحث
-        const words = normalizedQuery.split(' ').filter(w => w.length >= 2);
-        words.forEach(word => {
-          const variants = arabicToArabiziVariants(word);
-          variants.forEach(v => { if (v.length >= 2) addResults(fuse.search(v)); });
+      const qLower = raw.toLowerCase();
+      const normQLower = normQ.toLowerCase();
+      const deepQLower = deepQ.toLowerCase();
+
+      // ── الأولوية 1: تطابق دقيق بالنص الأصلي ─────────────────────────────
+      ext.forEach(it => {
+        if (it.name === raw || it.name.toLowerCase() === qLower)
+          setScore(it.id, -2.0, 'exact');
+      });
+
+      // ── الأولوية 2: يبدأ بـ (نص أصلي) ────────────────────────────────────
+      ext.forEach(it => {
+        if (it._rawLower.startsWith(qLower))
+          setScore(it.id, -1.5, 'exact');
+      });
+
+      // ── الأولوية 3: يحتوي على (نص أصلي) ──────────────────────────────────
+      ext.forEach(it => {
+        if (it._rawLower.includes(qLower))
+          setScore(it.id, -1.0, 'exact');
+      });
+
+      // ── الأولوية 4: تطابق دقيق بعد التطبيع العربي ────────────────────────
+      ext.forEach(it => {
+        if (it._normName === normQLower || it._deepName === deepQLower)
+          setScore(it.id, -0.8, 'exact');
+      });
+
+      // ── الأولوية 5: يبدأ بـ بعد التطبيع ──────────────────────────────────
+      ext.forEach(it => {
+        if (it._normName.startsWith(normQLower) || it._deepName.startsWith(deepQLower))
+          setScore(it.id, -0.6, 'exact');
+      });
+
+      // ── الأولوية 6: يحتوي على بعد التطبيع ────────────────────────────────
+      ext.forEach(it => {
+        if (it._normName.includes(normQLower) || it._deepName.includes(deepQLower) ||
+            it._normFolder.includes(normQLower))
+          setScore(it.id, -0.3, 'exact');
+      });
+
+      // ── الأولوية 7: بحث كلمة بكلمة (كل كلمة موجودة في الاسم) ────────────
+      const queryWords = normQLower.split(/\s+/).filter(w => w.length >= 2);
+      if (queryWords.length > 1) {
+        ext.forEach(it => {
+          const allMatch = queryWords.every(w => it._normName.includes(w) || it._normFolder.includes(w));
+          if (allMatch) setScore(it.id, -0.1, 'exact');
+          else {
+            const matchCount = queryWords.filter(w => it._normName.includes(w)).length;
+            if (matchCount > 0) setScore(it.id, -0.1 + (queryWords.length - matchCount) * 0.05, 'exact');
+          }
         });
-        // 4. تحويل العبارة كاملة إلى عربيزي
-        if (words.length > 1) {
-          const fullVariants = arabicToArabiziVariants(normalizedQuery);
-          fullVariants.forEach(v => { if (v.length >= 3) addResults(fuse.search(v)); });
-        }
-      } else {
-        // بحث بالإنجليزي / العربيزي مباشرة
-        addResults(fuse.search(raw), 0.05);
-        addResults(fuse.search(raw.toLowerCase()));
       }
 
-      if (scores.size === 0) return [];
+      // ── الأولويات 8-9: Fuse.js ────────────────────────────────────────────
+      if (typeof Fuse !== 'undefined') {
+        const fuseOpts = {
+          threshold: 0.42, ignoreLocation: true, includeScore: true, minMatchCharLength: 2,
+          keys: [{ name: '_normName', weight: 0.70 }, { name: '_normFolder', weight: 0.20 }, { name: '_deepName', weight: 0.10 }]
+        };
+        const fuseNorm = new Fuse(ext, fuseOpts);
 
-      // ترتيب: الأقل score أولاً
-      const sorted = [...scores.entries()].sort((a, b) => a[1] - b[1]);
+        // أولوية 8: Fuse على النص المطبّع
+        fuseNorm.search(normQLower).forEach(r => {
+          const sc = r.score || 0;
+          if (sc < 0.45) setScore(r.item.id, sc + 0.1, sc < 0.25 ? 'exact' : 'similar');
+        });
+
+        // أولوية 8b: Fuse على النص العميق
+        if (deepQLower !== normQLower) {
+          fuseNorm.search(deepQLower).forEach(r => {
+            const sc = r.score || 0;
+            if (sc < 0.45) setScore(r.item.id, sc + 0.12, 'similar');
+          });
+        }
+
+        // أولوية 9: بحث بكل كلمة على حدة
+        queryWords.forEach(word => {
+          fuseNorm.search(word).forEach(r => {
+            const sc = (r.score || 0) + 0.2;
+            if (sc < 0.65) setScore(r.item.id, sc, 'similar');
+          });
+        });
+
+        // أولوية 10: عربيزي / صوتي
+        if (isArabic) {
+          const fuseRaw = new Fuse(ext, { ...fuseOpts, threshold: 0.45,
+            keys: [{ name: 'name', weight: 0.8 }, { name: 'folderName', weight: 0.2 }] });
+
+          queryWords.forEach(word => {
+            const variants = arabicToArabiziVariants(word);
+            variants.forEach(v => {
+              if (v.length < 2) return;
+              fuseRaw.search(v).forEach(r => {
+                const sc = (r.score || 0) + 0.35;
+                if (sc < 0.80) setScore(r.item.id, sc, 'phonetic');
+              });
+            });
+          });
+          // بحث بالعبارة كاملة صوتياً
+          if (queryWords.length > 1) {
+            arabicToArabiziVariants(normQLower).forEach(v => {
+              if (v.length >= 3) fuseRaw.search(v).forEach(r => {
+                const sc = (r.score || 0) + 0.30;
+                if (sc < 0.80) setScore(r.item.id, sc, 'phonetic');
+              });
+            });
+          }
+        } else {
+          // إنجليزي: Fuse مباشرة على الأسماء
+          const fuseEn = new Fuse(ext, { ...fuseOpts, threshold: 0.40,
+            keys: [{ name: 'name', weight: 0.8 }, { name: 'folderName', weight: 0.2 }] });
+          fuseEn.search(qLower).forEach(r => {
+            const sc = (r.score || 0) + 0.15;
+            if (sc < 0.65) setScore(r.item.id, sc, 'phonetic');
+          });
+        }
+      } else {
+        // Fallback بدون Fuse
+        ext.forEach(it => {
+          if (it._normName.includes(normQLower)) setScore(it.id, 0.3, 'similar');
+        });
+      }
+
+      if (scoreMap.size === 0) return [];
+
+      // ── تطبيق الاستثناءات ─────────────────────────────────────────────────
+      const validIds = new Set([...scoreMap.keys()]);
+      if (parsed.exclude.length) {
+        parsed.exclude.forEach(ex => {
+          const exNorm = normalizeArabic(ex).toLowerCase();
+          pool.forEach(it => {
+            const nm = normalizeArabic(it.name || '').toLowerCase();
+            if (nm.includes(exNorm) || it.name.toLowerCase().includes(ex.toLowerCase())) {
+              validIds.delete(it.id);
+              scoreMap.delete(it.id);
+            }
+          });
+        });
+      }
+
+      // ── تجميع إحصاءات نوع التطابق ─────────────────────────────────────────
+      scoreMap.forEach(({ type }) => {
+        if (type === 'exact')    _lastSearchMeta.exact++;
+        else if (type === 'similar') _lastSearchMeta.similar++;
+        else if (type === 'phonetic') _lastSearchMeta.phonetic++;
+      });
+      _lastSearchMeta.total = scoreMap.size;
+
+      // ── ترتيب وإرجاع ──────────────────────────────────────────────────────
+      const sorted = [...scoreMap.entries()].sort((a, b) => a[1].sc - b[1].sc);
       const idOrder = new Map(sorted.map(([id], idx) => [id, idx]));
+      const typeOf  = new Map(sorted.map(([id, v]) => [id, v.type]));
 
-      return items
+      return pool
         .filter(it => idOrder.has(it.id))
-        .sort((a, b) => (idOrder.get(a.id) || 0) - (idOrder.get(b.id) || 0));
+        .sort((a, b) => (idOrder.get(a.id) || 0) - (idOrder.get(b.id) || 0))
+        .map(it => ({ ...it, _matchType: typeOf.get(it.id) || 'similar' }));
+    }
+
+    /** تطبيق الاستثناءات على مصفوفة */
+    function applyExclusions(items, exclude) {
+      if (!exclude || !exclude.length) return items;
+      return items.filter(it => {
+        const nm = it.name.toLowerCase();
+        return !exclude.some(ex => nm.includes(ex.toLowerCase()) || normalizeArabic(nm).includes(normalizeArabic(ex)));
+      });
+    }
+
+    // ─── نظام مقترحات البحث ────────────────────────────────────────────────
+    let _suggestDebounceTimer = null;
+    let _suggestActiveSel     = -1;
+
+    function showSearchSuggestions(query) {
+      const box = document.getElementById('searchSuggestions');
+      if (!box) return;
+      if (!query || query.length < 1) { box.classList.remove('visible'); return; }
+
+      const history    = getSearchHistory().filter(h => h !== query && h.toLowerCase().includes(query.toLowerCase())).slice(0, 4);
+      const allItems   = [...state.allFolders.map(f => ({
+        id: f.id, name: f.name, mimeType: 'application/vnd.google-apps.folder', folderName: f.parentName || ''
+      })), ...state.allBooks];
+      const topResults = hybridSearch(query, allItems).slice(0, 6);
+
+      let html = '';
+      if (history.length) {
+        html += `<div class="suggestions-section-title"><i class="fas fa-history"></i> عمليات بحث سابقة</div>`;
+        history.forEach(h => {
+          html += `<div class="suggestion-item" data-query="${encodeURIComponent(h)}" role="option">
+            <div class="suggestion-icon history"><i class="fas fa-clock"></i></div>
+            <div class="suggestion-text"><div class="suggestion-name">${highlightText(h, [query])}</div></div>
+          </div>`;
+        });
+      }
+      if (topResults.length) {
+        html += `<div class="suggestions-section-title"><i class="fas fa-search"></i> نتائج سريعة</div>`;
+        topResults.forEach(item => {
+          const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
+          const cleanName = item.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '');
+          const matchType = item._matchType || 'similar';
+          const badge = matchType === 'exact'   ? '<span class="suggestion-badge exact">دقيق</span>'
+                      : matchType === 'similar' ? '<span class="suggestion-badge similar">مشابه</span>'
+                                                : '<span class="suggestion-badge phonetic">صوتي</span>';
+          html += `<div class="suggestion-item" data-id="${item.id}" data-name="${encodeURIComponent(cleanName)}" data-folder="${isFolder}" role="option">
+            <div class="suggestion-icon ${isFolder ? 'result-folder' : 'result-book'}">
+              <i class="fas ${isFolder ? 'fa-folder' : 'fa-file-alt'}"></i>
+            </div>
+            <div class="suggestion-text">
+              <div class="suggestion-name">${highlightText(cleanName, [query, normalizeArabic(query)])}</div>
+              ${item.folderName ? `<div class="suggestion-sub"><i class="fas fa-folder" style="font-size:0.65rem;"></i> ${item.folderName}</div>` : ''}
+            </div>
+            ${badge}
+          </div>`;
+        });
+      }
+      if (!history.length && !topResults.length) {
+        html += `<div style="padding:16px;text-align:center;color:var(--text-muted);font-size:0.82rem;"><i class="fas fa-search" style="margin-bottom:6px;display:block;font-size:1.2rem;opacity:0.4;"></i>لا توجد مقترحات</div>`;
+      }
+      html += `<div class="suggestions-footer">
+        <kbd>↑↓</kbd> للتنقل &nbsp; <kbd>Enter</kbd> للاختيار &nbsp; <kbd>Esc</kbd> للإغلاق
+        ${history.length ? '<span class="suggestions-clear-history" id="clearHistoryBtn">مسح السجل</span>' : ''}
+      </div>`;
+
+      box.innerHTML = html;
+      box.classList.add('visible');
+      _suggestActiveSel = -1;
+
+      // أحداث العناصر
+      box.querySelectorAll('.suggestion-item').forEach(el => {
+        el.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          const q = el.dataset.query;
+          if (q) {
+            DOM.searchInput.value = decodeURIComponent(q);
+            triggerSearch(decodeURIComponent(q));
+          } else if (el.dataset.id) {
+            const nm = decodeURIComponent(el.dataset.name);
+            if (el.dataset.folder === 'true') {
+              openFolder(el.dataset.id, nm);
+            } else {
+              openModal(el.dataset.id);
+            }
+            box.classList.remove('visible');
+          }
+        });
+      });
+      const clearBtn = box.querySelector('#clearHistoryBtn');
+      if (clearBtn) clearBtn.addEventListener('mousedown', (e) => {
+        e.preventDefault(); clearSearchHistory();
+        box.classList.remove('visible');
+      });
+    }
+
+    function hideSearchSuggestions() {
+      const box = document.getElementById('searchSuggestions');
+      if (box) box.classList.remove('visible');
+    }
+
+    /** تحديث شريط إحصاءات البحث */
+    function updateSearchStatsBar(query) {
+      const bar = document.getElementById('searchStatsBar');
+      if (!bar) return;
+      if (!query || !query.trim()) { bar.classList.remove('visible'); return; }
+      const m = _lastSearchMeta;
+      let pills = '';
+      if (m.exact)    pills += `<span class="search-stat-pill exact"><i class="fas fa-bullseye"></i> ${m.exact} دقيق</span>`;
+      if (m.similar)  pills += `<span class="search-stat-pill similar"><i class="fas fa-circle-nodes"></i> ${m.similar} مشابه</span>`;
+      if (m.phonetic) pills += `<span class="search-stat-pill phonetic"><i class="fas fa-wave-square"></i> ${m.phonetic} صوتي</span>`;
+      bar.innerHTML = `
+        <i class="fas fa-search" style="color:var(--accent-gold);"></i>
+        البحث عن <strong>"${query}"</strong> — <strong>${m.total}</strong> نتيجة
+        ${pills}
+        <span class="search-clear-btn" id="searchClearBtn"><i class="fas fa-times-circle"></i> مسح</span>`;
+      bar.classList.add('visible');
+      const cb = bar.querySelector('#searchClearBtn');
+      if (cb) cb.addEventListener('click', () => {
+        DOM.searchInput.value = '';
+        triggerSearch('');
+        hideSearchSuggestions();
+      });
+    }
+
+    /** تنفيذ البحث وحفظه في السجل */
+    function triggerSearch(value) {
+      state.searchQuery = value;
+      state.currentPage = 1;
+      if (value.trim()) {
+        addToSearchHistory(value.trim());
+        const libPage = document.getElementById('page-library');
+        if (libPage && libPage.style.display === 'none') showLibraryPage && showLibraryPage();
+      }
+      filterAndRender();
+      hideSearchSuggestions();
+    }
+
+    /** تمييز النص داخل العنصر المعروض */
+    function applyHighlightsToGrid(query) {
+      if (!query || !query.trim()) return;
+      const terms = [query, normalizeArabic(query)].filter((v, i, a) => v && a.indexOf(v) === i);
+      document.querySelectorAll('.book-title, .folder-name').forEach(el => {
+        const orig = el.dataset.origText || el.textContent;
+        el.dataset.origText = orig;
+        el.classList.add('search-highlight');
+        el.innerHTML = highlightText(orig, terms);
+      });
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
     // filterAndRender
     function filterAndRender() {
       let items = [];
+      const currentScope = 'all';
       
-      // إذا كان هناك بحث نشط → ابحث في كامل المكتبة (كل الكتب والمجلدات)
+      // إذا كان هناك بحث نشط → ابحث في المكتبة (كل أو القسم الحالي)
       if (state.searchQuery.trim()) {
-        const allFolderItems = state.allFolders.map(f => ({
-          id: f.id, name: f.name,
-          mimeType: 'application/vnd.google-apps.folder',
-          folderName: f.parentName || ''
-        }));
-        const allBookItems = state.allBooks.map(b => ({ ...b, mimeType: b.mimeType || 'application/octet-stream' }));
-        items = [...allFolderItems, ...allBookItems];
+        let searchPool;
+        if (currentScope === 'folder') {
+          // البحث في القسم الحالي فقط
+          const currentFolderItems = state.currentItems.map(it =>
+            it.mimeType === 'application/vnd.google-apps.folder'
+              ? { ...it, folderName: '' }
+              : it
+          );
+          searchPool = currentFolderItems;
+        } else {
+          // البحث في كامل المكتبة
+          const allFolderItems = state.allFolders.map(f => ({
+            id: f.id, name: f.name,
+            mimeType: 'application/vnd.google-apps.folder',
+            folderName: f.parentName || ''
+          }));
+          const allBookItems = state.allBooks.map(b => ({ ...b, mimeType: b.mimeType || 'application/octet-stream' }));
+          searchPool = [...allFolderItems, ...allBookItems];
+        }
 
-        // ✨ البحث الذكي الهجين على كامل المحتوى
-        items = hybridSearch(state.searchQuery, items);
+        // ✨ البحث الذكي المتطور
+        items = hybridSearch(state.searchQuery, searchPool, currentScope);
 
-        // تحديث عنوان القسم ليعكس البحث
-        if (DOM.sectionTitleText) DOM.sectionTitleText.textContent = `نتائج البحث: "${state.searchQuery}"`;
+        // تحديث عنوان القسم
+        const scopeLabel = currentScope === 'folder' ? ' (القسم الحالي)' : '';
+        if (DOM.sectionTitleText) DOM.sectionTitleText.textContent = `نتائج البحث: "${state.searchQuery}"${scopeLabel}`;
 
         // تأكد أن صفحة المكتبة ظاهرة
         const libSection = document.getElementById('page-library');
@@ -12101,20 +12627,23 @@
       }
       
       const folders = items.filter(item => item.mimeType === 'application/vnd.google-apps.folder');
-      const files = items.filter(item => item.mimeType !== 'application/vnd.google-apps.folder');
+      const files   = items.filter(item => item.mimeType !== 'application/vnd.google-apps.folder');
       
       const sortFn = (a, b) => {
         switch (state.currentSort) {
-          case 'name-asc': return a.name.localeCompare(b.name, 'ar');
+          case 'name-asc':  return a.name.localeCompare(b.name, 'ar');
           case 'name-desc': return b.name.localeCompare(a.name, 'ar');
-          case 'newest': return new Date(b.createdTime || 0) - new Date(a.createdTime || 0);
-          case 'oldest': return new Date(a.createdTime || 0) - new Date(b.createdTime || 0);
+          case 'newest':    return new Date(b.createdTime || 0) - new Date(a.createdTime || 0);
+          case 'oldest':    return new Date(a.createdTime || 0) - new Date(b.createdTime || 0);
           default: return 0;
         }
       };
       
-      folders.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
-      files.sort(sortFn);
+      // عند البحث: لا ترتّب المجلدات أبجدياً بل احتفظ بترتيب الأولوية
+      if (!state.searchQuery.trim()) {
+        folders.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
+        files.sort(sortFn);
+      }
       
       state.filteredItems = [...folders, ...files];
       DOM.resultsCount.textContent = state.filteredItems.length;
@@ -12122,11 +12651,46 @@
       const start = (state.currentPage - 1) * CONFIG.ITEMS_PER_PAGE;
       renderItems(state.filteredItems.slice(start, start + CONFIG.ITEMS_PER_PAGE));
       renderPagination(state.filteredItems.length);
+
+      // تحديث شريط الإحصاءات
+      updateSearchStatsBar(state.searchQuery.trim());
+
+      // تطبيق تمييز الكلمات بعد الرسم
+      if (state.searchQuery.trim()) {
+        requestAnimationFrame(() => applyHighlightsToGrid(state.searchQuery));
+      } else {
+        // إزالة التمييز
+        document.querySelectorAll('.book-title[data-orig-text], .folder-name[data-orig-text]').forEach(el => {
+          el.innerHTML = el.dataset.origText || el.textContent;
+          el.classList.remove('search-highlight');
+          delete el.dataset.origText;
+        });
+      }
     }
 
     function renderItems(items) {
       if (items.length === 0) {
-        renderStatusMessage('fa-search', 'لا توجد نتائج', state.searchQuery ? `لم يتم العثور على نتائج` : 'لا يوجد محتوى');
+        if (state.searchQuery) {
+          const q = state.searchQuery;
+          renderStatusMessage('fa-search', 'لا توجد نتائج', `لم يتم العثور على نتائج للبحث عن "${q}"`);
+          // إضافة نصائح البحث
+          setTimeout(() => {
+            const msgEl = DOM.booksGrid.querySelector('.status-message');
+            if (msgEl) {
+              const tips = document.createElement('div');
+              tips.className = 'search-no-results-tips';
+              tips.innerHTML = `<ul>
+                <li>جرّب كلمات مختلفة أو أقصر</li>
+                <li>للبحث الدقيق: <code>"${q}"</code></li>
+                <li>للبحث بالنوع: <code>pdf:${q}</code> أو <code>مجلد:${q}</code></li>
+                <li>تأكد من إملاء الكلمة أو جرّب بالإنجليزية</li>
+              </ul>`;
+              msgEl.appendChild(tips);
+            }
+          }, 50);
+        } else {
+          renderStatusMessage('fa-search', 'لا توجد نتائج', 'لا يوجد محتوى');
+        }
         return;
       }
       
@@ -13457,31 +14021,72 @@
     function initEventListeners() {
       window.addEventListener('scroll', () => DOM.header.classList.toggle('scrolled', window.scrollY > 50));
       
-      const debouncedSearch = debounce((value) => { 
-        state.searchQuery = value; 
-        state.currentPage = 1;
-        if (value.trim()) {
-          const libPage = document.getElementById('page-library');
-          if (libPage && libPage.style.display === 'none') showLibraryPage && showLibraryPage();
+      // ── البحث الذكي مع debounce + suggestions ───────────────────────────
+      const debouncedSearch = debounce((value) => {
+        triggerSearch(value);
+      }, 280);
+
+      const debouncedSuggest = debounce((value) => {
+        showSearchSuggestions(value);
+      }, 150);
+
+      DOM.searchInput.addEventListener('input', (e) => {
+        const val = e.target.value;
+        debouncedSearch(val);
+        debouncedSuggest(val);
+        // تحريك الأيقونة عند الكتابة
+        const icon = document.getElementById('searchIconEl');
+        if (icon) icon.style.color = val ? 'var(--accent-gold)' : '';
+      });
+
+      DOM.searchInput.addEventListener('focus', (e) => {
+        if (e.target.value.length >= 1) showSearchSuggestions(e.target.value);
+        else {
+          // عرض السجل فقط
+          const h = getSearchHistory();
+          if (h.length) showSearchSuggestions(' ');
         }
-        filterAndRender(); 
-      }, 300);
-      
-      DOM.searchInput.addEventListener('input', (e) => debouncedSearch(e.target.value));
-      DOM.searchBtn.addEventListener('click', () => { 
-        state.searchQuery = DOM.searchInput.value;
-        state.currentPage = 1;
-        if (state.searchQuery.trim()) {
-          const libPage = document.getElementById('page-library');
-          if (libPage && libPage.style.display === 'none') showLibraryPage && showLibraryPage();
+      });
+
+      DOM.searchInput.addEventListener('blur', () => {
+        setTimeout(hideSearchSuggestions, 200);
+      });
+
+      // ── التنقل بالكيبورد في المقترحات ──────────────────────────────────
+      DOM.searchInput.addEventListener('keydown', (e) => {
+        const box = document.getElementById('searchSuggestions');
+        const items = box ? [...box.querySelectorAll('.suggestion-item')] : [];
+        if (e.key === 'ArrowDown' && items.length) {
+          e.preventDefault();
+          _suggestActiveSel = Math.min(_suggestActiveSel + 1, items.length - 1);
+          items.forEach((el, i) => el.classList.toggle('active', i === _suggestActiveSel));
+        } else if (e.key === 'ArrowUp' && items.length) {
+          e.preventDefault();
+          _suggestActiveSel = Math.max(_suggestActiveSel - 1, -1);
+          items.forEach((el, i) => el.classList.toggle('active', i === _suggestActiveSel));
+        } else if (e.key === 'Enter') {
+          if (_suggestActiveSel >= 0 && items[_suggestActiveSel]) {
+            items[_suggestActiveSel].dispatchEvent(new MouseEvent('mousedown'));
+          } else {
+            triggerSearch(DOM.searchInput.value);
+            hideSearchSuggestions();
+          }
+        } else if (e.key === 'Escape') {
+          hideSearchSuggestions();
+          DOM.searchInput.blur();
         }
-        filterAndRender();
-        // الانتقال لقسم المكتبة مرة واحدة عند الضغط على الزر فقط
+      });
+
+      DOM.searchBtn.addEventListener('click', () => {
+        triggerSearch(DOM.searchInput.value);
+        hideSearchSuggestions();
         if (state.searchQuery.trim()) {
           const libSection = document.getElementById('page-library');
           if (libSection) setTimeout(() => libSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
         }
       });
+
+      // ── Scope always = 'all' ─────────────────────────────────────────────
       
       DOM.sortSelect.addEventListener('change', (e) => { 
         state.currentSort = e.target.value; 
@@ -13508,7 +14113,7 @@
       if (savedCatState !== null) {
         state.categoriesCollapsed = savedCatState === 'true';
       } else {
-        state.categoriesCollapsed = true; // افتراضياً مغلق
+        state.categoriesCollapsed = true;
       }
       
       DOM.categoriesToggle.classList.toggle('collapsed', state.categoriesCollapsed);
@@ -13612,7 +14217,19 @@
       
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && DOM.bookModal.classList.contains('active')) closeModal();
-        if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); DOM.searchInput.focus(); }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+          e.preventDefault();
+          DOM.searchInput.focus();
+          DOM.searchInput.select();
+          // إظهار المقترحات عند فتح البحث بالاختصار
+          setTimeout(() => showSearchSuggestions(DOM.searchInput.value || ' '), 50);
+        }
+      });
+
+      // إغلاق المقترحات عند الضغط خارجها
+      document.addEventListener('click', (e) => {
+        const container = document.getElementById('searchContainer');
+        if (container && !container.contains(e.target)) hideSearchSuggestions();
       });
       
       window.addEventListener('resize', debounce(() => filterAndRender(), 250));
