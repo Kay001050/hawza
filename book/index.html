@@ -10526,8 +10526,8 @@
           <span class="library-tab-name">قصائد ومجالس</span>
         </button>
         <button class="library-tab" data-library="quds">
-          <span class="library-tab-icon"><i class="fas fa-mosque"></i></span>
-          <span class="library-tab-name">صور عمائم القدس</span>
+          <span class="library-tab-icon"><i class="fas fa-star-and-crescent"></i></span>
+          <span class="library-tab-name">أرث الشهيد الولي</span>
         </button>
         
 
@@ -11591,7 +11591,7 @@
         publications: { id: '1vuUnMUydyB1ZCR_9ibBEyKdxDcX_OPgi', name: 'إصدارات نور الحوزة' },
         electronic: { id: '1HZwxVbDfNfVOILQX3eg18T-NmUwYy-Uw', name: 'المكتبة الإلكترونية جامع أهل البيت (ع)' },
         poems: { id: '1l7zE8Q6B-2Iu_4I9fWBPfdp9ArMQklgE', name: 'قصائد ومجالس كاملة' },
-        quds: { id: '1TLLTDDtUKmxWE1ZCHoC9g1WaLcdFNjBZ', name: 'صور القدس في عمامة' }
+        quds: { id: '16Ao3y7yEGxvv0zlZMp5cTKBY_jHy0WJS', name: 'أرث الشهيد الولي' }
       },
       // المجلدات الثقيلة التي يجب تأخير تحميلها
       HEAVY_FOLDERS: [
@@ -13328,7 +13328,7 @@
           const q = el.dataset.query;
           if (q) {
             DOM.searchInput.value = decodeURIComponent(q);
-            triggerSearch(decodeURIComponent(q));
+            triggerSearch(decodeURIComponent(q), true);
           } else if (el.dataset.id) {
             const nm = decodeURIComponent(el.dataset.name);
             if (el.dataset.folder === 'true') openFolder(el.dataset.id, nm);
@@ -13341,7 +13341,7 @@
         chip.addEventListener('mousedown', e => {
           e.preventDefault();
           DOM.searchInput.value = chip.dataset.q;
-          triggerSearch(chip.dataset.q);
+          triggerSearch(chip.dataset.q, true);
           box.classList.remove('visible');
         });
       });
@@ -13384,7 +13384,7 @@
       bar.classList.add('visible');
       const cb = bar.querySelector('#searchClearBtn');
       if (cb) cb.addEventListener('click', () => {
-        DOM.searchInput.value = ''; triggerSearch(''); hideSearchSuggestions();
+        DOM.searchInput.value = ''; triggerSearch('', false); hideSearchSuggestions();
       });
       // شريط "هل تقصد؟"
       _updateDYMBar(query);
@@ -13405,29 +13405,29 @@
       chips.querySelectorAll('.dym-chip').forEach(chip => {
         chip.addEventListener('click', () => {
           DOM.searchInput.value = chip.dataset.q;
-          triggerSearch(chip.dataset.q);
+          triggerSearch(chip.dataset.q, true);
           bar.classList.remove('visible');
         });
       });
     }
 
     /** تنفيذ البحث وحفظه في السجل */
-    function triggerSearch(value) {
+    function triggerSearch(value, saveHistory) {
       state.searchQuery = value;
       state.currentPage = 1;
-      if (value.trim()) {
+      // ── يُحفظ في السجل فقط عند طلب صريح (Enter / زر بحث) ──────────────
+      if (saveHistory && value.trim()) {
         addToSearchHistory(value.trim());
+      }
+      if (value.trim()) {
         const libPage = document.getElementById('page-library');
         if (libPage && libPage.style.display === 'none') showLibraryPage && showLibraryPage();
       }
       hideSearchSuggestions();
 
-      // ── تشغيل البحث بشكل غير متزامن لمنع تجميد الواجهة ──────────────
       const icon = document.getElementById('searchIconEl');
       if (icon && value.trim()) icon.style.animation = 'spin 0.6s linear infinite';
 
-      // setTimeout(0) يُخرج العملية من الـ call-stack الحالي
-      // فيُتيح للمتصفح رسم أي تغييرات معلّقة قبل البحث
       setTimeout(() => {
         filterAndRender();
         if (typeof renderSearchChips === 'function') renderSearchChips();
@@ -14891,7 +14891,7 @@
       // ── البحث الذكي مع debounce + suggestions ───────────────────────────
       // تأخير أطول قليلاً لمنع التجميد أثناء الكتابة
       const debouncedSearch = debounce((value) => {
-        triggerSearch(value);
+        triggerSearch(value, false); // بدون حفظ في السجل أثناء الكتابة
       }, 380);
 
       const debouncedSuggest = debounce((value) => {
@@ -14936,7 +14936,7 @@
           if (_suggestActiveSel >= 0 && items[_suggestActiveSel]) {
             items[_suggestActiveSel].dispatchEvent(new MouseEvent('mousedown'));
           } else {
-            triggerSearch(DOM.searchInput.value);
+            triggerSearch(DOM.searchInput.value, true); // ← حفظ في السجل
             hideSearchSuggestions();
           }
         } else if (e.key === 'Escape') {
@@ -14946,7 +14946,7 @@
       });
 
       DOM.searchBtn.addEventListener('click', () => {
-        triggerSearch(DOM.searchInput.value);
+        triggerSearch(DOM.searchInput.value, true); // ← حفظ في السجل
         hideSearchSuggestions();
         if (state.searchQuery.trim()) {
           const libSection = document.getElementById('page-library');
@@ -15037,21 +15037,21 @@
           const cur = DOM.searchInput.value.replace(/^(pdf:|مجلد:)\s*/, '');
           DOM.searchInput.value = 'pdf:' + cur;
           DOM.searchInput.focus();
-          triggerSearch(DOM.searchInput.value);
+          triggerSearch(DOM.searchInput.value, true);
           closeOptionsDropdown();
         });
         document.getElementById('optFilterFolder').addEventListener('click', () => {
           const cur = DOM.searchInput.value.replace(/^(pdf:|مجلد:)\s*/, '');
           DOM.searchInput.value = 'مجلد:' + cur;
           DOM.searchInput.focus();
-          triggerSearch(DOM.searchInput.value);
+          triggerSearch(DOM.searchInput.value, true);
           closeOptionsDropdown();
         });
         document.getElementById('optFilterExact').addEventListener('click', () => {
           const cur = DOM.searchInput.value.replace(/^"(.*)"$/, '$1').replace(/^"|"$/g, '');
           DOM.searchInput.value = `"${cur}"`;
           DOM.searchInput.focus();
-          triggerSearch(DOM.searchInput.value);
+          triggerSearch(DOM.searchInput.value, true);
           closeOptionsDropdown();
         });
 
@@ -15110,7 +15110,7 @@
             q = q.trim() + ' حجم:' + sizeAr;
           }
           DOM.searchInput.value = q.trim();
-          triggerSearch(DOM.searchInput.value);
+          triggerSearch(DOM.searchInput.value, true);
           advPanel.classList.remove('open');
           advBtn.classList.remove('active');
         });
@@ -15142,7 +15142,7 @@
         row.querySelectorAll('.search-chip').forEach(chip => {
           chip.addEventListener('click', () => {
             DOM.searchInput.value = decodeURIComponent(chip.dataset.q);
-            triggerSearch(decodeURIComponent(chip.dataset.q));
+            triggerSearch(decodeURIComponent(chip.dataset.q), true);
           });
         });
       }
