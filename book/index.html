@@ -2968,6 +2968,172 @@
       border-radius: 4px; padding: 1px 5px; font-size: 0.78rem;
     }
 
+    /* ══════════════════════════════════════════════════════════════════════
+       🔍 نظام البحث المتطور v2 — CSS إضافي
+    ══════════════════════════════════════════════════════════════════════ */
+
+    /* ── شارة المرادف ── */
+    .search-stat-pill.synonym { background: rgba(155,89,182,0.12); color: #9b59b6; }
+    .suggestion-badge.synonym { background: rgba(155,89,182,0.15); color: #9b59b6; }
+
+    /* ── مسار المجلد في المقترحات ── */
+    .suggestion-path {
+      font-size: 0.64rem; color: var(--text-muted);
+      display: flex; align-items: center; gap: 3px; margin-top: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .suggestion-path i { font-size: 0.58rem; }
+
+    /* ── شريط البحثات الرائجة ── */
+    .search-trending {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      padding: 10px 16px; border-top: 1px solid var(--border-subtle);
+      background: var(--bg-secondary);
+    }
+    .search-trending-label {
+      font-size: 0.68rem; color: var(--text-muted); font-weight: 700;
+      text-transform: uppercase; white-space: nowrap;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .search-trending-label i { color: var(--accent-gold); }
+    .search-trending-chip {
+      padding: 3px 10px; border-radius: var(--radius-full);
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      font-size: 0.74rem; color: var(--text-secondary); cursor: pointer;
+      transition: all var(--transition-fast); font-weight: 600;
+    }
+    .search-trending-chip:hover {
+      border-color: var(--accent-gold); color: var(--accent-gold);
+      background: rgba(160,127,58,0.08);
+    }
+
+    /* ── شريط "هل تقصد؟" ── */
+    .did-you-mean-bar {
+      display: none; align-items: center; gap: 10px; flex-wrap: wrap;
+      padding: 8px 14px;
+      background: rgba(52,152,219,0.06);
+      border: 1px solid rgba(52,152,219,0.2);
+      border-radius: var(--radius-md); margin-bottom: 10px;
+      font-size: 0.82rem; color: var(--text-secondary);
+      animation: fadeIn 0.3s ease;
+    }
+    .did-you-mean-bar.visible { display: flex; }
+    .did-you-mean-bar > i { color: var(--accent-blue); flex-shrink: 0; }
+    .dym-label { color: var(--text-muted); white-space: nowrap; }
+    .dym-chips { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+    .dym-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 12px; border-radius: var(--radius-full);
+      background: rgba(52,152,219,0.1); border: 1px solid rgba(52,152,219,0.25);
+      color: var(--accent-blue); font-weight: 700; cursor: pointer;
+      transition: all var(--transition-fast); font-size: 0.8rem;
+    }
+    .dym-chip:hover { background: rgba(52,152,219,0.2); transform: translateY(-2px); }
+
+    /* ── شرائح البحث الأخير (تحت صندوق البحث) ── */
+    .search-chips-row {
+      display: flex; align-items: center; gap: 7px; flex-wrap: wrap;
+      justify-content: center; margin-top: 14px; min-height: 0;
+    }
+    .search-chips-label {
+      font-size: 0.7rem; color: var(--text-muted); font-weight: 600;
+      flex-shrink: 0; display: flex; align-items: center; gap: 5px;
+    }
+    .search-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 13px; background: var(--bg-card);
+      border: 1px solid var(--border-subtle); border-radius: var(--radius-full);
+      font-size: 0.76rem; font-weight: 600; color: var(--text-secondary);
+      cursor: pointer; transition: all var(--transition-fast);
+      max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .search-chip:hover {
+      background: rgba(160,127,58,0.1); border-color: var(--accent-gold);
+      color: var(--accent-gold); transform: translateY(-2px);
+    }
+    .search-chip i { font-size: 0.68rem; opacity: 0.65; flex-shrink: 0; }
+
+    /* ── لوحة البحث المتقدم ── */
+    .adv-search-panel {
+      display: none; background: var(--bg-card);
+      border: 1px solid var(--border-medium); border-radius: var(--radius-md);
+      padding: 14px 18px; margin-top: 8px;
+      animation: fadeIn 0.25s ease;
+      flex-wrap: wrap; align-items: flex-end; gap: 12px;
+    }
+    .adv-search-panel.open { display: flex; }
+    .adv-field {
+      display: flex; flex-direction: column; gap: 4px; min-width: 140px; flex: 1;
+    }
+    .adv-field label {
+      font-size: 0.68rem; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .adv-field input, .adv-field select {
+      padding: 8px 12px; background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
+      font-size: 0.84rem; color: var(--text-primary); font-family: var(--font-ui);
+      transition: border-color var(--transition-fast); outline: none;
+    }
+    .adv-field input:focus, .adv-field select:focus { border-color: var(--accent-gold); }
+    .adv-search-apply {
+      padding: 9px 22px;
+      background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
+      color: var(--bg-primary); border-radius: var(--radius-sm);
+      font-weight: 700; font-size: 0.85rem; font-family: var(--font-ui);
+      cursor: pointer; border: none; transition: all var(--transition-fast);
+      align-self: flex-end; white-space: nowrap;
+    }
+    .adv-search-apply:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(160,127,58,0.3); }
+    .adv-search-reset {
+      padding: 9px 14px; background: var(--bg-secondary);
+      color: var(--text-muted); border-radius: var(--radius-sm);
+      font-weight: 600; font-size: 0.82rem; font-family: var(--font-ui);
+      cursor: pointer; border: 1px solid var(--border-subtle);
+      transition: all var(--transition-fast); align-self: flex-end;
+    }
+    .adv-search-reset:hover { color: var(--text-primary); border-color: var(--border-medium); }
+
+    /* ── زر البحث المتقدم ── */
+    .search-adv-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 0 14px; height: 100%;
+      background: none; border: none;
+      border-right: 1px solid var(--border-subtle);
+      color: var(--text-muted); font-size: 0.8rem; font-weight: 600;
+      font-family: var(--font-ui); cursor: pointer;
+      transition: color var(--transition-fast), background var(--transition-fast);
+      flex-shrink: 0;
+    }
+    .search-adv-btn:hover { color: var(--accent-gold); background: rgba(160,127,58,0.06); }
+    .search-adv-btn.active { color: var(--accent-gold); }
+    .search-adv-btn i { font-size: 0.75rem; }
+
+    /* ── اختصار لوحة المفاتيح ── */
+    .search-kbd-hint {
+      display: flex; align-items: center; gap: 3px;
+      pointer-events: none; opacity: 0.38;
+      transition: opacity 0.2s ease; flex-shrink: 0; margin-left: 8px;
+    }
+    .search-box:focus-within .search-kbd-hint { opacity: 0; }
+    .search-kbd-hint kbd {
+      background: var(--bg-secondary); border: 1px solid var(--border-medium);
+      border-radius: 4px; padding: 1px 5px; font-size: 0.63rem;
+      font-family: monospace; color: var(--text-muted);
+    }
+    @media (max-width: 600px) { .search-kbd-hint { display: none; } }
+
+    /* ── خيارات إضافية في options dropdown ── */
+    .options-info-row {
+      padding: 8px 14px 6px;
+      font-size: 0.7rem; color: var(--text-muted); line-height: 1.6;
+    }
+    .options-info-row code {
+      background: var(--bg-secondary); border: 1px solid var(--border-subtle);
+      border-radius: 3px; padding: 0 4px; font-size: 0.68rem;
+      font-family: monospace; color: var(--accent-gold);
+    }
+
     /* Library Switcher */
     .library-switcher {
       position: relative;
@@ -10211,10 +10377,19 @@
               <i class="fas fa-search"></i>
               <span>بحث</span>
             </button>
+            <!-- اختصار لوحة المفاتيح -->
+            <div class="search-kbd-hint">
+              <kbd>Ctrl</kbd><kbd>K</kbd>
+            </div>
+            <!-- زر البحث المتقدم -->
+            <button class="search-adv-btn" id="searchAdvBtn" title="بحث متقدم">
+              <i class="fas fa-sliders-h"></i>
+              <span class="adv-btn-label">متقدم</span>
+            </button>
             <!-- زر الخيارات — يسار مربع البحث -->
             <div class="search-opt-wrap">
               <button class="search-options-btn" id="searchOptionsBtn" title="خيارات البحث">
-                <i class="fas fa-sliders-h"></i>
+                <i class="fas fa-ellipsis-v"></i>
                 <span class="options-dot"></span>
               </button>
               <div class="search-options-dropdown" id="searchOptionsDropdown">
@@ -10247,9 +10422,54 @@
                   <span>عبارة دقيقة</span>
                   <span class="opt-shortcut">"..."</span>
                 </div>
+                <div class="options-dropdown-sep"></div>
+                <!-- خيارات إضافية -->
+                <div class="options-dropdown-item" id="optSynonyms" data-opt="synonyms">
+                  <i class="fas fa-random opt-icon"></i>
+                  <span>بحث بالمرادفات</span>
+                  <i class="fas fa-check opt-check"></i>
+                </div>
+                <div class="options-dropdown-sep"></div>
+                <div class="options-info-row">
+                  <strong>مشغّلات متقدمة:</strong><br>
+                  <code>-كلمة</code> استثناء &nbsp; <code>+كلمة</code> إلزامي<br>
+                  <code>~مرادف</code> &nbsp; <code>مؤلف:اسم</code> &nbsp; <code>حجم:كبير</code>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- لوحة البحث المتقدم -->
+        <div class="adv-search-panel" id="advSearchPanel">
+          <div class="adv-field">
+            <label><i class="fas fa-user-edit"></i> المؤلف</label>
+            <input type="text" id="advAuthor" placeholder="اسم المؤلف..." autocomplete="off">
+          </div>
+          <div class="adv-field">
+            <label><i class="fas fa-tag"></i> الموضوع</label>
+            <input type="text" id="advCategory" placeholder="موضوع الكتاب..." autocomplete="off">
+          </div>
+          <div class="adv-field" style="max-width:130px;">
+            <label><i class="fas fa-file-alt"></i> النوع</label>
+            <select id="advType">
+              <option value="">الكل</option>
+              <option value="pdf">PDF</option>
+              <option value="folder">مجلد</option>
+              <option value="doc">Word</option>
+            </select>
+          </div>
+          <div class="adv-field" style="max-width:130px;">
+            <label><i class="fas fa-hdd"></i> الحجم</label>
+            <select id="advSize">
+              <option value="">الكل</option>
+              <option value="small">صغير (&lt;1MB)</option>
+              <option value="medium">متوسط (1-10MB)</option>
+              <option value="large">كبير (&gt;10MB)</option>
+            </select>
+          </div>
+          <button class="adv-search-apply" id="advSearchApply"><i class="fas fa-search"></i> بحث</button>
+          <button class="adv-search-reset" id="advSearchReset"><i class="fas fa-undo"></i> إعادة</button>
         </div>
 
         <!-- Suggestions Dropdown -->
@@ -10257,6 +10477,9 @@
           <!-- injected by JS -->
         </div>
       </div>
+
+      <!-- شرائح البحث الأخير -->
+      <div class="search-chips-row" id="searchChipsRow"></div>
     </div>
   </section>
 
@@ -10623,6 +10846,12 @@
           <i class="fas fa-folder-open"></i>
           <span id="sectionTitleText">جميع الأقسام</span>
         </h2>
+      </div>
+      <!-- شريط "هل تقصد؟" -->
+      <div class="did-you-mean-bar" id="didYouMeanBar">
+        <i class="fas fa-lightbulb"></i>
+        <span class="dym-label">هل تقصد؟</span>
+        <div class="dym-chips" id="dymChips"></div>
       </div>
       <!-- شريط إحصاءات البحث -->
       <div class="search-stats-bar" id="searchStatsBar">
@@ -12372,6 +12601,63 @@
       'ى': ['a', 'y', 'i'],            'ال': ['al', 'el'],   'لا': ['la'],
     };
 
+    /* ══════════════════════════════════════════════════════════════════════════
+     * قاموس المرادفات الإسلامية — يوسّع نطاق البحث تلقائياً
+     * ══════════════════════════════════════════════════════════════════════════ */
+    const ISLAMIC_SYNONYMS = {
+      'فقه':       ['احكام','شريعة','مسائل','فتاوى','رسالة عملية','حكم شرعي'],
+      'عقائد':     ['كلام','توحيد','اعتقاد','الهيات','عقيدة','ايمان'],
+      'توحيد':     ['عقائد','الهيات','كلام','وحدانية'],
+      'كلام':      ['عقائد','توحيد','الهيات','فلسفة'],
+      'تفسير':     ['قران','ايات','سور','تأويل','معاني القران'],
+      'قران':      ['تفسير','قرائة','تجويد','حفظ','مصحف'],
+      'تجويد':     ['قران','قرائة','مخارج','احكام التجويد'],
+      'حديث':      ['رواية','سند','مرويات','خبر','اثر','نقل','روايات'],
+      'رواية':     ['حديث','سند','نقل','اثر'],
+      'رجال':      ['تراجم','سند','توثيق','جرح وتعديل','علم الرجال'],
+      'تراجم':     ['رجال','سيرة','ترجمة','مناقب'],
+      'دعاء':      ['ادعية','زيارة','مناجاة','تعقيب','ورد'],
+      'زيارة':     ['ادعية','دعاء','مزار','مشاهد','مقامات'],
+      'ادعية':     ['دعاء','زيارة','مناجاة','ورد'],
+      'مفاتيح':    ['دعاء','ادعية','زيارة','مناجاة'],
+      'اخلاق':     ['تزكية','سلوك','معنوية','تهذيب','اداب','مكارم'],
+      'تزكية':     ['اخلاق','سلوك','معنوية','تهذيب النفس'],
+      'تاريخ':     ['سيرة','حياة','ترجمة','قصص','مناقب','احداث'],
+      'سيرة':      ['تاريخ','حياة','تراجم','مناقب','ترجمة'],
+      'مناقب':     ['سيرة','فضائل','تراجم','تاريخ'],
+      'فضائل':     ['مناقب','اهل البيت','امامة','خصائص'],
+      'امامة':     ['ولاية','خلافة','اهل البيت','عصمة'],
+      'ولاية':     ['امامة','اهل البيت','تولي'],
+      'اهل البيت': ['ائمة','امامة','عترة','ال النبي'],
+      'اصول':      ['اصول الفقه','اجتهاد','تقليد','استنباط','مناهج'],
+      'اجتهاد':    ['اصول','استنباط','تقليد','مناهج'],
+      'فلسفة':     ['منطق','حكمة','كلام','عقل','الهيات'],
+      'منطق':      ['فلسفة','استدلال','برهان','مقدمات'],
+      'لغة':       ['نحو','صرف','بلاغة','ادب','لسانيات'],
+      'نحو':       ['صرف','لغة','اعراب','قواعد'],
+      'بلاغة':     ['فصاحة','لغة','ادب','بيان'],
+      'صلاة':      ['عبادات','احكام','فقه','نماز'],
+      'صوم':       ['صيام','عبادات','رمضان','احكام'],
+      'حج':        ['مناسك','عمرة','مكة','احكام'],
+      'زكاة':      ['خمس','مالية','احكام','عبادات'],
+      'خمس':       ['زكاة','مالية','احكام'],
+      'نهج البلاغة': ['امام علي','خطب','رسائل','حكم'],
+      'مفاتيح الجنان': ['دعاء','ادعية','زيارة','شيخ عباس قمي'],
+    };
+
+    /** توسيع الاستعلام بالمرادفات */
+    function expandWithSynonyms(query) {
+      const norm = normalizeArabic(query).toLowerCase();
+      const synonyms = new Set();
+      Object.keys(ISLAMIC_SYNONYMS).forEach(term => {
+        const normTerm = normalizeArabic(term).toLowerCase();
+        if (norm.includes(normTerm) || normTerm.includes(norm)) {
+          ISLAMIC_SYNONYMS[term].forEach(s => synonyms.add(s));
+        }
+      });
+      return [...synonyms];
+    }
+
     /** تطبيع عربي شامل: الألفات + التاء المربوطة + الياء + التشكيل + الهمزات */
     function normalizeArabic(text) {
       if (!text) return '';
@@ -12381,8 +12667,8 @@
         .replace(/[ىي]/g, 'ي')
         .replace(/[ؤو]/g, 'و')
         .replace(/ئ/g, 'ي')
-        .replace(/[\u064B-\u065F\u0670\u0640]/g, '') // تشكيل + كشيدة
-        .replace(/ّ/g, '')                             // شدة
+        .replace(/[\u064B-\u065F\u0670\u0640]/g, '')
+        .replace(/ّ/g, '')
         .replace(/\s+/g, ' ')
         .trim();
     }
@@ -12426,22 +12712,43 @@
     }
 
     /**
-     * تحليل استعلام البحث واستخراج المشغّلات الخاصة
-     * يدعم: "عبارة دقيقة", -استثناء, pdf:, مجلد:, كتاب:
+     * تحليل استعلام البحث المحسّن
+     * يدعم: "عبارة دقيقة", -استثناء, +إلزامي, ~مرادف, pdf:, مجلد:, doc:, مؤلف:, حجم:
      */
     function parseSearchQuery(rawQuery) {
       let query = rawQuery.trim();
-      const operators = { exactPhrases: [], exclude: [], typeFilter: null, isExactMode: false };
+      const operators = {
+        exactPhrases: [], exclude: [], mustInclude: [], synonymWords: [],
+        typeFilter: null, isExactMode: false, authorFilter: null, sizeFilter: null
+      };
 
-      // مشغّل النوع: pdf: أو مجلد: أو كتاب:
-      const typeMatch = query.match(/^(pdf|PDF|مجلد|كتاب|فولدر):\s*/);
+      // مشغّل المؤلف
+      const authorMatch = query.match(/مؤلف:\s*"([^"]+)"|مؤلف:\s*(\S+)/);
+      if (authorMatch) {
+        operators.authorFilter = (authorMatch[1] || authorMatch[2]).trim();
+        query = query.replace(/مؤلف:\s*"[^"]+"|مؤلف:\s*\S+/, '').trim();
+      }
+
+      // مشغّل الحجم
+      const sizeMatch = query.match(/حجم:(كبير|صغير|متوسط)/);
+      if (sizeMatch) {
+        const s = sizeMatch[1];
+        operators.sizeFilter = s === 'كبير' ? 'large' : s === 'صغير' ? 'small' : 'medium';
+        query = query.replace(/حجم:(كبير|صغير|متوسط)/, '').trim();
+      }
+
+      // مشغّل النوع
+      const typeMatch = query.match(/^(pdf|PDF|مجلد|كتاب|فولدر|doc|word):\s*/);
       if (typeMatch) {
         const t = typeMatch[1].toLowerCase();
-        operators.typeFilter = (t === 'pdf') ? 'pdf' : (t === 'مجلد' || t === 'فولدر') ? 'folder' : 'book';
+        if (t === 'pdf') operators.typeFilter = 'pdf';
+        else if (t === 'doc' || t === 'word') operators.typeFilter = 'doc';
+        else if (t === 'مجلد' || t === 'فولدر') operators.typeFilter = 'folder';
+        else operators.typeFilter = 'book';
         query = query.slice(typeMatch[0].length);
       }
 
-      // عبارات دقيقة بين علامتي اقتباس: "كلمة"
+      // عبارات دقيقة
       const phraseRe = /"([^"]+)"/g;
       let m;
       while ((m = phraseRe.exec(query)) !== null) {
@@ -12450,9 +12757,19 @@
       }
       query = query.replace(/"[^"]*"/g, '').trim();
 
+      // مرادفات: ~كلمة
+      const synonymRe = /(?:^|\s)~(\S+)/g;
+      while ((m = synonymRe.exec(query)) !== null) operators.synonymWords.push(m[1]);
+      query = query.replace(/(?:^|\s)~\S+/g, '').trim();
+
+      // إلزامي: +كلمة
+      const mustRe = /(?:^|\s)\+(\S+)/g;
+      while ((m = mustRe.exec(query)) !== null) operators.mustInclude.push(m[1]);
+      query = query.replace(/(?:^|\s)\+\S+/g, '').trim();
+
       // استثناءات: -كلمة
       const excludeRe = /(?:^|\s)-(\S+)/g;
-      while ((m = excludeRe.exec(query)) !== null) { operators.exclude.push(m[1]); }
+      while ((m = excludeRe.exec(query)) !== null) operators.exclude.push(m[1]);
       query = query.replace(/(?:^|\s)-\S+/g, '').trim();
 
       return { cleanQuery: query, ...operators };
@@ -12491,38 +12808,69 @@
       try { localStorage.removeItem(SEARCH_HISTORY_KEY); } catch(e) {}
     }
 
-    // ─── كائن يحمل آخر نتائج بحث مع بيانات التطابق ──────────────────────────
-    let _lastSearchMeta = { exact: 0, similar: 0, phonetic: 0, total: 0, query: '' };
+    // ─── بيانات آخر عملية بحث ────────────────────────────────────────────────
+    let _lastSearchMeta = { exact: 0, similar: 0, phonetic: 0, synonym: 0, total: 0, query: '' };
+    let _dymSuggestions = [];
 
     /**
      * ══════════════════════════════════════════════════════════════════════════
-     * hybridSearch — المحرك الرئيسي
+     * hybridSearch v2 — المحرك الرئيسي المتطور
      * ══════════════════════════════════════════════════════════════════════════
-     * @param {string} query   - نص البحث
-     * @param {Array}  items   - العناصر (مجلدات + كتب)
-     * @param {string} scope   - 'all' | 'folder' (البحث في القسم الحالي فقط)
-     * @returns {Array}        - نتائج مرتّبة بالأولوية + حقل _matchType
+     * P1  تطابق دقيق أصلي | P2 يبدأ بـ | P3 يحتوي على
+     * P4  تطابق بعد تطبيع | P5 يبدأ بعد تطبيع | P6 يحتوي بعد تطبيع
+     * P7  كلمة بكلمة | P8 N-gram قصير | P9 Fuse.js تكيّفي
+     * P10 مرادفات إسلامية | P11 عربيزي/صوتي
+     * مشغّلات: "..."، -، +، ~، pdf:، مجلد:، doc:، مؤلف:، حجم:
      */
     function hybridSearch(query, items, scope) {
-      _lastSearchMeta = { exact: 0, similar: 0, phonetic: 0, total: 0, query };
+      _lastSearchMeta = { exact: 0, similar: 0, phonetic: 0, synonym: 0, total: 0, query };
       if (!query || !query.trim() || !items.length) return items;
 
-      // ── تحليل الاستعلام ──────────────────────────────────────────────────
-      const parsed    = parseSearchQuery(query);
-      const cleanQ    = parsed.cleanQuery;
-      const isArabic  = isArabicText(cleanQ) || parsed.exactPhrases.some(p => isArabicText(p));
+      const parsed   = parseSearchQuery(query);
+      const cleanQ   = parsed.cleanQuery;
+      const isArabic = isArabicText(cleanQ) || parsed.exactPhrases.some(p => isArabicText(p));
 
-      // فلتر النوع (pdf / مجلد / كتاب)
+      // ── فلتر النوع ────────────────────────────────────────────────────────
       let pool = items;
       if (parsed.typeFilter === 'folder') {
         pool = items.filter(it => it.mimeType === 'application/vnd.google-apps.folder');
       } else if (parsed.typeFilter === 'pdf') {
-        pool = items.filter(it => (it.mimeType || '').includes('pdf') || (it.name || '').toLowerCase().endsWith('.pdf'));
+        pool = items.filter(it => (it.mimeType || '').includes('pdf') || /\.pdf$/i.test(it.name || ''));
+      } else if (parsed.typeFilter === 'doc') {
+        pool = items.filter(it => (it.mimeType || '').includes('word') || /\.(doc|docx)$/i.test(it.name || ''));
       } else if (parsed.typeFilter === 'book') {
         pool = items.filter(it => it.mimeType !== 'application/vnd.google-apps.folder');
       }
 
-      // وضع "عبارة دقيقة فقط" — كل المصطلحات بين علامات اقتباس
+      // ── فلتر الحجم ────────────────────────────────────────────────────────
+      if (parsed.sizeFilter) {
+        pool = pool.filter(it => {
+          const sz = Number(it.size || 0);
+          if (parsed.sizeFilter === 'small')  return sz > 0 && sz < 1_000_000;
+          if (parsed.sizeFilter === 'medium') return sz >= 1_000_000 && sz <= 10_000_000;
+          if (parsed.sizeFilter === 'large')  return sz > 10_000_000;
+          return true;
+        });
+      }
+
+      // ── فلتر المؤلف ───────────────────────────────────────────────────────
+      if (parsed.authorFilter) {
+        const authNorm = normalizeArabic(parsed.authorFilter).toLowerCase();
+        pool = pool.filter(it =>
+          normalizeArabic(it.name || '').toLowerCase().includes(authNorm) ||
+          normalizeArabic(it.folderName || '').toLowerCase().includes(authNorm)
+        );
+      }
+
+      // ── فلتر الكلمات الإلزامية ────────────────────────────────────────────
+      if (parsed.mustInclude.length) {
+        pool = pool.filter(it => {
+          const nm = normalizeArabic(it.name || '').toLowerCase();
+          return parsed.mustInclude.every(w => nm.includes(normalizeArabic(w).toLowerCase()));
+        });
+      }
+
+      // ── وضع عبارة دقيقة ────────────────────────────────────────────────────
       if (parsed.isExactMode && cleanQ === '') {
         const matched = pool.filter(it => {
           const name = it.name || '';
@@ -12532,17 +12880,22 @@
         });
         const excluded = applyExclusions(matched, parsed.exclude);
         excluded.forEach(it => it._matchType = 'exact');
-        _lastSearchMeta.exact = excluded.length; _lastSearchMeta.total = excluded.length;
+        _lastSearchMeta.exact = excluded.length;
+        _lastSearchMeta.total = excluded.length;
         return excluded;
       }
 
-      // النص الفعلي للبحث (قد يكون cleanQ وحده أو + exactPhrases مدمجة)
       const effectiveQuery = [cleanQ, ...parsed.exactPhrases].filter(Boolean).join(' ');
       if (!effectiveQuery) return applyExclusions(pool, parsed.exclude);
 
-      const raw        = effectiveQuery.trim();
-      const normQ      = isArabic ? normalizeArabic(raw)  : raw.toLowerCase();
-      const deepQ      = isArabic ? deepNormalize(raw)     : raw.toLowerCase();
+      const raw  = effectiveQuery.trim();
+      const normQ = isArabic ? normalizeArabic(raw) : raw.toLowerCase();
+      const deepQ = isArabic ? deepNormalize(raw)   : raw.toLowerCase();
+
+      // threshold تكيّفي حسب طول الاستعلام
+      const qLen = raw.replace(/\s+/g, '').length;
+      const adaptiveThreshold = qLen <= 2 ? 0.20 : qLen <= 4 ? 0.32
+                              : qLen <= 7 ? 0.42 : qLen <= 12 ? 0.48 : 0.54;
 
       // ── إعداد العناصر الموسّعة ────────────────────────────────────────────
       const ext = pool.map(it => ({
@@ -12553,107 +12906,136 @@
         _rawLower:   (it.name || '').toLowerCase(),
       }));
 
-      // خريطة: id → { score, matchType }
-      const scoreMap = new Map(); // id → { sc, type }
-
-      const setScore = (id, sc, type) => {
-        if (!scoreMap.has(id) || scoreMap.get(id).sc > sc) {
-          scoreMap.set(id, { sc, type });
-        }
+      const scoreMap  = new Map();
+      const setScore  = (id, sc, type) => {
+        if (!scoreMap.has(id) || scoreMap.get(id).sc > sc) scoreMap.set(id, { sc, type });
       };
 
-      const qLower = raw.toLowerCase();
+      const qLower     = raw.toLowerCase();
       const normQLower = normQ.toLowerCase();
       const deepQLower = deepQ.toLowerCase();
 
-      // ── الأولوية 1: تطابق دقيق بالنص الأصلي ─────────────────────────────
+      // P1 – تطابق دقيق
       ext.forEach(it => {
-        if (it.name === raw || it.name.toLowerCase() === qLower)
-          setScore(it.id, -2.0, 'exact');
+        if (it.name === raw || it._rawLower === qLower) setScore(it.id, -2.0, 'exact');
       });
-
-      // ── الأولوية 2: يبدأ بـ (نص أصلي) ────────────────────────────────────
+      // P2 – يبدأ بـ
       ext.forEach(it => {
-        if (it._rawLower.startsWith(qLower))
-          setScore(it.id, -1.5, 'exact');
+        if (it._rawLower.startsWith(qLower)) setScore(it.id, -1.5, 'exact');
       });
-
-      // ── الأولوية 3: يحتوي على (نص أصلي) ──────────────────────────────────
+      // P3 – يحتوي على (مع نسبة)
       ext.forEach(it => {
-        if (it._rawLower.includes(qLower))
-          setScore(it.id, -1.0, 'exact');
+        if (it._rawLower.includes(qLower)) {
+          const ratio = qLower.length / (it._rawLower.length || 1);
+          setScore(it.id, -1.0 - ratio * 0.3, 'exact');
+        }
       });
-
-      // ── الأولوية 4: تطابق دقيق بعد التطبيع العربي ────────────────────────
+      // P4 – تطابق بعد تطبيع
       ext.forEach(it => {
         if (it._normName === normQLower || it._deepName === deepQLower)
           setScore(it.id, -0.8, 'exact');
       });
-
-      // ── الأولوية 5: يبدأ بـ بعد التطبيع ──────────────────────────────────
+      // P5 – يبدأ بعد تطبيع
       ext.forEach(it => {
         if (it._normName.startsWith(normQLower) || it._deepName.startsWith(deepQLower))
           setScore(it.id, -0.6, 'exact');
       });
-
-      // ── الأولوية 6: يحتوي على بعد التطبيع ────────────────────────────────
+      // P6 – يحتوي بعد تطبيع
       ext.forEach(it => {
         if (it._normName.includes(normQLower) || it._deepName.includes(deepQLower) ||
-            it._normFolder.includes(normQLower))
-          setScore(it.id, -0.3, 'exact');
+            it._normFolder.includes(normQLower)) {
+          const ratio = normQLower.length / (it._normName.length || 1);
+          setScore(it.id, -0.3 - ratio * 0.2, 'exact');
+        }
       });
-
-      // ── الأولوية 7: بحث كلمة بكلمة (كل كلمة موجودة في الاسم) ────────────
+      // P7 – كلمة بكلمة
       const queryWords = normQLower.split(/\s+/).filter(w => w.length >= 2);
       if (queryWords.length > 1) {
         ext.forEach(it => {
-          const allMatch = queryWords.every(w => it._normName.includes(w) || it._normFolder.includes(w));
-          if (allMatch) setScore(it.id, -0.1, 'exact');
-          else {
-            const matchCount = queryWords.filter(w => it._normName.includes(w)).length;
-            if (matchCount > 0) setScore(it.id, -0.1 + (queryWords.length - matchCount) * 0.05, 'exact');
+          const matchCount = queryWords.filter(w =>
+            it._normName.includes(w) || it._normFolder.includes(w)
+          ).length;
+          if (matchCount === queryWords.length) setScore(it.id, -0.1, 'exact');
+          else if (matchCount > 0) {
+            const penalty = (queryWords.length - matchCount) * 0.06;
+            setScore(it.id, -0.1 + penalty, matchCount >= queryWords.length * 0.7 ? 'exact' : 'similar');
+          }
+        });
+      }
+      // P8 – N-gram للاستعلامات القصيرة
+      if (qLen <= 3 && normQLower.length >= 2) {
+        ext.forEach(it => {
+          const idx = it._normName.indexOf(normQLower);
+          if (idx !== -1) {
+            const posBoost = idx === 0 ? 0.4 : idx < 5 ? 0.2 : 0.0;
+            setScore(it.id, 0.1 - posBoost, 'exact');
           }
         });
       }
 
-      // ── الأولويات 8-9: Fuse.js ────────────────────────────────────────────
+      // P9-P11 – Fuse.js
       if (typeof Fuse !== 'undefined') {
         const fuseOpts = {
-          threshold: 0.42, ignoreLocation: true, includeScore: true, minMatchCharLength: 2,
-          keys: [{ name: '_normName', weight: 0.70 }, { name: '_normFolder', weight: 0.20 }, { name: '_deepName', weight: 0.10 }]
+          threshold: adaptiveThreshold, ignoreLocation: true, includeScore: true,
+          minMatchCharLength: Math.max(2, Math.floor(qLen * 0.5)),
+          keys: [
+            { name: '_normName',   weight: 0.65 },
+            { name: '_deepName',   weight: 0.20 },
+            { name: '_normFolder', weight: 0.15 }
+          ]
         };
         const fuseNorm = new Fuse(ext, fuseOpts);
 
-        // أولوية 8: Fuse على النص المطبّع
         fuseNorm.search(normQLower).forEach(r => {
           const sc = r.score || 0;
-          if (sc < 0.45) setScore(r.item.id, sc + 0.1, sc < 0.25 ? 'exact' : 'similar');
+          if (sc < adaptiveThreshold + 0.05)
+            setScore(r.item.id, sc + 0.1, sc < 0.25 ? 'exact' : 'similar');
         });
-
-        // أولوية 8b: Fuse على النص العميق
         if (deepQLower !== normQLower) {
           fuseNorm.search(deepQLower).forEach(r => {
             const sc = r.score || 0;
-            if (sc < 0.45) setScore(r.item.id, sc + 0.12, 'similar');
+            if (sc < adaptiveThreshold + 0.05) setScore(r.item.id, sc + 0.12, 'similar');
           });
         }
-
-        // أولوية 9: بحث بكل كلمة على حدة
         queryWords.forEach(word => {
+          if (word.length < 2) return;
           fuseNorm.search(word).forEach(r => {
             const sc = (r.score || 0) + 0.2;
             if (sc < 0.65) setScore(r.item.id, sc, 'similar');
           });
         });
 
-        // أولوية 10: عربيزي / صوتي
-        if (isArabic) {
-          const fuseRaw = new Fuse(ext, { ...fuseOpts, threshold: 0.45,
-            keys: [{ name: 'name', weight: 0.8 }, { name: 'folderName', weight: 0.2 }] });
+        // P10 – مرادفات إسلامية
+        if (typeof _searchSynonyms === 'undefined' || _searchSynonyms !== false) {
+          const allSynonyms = [...new Set([
+            ...parsed.synonymWords,
+            ...expandWithSynonyms(normQLower)
+          ])];
+          if (allSynonyms.length) {
+            allSynonyms.forEach(syn => {
+              const synNorm = normalizeArabic(syn).toLowerCase();
+              if (synNorm.length < 2) return;
+              ext.forEach(it => {
+                if (it._normName.includes(synNorm) || it._deepName.includes(synNorm))
+                  setScore(it.id, 0.35, 'synonym');
+              });
+              fuseNorm.search(synNorm).forEach(r => {
+                const sc = (r.score || 0) + 0.30;
+                if (sc < 0.75) setScore(r.item.id, sc, 'synonym');
+              });
+            });
+          }
+        }
 
+        // P11 – عربيزي / صوتي
+        if (isArabic) {
+          const fuseRaw = new Fuse(ext, {
+            ...fuseOpts,
+            threshold: Math.min(adaptiveThreshold + 0.06, 0.5),
+            keys: [{ name: 'name', weight: 0.8 }, { name: 'folderName', weight: 0.2 }]
+          });
           queryWords.forEach(word => {
-            const variants = arabicToArabiziVariants(word);
-            variants.forEach(v => {
+            arabicToArabiziVariants(word).forEach(v => {
               if (v.length < 2) return;
               fuseRaw.search(v).forEach(r => {
                 const sc = (r.score || 0) + 0.35;
@@ -12661,7 +13043,6 @@
               });
             });
           });
-          // بحث بالعبارة كاملة صوتياً
           if (queryWords.length > 1) {
             arabicToArabiziVariants(normQLower).forEach(v => {
               if (v.length >= 3) fuseRaw.search(v).forEach(r => {
@@ -12671,48 +13052,52 @@
             });
           }
         } else {
-          // إنجليزي: Fuse مباشرة على الأسماء
-          const fuseEn = new Fuse(ext, { ...fuseOpts, threshold: 0.40,
-            keys: [{ name: 'name', weight: 0.8 }, { name: 'folderName', weight: 0.2 }] });
+          const fuseEn = new Fuse(ext, {
+            ...fuseOpts, threshold: Math.min(adaptiveThreshold + 0.02, 0.45),
+            keys: [{ name: 'name', weight: 0.85 }, { name: 'folderName', weight: 0.15 }]
+          });
           fuseEn.search(qLower).forEach(r => {
             const sc = (r.score || 0) + 0.15;
             if (sc < 0.65) setScore(r.item.id, sc, 'phonetic');
           });
         }
       } else {
-        // Fallback بدون Fuse
         ext.forEach(it => {
           if (it._normName.includes(normQLower)) setScore(it.id, 0.3, 'similar');
         });
       }
 
-      if (scoreMap.size === 0) return [];
+      if (scoreMap.size === 0) {
+        _computeDYMSuggestions(query, ext);
+        return [];
+      }
 
       // ── تطبيق الاستثناءات ─────────────────────────────────────────────────
-      const validIds = new Set([...scoreMap.keys()]);
       if (parsed.exclude.length) {
         parsed.exclude.forEach(ex => {
           const exNorm = normalizeArabic(ex).toLowerCase();
           pool.forEach(it => {
             const nm = normalizeArabic(it.name || '').toLowerCase();
-            if (nm.includes(exNorm) || it.name.toLowerCase().includes(ex.toLowerCase())) {
-              validIds.delete(it.id);
+            if (nm.includes(exNorm) || (it.name || '').toLowerCase().includes(ex.toLowerCase()))
               scoreMap.delete(it.id);
-            }
           });
         });
       }
 
-      // ── تجميع إحصاءات نوع التطابق ─────────────────────────────────────────
+      // ── حساب "هل تقصد؟" ──────────────────────────────────────────────────
+      _computeDYMSuggestions(query, ext, scoreMap.size);
+
+      // ── إحصاءات نوع التطابق ───────────────────────────────────────────────
       scoreMap.forEach(({ type }) => {
-        if (type === 'exact')    _lastSearchMeta.exact++;
-        else if (type === 'similar') _lastSearchMeta.similar++;
+        if (type === 'exact')         _lastSearchMeta.exact++;
+        else if (type === 'similar')  _lastSearchMeta.similar++;
         else if (type === 'phonetic') _lastSearchMeta.phonetic++;
+        else if (type === 'synonym')  _lastSearchMeta.synonym++;
       });
       _lastSearchMeta.total = scoreMap.size;
 
       // ── ترتيب وإرجاع ──────────────────────────────────────────────────────
-      const sorted = [...scoreMap.entries()].sort((a, b) => a[1].sc - b[1].sc);
+      const sorted  = [...scoreMap.entries()].sort((a, b) => a[1].sc - b[1].sc);
       const idOrder = new Map(sorted.map(([id], idx) => [id, idx]));
       const typeOf  = new Map(sorted.map(([id, v]) => [id, v.type]));
 
@@ -12720,6 +13105,36 @@
         .filter(it => idOrder.has(it.id))
         .sort((a, b) => (idOrder.get(a.id) || 0) - (idOrder.get(b.id) || 0))
         .map(it => ({ ...it, _matchType: typeOf.get(it.id) || 'similar' }));
+    }
+
+    /** حساب مقترحات "هل تقصد؟" */
+    function _computeDYMSuggestions(query, ext, resultCount) {
+      _dymSuggestions = [];
+      if (resultCount > 0) return;
+      if (!query || query.trim().length < 2) return;
+      if (typeof Fuse === 'undefined') return;
+      const normQ = normalizeArabic(query).toLowerCase();
+      const fuseDym = new Fuse(ext, {
+        threshold: 0.7, ignoreLocation: true, includeScore: true, minMatchCharLength: 1,
+        keys: [{ name: '_normName', weight: 1.0 }]
+      });
+      const results = fuseDym.search(normQ).slice(0, 8);
+      const seenWords = new Set();
+      results.forEach(r => {
+        (r.item._normName || '').split(/\s+/).filter(w => w.length >= 3).forEach(w => {
+          if (!seenWords.has(w) && !normQ.includes(w)) {
+            seenWords.add(w);
+            const origItem = ext.find(it => normalizeArabic(it.name || '').toLowerCase().includes(w));
+            if (origItem) {
+              const matchWord = origItem.name.split(/\s+/).find(ow =>
+                normalizeArabic(ow).toLowerCase().includes(w)
+              );
+              if (matchWord && matchWord.length >= 3) _dymSuggestions.push(matchWord);
+            }
+          }
+        });
+      });
+      _dymSuggestions = [...new Set(_dymSuggestions)].slice(0, 4);
     }
 
     /** تطبيق الاستثناءات على مصفوفة */
@@ -12731,20 +13146,81 @@
       });
     }
 
-    // ─── نظام مقترحات البحث ────────────────────────────────────────────────
+    // كلمات البحث الرائجة
+    const TRENDING_SEARCHES = [
+      'فقه', 'عقائد', 'تفسير', 'نهج البلاغة', 'مفاتيح الجنان',
+      'دعاء', 'أخلاق', 'حديث', 'تجويد', 'تاريخ'
+    ];
+
+    /** بناء مسار المجلد */
+    function _buildFolderPath(folderId) {
+      if (!folderId || !state.allFolders) return '';
+      const libraryConfig = CONFIG.LIBRARIES[state.currentLibrary];
+      const rootId = libraryConfig ? libraryConfig.id : null;
+      if (folderId === rootId) return '';
+      const folder = state.allFolders.find(f => f.id === folderId);
+      if (!folder) return '';
+      const parts = [folder.name];
+      let parentId = folder.parentId;
+      let depth = 0;
+      while (parentId && parentId !== rootId && depth < 2) {
+        const parent = state.allFolders.find(f => f.id === parentId);
+        if (!parent) break;
+        parts.unshift(parent.name);
+        parentId = parent.parentId;
+        depth++;
+      }
+      return parts.join(' › ');
+    }
+
+    // ─── نظام مقترحات البحث المحسّن ──────────────────────────────────────────
     let _suggestDebounceTimer = null;
     let _suggestActiveSel     = -1;
 
     function showSearchSuggestions(query) {
       const box = document.getElementById('searchSuggestions');
       if (!box) return;
-      if (!query || query.length < 1) { box.classList.remove('visible'); return; }
 
-      const history    = getSearchHistory().filter(h => h !== query && h.toLowerCase().includes(query.toLowerCase())).slice(0, 4);
-      const allItems   = [...state.allFolders.map(f => ({
-        id: f.id, name: f.name, mimeType: 'application/vnd.google-apps.folder', folderName: f.parentName || ''
-      })), ...state.allBooks];
-      const topResults = hybridSearch(query, allItems).slice(0, 6);
+      // بدون نص: عرض السجل + الرائج
+      if (!query || query.trim().length < 1) {
+        const history = getSearchHistory().slice(0, 5);
+        if (!history.length) { box.classList.remove('visible'); return; }
+        let html = `<div class="suggestions-section-title"><i class="fas fa-history"></i> عمليات بحث سابقة</div>`;
+        history.forEach(h => {
+          html += `<div class="suggestion-item" data-query="${encodeURIComponent(h)}" role="option">
+            <div class="suggestion-icon history"><i class="fas fa-clock"></i></div>
+            <div class="suggestion-text"><div class="suggestion-name">${h}</div></div>
+          </div>`;
+        });
+        html += `<div class="search-trending">
+          <span class="search-trending-label"><i class="fas fa-fire"></i> رائج</span>
+          ${TRENDING_SEARCHES.slice(0, 5).map(t =>
+            `<span class="search-trending-chip" data-q="${t}">${t}</span>`
+          ).join('')}
+        </div>`;
+        html += `<div class="suggestions-footer">
+          <span class="suggestions-clear-history" id="clearHistoryBtn">مسح السجل</span>
+        </div>`;
+        box.innerHTML = html;
+        box.classList.add('visible');
+        _suggestActiveSel = -1;
+        _attachSuggEvt(box, '');
+        return;
+      }
+
+      const history    = getSearchHistory()
+        .filter(h => h !== query && h.toLowerCase().includes(query.toLowerCase()))
+        .slice(0, 3);
+      const allItems   = [
+        ...state.allFolders.map(f => ({
+          id: f.id, name: f.name,
+          mimeType: 'application/vnd.google-apps.folder',
+          folderName: f.parentName || '',
+          folderPath: _buildFolderPath(f.id)
+        })),
+        ...state.allBooks.map(b => ({ ...b, folderPath: _buildFolderPath(b.folderId) }))
+      ];
+      const topResults = hybridSearch(query, allItems).slice(0, 7);
 
       let html = '';
       if (history.length) {
@@ -12759,26 +13235,48 @@
       if (topResults.length) {
         html += `<div class="suggestions-section-title"><i class="fas fa-search"></i> نتائج سريعة</div>`;
         topResults.forEach(item => {
-          const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
+          const isFolder  = item.mimeType === 'application/vnd.google-apps.folder';
           const cleanName = item.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '');
           const matchType = item._matchType || 'similar';
-          const badge = matchType === 'exact'   ? '<span class="suggestion-badge exact">دقيق</span>'
-                      : matchType === 'similar' ? '<span class="suggestion-badge similar">مشابه</span>'
-                                                : '<span class="suggestion-badge phonetic">صوتي</span>';
+          const badge     = matchType === 'exact'   ? '<span class="suggestion-badge exact">دقيق</span>'
+                          : matchType === 'similar' ? '<span class="suggestion-badge similar">مشابه</span>'
+                          : matchType === 'synonym' ? '<span class="suggestion-badge synonym">مرادف</span>'
+                                                    : '<span class="suggestion-badge phonetic">صوتي</span>';
+          const pathStr   = item.folderPath || item.folderName || '';
+          const pathHtml  = pathStr
+            ? `<div class="suggestion-path"><i class="fas fa-folder"></i>${pathStr}</div>`
+            : '';
           html += `<div class="suggestion-item" data-id="${item.id}" data-name="${encodeURIComponent(cleanName)}" data-folder="${isFolder}" role="option">
             <div class="suggestion-icon ${isFolder ? 'result-folder' : 'result-book'}">
               <i class="fas ${isFolder ? 'fa-folder' : 'fa-file-alt'}"></i>
             </div>
             <div class="suggestion-text">
               <div class="suggestion-name">${highlightText(cleanName, [query, normalizeArabic(query)])}</div>
-              ${item.folderName ? `<div class="suggestion-sub"><i class="fas fa-folder" style="font-size:0.65rem;"></i> ${item.folderName}</div>` : ''}
+              ${pathHtml}
             </div>
             ${badge}
           </div>`;
         });
       }
       if (!history.length && !topResults.length) {
-        html += `<div style="padding:16px;text-align:center;color:var(--text-muted);font-size:0.82rem;"><i class="fas fa-search" style="margin-bottom:6px;display:block;font-size:1.2rem;opacity:0.4;"></i>لا توجد مقترحات</div>`;
+        if (_dymSuggestions.length) {
+          html += `<div class="suggestions-section-title"><i class="fas fa-lightbulb"></i> هل تقصد؟</div>`;
+          _dymSuggestions.forEach(s => {
+            html += `<div class="suggestion-item" data-query="${encodeURIComponent(s)}" role="option">
+              <div class="suggestion-icon" style="background:rgba(52,152,219,0.1);color:var(--accent-blue);">
+                <i class="fas fa-lightbulb"></i>
+              </div>
+              <div class="suggestion-text">
+                <div class="suggestion-name" style="color:var(--accent-blue);">${s}</div>
+              </div>
+            </div>`;
+          });
+        } else {
+          html += `<div style="padding:16px;text-align:center;color:var(--text-muted);font-size:0.82rem;">
+            <i class="fas fa-search" style="margin-bottom:6px;display:block;font-size:1.2rem;opacity:0.4;"></i>
+            لا توجد مقترحات
+          </div>`;
+        }
       }
       html += `<div class="suggestions-footer">
         <kbd>↑↓</kbd> للتنقل &nbsp; <kbd>Enter</kbd> للاختيار &nbsp; <kbd>Esc</kbd> للإغلاق
@@ -12788,10 +13286,13 @@
       box.innerHTML = html;
       box.classList.add('visible');
       _suggestActiveSel = -1;
+      _attachSuggEvt(box, query);
+    }
 
-      // أحداث العناصر
+    /** إرفاق أحداث المقترحات */
+    function _attachSuggEvt(box, query) {
       box.querySelectorAll('.suggestion-item').forEach(el => {
-        el.addEventListener('mousedown', (e) => {
+        el.addEventListener('mousedown', e => {
           e.preventDefault();
           const q = el.dataset.query;
           if (q) {
@@ -12799,19 +13300,23 @@
             triggerSearch(decodeURIComponent(q));
           } else if (el.dataset.id) {
             const nm = decodeURIComponent(el.dataset.name);
-            if (el.dataset.folder === 'true') {
-              openFolder(el.dataset.id, nm);
-            } else {
-              openModal(el.dataset.id);
-            }
+            if (el.dataset.folder === 'true') openFolder(el.dataset.id, nm);
+            else openModal(el.dataset.id);
             box.classList.remove('visible');
           }
         });
       });
+      box.querySelectorAll('.search-trending-chip').forEach(chip => {
+        chip.addEventListener('mousedown', e => {
+          e.preventDefault();
+          DOM.searchInput.value = chip.dataset.q;
+          triggerSearch(chip.dataset.q);
+          box.classList.remove('visible');
+        });
+      });
       const clearBtn = box.querySelector('#clearHistoryBtn');
-      if (clearBtn) clearBtn.addEventListener('mousedown', (e) => {
-        e.preventDefault(); clearSearchHistory();
-        box.classList.remove('visible');
+      if (clearBtn) clearBtn.addEventListener('mousedown', e => {
+        e.preventDefault(); clearSearchHistory(); box.classList.remove('visible');
       });
     }
 
@@ -12824,23 +13329,54 @@
     function updateSearchStatsBar(query) {
       const bar = document.getElementById('searchStatsBar');
       if (!bar) return;
-      if (!query || !query.trim()) { bar.classList.remove('visible'); return; }
+      if (!query || !query.trim()) {
+        bar.classList.remove('visible');
+        const dymBar = document.getElementById('didYouMeanBar');
+        if (dymBar) dymBar.classList.remove('visible');
+        return;
+      }
       const m = _lastSearchMeta;
       let pills = '';
       if (m.exact)    pills += `<span class="search-stat-pill exact"><i class="fas fa-bullseye"></i> ${m.exact} دقيق</span>`;
       if (m.similar)  pills += `<span class="search-stat-pill similar"><i class="fas fa-circle-nodes"></i> ${m.similar} مشابه</span>`;
       if (m.phonetic) pills += `<span class="search-stat-pill phonetic"><i class="fas fa-wave-square"></i> ${m.phonetic} صوتي</span>`;
+      if (m.synonym)  pills += `<span class="search-stat-pill synonym"><i class="fas fa-random"></i> ${m.synonym} مرادف</span>`;
+      const scopeEl   = typeof _searchScope !== 'undefined' ? _searchScope : 'all';
+      const scopeLbl  = scopeEl === 'folder'
+        ? ' <span style="font-size:0.7rem;color:var(--accent-blue);font-weight:700;"><i class="fas fa-folder-open"></i> القسم الحالي</span>'
+        : '';
       bar.innerHTML = `
         <i class="fas fa-search" style="color:var(--accent-gold);"></i>
         البحث عن <strong>"${query}"</strong> — <strong>${m.total}</strong> نتيجة
-        ${pills}
+        ${scopeLbl}${pills}
         <span class="search-clear-btn" id="searchClearBtn"><i class="fas fa-times-circle"></i> مسح</span>`;
       bar.classList.add('visible');
       const cb = bar.querySelector('#searchClearBtn');
       if (cb) cb.addEventListener('click', () => {
-        DOM.searchInput.value = '';
-        triggerSearch('');
-        hideSearchSuggestions();
+        DOM.searchInput.value = ''; triggerSearch(''); hideSearchSuggestions();
+      });
+      // شريط "هل تقصد؟"
+      _updateDYMBar(query);
+    }
+
+    /** تحديث شريط "هل تقصد؟" */
+    function _updateDYMBar(query) {
+      const bar   = document.getElementById('didYouMeanBar');
+      const chips = document.getElementById('dymChips');
+      if (!bar || !chips) return;
+      if (!_dymSuggestions.length || !query.trim()) {
+        bar.classList.remove('visible'); return;
+      }
+      chips.innerHTML = _dymSuggestions.map(s =>
+        `<span class="dym-chip" data-q="${s}"><i class="fas fa-search"></i>${s}</span>`
+      ).join('');
+      bar.classList.add('visible');
+      chips.querySelectorAll('.dym-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          DOM.searchInput.value = chip.dataset.q;
+          triggerSearch(chip.dataset.q);
+          bar.classList.remove('visible');
+        });
       });
     }
 
@@ -12855,6 +13391,8 @@
       }
       filterAndRender();
       hideSearchSuggestions();
+      // تحديث شرائح البحث الأخير
+      if (typeof renderSearchChips === 'function') renderSearchChips();
     }
 
     /** تمييز النص داخل العنصر المعروض */
@@ -14375,12 +14913,24 @@
         }
       });
 
-      // ── Scope always = 'all' (يُحدَّث ديناميكياً عبر زر الخيارات) ──────
-      let _searchScope = 'all';
+      // ── متغيرات الخيارات (محفوظة في localStorage) ──────────────────────
+      let _searchScope    = localStorage.getItem('noor_search_scope')    || 'all';
+      let _searchSynonyms = localStorage.getItem('noor_search_synonyms') !== 'false';
 
       // ── زر الخيارات ─────────────────────────────────────────────────────
       const optBtn  = document.getElementById('searchOptionsBtn');
       const optDrop = document.getElementById('searchOptionsDropdown');
+
+      function _syncOptionsUI() {
+        const elAll    = document.getElementById('optScopeAll');
+        const elFolder = document.getElementById('optScopeFolder');
+        const elSyn    = document.getElementById('optSynonyms');
+        if (elAll)    elAll.classList.toggle('active',    _searchScope === 'all');
+        if (elFolder) elFolder.classList.toggle('active', _searchScope === 'folder');
+        if (elSyn)    elSyn.classList.toggle('active', _searchSynonyms);
+        if (optBtn)   optBtn.classList.toggle('has-active', _searchScope !== 'all' || _searchSynonyms);
+      }
+      _syncOptionsUI();
 
       function closeOptionsDropdown() {
         if (optDrop) optDrop.classList.remove('open');
@@ -14398,17 +14948,15 @@
         // نطاق البحث
         document.getElementById('optScopeAll').addEventListener('click', () => {
           _searchScope = 'all';
-          document.getElementById('optScopeAll').classList.add('active');
-          document.getElementById('optScopeFolder').classList.remove('active');
-          optBtn.classList.remove('has-active');
+          localStorage.setItem('noor_search_scope', 'all');
+          _syncOptionsUI();
           if (state.searchQuery.trim()) { state.currentPage = 1; filterAndRender(); }
           closeOptionsDropdown();
         });
         document.getElementById('optScopeFolder').addEventListener('click', () => {
           _searchScope = 'folder';
-          document.getElementById('optScopeFolder').classList.add('active');
-          document.getElementById('optScopeAll').classList.remove('active');
-          optBtn.classList.add('has-active');
+          localStorage.setItem('noor_search_scope', 'folder');
+          _syncOptionsUI();
           if (state.searchQuery.trim()) { state.currentPage = 1; filterAndRender(); }
           closeOptionsDropdown();
         });
@@ -14436,11 +14984,103 @@
           closeOptionsDropdown();
         });
 
+        // المرادفات
+        const elSynBtn = document.getElementById('optSynonyms');
+        if (elSynBtn) elSynBtn.addEventListener('click', () => {
+          _searchSynonyms = !_searchSynonyms;
+          localStorage.setItem('noor_search_synonyms', _searchSynonyms);
+          _syncOptionsUI();
+          if (state.searchQuery.trim()) { state.currentPage = 1; filterAndRender(); }
+          closeOptionsDropdown();
+        });
+
         // إغلاق عند الضغط خارجه
         document.addEventListener('click', (e) => {
           if (!optBtn.contains(e.target) && !optDrop.contains(e.target)) closeOptionsDropdown();
         });
       }
+
+      // ── زر البحث المتقدم ────────────────────────────────────────────────
+      const advBtn   = document.getElementById('searchAdvBtn');
+      const advPanel = document.getElementById('advSearchPanel');
+      if (advBtn && advPanel) {
+        advBtn.addEventListener('click', () => {
+          const isOpen = advPanel.classList.toggle('open');
+          advBtn.classList.toggle('active', isOpen);
+        });
+        const advApply = document.getElementById('advSearchApply');
+        const advReset = document.getElementById('advSearchReset');
+        if (advApply) advApply.addEventListener('click', () => {
+          const author   = (document.getElementById('advAuthor')?.value   || '').trim();
+          const category = (document.getElementById('advCategory')?.value || '').trim();
+          const type     = document.getElementById('advType')?.value  || '';
+          const size     = document.getElementById('advSize')?.value  || '';
+          let q = DOM.searchInput.value
+            .replace(/مؤلف:\s*"[^"]+"|مؤلف:\s*\S+/g, '')
+            .replace(/حجم:(كبير|صغير|متوسط)/g, '')
+            .replace(/^(pdf:|مجلد:|doc:)/g, '')
+            .trim();
+          if (author)   q = `مؤلف:"${author}" ` + q;
+          if (category) q = q + ' ' + category;
+          if (type) {
+            const typeAr = type === 'folder' ? 'مجلد' : type;
+            q = typeAr + ':' + q.trim();
+          }
+          if (size) {
+            const sizeAr = size === 'large' ? 'كبير' : size === 'small' ? 'صغير' : 'متوسط';
+            q = q.trim() + ' حجم:' + sizeAr;
+          }
+          DOM.searchInput.value = q.trim();
+          triggerSearch(DOM.searchInput.value);
+          advPanel.classList.remove('open');
+          advBtn.classList.remove('active');
+        });
+        if (advReset) advReset.addEventListener('click', () => {
+          ['advAuthor','advCategory'].forEach(id => {
+            const el = document.getElementById(id); if (el) el.value = '';
+          });
+          ['advType','advSize'].forEach(id => {
+            const el = document.getElementById(id); if (el) el.value = '';
+          });
+        });
+      }
+
+      // ── شرائح البحث الأخير ──────────────────────────────────────────────
+      function renderSearchChips() {
+        const row = document.getElementById('searchChipsRow');
+        if (!row) return;
+        const history = getSearchHistory().slice(0, 6);
+        if (!history.length) { row.innerHTML = ''; return; }
+        row.innerHTML =
+          `<span class="search-chips-label"><i class="fas fa-history"></i> الأخير:</span>` +
+          history.map(h =>
+            `<span class="search-chip" data-q="${encodeURIComponent(h)}">
+              <i class="fas fa-clock"></i>${h}
+            </span>`
+          ).join('');
+        row.querySelectorAll('.search-chip').forEach(chip => {
+          chip.addEventListener('click', () => {
+            DOM.searchInput.value = decodeURIComponent(chip.dataset.q);
+            triggerSearch(decodeURIComponent(chip.dataset.q));
+          });
+        });
+      }
+      renderSearchChips();
+
+      // ── اختصار لوحة المفاتيح Ctrl+K و '/' ──────────────────────────────
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+          e.preventDefault();
+          DOM.searchInput.focus();
+          DOM.searchInput.select();
+          setTimeout(() => DOM.searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+        }
+        if (e.key === '/' && !['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) {
+          e.preventDefault();
+          DOM.searchInput.focus();
+          DOM.searchInput.select();
+        }
+      });
       
       DOM.sortSelect.addEventListener('change', (e) => { 
         state.currentSort = e.target.value; 
