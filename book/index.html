@@ -2770,13 +2770,15 @@
 
     /* قائمة الخيارات المنسدلة */
     .search-options-dropdown {
-      position: absolute; top: calc(100% + 10px); right: 0; left: auto;
-      min-width: 220px;
+      position: fixed;
+      /* سيتم حساب top/left ديناميكياً بالـ JS عند الفتح */
+      min-width: 260px;
+      max-width: 92vw;
       background: var(--bg-card);
       border: 1px solid var(--border-medium);
       border-radius: var(--radius-md);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.18);
-      z-index: 99999;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.22);
+      z-index: 999999;
       display: none;
       overflow: hidden;
       animation: fadeInDown 0.18s ease;
@@ -3132,6 +3134,12 @@
       background: var(--bg-secondary); border: 1px solid var(--border-subtle);
       border-radius: 3px; padding: 0 4px; font-size: 0.68rem;
       font-family: monospace; color: var(--accent-gold);
+    }
+
+    /* ── أنيميشن تحميل البحث ── */
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
     }
 
     /* Library Switcher */
@@ -10450,14 +10458,20 @@
             <label><i class="fas fa-tag"></i> الموضوع</label>
             <input type="text" id="advCategory" placeholder="موضوع الكتاب..." autocomplete="off">
           </div>
-          <div class="adv-field" style="max-width:130px;">
+          <div class="adv-field" style="max-width:160px;">
             <label><i class="fas fa-file-alt"></i> النوع</label>
-            <select id="advType">
+            <select id="advType" onchange="document.getElementById('advTypeCustomWrap').style.display=this.value==='other'?'block':'none'">
               <option value="">الكل</option>
               <option value="pdf">PDF</option>
               <option value="folder">مجلد</option>
               <option value="doc">Word</option>
+              <option value="other">أخرى...</option>
             </select>
+            <div id="advTypeCustomWrap" style="display:none;margin-top:5px;">
+              <input type="text" id="advTypeCustom" placeholder="مثال: صور، صوتيات..." autocomplete="off"
+                style="width:100%;padding:7px 10px;background:var(--bg-secondary);border:1px solid var(--border-subtle);
+                border-radius:var(--radius-sm);font-size:0.82rem;color:var(--text-primary);font-family:var(--font-ui);outline:none;">
+            </div>
           </div>
           <div class="adv-field" style="max-width:130px;">
             <label><i class="fas fa-hdd"></i> الحجم</label>
@@ -12812,6 +12826,18 @@
     let _lastSearchMeta = { exact: 0, similar: 0, phonetic: 0, synonym: 0, total: 0, query: '' };
     let _dymSuggestions = [];
 
+    // ─── كاش Fuse لمنع إعادة البناء عند كل بحث ──────────────────────────────
+    let _fuseCache = null;
+    let _fuseCacheKey = '';
+    function _getFuseInstance(ext, opts) {
+      // مفتاح الكاش = عدد العناصر (يتغير عند تحديث المكتبة فقط)
+      const key = ext.length + '_' + (opts.threshold || 0);
+      if (_fuseCache && _fuseCacheKey === key) return _fuseCache;
+      _fuseCache = new Fuse(ext, opts);
+      _fuseCacheKey = key;
+      return _fuseCache;
+    }
+
     /**
      * ══════════════════════════════════════════════════════════════════════════
      * hybridSearch v2 — المحرك الرئيسي المتطور
@@ -12973,8 +12999,12 @@
         });
       }
 
-      // P9-P11 – Fuse.js
-      if (typeof Fuse !== 'undefined') {
+      // ── تحسين الأداء: تخطّ Fuse إذا وجدنا نتائج دقيقة كافية ─────────────
+      const exactCount = [...scoreMap.values()].filter(v => v.type === 'exact').length;
+      const skipFuse   = exactCount >= 10; // 10 نتيجة دقيقة تكفي
+
+      // P9-P11 – Fuse.js (مع كاش لتحسين الأداء)
+      if (!skipFuse && typeof Fuse !== 'undefined') {
         const fuseOpts = {
           threshold: adaptiveThreshold, ignoreLocation: true, includeScore: true,
           minMatchCharLength: Math.max(2, Math.floor(qLen * 0.5)),
@@ -12984,6 +13014,7 @@
             { name: '_normFolder', weight: 0.15 }
           ]
         };
+        // نستخدم Fuse جديد لكل pool مختلف، لكن نكشّ النتائج مؤقتاً
         const fuseNorm = new Fuse(ext, fuseOpts);
 
         fuseNorm.search(normQLower).forEach(r => {
@@ -13389,10 +13420,19 @@
         const libPage = document.getElementById('page-library');
         if (libPage && libPage.style.display === 'none') showLibraryPage && showLibraryPage();
       }
-      filterAndRender();
       hideSearchSuggestions();
-      // تحديث شرائح البحث الأخير
-      if (typeof renderSearchChips === 'function') renderSearchChips();
+
+      // ── تشغيل البحث بشكل غير متزامن لمنع تجميد الواجهة ──────────────
+      const icon = document.getElementById('searchIconEl');
+      if (icon && value.trim()) icon.style.animation = 'spin 0.6s linear infinite';
+
+      // setTimeout(0) يُخرج العملية من الـ call-stack الحالي
+      // فيُتيح للمتصفح رسم أي تغييرات معلّقة قبل البحث
+      setTimeout(() => {
+        filterAndRender();
+        if (typeof renderSearchChips === 'function') renderSearchChips();
+        if (icon) icon.style.animation = '';
+      }, 0);
     }
 
     /** تمييز النص داخل العنصر المعروض */
@@ -14849,13 +14889,14 @@
       window.addEventListener('scroll', () => DOM.header.classList.toggle('scrolled', window.scrollY > 50));
       
       // ── البحث الذكي مع debounce + suggestions ───────────────────────────
+      // تأخير أطول قليلاً لمنع التجميد أثناء الكتابة
       const debouncedSearch = debounce((value) => {
         triggerSearch(value);
-      }, 280);
+      }, 380);
 
       const debouncedSuggest = debounce((value) => {
         showSearchSuggestions(value);
-      }, 150);
+      }, 200);
 
       DOM.searchInput.addEventListener('input', (e) => {
         const val = e.target.value;
@@ -14938,11 +14979,41 @@
       }
 
       if (optBtn && optDrop) {
+        /** حساب موضع القائمة ليظهر دائماً داخل الشاشة */
+        function _positionDropdown() {
+          const btnRect  = optBtn.getBoundingClientRect();
+          const dropW    = 270; // عرض القائمة تقريباً
+          const margin   = 8;
+          const vpW      = window.innerWidth;
+          const vpH      = window.innerHeight;
+
+          // الارتفاع الافتراضي من أعلى الزر
+          let top  = btnRect.bottom + 8;
+          // محاولة تموضع إلى اليمين من الزر (RTL: يميناً = نهاية الشاشة)
+          let left = btnRect.right - dropW;
+
+          // منع الخروج من اليسار
+          if (left < margin) left = margin;
+          // منع الخروج من اليمين
+          if (left + dropW > vpW - margin) left = vpW - dropW - margin;
+          // إذا القائمة ستخرج من الأسفل، اعرضها فوق الزر
+          const estH = 380;
+          if (top + estH > vpH - margin) top = btnRect.top - estH - 8;
+          if (top < margin) top = margin;
+
+          optDrop.style.top  = top  + 'px';
+          optDrop.style.left = left + 'px';
+          optDrop.style.width = Math.min(dropW, vpW - margin * 2) + 'px';
+        }
+
         optBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           const isOpen = optDrop.classList.toggle('open');
           optBtn.classList.toggle('open', isOpen);
-          if (isOpen) hideSearchSuggestions();
+          if (isOpen) {
+            _positionDropdown();
+            hideSearchSuggestions();
+          }
         });
 
         // نطاق البحث
@@ -14998,6 +15069,9 @@
         document.addEventListener('click', (e) => {
           if (!optBtn.contains(e.target) && !optDrop.contains(e.target)) closeOptionsDropdown();
         });
+        // إغلاق عند التمرير أو تغيير حجم الشاشة
+        window.addEventListener('scroll', closeOptionsDropdown, { passive: true });
+        window.addEventListener('resize', closeOptionsDropdown, { passive: true });
       }
 
       // ── زر البحث المتقدم ────────────────────────────────────────────────
@@ -15013,7 +15087,8 @@
         if (advApply) advApply.addEventListener('click', () => {
           const author   = (document.getElementById('advAuthor')?.value   || '').trim();
           const category = (document.getElementById('advCategory')?.value || '').trim();
-          const type     = document.getElementById('advType')?.value  || '';
+          const typeVal  = document.getElementById('advType')?.value  || '';
+          const typeCustom = (document.getElementById('advTypeCustom')?.value || '').trim();
           const size     = document.getElementById('advSize')?.value  || '';
           let q = DOM.searchInput.value
             .replace(/مؤلف:\s*"[^"]+"|مؤلف:\s*\S+/g, '')
@@ -15021,9 +15096,13 @@
             .replace(/^(pdf:|مجلد:|doc:)/g, '')
             .trim();
           if (author)   q = `مؤلف:"${author}" ` + q;
+          // الموضوع / الفئة
           if (category) q = q + ' ' + category;
-          if (type) {
-            const typeAr = type === 'folder' ? 'مجلد' : type;
+          // النوع — أخرى: يُضاف ككلمة بحث عادية
+          if (typeVal === 'other' && typeCustom) {
+            q = q.trim() + ' ' + typeCustom;
+          } else if (typeVal && typeVal !== 'other') {
+            const typeAr = typeVal === 'folder' ? 'مجلد' : typeVal;
             q = typeAr + ':' + q.trim();
           }
           if (size) {
@@ -15036,12 +15115,14 @@
           advBtn.classList.remove('active');
         });
         if (advReset) advReset.addEventListener('click', () => {
-          ['advAuthor','advCategory'].forEach(id => {
+          ['advAuthor','advCategory','advTypeCustom'].forEach(id => {
             const el = document.getElementById(id); if (el) el.value = '';
           });
           ['advType','advSize'].forEach(id => {
             const el = document.getElementById(id); if (el) el.value = '';
           });
+          const wrap = document.getElementById('advTypeCustomWrap');
+          if (wrap) wrap.style.display = 'none';
         });
       }
 
