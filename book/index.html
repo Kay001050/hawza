@@ -2835,18 +2835,20 @@
       height: 1px; background: var(--border-subtle); margin: 2px 0;
     }
 
-    /* Suggestions dropdown */
+    /* Suggestions dropdown — fixed لتجاوز overflow:hidden وجميع الطبقات */
     .search-suggestions {
-      position: absolute; top: calc(100% + 8px); right: 0; left: 0;
+      position: fixed;
       background: var(--bg-card);
       border: 1px solid var(--border-medium);
       border-radius: var(--radius-md);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.18);
-      z-index: 99999;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.22), 0 4px 16px rgba(0,0,0,0.12);
+      z-index: 999999;
       display: none;
       overflow: hidden;
-      max-height: 360px;
+      max-height: 400px;
       overflow-y: auto;
+      min-width: 280px;
+      /* top/left/width تُحسَب بالـ JS */
     }
     .search-suggestions.visible { display: block; animation: fadeInDown 0.18s ease; }
     @keyframes fadeInDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
@@ -14936,7 +14938,7 @@
       });
 
       DOM.searchInput.addEventListener('blur', () => {
-        setTimeout(hideSearchSuggestions, 200);
+        // لا نُغلق عند blur — سيُغلق فقط عند الضغط خارجاً (انظر click-outside أدناه)
       });
 
       // ── التنقل بالكيبورد في المقترحات ──────────────────────────────────
@@ -14972,6 +14974,67 @@
           if (libSection) setTimeout(() => libSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
         }
       });
+
+      // ═══════════════════════════════════════════════════════════════════
+      //  نظام تثبيت قائمة المقترحات (position:fixed — تعلو على كل الطبقات)
+      // ═══════════════════════════════════════════════════════════════════
+      (function initFloatingSuggestions() {
+        const sugBox   = document.getElementById('searchSuggestions');
+        const cont     = document.getElementById('searchContainer');
+        if (!sugBox || !cont) return;
+
+        /* ── حساب الموضع ─────────────────────────────────────────────── */
+        function positionBox() {
+          if (!sugBox.classList.contains('visible')) return;
+          const rect = cont.getBoundingClientRect();
+          const vpH  = window.innerHeight;
+          const vpW  = window.innerWidth;
+          const gap  = 6;
+          const spaceBelow = vpH - rect.bottom - gap;
+          const spaceAbove = rect.top - gap;
+          const maxH = Math.min(400, Math.max(spaceBelow, spaceAbove) - 4);
+
+          let top;
+          if (spaceBelow >= 120 || spaceBelow >= spaceAbove) {
+            top = rect.bottom + gap;
+            sugBox.style.maxHeight = Math.min(400, spaceBelow - 4) + 'px';
+          } else {
+            const h = Math.min(400, spaceAbove - 4);
+            top = rect.top - gap - h;
+            sugBox.style.maxHeight = h + 'px';
+          }
+
+          const w = Math.min(rect.width, vpW - 24);
+          let left = rect.left;
+          if (left + w > vpW - 8) left = vpW - w - 8;
+          if (left < 8) left = 8;
+
+          sugBox.style.top   = top  + 'px';
+          sugBox.style.left  = left + 'px';
+          sugBox.style.width = w    + 'px';
+        }
+
+        /* ── راقب إظهار/إخفاء الـ class "visible" ─────────────────── */
+        new MutationObserver(function() {
+          if (sugBox.classList.contains('visible')) {
+            requestAnimationFrame(positionBox);
+          }
+        }).observe(sugBox, { attributes: true, attributeFilter: ['class'] });
+
+        /* ── أبقِ الموضع محدثاً أثناء التمرير والـ resize ─────────── */
+        window.addEventListener('scroll',  positionBox, { passive: true, capture: true });
+        window.addEventListener('resize',  positionBox, { passive: true });
+
+        /* ── أغلق فقط عند الضغط خارج حقل البحث والقائمة ──────────── */
+        function onOutsideInteraction(e) {
+          if (!sugBox.classList.contains('visible')) return;
+          if (cont.contains(e.target))   return;
+          if (sugBox.contains(e.target)) return;
+          hideSearchSuggestions();
+        }
+        document.addEventListener('mousedown',  onOutsideInteraction);
+        document.addEventListener('touchstart', onOutsideInteraction, { passive: true });
+      })();
 
       // ── متغيرات الخيارات (محفوظة في localStorage) ──────────────────────
       let _searchScope    = localStorage.getItem('noor_search_scope')    || 'all';
