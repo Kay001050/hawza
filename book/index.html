@@ -4186,16 +4186,18 @@
     /* العنوان الفرعي العربي لكتب العربيزي */
     .book-title-ar {
       font-family: var(--font-ui);
-      font-size: 0.72rem;
-      color: var(--accent-gold);
-      opacity: 0.85;
-      margin-top: 3px;
-      line-height: 1.4;
-      direction: rtl;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      opacity: 0.75;
+      margin-top: 2px;
+      line-height: 1.3;
+      direction: ltr;
+      text-align: left;
       display: -webkit-box;
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      font-style: italic;
     }
 
     .book-meta {
@@ -8198,21 +8200,23 @@
     /* العنوان العربي المُعرَّب في المودال */
     .modal-title-ar {
       font-family: var(--font-ui);
-      font-size: 0.82rem;
-      color: var(--accent-gold);
-      opacity: 0.9;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      opacity: 0.8;
       margin-bottom: 8px;
       line-height: 1.4;
-      direction: rtl;
+      direction: ltr;
+      text-align: left;
       display: -webkit-box;
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      background: rgba(160, 127, 58, 0.08);
-      padding: 3px 8px;
+      background: var(--bg-tertiary);
+      padding: 2px 8px;
       border-radius: 6px;
       width: fit-content;
       max-width: 100%;
+      font-style: italic;
     }
 
     /* ميتا */
@@ -11659,7 +11663,7 @@
         '18y7MZhorEYoKUxEXLD0J6qooPrF11_JL'  // مكتبة نون والقلم
       ],
       PAGE_SIZE: 1000,
-      CACHE_KEY: 'noor_library_v17', // تحديث الإصدار لضمان تطبيق التغييرات
+      CACHE_KEY: 'noor_library_v18', // تحديث الإصدار لضمان تطبيق التغييرات
       CACHE_TIME: 12 * 60 * 60 * 1000,
       ITEMS_PER_PAGE: 30
     };
@@ -11787,6 +11791,404 @@
     };
 
     DOM.currentYear.textContent = new Date().getFullYear();
+
+    // ══════════════════════════════════════════════════════════════════════════
+    //  نظام تعريب عناوين الكتب v4 — محسّن ودقيق
+    //  يعتمد على: قاموس موسّع + معالجة ذكية للبادئات + تحويل صوتي دقيق
+    // ══════════════════════════════════════════════════════════════════════════
+
+    // ── قاموس المصطلحات الإسلامية الموسّع ─────────────────────────────────────
+    const _ARABIZI_VOCAB = {
+      // ── مركّبات كاملة (تُطابَق قبل تقسيم الكلمات) ──
+      'mafatih_aljinan':'مفاتيح الجنان','mafatih_jinan':'مفاتيح الجنان',
+      'nahjul_balagha':'نهج البلاغة','nahj_al_balagha':'نهج البلاغة',
+      'bihar_alanwar':'بحار الأنوار','bihar_al_anwar':'بحار الأنوار',
+      'al_kafi':'الكافي','alkafi':'الكافي',
+      'wasail_alshia':'وسائل الشيعة','riyadh_masail':'رياض المسائل',
+      'tarbiyat_altofol':'تربية الأطفال','tarbiyat_altifl':'تربية الطفل',
+      'tarbiyat_altofal':'تربية الأطفال',
+      'tarbeya_wela2eya':'التربية الولائية','tarbeya_welaeya':'التربية الولائية',
+      'altarbeya_alwelaeya':'التربية الولائية',
+      'alzawaj_alnajeh':'الزواج الناجح','zowaj_alnajeh':'الزواج الناجح',
+      'alzawaj_alnajeh':'الزواج الناجح',
+      'alaqeda_alislameya_fe_alrewayat':'العقيدة الإسلامية في الروايات',
+      'alaqeda_alislameya_fi_alrewayat':'العقيدة الإسلامية في الروايات',
+      'dourouss_fe_alakida_alislameya':'دروس في العقيدة الإسلامية',
+      'durus_fe_alakida_alislameya':'دروس في العقيدة الإسلامية',
+
+      // ── فقه وأصوله ──
+      'fiqh':'فقه','fuqh':'فقه','feqh':'فقه','fekh':'فقه','fqh':'فقه','fegh':'فقه',
+      'usul':'أصول','usool':'أصول','osul':'أصول','usol':'أصول','ousoul':'أصول',
+      'ijtihad':'اجتهاد','ijtehad':'اجتهاد',
+      'taqlid':'تقليد','taklid':'تقليد',
+      'marja':'مرجع','marjaa':'مرجع','marji3':'مرجع',
+      'fatwa':'فتوى','fatawa':'فتاوى','fetwa':'فتوى',
+      'masail':'مسائل','masa2il':'مسائل',
+      'ahkam':'أحكام','ahkaam':'أحكام',
+      'risala':'رسالة','risalah':'رسالة','resala':'رسالة','resalah':'رسالة',
+      'rasail':'رسائل',
+      'amaliya':'عملية','amalia':'عملية','amali':'عملي',
+      'sharia':'شريعة','shari3a':'شريعة','shari':'شرعي','shariat':'شريعة',
+      'khums':'خمس','khms':'خمس',
+      'zakat':'زكاة','zakah':'زكاة','zaka':'زكاة',
+      'salat':'صلاة','salah':'صلاة','sala':'صلاة','namaz':'نماز',
+      'sawm':'صوم','siyam':'صيام','soom':'صوم',
+      'hajj':'حج','haj':'حج',
+      'umra':'عمرة','omra':'عمرة',
+      'nikah':'نكاح',
+      'talaq':'طلاق','talaaq':'طلاق',
+      'miras':'ميراث','irth':'إرث',
+      'tahara':'طهارة','taharah':'طهارة','taharet':'طهارة',
+      'wudhu':'وضوء','wudu':'وضوء','woudhou':'وضوء',
+      'ghusl':'غسل','ghosol':'غسل',
+      'tayammum':'تيمم','tayamom':'تيمم',
+      'halal':'حلال','haram':'حرام',
+      'makruh':'مكروه','makrooh':'مكروه',
+      'mustahab':'مستحب','mustahabb':'مستحب',
+      'wajib':'واجب','waajib':'واجب',
+      'mubah':'مباح',
+      'tawdih':'توضيح','tawzih':'توضيح','tawzeeh':'توضيح',
+      'tabsira':'تبصرة','tabsirat':'تبصرة',
+      'mubtilat':'مبطلات',
+      'makasib':'مكاسب','makaseb':'مكاسب',
+      'kifaya':'كفاية','kifayah':'كفاية','kefaya':'كفاية',
+      'tahrir':'تحرير',
+      'sharh':'شرح',
+      'talkhis':'تلخيص',
+      'mukhtasar':'مختصر',
+      'khilaf':'خلاف',
+      'ijma':'إجماع','ijmaa':'إجماع',
+      'qiyas':'قياس',
+      'zawaj':'زواج','zwaj':'زواج','alzawaj':'الزواج','zowaj':'زواج',
+      'alnajeh':'الناجح','najeh':'ناجح','najah':'نجاح','alnajeha':'الناجحة',
+      'tarbiya':'تربية','tarbeya':'تربية','tarbiat':'تربية','tarbiyat':'تربية',
+      'wela2eya':'ولائية','welaeya':'ولائية','wela2i':'ولائي','wela2iya':'ولائية',
+      'wilaya':'ولاية','welaya':'ولاية','welayat':'ولاية','wilayet':'ولاية',
+
+      // ── عقيدة وكلام ──
+      'aqida':'عقيدة','aqidah':'عقيدة','aqideh':'عقيدة','3aqida':'عقيدة','akida':'عقيدة',
+      'aqeda':'عقيدة','aqidaa':'عقيدة','akidah':'عقيدة','aqaid':'عقائد',
+      'alakida':'العقيدة','alaqeda':'العقيدة','alaqida':'العقيدة',
+      'tawhid':'توحيد','tawheed':'توحيد','tauhid':'توحيد',
+      'kalam':'كلام','kalaam':'كلام',
+      'nubuwwa':'نبوة','nubua':'نبوة','nubuwah':'نبوة','nobuwa':'نبوة',
+      'imama':'إمامة','imamat':'الإمامة','imaamat':'الإمامة',
+      'maad':'معاد','ma3ad':'معاد',
+      'ilahiyat':'إلهيات','elaliyat':'إلهيات',
+      'adl':'عدل','3adl':'عدل',
+      'falsafa':'فلسفة','falsafah':'فلسفة',
+      'irfan':'عرفان','3irfan':'عرفان','erfan':'عرفان',
+      'mantiq':'منطق','manteq':'منطق','mantoq':'منطق',
+      'hikma':'حكمة','hikmah':'حكمة',
+      'shobohat':'شبهات','shobuhat':'شبهات','shubuhat':'شبهات','shubohat':'شبهات',
+      'shobhat':'شبهة','shubha':'شبهة','shouba':'شبهة','shoboha':'شبهة',
+
+      // ── تفسير وقرآن ──
+      'tafsir':'تفسير','tafseer':'تفسير','tafser':'تفسير',
+      'quran':'قرآن','qoran':'قرآن','koran':'قرآن','alquran':'القرآن',
+      'tajwid':'تجويد','tajweed':'تجويد','tajwed':'تجويد',
+      'qiraa':'قراءة','qira2a':'قراءة',
+      'tafseel':'تفصيل',
+
+      // ── حديث ورجال ──
+      'hadith':'حديث','hadeeth':'حديث','hades':'حديث',
+      'hadiths':'أحاديث','ahadith':'أحاديث',
+      'rijal':'رجال','rjal':'رجال',
+      'wasail':'وسائل','wasa2il':'وسائل','wasael':'وسائل',
+      'bihar':'بحار','anwar':'الأنوار',
+      'kafi':'الكافي','kaafi':'الكافي',
+      'sunna':'سنة','sunnah':'سنة','sunnat':'سنة',
+      'sanad':'سند','matan':'متن','isnad':'إسناد',
+
+      // ── أخلاق وتزكية ──
+      'akhlaq':'أخلاق','akhlak':'أخلاق','axlaq':'أخلاق',
+      'tazkiya':'تزكية','tazkiyah':'تزكية','tazkia':'تزكية',
+      'zuhd':'زهد','zohed':'زهد',
+      'ikhlas':'إخلاص','ekhlas':'إخلاص',
+      'tawba':'توبة','tawbah':'توبة','tobah':'توبة',
+      'sabr':'صبر','shukr':'شكر',
+      'tawakkul':'توكل','tawakol':'توكل',
+
+      // ── دعاء وزيارة ──
+      'dua':'دعاء','du3a':'دعاء','do3a':'دعاء','duaa':'دعاء',
+      'adiya':'أدعية','ad3iya':'أدعية','adiyah':'أدعية',
+      'ziyara':'زيارة','ziyarah':'زيارة','zyara':'زيارة','zeara':'زيارة',
+      'mafatih':'مفاتيح','mafateeh':'مفاتيح',
+      'jinan':'الجنان','janan':'الجنان','jenan':'الجنان',
+      'munajat':'مناجاة','wird':'ورد','awrad':'أوراد',
+
+      // ── تاريخ وسيرة ──
+      'tarikh':'تاريخ','taarikh':'تاريخ',
+      'sira':'سيرة','sirah':'سيرة','seera':'سيرة','seerah':'سيرة','seereh':'سيرة',
+      'maqtal':'مقتل',
+      'ashura':'عاشوراء','ashoura':'عاشوراء','ashora':'عاشوراء',
+      'karbala':'كربلاء','karbela':'كربلاء','kerbela':'كربلاء',
+      'ghadir':'غدير','ghadeer':'غدير',
+      'manaqib':'مناقب',
+      'fadail':'فضائل','fada2il':'فضائل','fadha2il':'فضائل',
+
+      // ── تربية وتعليم ──
+      'tofol':'الأطفال','tofal':'الأطفال','atfal':'الأطفال','altofol':'الأطفال',
+      'tifl':'الطفل','altifl':'الطفل',
+      'usra':'أسرة','usrat':'أسرة',
+      'zawjiya':'زوجية',
+      'shabab':'شباب','shaba':'شباب',
+      'maraa':'المرأة','mara':'المرأة',
+      'ta3lim':'تعليم','talim':'تعليم','tadrib':'تدريب',
+
+      // ── دروس وبحوث ──
+      'durus':'دروس','dross':'دروس','doross':'دروس','dorouss':'دروس','drouss':'دروس',
+      'duroos':'دروس','dourus':'دروس','dooros':'دروس','drous':'دروس',
+      'dourouss':'دروس','doroos':'دروس',
+      'bahth':'بحث','buhuth':'بحوث','abhath':'أبحاث',
+      'dirasat':'دراسات','muhadarat':'محاضرات','muhadharat':'محاضرات',
+      'mawsuah':'موسوعة','majala':'مجلة',
+
+      // ── لغة وبلاغة ──
+      'balagha':'البلاغة','balaghah':'البلاغة','balaghe':'البلاغة',
+      'nahj':'نهج','nahjul':'نهج','nahjal':'نهج',
+      'nahw':'نحو','sarf':'صرف','adab':'أدب',
+      'lugha':'لغة','lughat':'لغة',
+
+      // ── كتب ومصادر مشهورة ──
+      'jawahir':'جواهر',
+      'minhaj':'منهاج','manhaj':'منهج',
+      'maktaba':'مكتبة','maktabah':'مكتبة',
+      'muqadima':'مقدمة','muqaddima':'مقدمة','moqadema':'مقدمة',
+      'kitab':'كتاب','kutub':'كتب',
+      'diwan':'ديوان',
+      'majmu3a':'مجموعة','majmua':'مجموعة',
+      'mukhtar':'مختار','majalis':'مجالس',
+      'tanqih':'تنقيح','tahqiq':'تحقيق',
+      'nazariya':'نظرية','nadariya':'نظرية','nadhariya':'نظرية','nazari':'نظري',
+      'jawab':'جواب','sual':'سؤال','su2al':'سؤال',
+      'rad':'رد','naqd':'نقد',
+
+      // ── روايات وقصص ──
+      'riwayat':'روايات','rewayat':'روايات','riwaya':'رواية','rewaya':'رواية',
+      'qissa':'قصة','qisas':'قصص',
+
+      // ── أسماء الله والدين ──
+      'allah':'الله','allahu':'الله',
+      'islam':'الإسلام','islami':'إسلامي',
+      'islameya':'إسلامية','islamiya':'إسلامية','islamiyya':'إسلامية',
+      'alislameya':'الإسلامية','alIslamiya':'الإسلامية',
+      'iman':'إيمان','taqwa':'تقوى',
+      'din':'دين','deen':'دين','umma':'أمة',
+
+      // ── أسماء أئمة وأعلام ──
+      'ali':'علي',
+      'hasan':'حسن','hassan':'حسن',
+      'husayn':'حسين','husain':'حسين','hussain':'حسين','hussein':'حسين',
+      'hosein':'حسين','hossein':'حسين','hossain':'حسين',
+      'fatima':'فاطمة','fatemeh':'فاطمة','fatemah':'فاطمة',
+      'zahra':'الزهراء','alzahra':'الزهراء',
+      'muhammad':'محمد','mohammed':'محمد','mohamad':'محمد',
+      'ahmad':'أحمد',
+      'mahdi':'مهدي','almahdi':'المهدي',
+      'zainab':'زينب','zaynab':'زينب','zeynab':'زينب',
+      'musa':'موسى','moussa':'موسى',
+      'ibrahim':'إبراهيم','ebrahim':'إبراهيم',
+      'yusuf':'يوسف','yousef':'يوسف',
+      'sajad':'سجاد','sajjad':'سجاد',
+      'baqir':'باقر','sadiq':'صادق',
+      'kazem':'كاظم','kadhim':'كاظم','kazim':'كاظم','kaazim':'كاظم',
+      'reza':'رضا','ridha':'رضا','redha':'رضا',
+      'taqi':'تقي','jawad':'جواد','jawaad':'جواد',
+      'hadi':'هادي','askari':'عسكري',
+      'rasul':'رسول','rasool':'رسول','nabi':'نبي',
+
+      // ── ألقاب وكُنى ──
+      'ibn':'ابن','iben':'ابن','bin':'بن',
+      'abu':'أبو','abi':'أبي',
+      'shaykh':'شيخ','sheikh':'شيخ','shikh':'شيخ','sheykh':'شيخ','shaikh':'شيخ',
+      'sayyid':'سيد','syed':'سيد','seyed':'سيد','seyyed':'سيد','sayyed':'سيد',
+      'allama':'علامة','alama':'علامة','allamah':'علامة',
+      'mulla':'ملا','mola':'مولى','moula':'مولى',
+      'husayni':'حسيني','hussaini':'حسيني','hosseini':'حسيني',
+      'shirazi':'شيرازي','sistani':'سيستاني','khoei':'خوئي','khui':'خوئي',
+      'khomeini':'خميني','khamenei':'خامنئي',
+      'najafi':'نجفي','karbalaei':'كربلائي',
+      'shia':'شيعة','shi3a':'شيعة','shii':'شيعي',
+      'sunni':'سني','shafi3i':'شافعي','hanafi':'حنفي','maliki':'مالكي','hanbali':'حنبلي',
+      'jafari':'جعفري',
+
+      // ── مصطلحات الحوزة ──
+      'noor':'نور','nur':'نور',
+      'hawza':'حوزة','howza':'حوزة','hauza':'حوزة',
+      'masjid':'مسجد','masjed':'مسجد',
+      'ghaiba':'غيبة','ghayba':'غيبة',
+      'zuhur':'ظهور','bida':'بدعة','bid3a':'بدعة',
+      'maqasid':'مقاصد','furu':'فروع',
+
+      // ── حروف وأدوات (مهمة جداً — تُحذف أو تُترجم) ──
+      'wa':'و','min':'من','fi':'في','fe':'في','ila':'إلى','ela':'إلى',
+      'an':'عن','3an':'عن',
+      'ma':'ما','la':'لا','li':'لـ','bi':'بـ',
+      'inda':'عند','3inda':'عند',
+      'al':'','el':'',   // أل التعريف: تُعالج خصوصياً في _convertWord
+
+      // ── بادئات وامتدادات تُحذف ──
+      'pdf':'','doc':'','docx':'','jpg':'','jpeg':'','png':'','gif':'','epub':'',
+    };
+
+    // ── قائمة اللواحق الشائعة ──────────────────────────────────────────────────
+    const _SUFFIX_MAP = [
+      ['iyyah','ية'],['iyya','ية'],['iyat','يات'],
+      ['iyeh','ية'],['eyyah','ية'],['eyya','ية'],
+      ['iyyat','يات'],['iyyan','يين'],
+      ['atan','ات'],['atin','ات'],['aat','ات'],
+      ['ayn','ين'],['ain','ين'],
+      ['oon','ون'],['oun','ون'],['een','ين'],
+      ['tun','ة'],['tan','ة'],['ati','اتي'],
+      ['at','ات'],['ah','ة'],['eh','ة'],
+      ['a','ة'],['i','ي'],
+    ];
+
+    // ── خريطة التحويل الصوتي (من أطول لأقصر) ─────────────────────────────────
+    const _LATIN_AR_MAP = [
+      ['dha','ذا'],['tha','ثا'],['sha','شا'],['kha','خا'],['gha','غا'],
+      ['dhi','ذي'],['thi','ثي'],['shi','شي'],['khi','خي'],['ghi','غي'],
+      ['dhu','ذو'],['thu','ثو'],['shu','شو'],['khu','خو'],['ghu','غو'],
+      ['kh','خ'],['gh','غ'],['sh','ش'],['ch','ش'],
+      ['th','ث'],['dh','ذ'],['ph','ف'],
+      ['aa','ا'],['oo','و'],['ee','ي'],['ii','ي'],
+      ['ai','ي'],['ay','ي'],['aw','و'],['iy','ي'],
+      ['ou','و'],['ue','و'],
+      ['qu','ق'],['ss','ص'],['tt','ط'],['zz','ظ'],['dd','ض'],['ng','نج'],
+      ['b','ب'],['f','ف'],['j','ج'],['k','ك'],['l','ل'],['m','م'],
+      ['n','ن'],['r','ر'],['s','س'],['t','ت'],['z','ز'],['d','د'],
+      ['q','ق'],['h','ه'],['w','و'],['y','ي'],
+      ['x','خ'],['p','ب'],['v','ف'],['c','ك'],['g','غ'],
+      ['2','ء'],['3','ع'],['5','خ'],['6','ط'],['7','ح'],['8','ق'],['9','ص'],
+      ['a','ا'],['e','ي'],['i','ي'],['o','و'],['u','و'],
+    ];
+
+    // ── تحويل كلمة واحدة ─────────────────────────────────────────────────────
+    function _convertWord(word) {
+      if (!word) return '';
+      const w = word.toLowerCase().trim();
+      if (!w || w.length === 0) return '';
+
+      // 1) البحث المباشر في القاموس
+      if (_ARABIZI_VOCAB[w] !== undefined) return _ARABIZI_VOCAB[w] || '';
+
+      // 2) معالجة بادئة "al" / "el" — تُجرَّب دائماً بغض النظر عن الحرف التالي
+      let prefix = '';
+      let core = w;
+      if ((w.startsWith('al') || w.startsWith('el')) && w.length > 3) {
+        const withoutAl = w.slice(2);
+        if (_ARABIZI_VOCAB[withoutAl] !== undefined) {
+          const v = _ARABIZI_VOCAB[withoutAl];
+          return v ? 'ال' + v : '';
+        }
+        prefix = 'ال';
+        core = withoutAl;
+      }
+
+      // 3) محاولة مطابقة الجذر + لاحقة
+      for (const [suf, arSuf] of _SUFFIX_MAP) {
+        if (core.endsWith(suf) && core.length > suf.length + 1) {
+          const root = core.slice(0, -suf.length);
+          if (_ARABIZI_VOCAB[root] !== undefined) {
+            const v = _ARABIZI_VOCAB[root];
+            if (v) return prefix + v.replace(/[ةات]+$/, '') + arSuf;
+          }
+          if (root.startsWith('al') || root.startsWith('el')) {
+            const rootNoAl = root.slice(2);
+            if (_ARABIZI_VOCAB[rootNoAl] !== undefined) {
+              const v = _ARABIZI_VOCAB[rootNoAl];
+              if (v) return 'ال' + v.replace(/[ةات]+$/, '') + arSuf;
+            }
+          }
+        }
+      }
+
+      // 4) التحويل الصوتي حرفاً بحرف
+      let result = '';
+      let i = 0;
+      const len = core.length;
+      while (i < len) {
+        let matched = false;
+        for (const tryLen of [3, 2, 1]) {
+          const slice = core.slice(i, i + tryLen);
+          for (const [pat, ar] of _LATIN_AR_MAP) {
+            if (pat === slice) {
+              if (tryLen === 1 && 'aeiou'.includes(pat) && i > 0 && i < len - 1) {
+                const prev = core[i - 1];
+                const next = core[i + 1];
+                const prevC = !'aeiou'.includes(prev) && !/[\s\d_\-]/.test(prev);
+                const nextC = !'aeiou'.includes(next) && !/[\s\d_\-]/.test(next) && next;
+                if (prevC && nextC) { i++; matched = true; break; }
+              }
+              result += ar; i += tryLen; matched = true; break;
+            }
+          }
+          if (matched) break;
+        }
+        if (!matched) { result += core[i]; i++; }
+      }
+
+      // 5) تنظيف: إزالة تكرار الأحرف
+      result = result
+        .replace(/اا+/g, 'ا').replace(/يي+/g, 'ي')
+        .replace(/وو+/g, 'و').replace(/ءء+/g, 'ء');
+
+      return prefix + result;
+    }
+
+    // ── تحويل العنوان الكامل ──────────────────────────────────────────────────
+    function _arabiziToArabic(text) {
+      if (!text) return '';
+
+      // 1) إزالة الامتداد نهائياً بدون ترجمة (فقط حذف)
+      let clean = text.replace(/\.(pdf|docx?|xlsx?|pptx?|txt|png|jpe?g|gif|bmp|webp|svg|zip|rar|7z|epub|mp3|mp4|avi|mkv|mov)$/i, '');
+
+      // 2) إزالة بادئات pdf_ / doc_ / img_ من البداية
+      clean = clean.replace(/^(pdf|doc|docx|img|image|pic|photo)[_\-\s]+/i, '');
+
+      // 3) محاولة مطابقة العنوان الكامل مباشرةً (مع الشَّرطات السفلية)
+      const fullKey = clean.toLowerCase();
+      if (_ARABIZI_VOCAB[fullKey] !== undefined && _ARABIZI_VOCAB[fullKey]) {
+        return _ARABIZI_VOCAB[fullKey];
+      }
+
+      // 4) إزالة الشَّرطات والنقاط وتحويلها إلى مسافات
+      clean = clean.replace(/[_\-\.]+/g, ' ').trim();
+
+      // 5) تحويل كلمة بكلمة
+      const words = clean.split(/\s+/).filter(Boolean);
+      const result = words
+        .map(w => _convertWord(w))
+        .filter(w => w.length > 0)
+        .join(' ')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+
+      // 6) تحسينات نهائية
+      return result
+        .replace(/ ال([^ ])/g, ' ال$1')
+        .trim();
+    }
+
+    // ── هل العنوان عربيزي؟ ───────────────────────────────────────────────────
+    function _isArabiziTitle(text) {
+      if (!text || text.length < 2) return false;
+      const t = text.replace(/\.(pdf|docx?|png|jpe?g|gif|zip|rar|epub|mp3|mp4|txt)$/i, '') || text;
+      if (/[\u0600-\u06FF]/.test(t)) return false;
+      const latin  = (t.match(/[a-zA-Z]/g) || []).length;
+      const digits = (t.match(/[3579]/g)   || []).length;
+      const total  = t.replace(/[\s_\-\.0-9]/g, '').length;
+      if (total === 0) return false;
+      if ((latin + digits) / total < 0.35) return false;
+      if (/_/.test(t) || /\-/.test(t)) return true;
+      if (/[3579]/.test(t)) return true;
+      if (/\b(pdf|doc|fiqh|fuqh|aqid|aqeda|akida|tafsir|hadith|usul|kalam|nahj|quran|imam|shaykh|wilaya|rijal|sharh|kitab|rasul|allah|ibn|abu|husayn|husain|hussain|ali|fatima|tawhid|dua|akhlaq|sira|tajwid|hawza|mafatih|risala|seyyed|hosein|kazem|jawad|mahdi|zainab|ghadir|karbala|ashura|salat|zakat|khums|hajj|sawm|wajib|haram|halal|makasib|jawahir|bihar|wasail|kafi|kifaya|ijtihad|taqlid|marja|fatwa|masail|ahkam|tahara|shobohat|tarbiya|tarbiyat|zawaj|durus|doross|dorouss|dourouss|rewayat|riwayat|tofol|atfal|nazariya|minhaj|manhaj|islameya|welaeya|alakida|alaqeda)\b/i.test(t)) return true;
+      if (/kh|gh|sh|dh|th/.test(t.toLowerCase())) return true;
+      return false;
+    }
+
+
     // ══ المتغيرات الأساسية تُعلَن هنا بـ var لضمان توفرها قبل أي استدعاء ══
     var FIREBASE_DB_URL = 'https://nwr-alhawza-default-rtdb.europe-west1.firebasedatabase.app';
     var PRESENCE_TTL    = 5 * 60 * 1000; // 5 دقائق
@@ -12017,7 +12419,13 @@
       try {
         const cached = localStorage.getItem(CONFIG.CACHE_KEY + '_' + library);
         if (!cached) return null;
-        return JSON.parse(cached);
+        const data = JSON.parse(cached);
+        // فحص انتهاء الصلاحية
+        if (data.timestamp && (Date.now() - data.timestamp) > CONFIG.CACHE_TIME) {
+          localStorage.removeItem(CONFIG.CACHE_KEY + '_' + library);
+          return null;
+        }
+        return data;
       } catch (e) {
         return null;
       }
@@ -12064,12 +12472,22 @@
       return response.json();
     }
     async function fetchFolderContents(folderId) {
-      return fetchFromAPI('files', {
-        q: `'${folderId}' in parents and trashed = false`,
-        fields: 'files(id, name, mimeType, size, createdTime, thumbnailLink, webViewLink, iconLink, shortcutDetails)',
-        orderBy: 'folder,name',
-        pageSize: CONFIG.PAGE_SIZE
-      });
+      // جلب جميع الصفحات باستخدام nextPageToken
+      let allFiles = [];
+      let pageToken = null;
+      do {
+        const params = {
+          q: `'${folderId}' in parents and trashed = false`,
+          fields: 'nextPageToken,files(id,name,mimeType,size,createdTime,thumbnailLink,webViewLink,iconLink,shortcutDetails)',
+          orderBy: 'folder,name',
+          pageSize: CONFIG.PAGE_SIZE
+        };
+        if (pageToken) params.pageToken = pageToken;
+        const data = await fetchFromAPI('files', params);
+        allFiles = allFiles.concat(data.files || []);
+        pageToken = data.nextPageToken || null;
+      } while (pageToken);
+      return { files: allFiles };
     }
 
     // ── مساعد: هل العنصر مجلد (أو اختصار يشير لمجلد)؟ ──
@@ -12995,6 +13413,12 @@
         _deepName:   deepNormalize(it.name || '').toLowerCase(),
         _normFolder: normalizeArabic(it.folderName || '').toLowerCase(),
         _rawLower:   (it.name || '').toLowerCase(),
+        _arName:     (() => {
+          try {
+            const n = (it.name || '').replace(/\.[a-zA-Z0-9]{1,6}$/i, '');
+            return _isArabiziTitle(n) ? normalizeArabic(_arabiziToArabic(n)).toLowerCase() : '';
+          } catch(e) { return ''; }
+        })(),
       }));
 
       const scoreMap  = new Map();
@@ -13005,6 +13429,9 @@
       const qLower     = raw.toLowerCase();
       const normQLower = normQ.toLowerCase();
       const deepQLower = deepQ.toLowerCase();
+
+      // ── المتغير المساعد للعنوان العربي ──
+      const ar = isArabic;
 
       // P1 – تطابق دقيق
       ext.forEach(it => {
@@ -13023,7 +13450,7 @@
       });
       // P4 – تطابق بعد تطبيع
       ext.forEach(it => {
-        if (it._normName === normQLower || it._deepName === deepQLower)
+        if (it._normName === normQLower || it._deepName === deepQLower || (ar && it._arName === normQLower))
           setScore(it.id, -0.8, 'exact');
       });
       // P5 – يبدأ بعد تطبيع
@@ -13034,7 +13461,7 @@
       // P6 – يحتوي بعد تطبيع
       ext.forEach(it => {
         if (it._normName.includes(normQLower) || it._deepName.includes(deepQLower) ||
-            it._normFolder.includes(normQLower)) {
+            it._normFolder.includes(normQLower) || (ar && it._arName && it._arName.includes(normQLower))) {
           const ratio = normQLower.length / (it._normName.length || 1);
           setScore(it.id, -0.3 - ratio * 0.2, 'exact');
         }
@@ -13044,7 +13471,7 @@
       if (queryWords.length > 1) {
         ext.forEach(it => {
           const matchCount = queryWords.filter(w =>
-            it._normName.includes(w) || it._normFolder.includes(w)
+            it._normName.includes(w) || it._normFolder.includes(w) || (it._arName && it._arName.includes(w))
           ).length;
           if (matchCount === queryWords.length) setScore(it.id, -0.1, 'exact');
           else if (matchCount > 0) {
@@ -13074,9 +13501,10 @@
           threshold: adaptiveThreshold, ignoreLocation: true, includeScore: true,
           minMatchCharLength: Math.max(2, Math.floor(qLen * 0.5)),
           keys: [
-            { name: '_normName',   weight: 0.65 },
-            { name: '_deepName',   weight: 0.20 },
-            { name: '_normFolder', weight: 0.15 }
+            { name: '_normName',   weight: 0.50 },
+            { name: '_arName',     weight: 0.28 },
+            { name: '_deepName',   weight: 0.13 },
+            { name: '_normFolder', weight: 0.09 }
           ]
         };
         // نستخدم Fuse جديد لكل pool مختلف، لكن نكشّ النتائج مؤقتاً
@@ -13740,8 +14168,14 @@
     }
 
     function renderBookCard(book, isMobile) {
-      const cleanName = book.name.replace(/\.(docx|pdf|txt|zip|rar|doc|epub)$/i, '');
-      // Use smaller thumbnail for faster loading
+      const cleanName = book.name.replace(/\.[a-zA-Z0-9]{1,6}$/i, '');
+      // التعريب: العنوان الرئيسي هو العربي، والعنوان الفرعي هو الأصلي للمرجعية
+      const arTitle = _isArabiziTitle(cleanName) ? _arabiziToArabic(cleanName) : '';
+      const displayTitle = arTitle || cleanName;
+      // عرض الاسم الأصلي بالخط الصغير تحت العنوان العربي للمرجعية
+      const arSubHtml = arTitle
+        ? `<span class="book-title-ar" title="${cleanName}">${cleanName}</span>`
+        : '';
       const thumbnailUrl = `https://drive.google.com/thumbnail?sz=w200&id=${book.id}`;
       const previewUrl = book.webViewLink || getPreviewUrl(book.id);
       const downloadUrl = getDownloadUrl(book.id);
@@ -13750,18 +14184,14 @@
       const favIcon = isFavorite(book.id) ? 'fas fa-bookmark' : 'far fa-bookmark';
       const favColor = isFavorite(book.id) ? 'color:var(--accent-gold)' : '';
 
-      // Optimized image loading with lazy loading and fallback
       const imgOnError = `onerror="this.onerror=null;this.src='https://drive.google.com/thumbnail?sz=w200&id=${book.id}';if(this.naturalWidth===0){this.style.display='none';this.nextElementSibling.style.display='flex';}"`;
-
-      const coverHtml = `<img src="${thumbnailUrl}" alt="${cleanName}" class="book-cover" loading="lazy" ${imgOnError}><div class="book-no-cover" style="display:none;"><i class="fas ${fileIcon}"></i><span>${cleanName.substring(0, 25)}...</span></div>`;
-
-      const favBtn = `<button class="action-btn" title="مفضلة" data-fav-id="${book.id}" onclick="event.stopPropagation();toggleFavorite('${book.id}','${cleanName.replace(/'/g,"\\'")}','book','${previewUrl}');updateFavButtons();"><i class="${favIcon}" style="${favColor}"></i></button>`;
+      const coverHtml = `<img src="${thumbnailUrl}" alt="${displayTitle}" class="book-cover" loading="lazy" ${imgOnError}><div class="book-no-cover" style="display:none;"><i class="fas ${fileIcon}"></i><span>${displayTitle.substring(0, 25)}...</span></div>`;
+      const favBtn = `<button class="action-btn" title="مفضلة" data-fav-id="${book.id}" onclick="event.stopPropagation();toggleFavorite('${book.id}','${displayTitle.replace(/'/g,"\\'")}','book','${previewUrl}');updateFavButtons();"><i class="${favIcon}" style="${favColor}"></i></button>`;
 
       if (isMobile) {
-        return `<div class="book-card" onclick="openModal('${book.id}')"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay">${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3></div></div>`;
+        return `<div class="book-card" onclick="openModal('${book.id}')"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay">${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title" data-orig-text="${cleanName}">${displayTitle}</h3>${arSubHtml}</div></div>`;
       }
-
-      return `<div class="book-card" data-id="${book.id}"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay"><a href="${previewUrl}" target="_blank" class="action-btn" title="معاينة" onclick="event.stopPropagation()"><i class="fas fa-eye"></i></a><a href="${downloadUrl}" class="action-btn" title="تحميل" onclick="event.stopPropagation()"><i class="fas fa-download"></i></a><button class="action-btn" title="مشاركة" data-action="share" data-id="${book.id}" data-name="${cleanName}"><i class="fas fa-share-alt"></i></button>${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3><div class="book-meta"><span class="book-format"><i class="fas ${fileIcon}"></i>${fileFormat}</span><span>${formatFileSize(book.size)}</span></div></div></div>`;
+      return `<div class="book-card" data-id="${book.id}"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay"><a href="${previewUrl}" target="_blank" class="action-btn" title="معاينة" onclick="event.stopPropagation()"><i class="fas fa-eye"></i></a><a href="${downloadUrl}" class="action-btn" title="تحميل" onclick="event.stopPropagation()"><i class="fas fa-download"></i></a><button class="action-btn" title="مشاركة" data-action="share" data-id="${book.id}" data-name="${displayTitle}"><i class="fas fa-share-alt"></i></button>${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title" data-orig-text="${cleanName}">${displayTitle}</h3>${arSubHtml}<div class="book-meta"><span class="book-format"><i class="fas ${fileIcon}"></i>${fileFormat}</span><span>${formatFileSize(book.size)}</span></div></div></div>`;
     }
 
     function renderPagination(totalItems) {
@@ -14795,6 +15225,8 @@
       if (!book) return;
 
       const cleanName   = book.name.replace(/\.[a-zA-Z0-9]{1,6}$/i, '');
+      const arTitle     = _isArabiziTitle(cleanName) ? _arabiziToArabic(cleanName) : '';
+      const displayTitle = arTitle || cleanName;
       const fileFormat  = getFileFormat(book.mimeType);
       const fileIcon    = getFileIcon(book.mimeType);
       const thumb       = `https://drive.google.com/thumbnail?sz=w400&id=${book.id}`;
@@ -14811,20 +15243,21 @@
         DOM.modalNoCover.style.display  = 'flex';
         const ico = DOM.modalNoCover.querySelector('i');
         if (ico) ico.className = `fas ${fileIcon}`;
-        DOM.modalNoCoverTitle.textContent = cleanName.substring(0, 35);
+        DOM.modalNoCoverTitle.textContent = displayTitle.substring(0, 35);
       };
 
       // ── معلومات ──
       if (DOM.modalCategoryText) DOM.modalCategoryText.textContent = book.folderName || 'مكتبة نور الحوزة';
-      DOM.modalTitle.textContent  = cleanName;
+      DOM.modalTitle.textContent  = displayTitle;
       DOM.modalFormat.textContent = fileFormat;
       DOM.modalSize.textContent   = formatFileSize(book.size);
 
-      // ── عنوان عربي مُعرَّب (للكتب المكتوبة بالعربيزي) ──
+      // ── العنوان المُعرَّب: يظهر أسفل العنوان الرئيسي في المودال ──
       const modalTitleAr = document.getElementById('modalTitleAr');
       if (modalTitleAr) {
-        if (_isArabiziTitle(cleanName)) {
-          modalTitleAr.textContent = _arabiziToArabic(cleanName);
+        if (arTitle) {
+          // يظهر الاسم الأصلي (Arabizi) كعنوان فرعي صغير للمرجعية
+          modalTitleAr.textContent = '📄 ' + cleanName;
           modalTitleAr.style.display = '';
         } else {
           modalTitleAr.textContent = '';
@@ -14840,7 +15273,7 @@
       DOM.modalDriveBtn.href = driveView;
 
       // ── مشاركة ──
-      DOM.modalShare.onclick = () => shareBook(book.id, cleanName);
+      DOM.modalShare.onclick = () => shareBook(book.id, displayTitle);
 
       // ── مفضلة (حفظ مستمر) ──
       const favBtn = DOM.modalFavBtn;
@@ -14854,7 +15287,7 @@
       };
       refreshFav();
       favBtn.onclick = () => {
-        toggleFavorite(book.id, cleanName, 'book', driveView);
+        toggleFavorite(book.id, displayTitle, 'book', driveView);
         refreshFav();
         updateFavShelfCount();
       };
@@ -18650,317 +19083,6 @@
     }
 
     // ══════════════════════════════════════════════════════════════════════════
-    //  نظام تعريب عناوين الكتب المكتوبة بالعربيزي (حروف لاتينية ← عربية)
-    //  يعتمد على نفس مبدأ نظام البحث دون الحاجة لأي خدمة خارجية
-    // ══════════════════════════════════════════════════════════════════════════
-
-    // قاموس المصطلحات الإسلامية الشائعة بالعربيزي → العربية (محسَّن)
-    const _ARABIZI_VOCAB = {
-      // ── فقه وأصوله ──
-      'fqh':'فقه','fiqh':'فقه','fuqh':'فقه','feqh':'فقه','fekh':'فقه',
-      'usul':'أصول','usool':'أصول','osul':'أصول','usol':'أصول','ousoul':'أصول',
-      'ijtihad':'اجتهاد','ijtehad':'اجتهاد',
-      'taqlid':'تقليد','taklid':'تقليد',
-      'marja':'مرجع','marjaa':'مرجع','marji3':'مرجع',
-      'fatwa':'فتوى','fatawa':'فتاوى','fetwa':'فتوى',
-      'masail':'مسائل','masa2il':'مسائل','masa\'il':'مسائل',
-      'ahkam':'أحكام','ahkaam':'أحكام',
-      'risala':'رسالة','risalah':'رسالة','resala':'رسالة','resalah':'رسالة',
-      'rasail':'رسائل','rasa\'il':'رسائل',
-      'amalia':'عملية','amaliya':'عملية','amali':'عملي',
-      'shari':'شرعي','sharia':'شريعة','shariat':'شريعة','shari3a':'شريعة',
-      'khums':'خمس','khms':'خمس',
-      'zakat':'زكاة','zakah':'زكاة','zaka':'زكاة',
-      'salat':'صلاة','salah':'صلاة','sala':'صلاة','namaz':'نماز',
-      'sawm':'صوم','siyam':'صيام','soom':'صوم',
-      'hajj':'حج','haj':'حج','umra':'عمرة','omra':'عمرة',
-      'nikah':'نكاح','nikah':'نكاح',
-      'talaq':'طلاق','talaaq':'طلاق',
-      'miras':'ميراث','irth':'إرث',
-      'tahara':'طهارة','taharah':'طهارة','taharet':'طهارة',
-      'wudhu':'وضوء','wudu':'وضوء','woudhou':'وضوء',
-      'ghusl':'غسل','ghosol':'غسل',
-      'tayammum':'تيمم','tayamom':'تيمم',
-      'khilaf':'خلاف',
-      'ijma':'إجماع','ijmaa':'إجماع',
-      'qiyas':'قياس',
-      'istihsan':'استحسان',
-      'halal':'حلال','haram':'حرام',
-      'makruh':'مكروه','makrooh':'مكروه',
-      'mustahab':'مستحب','mustahabb':'مستحب',
-      'wajib':'واجب','waajib':'واجب',
-      'mubah':'مباح',
-      'tawdih':'توضيح','tawzih':'توضيح','tawzeeh':'توضيح',
-      'tabsira':'تبصرة','tabsirat':'تبصرة',
-      'mubtilat':'مبطلات',
-      'makasib':'مكاسب','makaseb':'مكاسب',
-      'kifaya':'كفاية','kifayah':'كفاية','kefaya':'كفاية',
-      'tahrir':'تحرير',
-      'sharh':'شرح',
-      'talkhis':'تلخيص',
-      'mukhtasar':'مختصر',
-      // ── عقيدة وكلام ──
-      'aqida':'عقيدة','aqidah':'عقيدة','aqideh':'عقيدة','3aqida':'عقيدة','akida':'عقيدة',
-      'tawhid':'توحيد','tawheed':'توحيد','tauhid':'توحيد','tawheed':'توحيد',
-      'kalam':'كلام','kalaam':'كلام',
-      'nubuwwa':'نبوة','nubua':'نبوة','nubuwah':'نبوة','nobuwa':'نبوة',
-      'imama':'إمامة','imamat':'الإمامة','imaamat':'الإمامة',
-      'maad':'معاد','ma3ad':'معاد','ma\'ad':'معاد',
-      'ilahiyat':'إلهيات','elaliyat':'إلهيات',
-      'adl':'عدل','3adl':'عدل',
-      'falsafa':'فلسفة','falsafah':'فلسفة',
-      'irfan':'عرفان','3irfan':'عرفان','erfan':'عرفان',
-      'mantiq':'منطق','manteq':'منطق','mantoq':'منطق',
-      'hikma':'حكمة','hikmah':'حكمة',
-      // ── تفسير وقرآن ──
-      'tafsir':'تفسير','tafseer':'تفسير','tafser':'تفسير','tafseer':'تفسير',
-      'quran':'قرآن','qoran':'قرآن','koran':'قرآن','quran':'قرآن','alquran':'القرآن',
-      'tajwid':'تجويد','tajweed':'تجويد','tajwed':'تجويد',
-      'qiraa':'قراءة','qira2a':'قراءة',
-      'tafseel':'تفصيل',
-      // ── حديث ورجال ──
-      'hadith':'حديث','hadeeth':'حديث','hades':'حديث',
-      'hadiths':'أحاديث','ahadith':'أحاديث',
-      'rijal':'رجال','rjal':'رجال',
-      'wasail':'وسائل','wasa2il':'وسائل','wasael':'وسائل',
-      'bihar':'بحار',
-      'anwar':'الأنوار',
-      'kafi':'الكافي','kaafi':'الكافي','al-kafi':'الكافي',
-      'sunnat':'سنة','sunnah':'سنة',
-      'sanad':'سند',
-      'matan':'متن',
-      'isnad':'إسناد',
-      // ── أخلاق وتزكية ──
-      'akhlaq':'أخلاق','akhlak':'أخلاق','axlaq':'أخلاق','akhlaq':'أخلاق',
-      'tazkiya':'تزكية','tazkiyah':'تزكية','tazkia':'تزكية',
-      'zuhd':'زهد','zohed':'زهد',
-      'ikhlas':'إخلاص','ekhlas':'إخلاص',
-      'tawba':'توبة','tawbah':'توبة','tobah':'توبة',
-      'sabr':'صبر',
-      'shukr':'شكر',
-      'tawakkul':'توكل','tawakol':'توكل',
-      // ── دعاء وزيارة ──
-      'dua':'دعاء','du3a':'دعاء','do3a':'دعاء','duaa':'دعاء','do\'aa':'دعاء',
-      'adiya':'أدعية','ad3iya':'أدعية','adiyah':'أدعية',
-      'ziyara':'زيارة','ziyarah':'زيارة','zyara':'زيارة','zeara':'زيارة',
-      'mafatih':'مفاتيح','mafateeh':'مفاتيح','mafatih':'مفاتيح',
-      'jinan':'الجنان','janan':'الجنان','jenan':'الجنان',
-      'munajat':'مناجاة','monaját':'مناجاة',
-      'wird':'ورد','awrad':'أوراد',
-      // ── تاريخ وسيرة ──
-      'tarikh':'تاريخ','taarikh':'تاريخ','taarikh':'تاريخ',
-      'sira':'سيرة','sirah':'سيرة','seera':'سيرة','seerah':'سيرة','seereh':'سيرة',
-      'maqtal':'مقتل',
-      'ashura':'عاشوراء','ashoura':'عاشوراء','ashora':'عاشوراء',
-      'karbala':'كربلاء','karbela':'كربلاء','kerbela':'كربلاء',
-      'ghadir':'غدير','ghadeer':'غدير','ghadir':'غدير',
-      'manaقib':'مناقب',
-      'manaqib':'مناقب','manaقib':'مناقب',
-      'fadha2il':'فضائل','fada2il':'فضائل','fadail':'فضائل',
-      // ── لغة وبلاغة ──
-      'balagha':'البلاغة','balaghe':'البلاغة','balaghah':'البلاغة',
-      'nahj':'نهج','nahjul':'نهج','nahjal':'نهج',
-      'nahw':'نحو',
-      'sarf':'صرف',
-      'adab':'أدب',
-      'lugha':'لغة','lughat':'لغة',
-      // ── كتب ومصادر مشهورة ──
-      'jawahir':'جواهر','juaher':'جواهر',
-      'minhaj':'منهاج','manhaj':'منهج',
-      'maktaba':'مكتبة','maktabah':'مكتبة',
-      'muqadima':'مقدمة','muqaddima':'مقدمة','moqadema':'مقدمة',
-      'bahth':'بحث','buhuth':'بحوث',
-      'kitab':'كتاب','kutub':'كتب',
-      'diwan':'ديوان',
-      'majmu3a':'مجموعة','majmua':'مجموعة',
-      'mukhtar':'مختار',
-      'majalis':'مجالس','mjalise':'مجالس','majalese':'مجالس',
-      // ── أسماء الله والدين ──
-      'allah':'الله','allahu':'الله',
-      'islam':'الإسلام','islami':'إسلامي','islameya':'إسلامية','islamiya':'إسلامية',
-      'iman':'إيمان',
-      'taqwa':'تقوى',
-      // ── أسماء وألقاب ──
-      'ali':'علي',
-      'hasan':'حسن','hassan':'حسن',
-      'husayn':'حسين','husain':'حسين','hussain':'حسين','hussein':'حسين',
-      'hosein':'حسين','hossein':'حسين','hossain':'حسين',
-      'fatima':'فاطمة','fatemeh':'فاطمة','fatemah':'فاطمة',
-      'zahra':'الزهراء','alzahra':'الزهراء',
-      'muhammad':'محمد','mohammed':'محمد','mohamad':'محمد','mohamad':'محمد',
-      'ahmad':'أحمد',
-      'mahdi':'مهدي','almahdi':'المهدي','al-mahdi':'المهدي',
-      'zainab':'زينب','zaynab':'زينب','zeynab':'زينب',
-      'musa':'موسى','moussa':'موسى',
-      'ibrahim':'إبراهيم','ebrahim':'إبراهيم',
-      'yusuf':'يوسف','yousef':'يوسف',
-      'sajad':'سجاد','sajjad':'سجاد',
-      'baqir':'باقر','albaقir':'الباقر',
-      'sadiq':'صادق','alsadiq':'الصادق',
-      'kazem':'كاظم','kadhim':'كاظم','kazim':'كاظم','kaazim':'كاظم',
-      'reza':'رضا','ridha':'رضا','redha':'رضا',
-      'taqi':'تقي','jawad':'جواد','jawaad':'جواد',
-      'hadi':'هادي',
-      'askari':'عسكري',
-      'rasul':'رسول','rasool':'رسول',
-      'nabi':'نبي',
-      // ── ألقاب وكُنى ──
-      'ibn':'ابن','iben':'ابن','bin':'بن',
-      'abu':'أبو','abi':'أبي',
-      'shaykh':'شيخ','sheikh':'شيخ','shikh':'شيخ','sheykh':'شيخ','shaikh':'شيخ',
-      'sayyid':'سيد','syed':'سيد','seyed':'سيد','seyyed':'سيد','sayyed':'سيد',
-      'allama':'علامة','alama':'علامة','allamah':'علامة',
-      'mulla':'ملا','mola':'مولى','moula':'مولى',
-      'husayni':'حسيني','hussaini':'حسيني','hosseini':'حسيني',
-      'shirazi':'شيرازي','sistani':'سيستاني','khoei':'خوئي','khui':'خوئي',
-      'khomeini':'خميني','khamenei':'خامنئي',
-      'najafi':'نجفي','karbalaei':'كربلائي',
-      'shia':'شيعة','shi3a':'شيعة','shi\'a':'شيعة','shii':'شيعي',
-      // ── مصطلحات الحوزة ──
-      'noor':'نور','nur':'نور',
-      'hawza':'حوزة','howza':'حوزة','hauza':'حوزة',
-      'masjid':'مسجد','masjed':'مسجد',
-      'wilaya':'ولاية','wilayet':'ولاية','welaya':'ولاية','welayat':'ولاية',
-      'furu':'فروع',
-      'ghaiba':'غيبة','ghayba':'غيبة',
-      'zuhur':'ظهور',
-      'bid3a':'بدعة','bida':'بدعة','bid\'a':'بدعة',
-      'sunni':'سني','shafi3i':'شافعي','hanafi':'حنفي','maliki':'مالكي','hanbali':'حنبلي',
-      'jafari':'جعفري',
-      'maqasid':'مقاصد',
-      'tahqiq':'تحقيق',
-      'dirasat':'دراسات',
-      'tanqih':'تنقيح',
-      'nazariya':'نظرية','nadariya':'نظرية','nadhariya':'نظرية',
-      'nazari':'نظري',
-      // ── حروف وأدوات ──
-      'wa':'و','min':'من','fi':'في','ila':'إلى',
-      'an':'عن','3an':'عن',
-      'ma':'ما','la':'لا','li':'لـ','bi':'بـ',
-      'inda':'عند','3inda':'عند',
-      'al':'ال',
-      // ── متفرقة ──
-      'jawab':'جواب',
-      'su\'al':'سؤال','sual':'سؤال',
-      'rad':'رد',
-      'naqd':'نقد',
-      'tadrib':'تدريب',
-      'tarbiya':'تربية',
-      'ta3lim':'تعليم','talim':'تعليم',
-    };
-
-    // خريطة التحويل من الحروف اللاتينية إلى العربية (محسَّنة — من حرفين ثم حرف واحد)
-    const _LATIN_AR_MAP = [
-      // ثنائيات الحروف أولاً (أولوية)
-      ['kh','خ'],['gh','غ'],['sh','ش'],['ch','ش'],['th','ث'],['dh','ذ'],
-      ['aa','ا'],['oo','و'],['ee','ي'],['ai','ي'],['ay','ي'],['aw','و'],['iy','ي'],
-      ['qu','ق'],['ph','ف'],['ss','ص'],['tt','ط'],['zz','ظ'],['dd','ض'],
-      // أحرف منفردة
-      ['b','ب'],['f','ف'],['j','ج'],['k','ك'],['l','ل'],['m','م'],
-      ['n','ن'],['r','ر'],['s','س'],['t','ت'],['z','ز'],['d','د'],
-      ['q','ق'],['g','غ'],['h','ه'],['w','و'],['y','ي'],
-      ['x','خ'],['p','ب'],['v','ف'],['c','ك'],
-      // أرقام عربيزي
-      ['2','ء'],['3','ع'],['5','خ'],['6','ط'],['7','ح'],['8','ق'],['9','ص'],
-      // حروف العلة
-      ['a','ا'],['e','ي'],['i','ي'],['o','و'],['u','و'],
-    ];
-    const _VOWELS_AR = new Set(['a','e','i','o','u']);
-
-    // تحويل كلمة واحدة من العربيزي إلى العربية (محسَّن)
-    function _convertArabiziWord(word) {
-      if (!word) return '';
-      const w = word.toLowerCase().trim();
-      if (!w) return '';
-
-      // 1) بحث مباشر في القاموس
-      if (_ARABIZI_VOCAB[w]) return _ARABIZI_VOCAB[w];
-
-      // 2) معالجة بادئة "ال" أو "el"
-      let prefix = '';
-      let core = w;
-      if ((w.startsWith('al') || w.startsWith('el')) && w.length > 3) {
-        const withoutAl = w.slice(2);
-        if (_ARABIZI_VOCAB[withoutAl]) return 'ال' + _ARABIZI_VOCAB[withoutAl];
-        prefix = 'ال';
-        core = withoutAl;
-      }
-
-      // 3) تحويل حرف بحرف مع تجربة أطول تطابق أولاً
-      let result = '';
-      let i = 0;
-      const len = core.length;
-
-      while (i < len) {
-        let matched = false;
-
-        // جرّب 3 حروف أولاً (للأنماط المركبة مستقبلاً)
-        // ثم جرّب حرفين
-        const two = core.slice(i, i + 2);
-        for (const [pat, ar] of _LATIN_AR_MAP) {
-          if (pat.length === 2 && two === pat) {
-            result += ar; i += 2; matched = true; break;
-          }
-        }
-
-        if (!matched) {
-          const ch = core[i];
-
-          // تخطي حركات قصيرة في وسط الكلمة فقط
-          // (بين حرفين ساكنين حقيقيين) — لا نتخطى أول حرف أو آخر حرف
-          if (_VOWELS_AR.has(ch) && i > 0 && i < len - 1) {
-            const prev = core[i - 1];
-            const next = core[i + 1];
-            const prevIsCons = !_VOWELS_AR.has(prev) && !/[\d\s]/.test(prev);
-            const nextIsCons = !_VOWELS_AR.has(next) && !/[\s]/.test(next) && next !== undefined;
-            // تخطي فقط إذا كان الحرف السابق واللاحق كلاهما حروف ساكنة
-            // ولم يكن هناك تسلسل صوتي طويل (مثل aa, ee, oo)
-            if (prevIsCons && nextIsCons) {
-              i++; continue;
-            }
-          }
-
-          for (const [pat, ar] of _LATIN_AR_MAP) {
-            if (pat.length === 1 && pat === ch) {
-              result += ar; i++; matched = true; break;
-            }
-          }
-          if (!matched) { result += ch; i++; }
-        }
-      }
-
-      // 4) تنظيف: إزالة همزة مكررة وألف مكررة
-      result = result.replace(/اا/g, 'ا').replace(/يي/g, 'ي').replace(/وو/g, 'و');
-
-      return prefix + result;
-    }
-
-    // تحويل عنوان عربيزي كامل — يدعم _ و - كفاصل، ويتجاهل الامتداد تلقائياً
-    function _arabiziToArabic(text) {
-      if (!text) return '';
-      // إزالة امتداد الملف إن وُجد (مثل .pdf .png .jpg .docx …)
-      const noExt = text.replace(/\.[a-zA-Z0-9]{1,6}$/, '');
-      const clean = (noExt || text).replace(/[_\-\.]+/g, ' ').trim();
-      const words = clean.split(/\s+/).filter(Boolean);
-      return words.map(w => _convertArabiziWord(w)).join(' ');
-    }
-
-    // هل العنوان مكتوب بالعربيزي (حروف لاتينية تمثل نصاً عربياً)؟
-    function _isArabiziTitle(text) {
-      if (!text || text.length < 2) return false;
-      // تجاهل امتداد الملف قبل الفحص
-      const t = text.replace(/\.[a-zA-Z0-9]{1,6}$/, '') || text;
-      if (/[\u0600-\u06FF]/.test(t)) return false; // يحتوي على حروف عربية فعلية
-      const latinCount = (t.match(/[a-zA-Z]/g) || []).length;
-      const totalCount = t.replace(/[\s_\-\.]/g, '').length;
-      if (totalCount === 0 || latinCount / totalCount < 0.4) return false;
-      // مؤشرات العربيزي القوية
-      if (/_/.test(t)) return true;
-      if (/[3579]/.test(t)) return true;
-      if (/\b(fqh|fuqh|fiqh|aqid|tafsir|hadith|usul|kalam|nahj|quran|imam|shaykh|bayt|wilaya|rijal|sharh|kitab|rasul|allah|ibn|abu|husayn|husain|hussain|ali|fatima|tawhid|dua|akhlaq|sira|tajwid|hawza|howza|mafatih|jinan|risala|usool|feqh|fekh|seyyed|sayyed|hosein|hossein|kazem|jawad|mahdi|zainab|musa|ibrahim|ghadir|karbala|ashura|salat|zakat|khums|hajj|sawm|wajib|haram|halal|makasib|jawahir|bihar|wasail|kafi|kifaya|ijtihad|taqlid|marja|fatwa|masail|ahkam|shariah|tahara)\b/i.test(t)) return true;
-      if (/kh|gh|sh|dh|th/.test(t.toLowerCase())) return true;
-      return false;
-    }
 
     // Optimized Thumbnail URL - Use smaller size for faster loading
     function getThumbnailUrl(fileId, thumbnailLink) {
@@ -18969,37 +19091,6 @@
         return thumbnailLink.replace('=s220', '=w400');
       }
       return `https://drive.google.com/thumbnail?sz=w400&id=${fileId}`;
-    }
-
-    // Updated Book Card Render with Optimized Images
-    function renderBookCard(book, isMobile) {
-      const cleanName = book.name.replace(/\.[a-zA-Z0-9]{1,6}$/i, '');
-      // Use smaller thumbnail for faster loading
-      const thumbnailUrl = `https://drive.google.com/thumbnail?sz=w200&id=${book.id}`;
-      const previewUrl = book.webViewLink || getPreviewUrl(book.id);
-      const downloadUrl = getDownloadUrl(book.id);
-      const fileFormat = getFileFormat(book.mimeType);
-      const fileIcon = getFileIcon(book.mimeType);
-      const favIcon = isFavorite(book.id) ? 'fas fa-bookmark' : 'far fa-bookmark';
-      const favColor = isFavorite(book.id) ? 'color:var(--accent-gold)' : '';
-
-      // Optimized image loading with lazy loading
-      const imgOnError = `onerror="this.onerror=null;this.src='https://drive.google.com/thumbnail?sz=w200&id=${book.id}';if(this.naturalWidth===0){this.style.display='none';this.nextElementSibling.style.display='flex';}"`;
-
-      const coverHtml = `<img src="${thumbnailUrl}" alt="${cleanName}" class="book-cover" loading="lazy" ${imgOnError}><div class="book-no-cover" style="display:none;"><i class="fas ${fileIcon}"></i><span>${cleanName.substring(0, 25)}...</span></div>`;
-
-      const favBtn = `<button class="action-btn" title="مفضلة" data-fav-id="${book.id}" onclick="event.stopPropagation();toggleFavorite('${book.id}','${cleanName.replace(/'/g,"\\'")}','book','${previewUrl}');updateFavButtons();"><i class="${favIcon}" style="${favColor}"></i></button>`;
-
-      // ── عنوان فرعي بالعربية للكتب المكتوبة بالعربيزي (بدون أي خدمة خارجية) ──
-      const arSubtitle = _isArabiziTitle(cleanName)
-        ? `<div class="book-title-ar" dir="rtl">${_arabiziToArabic(cleanName)}</div>`
-        : '';
-
-      if (isMobile) {
-        return `<div class="book-card" onclick="openModal('${book.id}')"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay">${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3>${arSubtitle}</div></div>`;
-      }
-
-      return `<div class="book-card" data-id="${book.id}"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay"><a href="${previewUrl}" target="_blank" class="action-btn" title="معاينة" onclick="event.stopPropagation()"><i class="fas fa-eye"></i></a><a href="${downloadUrl}" class="action-btn" title="تحميل" onclick="event.stopPropagation()"><i class="fas fa-download"></i></a><button class="action-btn" title="مشاركة" data-action="share" data-id="${book.id}" data-name="${cleanName}"><i class="fas fa-share-alt"></i></button>${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3>${arSubtitle}<div class="book-meta"><span class="book-format"><i class="fas ${fileIcon}"></i>${fileFormat}</span><span>${formatFileSize(book.size)}</span></div></div></div>`;
     }
 
     // Mobile Optimization for iframe
