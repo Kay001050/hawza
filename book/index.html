@@ -4183,6 +4183,21 @@
       overflow: hidden;
     }
 
+    /* العنوان الفرعي العربي لكتب العربيزي */
+    .book-title-ar {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      color: var(--accent-gold);
+      opacity: 0.85;
+      margin-top: 3px;
+      line-height: 1.4;
+      direction: rtl;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
     .book-meta {
       display: flex;
       justify-content: space-between;
@@ -10819,10 +10834,10 @@
     <div class="container controls-container">
       <div class="controls-left">
         <div class="view-toggles">
-          <button class="view-btn" data-view="grid" title="عرض شبكي">
+          <button class="view-btn" data-view="grid" title="عرض شبكي كبير">
             <i class="fas fa-th-large"></i>
           </button>
-          <button class="view-btn active" data-view="compact-grid" title="عرض مضغوط">
+          <button class="view-btn active" data-view="compact-grid" title="عرض مضغوط صغير">
             <i class="fas fa-th"></i>
           </button>
           <button class="view-btn" data-view="list" title="عرض قائمة">
@@ -11790,8 +11805,10 @@
         }
       });
 
-      // تحميل تفضيل العرض المحفوظ (الافتراضي: العرض المضغوط لجميع الأجهزة)
-      const savedView = localStorage.getItem('noor_view_pref') || 'compact-grid';
+      // تحميل تفضيل العرض المحفوظ (الافتراضي: العرض المضغوط الصغير لأجهزة التاب والكمبيوتر)
+      const isDesktopOrTablet = window.innerWidth >= 768;
+      const defaultView = isDesktopOrTablet ? 'compact-grid' : 'compact-grid';
+      const savedView = localStorage.getItem('noor_view_pref') || defaultView;
       state.currentView = savedView;
       document.querySelectorAll('.view-btn').forEach(b => {
         b.classList.toggle('active', b.dataset.view === savedView);
@@ -12842,6 +12859,12 @@
     function clearSearchHistory() {
       try { localStorage.removeItem(SEARCH_HISTORY_KEY); } catch(e) {}
     }
+    function removeFromSearchHistory(query) {
+      try {
+        let h = getSearchHistory().filter(q => q !== query);
+        localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(h));
+      } catch(e) {}
+    }
 
     // ─── بيانات آخر عملية بحث ────────────────────────────────────────────────
     let _lastSearchMeta = { exact: 0, similar: 0, phonetic: 0, synonym: 0, total: 0, query: '' };
@@ -13200,8 +13223,8 @@
 
     // كلمات البحث الرائجة
     const TRENDING_SEARCHES = [
-      'فقه', 'عقائد', 'تفسير', 'نهج البلاغة', 'مفاتيح الجنان',
-      'دعاء', 'أخلاق', 'حديث', 'تجويد', 'تاريخ'
+      'فقه', 'عقائد', 'تفسير', 'نهج البلاغة',
+      'دعاء', 'أخلاق', 'حديث', 'تجويد', 'تاريخ', 'أدعية'
     ];
 
     /** بناء مسار المجلد */
@@ -13237,11 +13260,12 @@
       if (!query || query.trim().length < 1) {
         const history = getSearchHistory().slice(0, 5);
         if (!history.length) { box.classList.remove('visible'); return; }
-        let html = `<div class="suggestions-section-title"><i class="fas fa-history"></i> عمليات بحث سابقة</div>`;
+        let html = `<div class="suggestions-section-title"><i class="fas fa-history"></i> عمليات بحث سابقة <span style="font-size:0.68rem;color:var(--text-muted);font-weight:400;">(اضغط مطولاً للحذف)</span></div>`;
         history.forEach(h => {
           html += `<div class="suggestion-item" data-query="${encodeURIComponent(h)}" role="option">
             <div class="suggestion-icon history"><i class="fas fa-clock"></i></div>
             <div class="suggestion-text"><div class="suggestion-name">${h}</div></div>
+            <button class="sugg-delete-btn" data-del="${encodeURIComponent(h)}" title="حذف" style="margin-right:auto;padding:4px 8px;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.8rem;border-radius:4px;flex-shrink:0;" onmousedown="event.stopPropagation()"><i class="fas fa-times"></i></button>
           </div>`;
         });
         html += `<div class="search-trending">
@@ -13276,11 +13300,12 @@
 
       let html = '';
       if (history.length) {
-        html += `<div class="suggestions-section-title"><i class="fas fa-history"></i> عمليات بحث سابقة</div>`;
+        html += `<div class="suggestions-section-title"><i class="fas fa-history"></i> عمليات بحث سابقة <span style="font-size:0.68rem;color:var(--text-muted);font-weight:400;">(اضغط مطولاً للحذف)</span></div>`;
         history.forEach(h => {
           html += `<div class="suggestion-item" data-query="${encodeURIComponent(h)}" role="option">
             <div class="suggestion-icon history"><i class="fas fa-clock"></i></div>
             <div class="suggestion-text"><div class="suggestion-name">${highlightText(h, [query])}</div></div>
+            <button class="sugg-delete-btn" data-del="${encodeURIComponent(h)}" title="حذف" style="margin-right:auto;padding:4px 8px;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.8rem;border-radius:4px;flex-shrink:0;" onmousedown="event.stopPropagation()"><i class="fas fa-times"></i></button>
           </div>`;
         });
       }
@@ -13343,7 +13368,46 @@
 
     /** إرفاق أحداث المقترحات */
     function _attachSuggEvt(box, query) {
+      // حذف فردي: زر X أو long-press
+      box.querySelectorAll('.sugg-delete-btn').forEach(btn => {
+        btn.addEventListener('mousedown', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          const q = decodeURIComponent(btn.dataset.del || '');
+          if (q) {
+            removeFromSearchHistory(q);
+            const val = DOM.searchInput.value;
+            showSearchSuggestions(val.trim() ? val : '');
+            if (typeof renderSearchChips === 'function') renderSearchChips();
+          }
+        });
+      });
+
+      // long-press على عنصر التاريخ نفسه
+      let _lpTimer = null;
       box.querySelectorAll('.suggestion-item').forEach(el => {
+        const startLp = () => {
+          _lpTimer = setTimeout(() => {
+            const rawQ = el.dataset.query;
+            if (!rawQ) return;
+            const decoded = decodeURIComponent(rawQ);
+            // تحقق أنه من السجل (له أيقونة clock)
+            if (el.querySelector('.suggestion-icon.history')) {
+              removeFromSearchHistory(decoded);
+              const val = DOM.searchInput.value;
+              showSearchSuggestions(val.trim() ? val : '');
+              if (typeof renderSearchChips === 'function') renderSearchChips();
+            }
+          }, 600);
+        };
+        const cancelLp = () => { clearTimeout(_lpTimer); _lpTimer = null; };
+        el.addEventListener('mousedown', startLp);
+        el.addEventListener('mouseup', cancelLp);
+        el.addEventListener('mouseleave', cancelLp);
+        el.addEventListener('touchstart', startLp, { passive: true });
+        el.addEventListener('touchend', cancelLp);
+        el.addEventListener('touchcancel', cancelLp);
+
         el.addEventListener('mousedown', e => {
           e.preventDefault();
           const q = el.dataset.query;
@@ -13369,6 +13433,7 @@
       const clearBtn = box.querySelector('#clearHistoryBtn');
       if (clearBtn) clearBtn.addEventListener('mousedown', e => {
         e.preventDefault(); clearSearchHistory(); box.classList.remove('visible');
+        if (typeof renderSearchChips === 'function') renderSearchChips();
       });
     }
 
@@ -13444,7 +13509,11 @@
         const libPage = document.getElementById('page-library');
         if (libPage && libPage.style.display === 'none') showLibraryPage && showLibraryPage();
       }
-      hideSearchSuggestions();
+      // نُخفي المقترحات فقط عند الضغط على زر البحث أو Enter (saveHistory=true)
+      // عند الكتابة تبقى المقترحات ظاهرة
+      if (saveHistory) {
+        hideSearchSuggestions();
+      }
 
       const icon = document.getElementById('searchIconEl');
       if (icon && value.trim()) icon.style.animation = 'spin 0.6s linear infinite';
@@ -15217,15 +15286,31 @@
         row.innerHTML =
           `<span class="search-chips-label"><i class="fas fa-history"></i> الأخير:</span>` +
           history.map(h =>
-            `<span class="search-chip" data-q="${encodeURIComponent(h)}">
+            `<span class="search-chip" data-q="${encodeURIComponent(h)}" title="اضغط مطولاً للحذف">
               <i class="fas fa-clock"></i>${h}
             </span>`
           ).join('');
         row.querySelectorAll('.search-chip').forEach(chip => {
+          // نقرة عادية: بحث
           chip.addEventListener('click', () => {
             DOM.searchInput.value = decodeURIComponent(chip.dataset.q);
             triggerSearch(decodeURIComponent(chip.dataset.q), true);
           });
+          // long-press: حذف
+          let _lpTimer = null;
+          const startLp = () => {
+            _lpTimer = setTimeout(() => {
+              removeFromSearchHistory(decodeURIComponent(chip.dataset.q));
+              renderSearchChips();
+            }, 600);
+          };
+          const cancelLp = () => { clearTimeout(_lpTimer); _lpTimer = null; };
+          chip.addEventListener('mousedown', startLp);
+          chip.addEventListener('mouseup', cancelLp);
+          chip.addEventListener('mouseleave', cancelLp);
+          chip.addEventListener('touchstart', startLp, { passive: true });
+          chip.addEventListener('touchend', cancelLp);
+          chip.addEventListener('touchcancel', cancelLp);
         });
       }
       renderSearchChips();
@@ -18531,6 +18616,191 @@
       }
     }
 
+    // ══════════════════════════════════════════════════════════════════════════
+    //  نظام تعريب عناوين الكتب المكتوبة بالعربيزي (حروف لاتينية ← عربية)
+    //  يعتمد على نفس مبدأ نظام البحث دون الحاجة لأي خدمة خارجية
+    // ══════════════════════════════════════════════════════════════════════════
+
+    // قاموس المصطلحات الإسلامية الشائعة بالعربيزي → العربية
+    const _ARABIZI_VOCAB = {
+      'fqh':'فقه','fiqh':'فقه','fuqh':'فقه','feqh':'فقه',
+      'aqida':'عقيدة','aqidah':'عقيدة','aqideh':'عقيدة','3aqida':'عقيدة','akida':'عقيدة',
+      'tafsir':'تفسير','tafseer':'تفسير','tafser':'تفسير',
+      'hadith':'حديث','hadiths':'أحاديث','hadeeth':'حديث',
+      'usul':'أصول','osul':'أصول','usool':'أصول','usol':'أصول',
+      'quran':'قرآن','qoran':'قرآن','koran':'قرآن','quran':'قرآن',
+      'akhlaq':'أخلاق','akhlak':'أخلاق','axlaq':'أخلاق',
+      'tarikh':'تاريخ','taarikh':'تاريخ',
+      'sira':'سيرة','sirah':'سيرة','seera':'سيرة','seerah':'سيرة',
+      'mantiq':'منطق','manteq':'منطق','mantiq':'منطق',
+      'falsafa':'فلسفة','falsafah':'فلسفة',
+      'nahj':'نهج','nahjul':'نهج ال','nahjal':'نهج ال',
+      'balagha':'البلاغة','balaghe':'البلاغة','balagha':'البلاغة',
+      'dua':'دعاء','du3a':'دعاء','do3a':'دعاء','duaa':'دعاء',
+      'adiya':'أدعية','ad3iya':'أدعية','adiyah':'أدعية',
+      'ziyara':'زيارة','ziyarah':'زيارة','zyara':'زيارة',
+      'tajwid':'تجويد','tajweed':'تجويد','tajwed':'تجويد',
+      'kalam':'كلام','kalaam':'كلام',
+      'imama':'إمامة','imamat':'الإمامة',
+      'rijal':'رجال','rjal':'رجال',
+      'tazkiya':'تزكية','tazkiyah':'تزكية','tazkia':'تزكية',
+      'imam':'إمام','a2ima':'الأئمة','aima':'الأئمة',
+      'ahl':'أهل','ahlul':'أهل ال',
+      'bayt':'البيت','beit':'البيت','beyt':'البيت',
+      'wilaya':'ولاية','wilayet':'ولاية','welaya':'ولاية',
+      'mafatih':'مفاتيح','mafateeh':'مفاتيح',
+      'jinan':'الجنان','janan':'الجنان',
+      'zuhd':'زهد','zuhed':'زهد',
+      'irfan':'عرفان','3irfan':'عرفان',
+      'khums':'خمس','khms':'خمس',
+      'zakat':'زكاة','zakah':'زكاة',
+      'salat':'صلاة','salah':'صلاة','sala':'صلاة',
+      'sawm':'صوم','siyam':'صيام',
+      'hajj':'حج','haj':'حج',
+      'tawba':'توبة','tawbah':'توبة',
+      'ikhlas':'إخلاص',
+      'tawhid':'توحيد','tawheed':'توحيد','tauhid':'توحيد',
+      'nubuwwa':'نبوة','nubua':'نبوة','nubuwah':'نبوة',
+      'maad':'معاد','ma3ad':'معاد',
+      'ghadir':'غدير','ghadeer':'غدير',
+      'karbala':'كربلاء','karbela':'كربلاء',
+      'ashura':'عاشوراء','ashoura':'عاشوراء',
+      'majalis':'مجالس','mjalise':'مجالس',
+      'noor':'نور','nur':'نور',
+      'hawza':'حوزة','howza':'حوزة',
+      'bihar':'بحار','anwar':'الأنوار',
+      'wasail':'وسائل','wasa2il':'وسائل','wasael':'وسائل',
+      'jawahir':'جواهر','juaher':'جواهر',
+      'makasib':'مكاسب',
+      'minhaj':'منهاج','manhaj':'منهج',
+      'risala':'رسالة','risalah':'رسالة','rasail':'رسائل',
+      'maqtal':'مقتل',
+      'khutba':'خطبة','khutab':'خطب',
+      'ijtihad':'اجتهاد',
+      'taqlid':'تقليد',
+      'marja':'مرجع','marji3':'مرجع',
+      'fatwa':'فتوى','fatawa':'فتاوى',
+      'maktaba':'مكتبة','maktabah':'مكتبة',
+      'kafi':'الكافي','kaafi':'الكافي',
+      'kifaya':'كفاية','kifayah':'كفاية',
+      'rasail':'رسائل',
+      'sharh':'شرح',
+      'tahrir':'تحرير',
+      'talkhis':'تلخيص',
+      'mukhtasar':'مختصر',
+      'mukhtar':'مختار',
+      'bahth':'بحث','buhuth':'بحوث',
+      'kitab':'كتاب','kutub':'كتب',
+      'masail':'مسائل','masa2il':'مسائل',
+      'ahkam':'أحكام',
+      'diwan':'ديوان',
+      'majmu3a':'مجموعة','majmua':'مجموعة',
+      'muqadima':'مقدمة','muqaddima':'مقدمة',
+      'ibn':'ابن','iben':'ابن',
+      'abu':'أبو','abi':'أبي',
+      'shaykh':'شيخ','sheikh':'شيخ','shikh':'شيخ','sheykh':'شيخ',
+      'sayyid':'سيد','syed':'سيد','seyed':'سيد',
+      'allama':'علامة','alama':'علامة',
+      'mulla':'ملا','mola':'مولى',
+      'husayni':'حسيني','hussaini':'حسيني',
+      'ali':'علي','hasan':'حسن','husayn':'حسين','hussain':'حسين',
+      'fatima':'فاطمة','zahra':'الزهراء',
+      'muhammad':'محمد','mohammed':'محمد','mohamad':'محمد',
+      'rasul':'رسول','rasool':'رسول',
+      'nabi':'نبي',
+      'allah':'الله',
+      'islam':'الإسلام','islami':'إسلامي','islameya':'إسلامية',
+      'shia':'شيعة','shi3a':'شيعة','shi\'a':'شيعة',
+      'wa':'و','min':'من','fi':'في','ila':'إلى',
+      'ma':'ما','la':'لا','li':'لـ','bi':'بـ',
+      'jawab':'جواب',
+      'nazariya':'نظرية','nadariya':'نظرية',
+    };
+
+    // خريطة التحويل من الحروف اللاتينية إلى العربية (من حرفين ثم حرف واحد)
+    const _LATIN_AR_MAP = [
+      ['kh','خ'],['gh','غ'],['sh','ش'],['ch','ش'],['th','ث'],['dh','ذ'],
+      ['aa','ا'],['oo','و'],['ee','ي'],['ai','ي'],['ay','ي'],['aw','و'],
+      ['qu','ق'],['ph','ف'],
+      ['b','ب'],['f','ف'],['j','ج'],['k','ك'],['l','ل'],['m','م'],
+      ['n','ن'],['r','ر'],['s','س'],['t','ت'],['z','ز'],['d','د'],
+      ['q','ق'],['g','غ'],['h','ه'],['w','و'],['y','ي'],
+      ['x','خ'],['p','ب'],['v','ف'],['c','ك'],
+      ['2','ء'],['3','ع'],['5','خ'],['6','ط'],['7','ح'],['8','ق'],['9','ص'],
+      ['a','ا'],['e','ي'],['i','ي'],['o','و'],['u','و'],
+    ];
+    const _VOWELS_AR = new Set(['a','e','i','o','u']);
+
+    // تحويل كلمة واحدة من العربيزي إلى العربية
+    function _convertArabiziWord(word) {
+      if (!word) return '';
+      const w = word.toLowerCase().trim();
+      if (!w) return '';
+      // بحث في القاموس أولاً
+      if (_ARABIZI_VOCAB[w]) return _ARABIZI_VOCAB[w];
+      // معالجة بادئة "ال"
+      let prefix = '';
+      let core = w;
+      if ((w.startsWith('al') || w.startsWith('el')) && w.length > 2) {
+        prefix = 'ال';
+        core = w.slice(2);
+        if (_ARABIZI_VOCAB[core]) return prefix + _ARABIZI_VOCAB[core];
+      }
+      // تحويل حرف بحرف مع أطول تطابق
+      let result = '';
+      let i = 0;
+      while (i < core.length) {
+        let matched = false;
+        // تجربة حرفين أولاً
+        const two = core.slice(i, i+2);
+        for (const [pat, ar] of _LATIN_AR_MAP) {
+          if (pat.length === 2 && two === pat) {
+            result += ar; i += 2; matched = true; break;
+          }
+        }
+        if (!matched) {
+          const ch = core[i];
+          // تخطي حركات قصيرة بين حرفين ساكنين (كما في العربية الفصحى)
+          if (_VOWELS_AR.has(ch)) {
+            const prev = i > 0 ? core[i-1] : '';
+            const next = i < core.length-1 ? core[i+1] : '';
+            const prevCons = prev && !_VOWELS_AR.has(prev) && !/\d/.test(prev) && prev !== ' ';
+            const nextCons = next && !_VOWELS_AR.has(next) && next !== ' ';
+            if (prevCons && nextCons) { i++; continue; } // تخطي الحركة القصيرة
+          }
+          for (const [pat, ar] of _LATIN_AR_MAP) {
+            if (pat.length === 1 && pat === ch) {
+              result += ar; i++; matched = true; break;
+            }
+          }
+          if (!matched) { result += ch; i++; }
+        }
+      }
+      return prefix + result;
+    }
+
+    // تحويل عنوان عربيزي كامل (يدعم _ و - كفاصل بين الكلمات)
+    function _arabiziToArabic(text) {
+      if (!text) return '';
+      const words = text.replace(/[_\-\.]+/g, ' ').trim().split(/\s+/).filter(Boolean);
+      return words.map(w => _convertArabiziWord(w)).join(' ');
+    }
+
+    // هل العنوان مكتوب بالعربيزي (حروف لاتينية تمثل نصاً عربياً)؟
+    function _isArabiziTitle(text) {
+      if (!text || text.length < 2) return false;
+      if (/[\u0600-\u06FF]/.test(text)) return false; // يحتوي على عربي فعلي
+      const latinCount = (text.match(/[a-zA-Z]/g) || []).length;
+      const totalCount = text.replace(/[\s_\-]/g,'').length;
+      if (totalCount === 0 || latinCount / totalCount < 0.4) return false;
+      // مؤشرات العربيزي القوية
+      if (/_/.test(text)) return true; // شرطة سفلية = فاصل كلمات عربيزي
+      if (/[3579]/.test(text)) return true; // أرقام عربيزي
+      if (/\b(fqh|fuqh|fiqh|aqid|tafsir|hadith|usul|kalam|nahj|quran|imam|shaykh|bayt|wilaya|rijal|sharh|kitab|rasul|allah|ibn|abu|husayn|husain|ali|fatima|tawhid|dua|akhlaq|sira|tajwid)\b/i.test(text)) return true;
+      if (/kh|gh|sh|dh/.test(text.toLowerCase())) return true;
+      return false;
+    }
+
     // Optimized Thumbnail URL - Use smaller size for faster loading
     function getThumbnailUrl(fileId, thumbnailLink) {
       if (thumbnailLink) {
@@ -18559,11 +18829,16 @@
 
       const favBtn = `<button class="action-btn" title="مفضلة" data-fav-id="${book.id}" onclick="event.stopPropagation();toggleFavorite('${book.id}','${cleanName.replace(/'/g,"\\'")}','book','${previewUrl}');updateFavButtons();"><i class="${favIcon}" style="${favColor}"></i></button>`;
 
+      // ── عنوان فرعي بالعربية للكتب المكتوبة بالعربيزي (بدون أي خدمة خارجية) ──
+      const arSubtitle = _isArabiziTitle(cleanName)
+        ? `<div class="book-title-ar" dir="rtl">${_arabiziToArabic(cleanName)}</div>`
+        : '';
+
       if (isMobile) {
-        return `<div class="book-card" onclick="openModal('${book.id}')"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay">${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3></div></div>`;
+        return `<div class="book-card" onclick="openModal('${book.id}')"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay">${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3>${arSubtitle}</div></div>`;
       }
 
-      return `<div class="book-card" data-id="${book.id}"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay"><a href="${previewUrl}" target="_blank" class="action-btn" title="معاينة" onclick="event.stopPropagation()"><i class="fas fa-eye"></i></a><a href="${downloadUrl}" class="action-btn" title="تحميل" onclick="event.stopPropagation()"><i class="fas fa-download"></i></a><button class="action-btn" title="مشاركة" data-action="share" data-id="${book.id}" data-name="${cleanName}"><i class="fas fa-share-alt"></i></button>${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3><div class="book-meta"><span class="book-format"><i class="fas ${fileIcon}"></i>${fileFormat}</span><span>${formatFileSize(book.size)}</span></div></div></div>`;
+      return `<div class="book-card" data-id="${book.id}"><div class="book-cover-wrapper">${coverHtml}<span class="book-type-badge">${fileFormat}</span><div class="book-overlay"><a href="${previewUrl}" target="_blank" class="action-btn" title="معاينة" onclick="event.stopPropagation()"><i class="fas fa-eye"></i></a><a href="${downloadUrl}" class="action-btn" title="تحميل" onclick="event.stopPropagation()"><i class="fas fa-download"></i></a><button class="action-btn" title="مشاركة" data-action="share" data-id="${book.id}" data-name="${cleanName}"><i class="fas fa-share-alt"></i></button>${favBtn}</div></div><div class="book-info">${book.folderName ? `<span class="book-category">${book.folderName}</span>` : ''}<h3 class="book-title">${cleanName}</h3>${arSubtitle}<div class="book-meta"><span class="book-format"><i class="fas ${fileIcon}"></i>${fileFormat}</span><span>${formatFileSize(book.size)}</span></div></div></div>`;
     }
 
     // Mobile Optimization for iframe
