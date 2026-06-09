@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "net.hawza.twa",
+      "sha256_cert_fingerprints": [
+        "BB:73:40:E3:DC:AE:24:89:03:12:6F:79:53:98:1B:F7:2A:CB:13:C6:1B:28:36:82:34:BD:1E:9F:B9:B1:C3:10"
+      ]
+    }
+  }
+]
