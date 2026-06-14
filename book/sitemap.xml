@@ -1,32 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║         خريطة موقع - قسم المكتبة الرقمية                   ║
+  ║         book/sitemap.xml                                     ║
+  ║         آخر تحديث: 2026-06-14                               ║
+  ╚══════════════════════════════════════════════════════════════╝
+-->
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+    http://www.sitemaps.org/schemas/sitemap/0.9
+    http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd
+    http://www.google.com/schemas/sitemap-image/1.1
+    http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd">
 
+
+  <!-- ════════════════════════════════════
+       صفحة الفهرس الرئيسية للمكتبة
+  ════════════════════════════════════ -->
   <url>
     <loc>https://hawza.netlify.app/book/</loc>
-    <lastmod>2026-05-31</lastmod>
+    <lastmod>2026-06-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.00</priority>
+    <image:image>
+      <image:loc>https://hawza.netlify.app/IMAGE_COVER_FRONT.jpg</image:loc>
+      <image:title>المكتبة الرقمية - الحوزة</image:title>
+    </image:image>
   </url>
 
+
+  <!-- ════════════════════════════════════
+       القرآن الكريم
+  ════════════════════════════════════ -->
   <url>
     <loc>https://hawza.netlify.app/book/quran.html</loc>
-    <lastmod>2026-05-31</lastmod>
+    <lastmod>2026-06-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://hawza.netlify.app/IMAGE_PAGE_QURAN.jpg</image:loc>
+      <image:title>القرآن الكريم - الحوزة</image:title>
+    </image:image>
   </url>
 
+
+  <!-- ════════════════════════════════════
+       الزاد اليومي
+  ════════════════════════════════════ -->
   <url>
     <loc>https://hawza.netlify.app/book/zad.html</loc>
-    <lastmod>2026-05-31</lastmod>
+    <lastmod>2026-06-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://hawza.netlify.app/IMAGE_PAGE_DAILY.jpg</image:loc>
+      <image:title>الزاد اليومي - الحوزة</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://hawza.netlify.app/IMAGE_PAGE_HEART.jpg</image:loc>
+      <image:title>زاد القلب</image:title>
+    </image:image>
   </url>
 
+
+  <!-- ════════════════════════════════════
+       حقيبة الخطيب
+  ════════════════════════════════════ -->
   <url>
     <loc>https://hawza.netlify.app/book/bag.html</loc>
-    <lastmod>2026-05-31</lastmod>
+    <lastmod>2026-06-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://hawza.netlify.app/IMAGE_PAGE_SERMON.jpg</image:loc>
+      <image:title>حقيبة الخطيب - الحوزة</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://hawza.netlify.app/IMAGE_PAGE_COVENANT.jpg</image:loc>
+      <image:title>صفحة العهد</image:title>
+    </image:image>
   </url>
+
 
 </urlset>
