@@ -1,36 +1,77 @@
 # =====================================================
 # robots.txt | موقع "نور الحوزة"
-# تم تحسينه لتحسين الزحف والأرشفة لدى محركات البحث
+# https://hawza.netlify.app/
+# آخر تحديث: 2026-06-14
 # =====================================================
 
-# توجيه محركات البحث إلى خرائط الموقع المعتمدة
+
+# ══════════════════════════════════════════════════════
+# خرائط الموقع المعتمدة (تمت إزالة: sitemap-1.xml و
+# sitemap-google-1.xml لأنهما غير موجودَين فعلياً)
+# ══════════════════════════════════════════════════════
 Sitemap: https://hawza.netlify.app/sitemap.xml
 Sitemap: https://hawza.netlify.app/sitemap-google.xml
-Sitemap: https://hawza.netlify.app/sitemap-1.xml
-Sitemap: https://hawza.netlify.app/sitemap-google-1.xml
 Sitemap: https://hawza.netlify.app/book/sitemap.xml
 
-# تعليمات لجميع روبوتات البحث (Googlebot, Bingbot, etc.)
+
+# ══════════════════════════════════════════════════════
+# تعليمات لجميع روبوتات البحث
+# ══════════════════════════════════════════════════════
 User-agent: *
 
-# منع الزحف إلى الملفات الحساسة أو البرمجية التي لا حاجة لأرشفتها
+# ─────────────────────────────────────────────────────
+# DISALLOW — صفحات يجب عدم فهرستها
+# ─────────────────────────────────────────────────────
+
+# صفحات تقنية / نظامية
+Disallow: /offline.html
+Disallow: /custom-404.html
+
+# صفحات تطوير / اختبار
+Disallow: /test.html
+Disallow: /ultimate_demo.html
+Disallow: /admin.html
+
+# ملفات الخادم والبنية التحتية
+Disallow: /server.js
 Disallow: /netlify/
 Disallow: /data/
-Disallow: /server.js
+
+# ملفات إعداد المشروع
 Disallow: /package.json
 Disallow: /package-lock.json
 Disallow: /.env.example
 Disallow: /.gitignore
 Disallow: /README.md
-Disallow: /admin.html
 
-# السماح العام بكل ما هو ضروري للأرشفة
+# ─────────────────────────────────────────────────────
+# ALLOW — السماح الصريح بالمحتوى المهم
+# (يضمن الأولوية على أي Disallow أعلى نطاقاً)
+# ─────────────────────────────────────────────────────
+
+# الصفحات الرئيسية
 Allow: /
 Allow: /book/
-Allow: /privacy/
+Allow: /about.html
+Allow: /masadir.html
+Allow: /questions.html
+Allow: /answered.html
+Allow: /faq.html
+Allow: /r-1447.html
+Allow: /2025.html
+Allow: /privacy.html
+
+# الوثائق والملفات
+Allow: /diyafa_ramadan.pdf
+
+# أصول العرض الضرورية لـ Googlebot (Rendering)
 Allow: /*.css$
 Allow: /*.js$
 Allow: /*.png$
 Allow: /*.jpg$
 Allow: /*.jpeg$
 Allow: /*.webp$
+Allow: /*.pdf$
+Allow: /*.xml$
+Allow: /*.ico$
+Allow: /.well-known/
