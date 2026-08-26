@@ -1,36 +1,33 @@
-# Noor Local Knowledge
+# Hawza Knowledge Pipeline
 
-This directory contains the reviewed source material that grounds the native iOS Noor Al-Hawza assistant. It is intentionally empty until approved, rights-cleared material is provided.
+This folder converts approved Hawza source documents into a local SQLite FTS5 database for the native iOS assistant.
 
-## Layout
-
-- `sources/`: original approved material, retained for provenance and review.
-- `processed/`: reviewed JSON chunks passed to the database builder.
-- `metadata/`: optional structured book-level metadata.
-- `build/`: reproducible validation and SQLite build tools.
-- `output/`: generated iOS database. SQLite files are not committed to Git.
-
-## Processed chunk format
-
-Each JSON file contains either an array of chunks or an object with a `chunks` array. Every chunk requires:
-
-```json
-{
-  "id": "unique-source-id",
-  "book_id": "stable-book-id",
-  "book_title": "عنوان الكتاب",
-  "category": "aqidah",
-  "text": "النص المعتمد"
-}
-```
-
-Optional verified fields are `author`, `volume`, `chapter`, `page`, `topic`, and `source_version`. `page` must be a positive integer when present. Never add metadata that cannot be verified from the approved original material.
-
-## Build and validate
+## Build
 
 ```bash
-python3 knowledge/build/build_knowledge.py
-python3 -m unittest discover -s knowledge/build/tests
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r knowledge/build/requirements.txt
+python knowledge/build/build_knowledge.py
+python knowledge/build/validate_knowledge.py --query "التوحيد"
 ```
 
-The builder writes `knowledge/output/hawza_knowledge.sqlite` with a `source_chunks` table and an FTS5 index named `source_chunks_fts`. The iOS application must display citations from `source_chunks` metadata, not model-generated bibliography.
+Output:
+
+```text
+knowledge/output/hawza_knowledge.sqlite
+```
+
+## Supported source formats
+
+- PDF (via PyMuPDF)
+- TXT
+- Markdown
+- HTML
+- JSON
+
+Only files listed in `manifest.json` with `"enabled": true` are indexed.
+
+## Licensing
+
+Do not commit copyrighted books to a public repository unless you have permission to redistribute them. The database contains extracted source text, so the same licensing concern applies to the generated database.

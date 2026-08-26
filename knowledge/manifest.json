@@ -1,5 +1,20 @@
 {
-  "version": "0.1.0",
-  "description": "Approved local source catalog for Noor Al-Hawza. Add only reviewed sources.",
-  "sources": []
+  "version": "1.0.0",
+  "chunking": {
+    "target_chars": 1500,
+    "overlap_chars": 220,
+    "min_chars": 180
+  },
+  "sources": [
+    {
+      "id": "EXAMPLE-replace-me",
+      "path": "example/replace_me.pdf",
+      "title": "REPLACE WITH APPROVED SOURCE",
+      "author": "",
+      "category": "other",
+      "enabled": false,
+      "version": "1",
+      "notes": "Add real approved sources here. Path is relative to knowledge/sources/."
+    }
+  ]
 }

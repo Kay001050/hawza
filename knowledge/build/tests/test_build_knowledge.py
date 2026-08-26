@@ -16,22 +16,13 @@ class BuildKnowledgeTests(unittest.TestCase):
             root = Path(temporary_directory)
             processed = root / "processed"
             processed.mkdir()
-            (root / "manifest.json").write_text(json.dumps({"version": "1.0.0", "sources": []}), encoding="utf-8")
-            (processed / "aqidah.json").write_text(
-                json.dumps([{
-                    "id": "aqidah-001",
-                    "book_id": "example-book",
-                    "book_title": "كتاب مثال",
-                    "category": "aqidah",
-                    "chapter": "التوحيد",
-                    "page": 31,
-                    "text": "نص تجريبي حول التوحيد.",
-                }]),
-                encoding="utf-8",
-            )
+            sources = root / "sources"
+            sources.mkdir()
+            (root / "manifest.json").write_text(json.dumps({"version": "1.0.0", "chunking": {"target_chars": 50, "overlap_chars": 0, "min_chars": 10}, "sources": [{"id": "aqidah-001", "path": "aqidah.txt", "title": "كتاب مثال", "category": "aqidah", "enabled": True}]}), encoding="utf-8")
+            (sources / "aqidah.txt").write_text("نص تجريبي حول التوحيد يشتمل على معلومات تقنية لا تمثل مصدرا دينيا.", encoding="utf-8")
             output = root / "hawza_knowledge.sqlite"
             result = subprocess.run(
-                [sys.executable, str(SCRIPT), "--manifest", str(root / "manifest.json"), "--processed-dir", str(processed), "--output", str(output)],
+                [sys.executable, str(SCRIPT), "--manifest", str(root / "manifest.json"), "--sources", str(sources), "--output", str(output)],
                 capture_output=True,
                 text=True,
                 check=False,
@@ -39,24 +30,22 @@ class BuildKnowledgeTests(unittest.TestCase):
 
             self.assertEqual(result.returncode, 0, result.stderr)
             with sqlite3.connect(output) as connection:
-                self.assertEqual(connection.execute("SELECT count(*) FROM source_chunks").fetchone()[0], 1)
-                self.assertEqual(connection.execute("SELECT id FROM source_chunks_fts WHERE source_chunks_fts MATCH 'التوحيد'").fetchone()[0], "aqidah-001")
+                self.assertGreaterEqual(connection.execute("SELECT count(*) FROM chunks").fetchone()[0], 1)
+                self.assertEqual(connection.execute("SELECT source_id FROM chunks_fts WHERE chunks_fts MATCH 'التوحيد'").fetchone()[0], "aqidah-001")
 
-    def test_rejects_duplicate_source_identifiers(self):
+    def test_rejects_manifest_source_that_is_missing_from_disk(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
-            processed = root / "processed"
-            processed.mkdir()
-            (root / "manifest.json").write_text(json.dumps({"version": "1.0.0", "sources": []}), encoding="utf-8")
-            chunk = {"id": "same-id", "book_id": "book", "book_title": "Book", "category": "test", "text": "Text"}
-            (processed / "duplicates.json").write_text(json.dumps([chunk, chunk]), encoding="utf-8")
+            sources = root / "sources"
+            sources.mkdir()
+            (root / "manifest.json").write_text(json.dumps({"version": "1.0.0", "sources": [{"id": "missing", "path": "missing.txt", "title": "Missing", "enabled": True}]}), encoding="utf-8")
 
             result = subprocess.run(
-                [sys.executable, str(SCRIPT), "--manifest", str(root / "manifest.json"), "--processed-dir", str(processed), "--output", str(root / "output.sqlite")],
+                [sys.executable, str(SCRIPT), "--manifest", str(root / "manifest.json"), "--sources", str(sources), "--output", str(root / "output.sqlite")],
                 capture_output=True,
                 text=True,
                 check=False,
             )
 
             self.assertNotEqual(result.returncode, 0)
-            self.assertIn("Duplicate chunk id", result.stderr)
+            self.assertIn("Manifest source not found", result.stderr)
