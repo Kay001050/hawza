@@ -7,3 +7,6 @@ npm-debug.log*
 
 # Local Netlify folder
 .netlify
+
+# Generated locally from reviewed source material; distribute with the iOS app release.
+knowledge/output/*.sqlite
