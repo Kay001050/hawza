@@ -34,3 +34,20 @@
   to = "/.netlify/functions/api/api/:splat"
   status = 200
   force = true
+
+# ===================================================================
+# القاعدة الرابعة: مشروع "نور الرثاء" — يعمل فعليًا على Vercel
+# (alritha.vercel.app) ويُعرض هنا وكأنه جزء أصيل من نفس الموقع.
+# قاعدتان: الأولى لعنوان بلا شرطة نهاية (/ritha)، والثانية لكل ما بعده.
+# ===================================================================
+[[redirects]]
+  from = "/ritha"
+  to = "https://alritha.vercel.app/ritha/"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/ritha/*"
+  to = "https://alritha.vercel.app/ritha/:splat"
+  status = 200
+  force = true
