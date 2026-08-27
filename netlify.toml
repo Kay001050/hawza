@@ -42,7 +42,13 @@
 # ===================================================================
 [[redirects]]
   from = "/ritha"
-  to = "https://alritha.vercel.app/ritha/"
+  to = "https://alritha.vercel.app/ritha"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/ritha/"
+  to = "https://alritha.vercel.app/ritha"
   status = 200
   force = true
 
