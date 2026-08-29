@@ -1,0 +1,20 @@
+{
+  "version": "test-1",
+  "chunking": {
+    "target_chars": 800,
+    "overlap_chars": 100,
+    "min_chars": 50
+  },
+  "sources": [
+    {
+      "id": "sample-technical-only",
+      "path": "example/README_SAMPLE.txt",
+      "title": "Technical Sample — NOT AN APPROVED RELIGIOUS SOURCE",
+      "author": "",
+      "category": "test",
+      "enabled": true,
+      "version": "1",
+      "notes": "Use only to test the pipeline; do not ship as religious knowledge."
+    }
+  ]
+}
