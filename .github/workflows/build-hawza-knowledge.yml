@@ -1,0 +1,49 @@
+name: Build Hawza Knowledge Database
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - foundation-models
+    paths:
+      - "knowledge/**"
+      - ".github/workflows/build-hawza-knowledge.yml"
+  pull_request:
+    paths:
+      - "knowledge/**"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: knowledge/build/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r knowledge/build/requirements.txt
+
+      - name: Build knowledge database
+        # Production sources are intentionally reviewed outside CI. The bundled
+        # technical sample verifies the extraction and FTS pipeline safely.
+        run: python knowledge/build/build_knowledge.py --manifest knowledge/manifest.sample-test.json
+
+      - name: Validate database
+        run: python knowledge/build/validate_knowledge.py
+
+      - name: Upload generated database artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hawza-knowledge
+          path: knowledge/output/hawza_knowledge.sqlite
+          if-no-files-found: error
