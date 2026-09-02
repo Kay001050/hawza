@@ -34,7 +34,7 @@
     { "id": "thaqafat-intizar", "path": "thaqafat_alintethar.pdf", "title": "ثقافة الانتظار: رؤية جديدة على ضوء هداية القرآن والسنة والعقل", "author": "", "category": "mahdawiyyah", "enabled": true, "version": "", "notes": "Approved archive source." },
     { "id": "nahj-rasul", "path": "nahj_alrasoul_s.pdf", "title": "نهج الرسول: القيم الرسالية والإنسانية في حديث رسول الله", "author": "", "category": "hadith-ethics", "enabled": true, "version": "", "notes": "Approved archive source." },
     { "id": "maaref-islam", "path": "maaref_alislam_2018.pdf", "title": "معارف الإسلام", "author": "", "category": "islamic-thought", "enabled": true, "version": "2018", "notes": "Approved archive source." },
-    { "id": "risala-ilmiyya-sayyid-qaid", "path": "الرسالة_العلمية_للسيد_القائد.pdf", "title": "الرسالة العلمية للسيد القائد", "author": "", "category": "fiqh", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "risala-ilmiyya-sayyid-qaid", "path": "alresala_alilmiya_lilsayyid_alqaed.pdf", "title": "الرسالة العلمية للسيد القائد", "author": "", "category": "fiqh", "enabled": true, "version": "", "notes": "Approved archive source." },
     { "id": "minhaj-salihin-1445", "path": "arabic-menhaj-1-1445.pdf", "title": "منهاج الصالحين", "author": "", "category": "fiqh", "enabled": true, "version": "1445", "notes": "Approved archive source." },
     { "id": "risala-amaliyya-shirazi", "path": "alresala_alamaleia_alshirazi.pdf", "title": "الرسالة العملية للسيد رضا الشيرازي", "author": "السيد رضا الشيرازي", "category": "fiqh", "enabled": true, "version": "", "notes": "User-supplied approved source." }
   ]
