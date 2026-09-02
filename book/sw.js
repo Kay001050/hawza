@@ -1,12 +1,29 @@
 /**
  * Service Worker — مكتبة نور الحوزة
  * نسخة متكاملة مخصصة لمكتبة نور الحوزة
+ *
+ * v3 (تحديث الكاش الإجباري):
+ * - ترقية أسماء الذاكرات v2 → v3: كل مستخدمي التطبيق يستلمون نسخة
+ *   جديدة نظيفة عند أول زيارة بعد هذا التحديث — يصلح «جميع المشاكل
+ *   المتراكمة» من النسخ المخزنة القديمة (رابط نور الرثاء، الشعار...).
+ * - إصلاح حرب مسح الذاكرات: التنشيط يحذف ذاكرات المكتبة القديمة فقط
+ *   (noor-hawza/noor-static/noor-dynamic/noor-images بإصداراتها السابقة)
+ *   ولا يمسّ ذاكرات التطبيقات الشقيقة على نفس النطاق (نور الرثاء
+ *   noor-ritha-* ولا ذاكرات الموقع الرئيسي) — كل تطبيق يملك ذاكراته.
+ * - حارس نطاق في الاعتراض العام: لا يعترض ولا يخزّن إلا ما يقع تحت
+ *   /book/ — أي طلب آخر (مثل /ritha) يمرّ للشبكة مباشرة بلا لمس.
+ * - الشعارات المحلية المستضافة (شعار نور الرثاء) ضمن التخزين المسبق.
  */
 
-const CACHE_NAME    = 'noor-hawza-v2';
-const STATIC_CACHE  = 'noor-static-v2';
-const DYNAMIC_CACHE = 'noor-dynamic-v2';
-const IMG_CACHE     = 'noor-images-v2';
+const CACHE_NAME    = 'noor-hawza-v3';
+const STATIC_CACHE  = 'noor-static-v3';
+const DYNAMIC_CACHE = 'noor-dynamic-v3';
+const IMG_CACHE     = 'noor-images-v3';
+
+/* ذاكراتنا نحن فقط — ما عداها لا يُمسّ (ذاكرات نور الرثاء والموقع) */
+const OWN_CACHE_PREFIXES = ['noor-hawza-', 'noor-static-', 'noor-dynamic-', 'noor-images-'];
+/* الإصدارات الحالية الصالحة — القديمة منها تُحذف عند التنشيط */
+const VALID_CACHES = [CACHE_NAME, STATIC_CACHE, DYNAMIC_CACHE, IMG_CACHE];
 
 /* ── الأصول الثابتة للتخزين المسبق ── */
 const PRECACHE = [
@@ -18,6 +35,7 @@ const PRECACHE = [
   'https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js',
   '/book/icons/icon-192.png',
   '/book/icons/icon-512.png',
+  '/book/icons/ritha-logo.png',
 ];
 
 /* ── صفحة بدون إنترنت ── */
@@ -64,10 +82,15 @@ self.addEventListener('install', e => {
 
 /* ════════════════ ACTIVATE ════════════════ */
 self.addEventListener('activate', e => {
-  const VALID = [STATIC_CACHE, DYNAMIC_CACHE, IMG_CACHE];
   e.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => !VALID.includes(k)).map(k => caches.delete(k))))
+      // ذاكرات المكتبة القديمة فقط (بادئاتنا + إصدار سابق) — لا نلمس
+      // ذاكرات نور الرثاء (noor-ritha-*) ولا ذاكرات الموقع الرئيسي
+      .then(keys => Promise.all(
+        keys
+          .filter(k => OWN_CACHE_PREFIXES.some(p => k.startsWith(p)) && !VALID_CACHES.includes(k))
+          .map(k => caches.delete(k))
+      ))
       .then(() => self.clients.claim())
   );
 });
@@ -78,6 +101,10 @@ self.addEventListener('fetch', e => {
   const url = new URL(req.url);
 
   if (req.method !== 'GET') return;
+
+  /* حارس النطاق: هذا العامل يملك /book/ فقط — أي مسار آخر على النطاق
+     (مثل نور الرثاء /ritha) يمرّ شبكةً مباشرة بلا اعتراض ولا تخزين */
+  if (url.origin === self.location.origin && !url.pathname.startsWith('/book/')) return;
 
   /* Google APIs & Drive — Network Only (البيانات دائماً من الشبكة) */
   if (url.hostname === 'www.googleapis.com' ||
@@ -143,7 +170,7 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  /* الباقي — Stale While Revalidate */
+  /* الباقي (أصول /book/ الداخلية) — Stale While Revalidate */
   e.respondWith(
     caches.open(DYNAMIC_CACHE).then(cache =>
       cache.match(req).then(cached => {
