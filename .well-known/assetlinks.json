@@ -1,0 +1,30 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "net.hawza.twa",
+      "sha256_cert_fingerprints": [
+        "EF:E9:50:F8:B1:AD:FF:2B:25:84:E6:87:DC:83:99:74:E2:7C:D7:1C:27:54:BC:E3:96:24:7E:46:7E:F0:2A:9F"
+      ]
+    }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "net.hawza.ritha",
+      "sha256_cert_fingerprints": [
+        "EF:E9:50:F8:B1:AD:FF:2B:25:84:E6:87:DC:83:99:74:E2:7C:D7:1C:27:54:BC:E3:96:24:7E:46:7E:F0:2A:9F",
+        "2B:89:F0:EB:FC:41:AA:A9:8F:21:EE:DB:48:C9:84:87:01:15:7E:DC:70:D0:0C:01:26:41:13:7C:2E:CE:BD:C6",
+        "07:73:4E:2D:4E:B3:05:82:4A:14:F1:F1:0E:E0:91:04:CB:C1:4D:A7:70:C1:95:1E:F8:FE:7A:D2:AA:35:23:AF",
+        "8C:94:E8:AA:17:38:16:E2:DB:FF:03:E0:A0:D5:FD:CC:AB:A3:48:D5:E1:77:16:A1:D9:8E:DF:52:B3:7B:33:ED"
+      ]
+    }
+  }
+]

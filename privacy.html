@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="description" content="سياسة الخصوصية لمشروع نور الحوزة — شفافية حول كيفية تعامل جميع خدماتنا مع بياناتك.">
+  <meta name="theme-color" content="#0f1c2e">
+  <meta name="robots" content="index, follow">
+  <title>سياسة الخصوصية | نور الحوزة</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <script>
+    (function(){
+      var t=localStorage.getItem('noor_library_theme');
+      var d=t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.setAttribute('data-theme',d?'dark':'light');
+    })();
+  </script>
+
+  <style>
+/* ══════════════════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════════════════ */
+:root {
+  --bg-page:        #f4f1eb;
+  --bg-surface:     #faf8f4;
+  --bg-card:        #ffffff;
+  --bg-sidebar:     #18293e;
+  --bg-sidebar-item:#1f3249;
+  --bg-sidebar-active:#2a4060;
+
+  --ink-deep:       #0f1c2e;
+  --ink-mid:        #2c3e55;
+  --ink-light:      #5a7184;
+  --ink-faint:      #8fa3b3;
+
+  --gold:           #b8892a;
+  --gold-light:     #d4a94a;
+  --gold-dim:       #8a6520;
+  --emerald:        #1b6b52;
+  --emerald-light:  #25896a;
+  --crimson:        #c0392b;
+  --crimson-light:  #e74c3c;
+  --sapphire:       #1a5276;
+  --sapphire-light: #2471a3;
+  --amber:          #d35400;
+  --amber-light:    #e67e22;
+  --violet:         #7d3c98;
+  --violet-light:   #9b59b6;
+  --teal:           #0e7c7b;
+
+  --border-ink:     rgba(15,28,46,0.10);
+  --border-gold:    rgba(184,137,42,0.22);
+  --border-gold-strong: rgba(184,137,42,0.38);
+
+  --shadow-card:    0 2px 12px rgba(15,28,46,0.07), 0 1px 3px rgba(15,28,46,0.04);
+  --shadow-float:   0 8px 32px rgba(15,28,46,0.14);
+
+  --r-sm:  6px;
+  --r-md:  10px;
+  --r-lg:  16px;
+  --r-xl:  22px;
+  --r-pill: 9999px;
+
+  --hdr:   64px;
+  --side:  292px;
+
+  --ease:  cubic-bezier(.4,0,.2,1);
+  --fast:  .18s var(--ease);
+  --mid:   .32s var(--ease);
+  --slow:  .50s var(--ease);
+
+  --font-body:    'Tajawal', sans-serif;
+  --font-heading: 'Amiri', serif;
+}
+
+[data-theme="dark"] {
+  --bg-page:        #0c1520;
+  --bg-surface:     #0f1c2e;
+  --bg-card:        #142030;
+  --bg-sidebar:     #07101a;
+  --bg-sidebar-item:#0c1828;
+  --bg-sidebar-active:#152535;
+
+  --ink-deep:       #e8dfc8;
+  --ink-mid:        #b8c8d8;
+  --ink-light:      #6a8298;
+  --ink-faint:      #3e5568;
+
+  --gold:           #d4a94a;
+  --gold-light:     #e8c070;
+  --gold-dim:       #a07830;
+  --emerald:        #25896a;
+  --emerald-light:  #30aa84;
+  --crimson:        #e74c3c;
+
+  --border-ink:     rgba(232,223,200,0.08);
+  --border-gold:    rgba(212,169,74,0.18);
+  --border-gold-strong: rgba(212,169,74,0.32);
+
+  --shadow-card:    0 2px 12px rgba(0,0,0,0.35);
+  --shadow-float:   0 8px 32px rgba(0,0,0,0.45);
+}
+
+/* ══ RESET ══ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:var(--font-body);background:var(--bg-page);color:var(--ink-deep);line-height:1.9;overflow-x:hidden;transition:background var(--mid),color var(--mid)}
+a{text-decoration:none;color:inherit;transition:color var(--fast)}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+img{max-width:100%;display:block}
+::selection{background:var(--gold);color:#fff}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg-surface)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--gold-dim),var(--emerald));border-radius:6px}
+
+/* ══ GEO PATTERN ══ */
+.geo-bg{
+  position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.03;
+  background-image:repeating-linear-gradient(45deg,var(--gold) 0,var(--gold) 1px,transparent 0,transparent 50%),
+    repeating-linear-gradient(-45deg,var(--gold) 0,var(--gold) 1px,transparent 0,transparent 50%);
+  background-size:26px 26px;
+}
+[data-theme="dark"] .geo-bg{opacity:.022}
+
+/* ══ READING PROGRESS ══ */
+#progress-bar{
+  position:fixed;top:0;right:0;left:0;height:3px;z-index:9999;
+  background:linear-gradient(90deg,var(--gold),var(--emerald-light),var(--gold));
+  transform-origin:right center;transform:scaleX(0);transition:transform .1s linear;
+}
+
+/* ══════════════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════════════ */
+.site-header{
+  position:fixed;top:0;right:0;left:0;height:var(--hdr);z-index:800;
+  background:rgba(15,28,46,0.97);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  border-bottom:1px solid rgba(184,137,42,0.18);
+  display:flex;align-items:center;transition:box-shadow var(--mid);
+}
+[data-theme="dark"] .site-header{background:rgba(7,16,26,0.98)}
+.site-header.scrolled{box-shadow:0 4px 24px rgba(0,0,0,0.28)}
+
+.hdr-inner{width:100%;display:flex;align-items:center;gap:10px;padding:0 20px}
+.hdr-brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.hdr-logo{
+  width:40px;height:40px;border-radius:var(--r-md);flex-shrink:0;
+  background:linear-gradient(135deg,var(--gold-dim),var(--gold));
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:1.15rem;
+  box-shadow:0 3px 10px rgba(184,137,42,0.35);
+}
+.hdr-name{font-family:var(--font-heading);font-size:1.2rem;font-weight:700;color:var(--gold-light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hdr-subtitle{font-size:.68rem;color:var(--ink-faint);font-weight:500;letter-spacing:.4px}
+
+.hdr-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.hdr-btn{
+  display:flex;align-items:center;gap:7px;padding:7px 16px;border-radius:var(--r-pill);
+  font-size:.85rem;font-weight:700;border:1px solid rgba(184,137,42,0.3);
+  color:rgba(232,223,200,.85);transition:all var(--fast);white-space:nowrap;
+}
+.hdr-btn:hover{background:rgba(184,137,42,0.15);border-color:var(--gold);color:var(--gold-light)}
+.theme-btn{
+  width:38px;height:38px;border-radius:50%;border:1px solid rgba(184,137,42,0.25);
+  color:rgba(232,223,200,.7);font-size:1rem;display:flex;align-items:center;justify-content:center;
+  transition:all var(--fast);
+}
+.theme-btn:hover{border-color:var(--gold);color:var(--gold-light);background:rgba(184,137,42,0.1)}
+.theme-btn .fa-sun{display:block}.theme-btn .fa-moon{display:none}
+[data-theme="dark"] .theme-btn .fa-sun{display:none}[data-theme="dark"] .theme-btn .fa-moon{display:block}
+.menu-btn{
+  width:38px;height:38px;border-radius:var(--r-md);border:1px solid rgba(184,137,42,0.25);
+  color:rgba(232,223,200,.7);font-size:1.05rem;display:none;align-items:center;justify-content:center;
+  transition:all var(--fast);
+}
+.menu-btn:hover{border-color:var(--gold);color:var(--gold-light);background:rgba(184,137,42,0.1)}
+
+/* ══════════════════════════════════════════════════
+   SIDEBAR OVERLAY
+══════════════════════════════════════════════════ */
+.sidebar-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.58);z-index:700;
+  opacity:0;pointer-events:none;transition:opacity var(--mid);backdrop-filter:blur(3px);
+}
+.sidebar-overlay.show{opacity:1;pointer-events:all}
+
+/* ══════════════════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════════════════ */
+.sidebar{
+  position:fixed;top:var(--hdr);right:0;bottom:0;width:var(--side);
+  background:var(--bg-sidebar);border-left:1px solid rgba(184,137,42,0.1);
+  z-index:750;display:flex;flex-direction:column;transition:transform var(--slow);overflow:hidden;
+}
+.sidebar-scroll{flex:1;overflow-y:auto;padding:14px 10px 24px;scrollbar-width:thin;scrollbar-color:rgba(184,137,42,0.18) transparent}
+.sidebar-scroll::-webkit-scrollbar{width:3px}
+.sidebar-scroll::-webkit-scrollbar-thumb{background:rgba(184,137,42,0.2);border-radius:3px}
+
+.sb-group{margin-bottom:16px}
+.sb-group-label{
+  font-size:.66rem;font-weight:800;letter-spacing:1.3px;
+  color:rgba(184,137,42,.5);text-transform:uppercase;
+  padding:0 10px 6px;margin-bottom:2px;border-bottom:1px solid rgba(184,137,42,0.08);
+}
+.sb-link{
+  display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--r-md);
+  font-size:.82rem;font-weight:600;color:rgba(232,223,200,.58);
+  transition:all var(--fast);position:relative;line-height:1.35;
+}
+.sb-link i{font-size:.83rem;width:16px;text-align:center;flex-shrink:0;color:rgba(184,137,42,.45);transition:color var(--fast)}
+.sb-link:hover{background:var(--bg-sidebar-item);color:rgba(232,223,200,.9)}
+.sb-link:hover i{color:var(--gold)}
+.sb-link.active{background:var(--bg-sidebar-active);color:var(--gold-light);border-right:3px solid var(--gold)}
+.sb-link.active i{color:var(--gold-light)}
+
+.sb-tag{margin-right:auto;flex-shrink:0;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:var(--r-pill);letter-spacing:.3px}
+.tag-lib{background:rgba(37,137,106,.2);color:#4ec99a}
+.tag-all{background:rgba(184,137,42,.16);color:#d4a94a}
+.tag-pwa{background:rgba(26,82,118,.22);color:#5b9bd5}
+.tag-ai {background:rgba(125,60,152,.18);color:#b07fd3}
+.tag-ext{background:rgba(192,57,43,.14);color:#e57e72}
+.tag-zaad{background:rgba(13,124,123,.2);color:#4ecac9}
+
+/* ══════════════════════════════════════════════════
+   MAIN LAYOUT
+══════════════════════════════════════════════════ */
+.page-wrap{padding-top:var(--hdr);padding-right:var(--side);min-height:100vh;position:relative;z-index:1}
+
+/* ══════════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════════ */
+.hero{
+  position:relative;overflow:hidden;
+  background:linear-gradient(165deg,#0d1e30 0%,#1a3a5e 50%,#0d2218 100%);
+  padding:76px 40px 62px;text-align:center;
+}
+[data-theme="dark"] .hero{background:linear-gradient(165deg,#04090f 0%,#091527 50%,#040f09 100%)}
+
+.hero-geo{position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(184,137,42,.055) 0,rgba(184,137,42,.055) 1px,transparent 0,transparent 40%),repeating-linear-gradient(-45deg,rgba(184,137,42,.055) 0,rgba(184,137,42,.055) 1px,transparent 0,transparent 40%);background-size:22px 22px}
+.hero-glow{position:absolute;border-radius:50%;pointer-events:none;filter:blur(90px)}
+.hero-glow-1{width:500px;height:300px;top:-100px;left:-80px;background:radial-gradient(rgba(184,137,42,.17),transparent)}
+.hero-glow-2{width:400px;height:250px;bottom:-70px;right:-50px;background:radial-gradient(rgba(37,137,106,.14),transparent)}
+.hero-glow-3{width:280px;height:180px;top:30%;left:45%;background:radial-gradient(rgba(26,82,118,.1),transparent)}
+
+.hero-inner{position:relative;z-index:2;max-width:780px;margin:0 auto}
+.hero-seal{
+  width:84px;height:84px;border-radius:50%;margin:0 auto 22px;
+  background:linear-gradient(135deg,rgba(184,137,42,.14),rgba(184,137,42,.04));
+  border:2px solid rgba(184,137,42,.38);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.3rem;color:var(--gold-light);
+  box-shadow:0 0 0 10px rgba(184,137,42,.05),0 0 0 20px rgba(184,137,42,.025);
+  animation:pulse-seal 4s ease-in-out infinite;
+}
+@keyframes pulse-seal{0%,100%{box-shadow:0 0 0 10px rgba(184,137,42,.05),0 0 0 20px rgba(184,137,42,.025)}50%{box-shadow:0 0 0 14px rgba(184,137,42,.07),0 0 0 26px rgba(184,137,42,.03)}}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.78rem;font-weight:700;letter-spacing:.8px;
+  color:rgba(212,169,74,.75);text-transform:uppercase;margin-bottom:14px;
+}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';flex:1;height:1px;background:rgba(184,137,42,.22);min-width:28px}
+
+.hero-title{font-family:var(--font-heading);font-size:clamp(2.2rem,5vw,3.5rem);color:#fff;font-weight:700;line-height:1.25;margin-bottom:14px;text-shadow:0 2px 24px rgba(0,0,0,.45)}
+.hero-title span{color:var(--gold-light)}
+.hero-desc{font-size:1.0rem;color:rgba(200,215,225,.8);line-height:1.95;margin-bottom:30px;font-weight:400;max-width:640px;margin-left:auto;margin-right:auto}
+
+.hero-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:var(--r-pill);font-size:.75rem;font-weight:700;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(220,230,240,.82);transition:background var(--fast)}
+.chip i{color:var(--gold-light);font-size:.8rem}
+.chip:hover{background:rgba(255,255,255,.11)}
+
+/* ══════════════════════════════════════════════════
+   CONTENT
+══════════════════════════════════════════════════ */
+.content-wrap{max-width:900px;margin:0 auto;padding:44px 28px 90px}
+
+/* ══ SECTION DIVIDER ══ */
+.sec-divider{
+  display:flex;align-items:center;gap:12px;margin:36px 0 22px;
+  font-size:.8rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  color:var(--ink-light);
+}
+.sec-divider::before,.sec-divider::after{content:'';flex:1;height:1px;background:var(--border-gold)}
+.sec-divider i{color:var(--gold);font-size:.9rem}
+
+/* ══ POLICY CARDS ══ */
+.policy-block{
+  background:var(--bg-card);border:1px solid var(--border-ink);border-radius:var(--r-xl);
+  margin-bottom:22px;overflow:hidden;box-shadow:var(--shadow-card);
+  scroll-margin-top:calc(var(--hdr) + 20px);transition:border-color var(--fast),box-shadow var(--mid);
+}
+.policy-block:hover{border-color:var(--border-gold);box-shadow:var(--shadow-float)}
+[data-theme="dark"] .policy-block{background:var(--bg-card);border-color:rgba(255,255,255,.04)}
+[data-theme="dark"] .policy-block:hover{border-color:var(--border-gold)}
+
+.pb-gold    {border-top:3px solid var(--gold)}
+.pb-emerald {border-top:3px solid var(--emerald)}
+.pb-sapphire{border-top:3px solid var(--sapphire)}
+.pb-amber   {border-top:3px solid var(--amber)}
+.pb-crimson {border-top:3px solid var(--crimson)}
+.pb-violet  {border-top:3px solid var(--violet)}
+.pb-teal    {border-top:3px solid var(--teal)}
+.pb-ink     {border-top:3px solid var(--ink-mid)}
+
+.block-hdr{display:flex;align-items:flex-start;gap:14px;padding:22px 24px 16px;border-bottom:1px solid var(--border-ink)}
+[data-theme="dark"] .block-hdr{border-bottom-color:rgba(255,255,255,.04)}
+.block-icon{
+  width:46px;height:46px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+}
+.ic-gold    {background:rgba(184,137,42,.12);color:var(--gold)}
+.ic-emerald {background:rgba(27,107,82,.12);color:var(--emerald)}
+.ic-sapphire{background:rgba(26,82,118,.12);color:var(--sapphire)}
+.ic-amber   {background:rgba(211,84,0,.12);color:var(--amber)}
+.ic-crimson {background:rgba(192,57,43,.12);color:var(--crimson)}
+.ic-violet  {background:rgba(125,60,152,.12);color:var(--violet)}
+.ic-teal    {background:rgba(14,124,123,.12);color:var(--teal)}
+.ic-ink     {background:rgba(44,62,85,.1);color:var(--ink-mid)}
+
+.block-hdr-text{flex:1;min-width:0}
+.block-num{font-size:.72rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--ink-faint);margin-bottom:4px}
+.block-title{font-family:var(--font-heading);font-size:1.35rem;font-weight:700;color:var(--ink-deep);line-height:1.3;margin-bottom:8px}
+.block-scope-tags{display:flex;flex-wrap:wrap;gap:5px}
+.scope-tag{font-size:.68rem;font-weight:700;padding:2px 9px;border-radius:var(--r-pill);letter-spacing:.3px}
+.st-all   {background:rgba(184,137,42,.12);color:var(--gold-dim);border:1px solid rgba(184,137,42,.2)}
+.st-lib   {background:rgba(27,107,82,.1);color:var(--emerald);border:1px solid rgba(27,107,82,.18)}
+.st-pwa   {background:rgba(26,82,118,.1);color:var(--sapphire);border:1px solid rgba(26,82,118,.18)}
+.st-ai    {background:rgba(125,60,152,.1);color:var(--violet);border:1px solid rgba(125,60,152,.18)}
+.st-zaad  {background:rgba(14,124,123,.1);color:var(--teal);border:1px solid rgba(14,124,123,.18)}
+.st-quran {background:rgba(211,84,0,.1);color:var(--amber);border:1px solid rgba(211,84,0,.18)}
+
+.block-body{padding:20px 24px}
+.block-body p{color:var(--ink-mid);margin-bottom:14px;font-size:.97rem}
+.block-body p:last-child{margin-bottom:0}
+.block-body ul{color:var(--ink-mid);padding-right:0;margin:10px 0 14px;list-style:none}
+.block-body ul li{position:relative;padding-right:22px;margin-bottom:10px;font-size:.95rem;line-height:1.75}
+.block-body ul li::before{content:'•';position:absolute;right:4px;color:var(--gold);font-size:1.1rem;line-height:1.4}
+.block-body strong{color:var(--ink-deep);font-weight:700}
+[data-theme="dark"] .block-body strong{color:var(--ink-deep)}
+code{font-family:'Courier New',monospace;font-size:.83em;background:rgba(184,137,42,.1);color:var(--gold-dim);padding:1px 5px;border-radius:4px;border:1px solid rgba(184,137,42,.15)}
+[data-theme="dark"] code{background:rgba(212,169,74,.1);color:var(--gold-light)}
+
+/* ══ CALLOUTS ══ */
+.callout{
+  display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:var(--r-lg);
+  margin:14px 0 0;border:1px solid;font-size:.9rem;
+}
+.callout > i{font-size:1.1rem;flex-shrink:0;margin-top:2px}
+.callout-body p{font-weight:700;font-size:.92rem;margin-bottom:4px!important;color:inherit!important}
+.callout-body span{font-size:.88rem;color:var(--ink-mid)}
+.callout-info {background:rgba(26,82,118,.07);border-color:rgba(26,82,118,.18);color:var(--sapphire)}
+.callout-warn {background:rgba(211,84,0,.07);border-color:rgba(211,84,0,.2);color:var(--amber)}
+.callout-gold {background:rgba(184,137,42,.07);border-color:rgba(184,137,42,.2);color:var(--gold-dim)}
+.callout-note {background:rgba(27,107,82,.07);border-color:rgba(27,107,82,.2);color:var(--emerald)}
+.callout-danger{background:rgba(192,57,43,.07);border-color:rgba(192,57,43,.2);color:var(--crimson)}
+[data-theme="dark"] .callout-body span{color:var(--ink-light)}
+
+/* ══ COMPLY GRID ══ */
+.comply-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:18px}
+.comply-item{
+  display:flex;align-items:center;gap:9px;padding:10px 14px;
+  background:rgba(27,107,82,.06);border:1px solid rgba(27,107,82,.14);
+  border-radius:var(--r-md);font-size:.88rem;font-weight:600;color:var(--emerald);
+}
+.comply-item i{color:var(--emerald-light);flex-shrink:0}
+
+/* ══ TABLE ══ */
+.tbl-wrap{overflow-x:auto;margin:14px 0;border-radius:var(--r-lg);border:1px solid var(--border-gold);box-shadow:var(--shadow-card)}
+.data-tbl{width:100%;border-collapse:collapse;font-size:.84rem;min-width:580px}
+.data-tbl thead th{background:rgba(184,137,42,.1);color:var(--gold-dim);font-weight:700;padding:10px 12px;text-align:right;white-space:nowrap;border-bottom:2px solid rgba(184,137,42,.22)}
+[data-theme="dark"] .data-tbl thead th{background:rgba(184,137,42,.08);color:var(--gold-light)}
+.data-tbl tbody td{padding:9px 12px;border-bottom:1px solid var(--border-ink);color:var(--ink-mid);vertical-align:top}
+[data-theme="dark"] .data-tbl tbody td{border-bottom-color:rgba(255,255,255,.04)}
+.data-tbl tbody tr:last-child td{border-bottom:none}
+.data-tbl tbody tr:hover td{background:rgba(184,137,42,.04)}
+
+/* ══ RATING BADGES ══ */
+.rating-list{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.rating-badge{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 12px;
+  background:rgba(27,107,82,.08);border:1px solid rgba(27,107,82,.18);
+  border-radius:var(--r-pill);font-size:.82rem;font-weight:700;color:var(--emerald);
+}
+.rating-badge i{font-size:.75rem;color:var(--gold)}
+
+/* ══ APP PILLS ══ */
+.app-pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.app-pill{
+  display:inline-flex;align-items:center;gap:7px;padding:6px 14px;
+  background:rgba(26,82,118,.08);border:1px solid rgba(26,82,118,.18);
+  border-radius:var(--r-pill);font-size:.82rem;font-weight:700;color:var(--sapphire);
+}
+
+/* ══ PLAY CONSOLE BLOCK ══ */
+.play-decl{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0;
+}
+.play-item{
+  display:flex;align-items:flex-start;gap:9px;padding:10px 12px;
+  background:var(--bg-surface);border:1px solid var(--border-ink);border-radius:var(--r-md);
+  font-size:.85rem;
+}
+.play-item i{color:var(--emerald);flex-shrink:0;margin-top:2px}
+.play-item span{color:var(--ink-mid);line-height:1.5}
+.play-item strong{color:var(--ink-deep);display:block;margin-bottom:1px}
+
+/* ══ FOOTER BUTTONS ══ */
+.fbtn{
+  display:inline-flex;align-items:center;gap:8px;padding:10px 22px;
+  border-radius:var(--r-pill);font-size:.9rem;font-weight:700;transition:all var(--fast);
+}
+.fbtn-home{background:rgba(184,137,42,.1);border:1px solid rgba(184,137,42,.22);color:var(--gold-dim)}
+.fbtn-home:hover{background:rgba(184,137,42,.18);color:var(--gold)}
+.fbtn-tg  {background:rgba(0,136,204,.1);border:1px solid rgba(0,136,204,.22);color:#0088cc}
+.fbtn-tg:hover{background:rgba(0,136,204,.18)}
+.fbtn-bot {background:rgba(125,60,152,.1);border:1px solid rgba(125,60,152,.22);color:var(--violet)}
+.fbtn-bot:hover{background:rgba(125,60,152,.18)}
+
+/* ══ SITE FOOTER ══ */
+.site-footer{
+  background:var(--bg-sidebar);border-top:1px solid rgba(184,137,42,.1);
+  padding:40px 20px 32px;text-align:center;position:relative;z-index:2;
+}
+.footer-inner{max-width:700px;margin:0 auto}
+.footer-logo{font-family:var(--font-heading);font-size:1.8rem;color:var(--gold-light);margin-bottom:10px}
+.footer-tagline{font-size:.9rem;color:rgba(184,184,184,.65);margin-bottom:24px;line-height:1.7}
+.footer-btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:22px}
+.footer-copy{font-size:.8rem;color:var(--ink-faint);border-top:1px solid rgba(184,137,42,.1);padding-top:18px;margin-top:8px}
+
+/* ══ MOBILE TOC BUTTON ══ */
+.mob-toc-btn{
+  position:fixed;bottom:22px;left:22px;z-index:600;
+  display:none;align-items:center;gap:7px;
+  padding:10px 18px;background:var(--gold);color:#fff;
+  border-radius:var(--r-pill);font-size:.88rem;font-weight:700;
+  box-shadow:0 4px 20px rgba(184,137,42,.45);
+  transition:transform var(--fast),box-shadow var(--fast);
+}
+.mob-toc-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(184,137,42,.5)}
+
+/* ══════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════ */
+@media(max-width:1100px){
+  :root{--side:262px}
+}
+@media(max-width:820px){
+  :root{--side:0px}
+  .page-wrap{padding-right:0}
+  .sidebar{right:-300px;width:288px;top:0;border-left:1px solid rgba(184,137,42,.15);box-shadow:var(--shadow-float)}
+  .sidebar.open{right:0}
+  .menu-btn{display:flex}
+  .mob-toc-btn{display:flex}
+  .hero{padding:52px 22px 46px}
+  .content-wrap{padding:28px 16px 110px}
+  .block-hdr{padding:18px 18px 14px;gap:12px}
+  .block-body{padding:16px 18px}
+  .block-icon{width:42px;height:42px;font-size:1.2rem;border-radius:10px}
+  .block-title{font-size:1.25rem}
+  .hdr-btn span{display:none}
+  .hdr-btn{padding:7px 10px}
+  .play-decl{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .hero-chips{gap:6px}
+  .chip{font-size:.7rem;padding:4px 10px}
+  .data-tbl{font-size:.78rem}
+  .comply-grid{grid-template-columns:1fr 1fr}
+  .footer-btns{flex-direction:column;align-items:center}
+  .fbtn{width:100%;max-width:280px;justify-content:center}
+}
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+<div class="geo-bg"></div>
+
+<!-- ══ HEADER ══ -->
+<header class="site-header" id="siteHeader">
+  <div class="hdr-inner">
+    <button class="menu-btn" id="menuBtn" aria-label="الفهرس"><i class="fas fa-bars"></i></button>
+    <div class="hdr-brand">
+      <div class="hdr-logo"><i class="fas fa-shield-halved"></i></div>
+      <div>
+        <div class="hdr-name">نور الحوزة</div>
+        <div class="hdr-subtitle">سياسة الخصوصية</div>
+      </div>
+    </div>
+    <div class="hdr-actions">
+      <button class="theme-btn" id="themeBtn" aria-label="تبديل الوضع">
+        <i class="fas fa-moon"></i><i class="fas fa-sun"></i>
+      </button>
+      <a href="https://hawza.netlify.app" class="hdr-btn"><i class="fas fa-home"></i><span>الرئيسية</span></a>
+      <a href="https://hawza.netlify.app/book/" class="hdr-btn"><i class="fas fa-book"></i><span>المكتبة</span></a>
+    </div>
+  </div>
+</header>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ══ SIDEBAR ══ -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-scroll" id="sidebarScroll">
+
+    <div class="sb-group">
+      <div class="sb-group-label">المبادئ</div>
+      <a href="#intro"        class="sb-link active"><i class="fas fa-handshake"></i> المبادئ الأساسية <span class="sb-tag tag-all">الكل</span></a>
+      <a href="#no-collect"   class="sb-link"><i class="fas fa-user-slash"></i> ما لا نجمعه <span class="sb-tag tag-all">الكل</span></a>
+    </div>
+
+    <div class="sb-group">
+      <div class="sb-group-label">التخزين والبيانات</div>
+      <a href="#local-storage" class="sb-link"><i class="fas fa-hdd"></i> التخزين المحلي <span class="sb-tag tag-all">الكل</span></a>
+      <a href="#firebase"      class="sb-link"><i class="fas fa-database"></i> Firebase <span class="sb-tag tag-lib">مكتبة</span></a>
+      <a href="#clarity"       class="sb-link"><i class="fas fa-chart-bar"></i> Microsoft Clarity <span class="sb-tag tag-lib">مكتبة</span></a>
+    </div>
+
+    <div class="sb-group">
+      <div class="sb-group-label">الخدمات الخارجية</div>
+      <a href="#google-apis"   class="sb-link"><i class="fab fa-google"></i> Google Drive & API <span class="sb-tag tag-lib">مكتبة</span></a>
+      <a href="#youtube"       class="sb-link"><i class="fab fa-youtube"></i> يوتيوب والمقاطع <span class="sb-tag tag-lib">مكتبة</span></a>
+      <a href="#netlify"       class="sb-link"><i class="fas fa-server"></i> Netlify الاستضافة <span class="sb-tag tag-all">الكل</span></a>
+      <a href="#ai-assistant"  class="sb-link"><i class="fas fa-robot"></i> المساعد الذكي <span class="sb-tag tag-ai">AI</span></a>
+    </div>
+
+    <div class="sb-group">
+      <div class="sb-group-label">أقسام المشروع</div>
+      <a href="#section-library"  class="sb-link"><i class="fas fa-book-open"></i> المكتبة الرقمية <span class="sb-tag tag-lib">مكتبة</span></a>
+      <a href="#section-zaad"     class="sb-link"><i class="fas fa-star-and-crescent"></i> زاد المتقين <span class="sb-tag tag-zaad">زاد</span></a>
+      <a href="#section-quran"    class="sb-link"><i class="fas fa-book-quran"></i> القرآن الكريم <span class="sb-tag tag-pwa">قرآن</span></a>
+      <a href="#section-main"     class="sb-link"><i class="fas fa-globe"></i> الموقع الرئيسي <span class="sb-tag tag-all">الكل</span></a>
+    </div>
+
+    <div class="sb-group">
+      <div class="sb-group-label">الأمان والحقوق</div>
+      <a href="#pwa"          class="sb-link"><i class="fas fa-mobile-screen"></i> تطبيق PWA &amp; Play <span class="sb-tag tag-pwa">PWA</span></a>
+      <a href="#children"     class="sb-link"><i class="fas fa-child"></i> خصوصية الأطفال</a>
+      <a href="#security"     class="sb-link"><i class="fas fa-lock"></i> الأمن والحماية</a>
+      <a href="#user-rights"  class="sb-link"><i class="fas fa-user-shield"></i> حقوقك وتحكمك</a>
+    </div>
+
+    <div class="sb-group">
+      <div class="sb-group-label">رسمي</div>
+      <a href="#playstore"    class="sb-link"><i class="fab fa-google-play"></i> إقرارات Google Play</a>
+      <a href="#ext-links"    class="sb-link"><i class="fas fa-external-link-alt"></i> الروابط الخارجية</a>
+      <a href="#updates"      class="sb-link"><i class="fas fa-rotate-right"></i> التحديثات والتواصل</a>
+    </div>
+
+  </div>
+</nav>
+
+<!-- ══ PAGE ══ -->
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-geo"></div>
+    <div class="hero-glow hero-glow-1"></div>
+    <div class="hero-glow hero-glow-2"></div>
+    <div class="hero-glow hero-glow-3"></div>
+    <div class="hero-inner">
+      <div class="hero-seal"><i class="fas fa-file-shield"></i></div>
+      <div class="hero-eyebrow"><i class="fas fa-calendar-check"></i> آخر تحديث: 30 مايو 2026</div>
+      <h1 class="hero-title">سياسة <span>الخصوصية</span></h1>
+      <p class="hero-desc">
+        بسم الله الرحمن الرحيم. هذه الوثيقة تُفصِّل بكل شفافية كيفية عمل جميع خدمات مشروع
+        <strong style="color:var(--gold-light)">نور الحوزة</strong> — الموقع الرئيسي، المكتبة الرقمية،
+        زاد المتقين، القرآن الكريم، والمساعد الذكي. مبدؤنا الثابت:
+        <em>تقديم المعرفة دون تتبع، وتوفير الأدوات دون تجسس.</em>
+      </p>
+      <div class="hero-chips">
+        <span class="chip"><i class="fas fa-globe"></i> hawza.netlify.app</span>
+        <span class="chip"><i class="fas fa-book"></i> المكتبة الرقمية</span>
+        <span class="chip"><i class="fas fa-star-and-crescent"></i> زاد المتقين</span>
+        <span class="chip"><i class="fas fa-book-quran"></i> القرآن الكريم</span>
+        <span class="chip"><i class="fas fa-robot"></i> المساعد الذكي</span>
+        <span class="chip"><i class="fab fa-google-play"></i> Google Play</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="content-wrap">
+
+    <!-- ━━━ 1. INTRO ━━━ -->
+    <div id="intro" class="policy-block pb-gold">
+      <div class="block-hdr">
+        <div class="block-icon ic-gold"><i class="fas fa-handshake"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم الأول</div>
+          <div class="block-title">المبادئ الأساسية لمشروع نور الحوزة</div>
+          <div class="block-scope-tags"><span class="scope-tag st-all">جميع الأقسام</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>
+          <strong>نور الحوزة</strong> مبادرة دينية تعليمية رقمية مجانية غير ربحية، أُنشئت خدمةً لطلاب العلوم الحوزوية والإسلامية والمؤمنين كافة، خالصةً لوجه الله تعالى.
+          يشمل المشروع: الموقع الرئيسي (<strong>hawza.netlify.app</strong>)، المكتبة الرقمية (<strong>book/</strong>)، وأقسام زاد المتقين والقرآن الكريم والمساعد الذكي.
+        </p>
+        <p>
+          تُطبَّق هذه السياسة على جميع الخدمات والأقسام. <strong>استخدامك لأي خدمة من خدمات نور الحوزة يُعدّ قبولاً صريحاً لهذه الوثيقة.</strong>
+        </p>
+        <div class="comply-grid">
+          <div class="comply-item"><i class="fas fa-check-circle"></i><span>لا تسجيل دخول مطلوب</span></div>
+          <div class="comply-item"><i class="fas fa-check-circle"></i><span>لا إعلانات من أي نوع</span></div>
+          <div class="comply-item"><i class="fas fa-check-circle"></i><span>لا بيع لأي بيانات</span></div>
+          <div class="comply-item"><i class="fas fa-check-circle"></i><span>مجاني 100% بلا شروط</span></div>
+          <div class="comply-item"><i class="fas fa-check-circle"></i><span>لا ميزات صحية أو مالية</span></div>
+          <div class="comply-item"><i class="fas fa-check-circle"></i><span>محتوى آمن لجميع الأعمار</span></div>
+          <div class="comply-item"><i class="fas fa-check-circle"></i><span>لا أذونات الكاميرا أو الميكروفون</span></div>
+          <div class="comply-item"><i class="fas fa-check-circle"></i><span>لا استهداف جغرافي أو إعلاني</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ━━━ 2. NO COLLECT ━━━ -->
+    <div id="no-collect" class="policy-block pb-emerald">
+      <div class="block-hdr">
+        <div class="block-icon ic-emerald"><i class="fas fa-user-slash"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم الثاني</div>
+          <div class="block-title">ما لا نجمعه أبداً — قائمة شاملة</div>
+          <div class="block-scope-tags"><span class="scope-tag st-all">جميع الأقسام</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>نؤكد بشكل قاطع أن مشروع نور الحوزة <strong>لا يجمع أياً من البيانات التالية</strong> عبر أي قسم أو خدمة:</p>
+        <ul>
+          <li><strong>الاسم أو الهوية الشخصية:</strong> لا نماذج تسجيل، لا حسابات مستخدمين، لا معلومات تعريفية.</li>
+          <li><strong>البريد الإلكتروني أو رقم الهاتف:</strong> غير مطلوبَين للوصول لأي محتوى.</li>
+          <li><strong>الموقع الجغرافي:</strong> لا نتتبع موقعك ولا نطلبه في أي ظرف.</li>
+          <li><strong>معرّف الإعلانات (Advertising ID / GAID / IDFA):</strong> لا نستخدم أي معرّف إعلاني.</li>
+          <li><strong>البيانات الصحية أو الطبية:</strong> لا توجد ميزات صحية في أي قسم.</li>
+          <li><strong>البيانات المالية:</strong> لا خدمات مدفوعة، لا معالجة مدفوعات، لا بيانات بنكية.</li>
+          <li><strong>جهات الاتصال أو ملفات الجهاز:</strong> لا نطلب أذونات الوصول لهاتفك أو ملفاتك أو معرضك.</li>
+          <li><strong>البيانات البيومترية:</strong> لا تعرف على الوجه، لا بصمة، لا تحليل صوتي.</li>
+          <li><strong>الرسائل الخاصة:</strong> لا نظام مراسلة داخلي بين المستخدمين.</li>
+          <li><strong>قوائم التطبيقات المثبتة:</strong> لا نصل لمعلومات جهازك أو تطبيقاتك.</li>
+        </ul>
+        <div class="callout callout-info">
+          <i class="fas fa-shield-alt"></i>
+          <div class="callout-body">
+            <p>التصفح المجهول الكامل</p>
+            <span>يمكنك قراءة الكتب، الاستماع للأدعية، ختم القرآن، واستخدام المسبحة دون أن يعرف أحد هويتك الشخصية. الاستخدام مجهول تماماً على مستوى الهوية.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"><i class="fas fa-database"></i> التخزين والبيانات</div>
+
+    <!-- ━━━ 3. LOCAL STORAGE ━━━ -->
+    <div id="local-storage" class="policy-block pb-gold">
+      <div class="block-hdr">
+        <div class="block-icon ic-gold"><i class="fas fa-hdd"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم الثالث</div>
+          <div class="block-title">التخزين المحلي في جهازك (Local Storage)</div>
+          <div class="block-scope-tags"><span class="scope-tag st-all">جميع الأقسام</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>
+          لتوفير تجربة ذكية وسلسة دون قواعد بيانات أو حسابات، تعتمد جميع خدمات نور الحوزة على
+          <strong>التخزين المحلي (Local Storage &amp; Session Storage)</strong> المدمج في متصفحك.
+          <strong>هذه البيانات تُحفظ في جهازك حصراً ولا تصل إلى أي خادم.</strong>
+        </p>
+
+        <div class="tbl-wrap">
+          <table class="data-tbl">
+            <thead>
+              <tr><th>مفتاح التخزين</th><th>القسم</th><th>الغرض</th><th>يُحذف عند</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>noor_library_theme</code></td><td>الكل</td><td>الوضع الليلي / النهاري</td><td>مسح بيانات المتصفح</td></tr>
+              <tr><td><code>noor_view_pref</code></td><td>مكتبة</td><td>طريقة عرض الكتب (شبكة / مدمجة)</td><td>مسح البيانات</td></tr>
+              <tr><td><code>noor_library_v17_*</code></td><td>مكتبة</td><td>ذاكرة تخزين مؤقت لبيانات الكتب من Google Drive</td><td>انتهاء الصلاحية / مسح البيانات</td></tr>
+              <tr><td><code>noor_favorites_v1</code></td><td>مكتبة</td><td>قائمة الكتب المفضلة</td><td>الحذف اليدوي / مسح البيانات</td></tr>
+              <tr><td><code>noor_yt_favorites</code></td><td>مكتبة — يوتيوب</td><td>القنوات والمقاطع المحفوظة</td><td>الحذف اليدوي / مسح البيانات</td></tr>
+              <tr><td><code>noor_reading_history</code></td><td>مكتبة</td><td>آخر 20 كتاباً فتحتها (استئناف القراءة)</td><td>مسح السجل من الواجهة</td></tr>
+              <tr><td><code>noor_search_history_v2</code></td><td>مكتبة</td><td>سجل عمليات البحث السابقة</td><td>زر "مسح السجل" / مسح البيانات</td></tr>
+              <tr><td><code>noor_bv_[bookId]</code></td><td>مكتبة</td><td>وقت آخر فتح لكتاب (لمنع تكرار العداد في Firebase)</td><td>مسح البيانات</td></tr>
+              <tr><td><code>noor_uid</code></td><td>مكتبة</td><td>معرّف مجهول عشوائي (UUID) للإحصاءات فقط</td><td>مسح البيانات</td></tr>
+              <tr><td><code>noor_user_visit_count</code></td><td>مكتبة</td><td>عداد زياراتك الشخصي (يُعرض لك فقط)</td><td>مسح البيانات</td></tr>
+              <tr><td><code>noor_user_dl_count</code></td><td>مكتبة</td><td>عداد الكتب التي فتحتها (يُعرض لك فقط)</td><td>مسح البيانات</td></tr>
+              <tr><td><code>noor_last_visit_ts</code></td><td>مكتبة</td><td>طابع زمني لآخر زيارة (إحصاء الزوار الفريدين)</td><td>مسح البيانات</td></tr>
+              <tr><td><code>noor_vsb_cache</code></td><td>مكتبة</td><td>نسخة مؤقتة من إحصائيات الزوار الإجمالية</td><td>انتهاء الصلاحية</td></tr>
+              <tr><td><code>noor_last_page</code></td><td>مكتبة</td><td>القسم الأخير الذي كنت فيه (مكتبة / يوتيوب / حقيبة…)</td><td>مسح البيانات</td></tr>
+              <tr><td><code>noor_session_visited</code> (Session)</td><td>مكتبة</td><td>كشف الجلسة الحالية — يُحذف تلقائياً بإغلاق التبويب</td><td>إغلاق التبويب تلقائياً</td></tr>
+              <tr><td><code>zaad_tasbih_count</code></td><td>زاد المتقين</td><td>عداد المسبحة الإلكترونية</td><td>زر "تصفير" / مسح البيانات</td></tr>
+              <tr><td><code>zaad_daily_tasks</code></td><td>زاد المتقين</td><td>مهام زاد اليوم المُنجزة</td><td>مسح البيانات</td></tr>
+              <tr><td><code>zaad_goals</code></td><td>زاد المتقين</td><td>الأهداف الشهرية ونسبة تحقيقها</td><td>مسح البيانات</td></tr>
+              <tr><td><code>zaad_challenges</code></td><td>زاد المتقين</td><td>تقدّمك في تحديات الـ40 يوماً (دعاء العهد، زيارة عاشوراء…)</td><td>مسح البيانات</td></tr>
+              <tr><td><code>zaad_dedications</code></td><td>زاد المتقين</td><td>نصوص الإهداء للشهداء والمعصومين</td><td>مسح البيانات</td></tr>
+              <tr><td><code>quran_progress</code></td><td>القرآن الكريم</td><td>تقدّمك في حفظ القرآن والسور المُنجزة</td><td>مسح البيانات</td></tr>
+              <tr><td><code>quran_active_surahs</code></td><td>القرآن الكريم</td><td>السور النشطة في خطة الحفظ</td><td>مسح البيانات</td></tr>
+              <tr><td><code>quran_font_size</code></td><td>القرآن الكريم</td><td>حجم الخط المفضل للقراءة</td><td>مسح البيانات</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-gold">
+          <i class="fas fa-lock"></i>
+          <div class="callout-body">
+            <p>ملكيتك المطلقة لهذه البيانات</p>
+            <span>لا نملك أي قدرة تقنية للوصول إلى هذه البيانات لأنها مُخزَّنة في ذاكرة متصفحك فقط. تغيير الجهاز أو مسح البيانات يُزيلها نهائياً.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ━━━ 4. FIREBASE ━━━ -->
+    <div id="firebase" class="policy-block pb-sapphire">
+      <div class="block-hdr">
+        <div class="block-icon ic-sapphire"><i class="fas fa-database"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم الرابع</div>
+          <div class="block-title">Firebase Realtime Database — الإحصائيات المجهولة</div>
+          <div class="block-scope-tags"><span class="scope-tag st-lib">المكتبة الرقمية فقط</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>
+          لإتاحة ميزتَي <strong>"الأكثر مشاهدة"</strong> و<strong>"عدد الزوار والمشاهدات الإجمالي"</strong>،
+          يتصل تطبيق المكتبة بخدمة <strong>Firebase Realtime Database</strong> (من Google، منطقة europe-west1).
+          هذه الخدمة تُستخدَم حصرياً في قسم المكتبة ولا تعمل في باقي أقسام الموقع.
+        </p>
+        <ul>
+          <li><strong>معرّف الجهاز المجهول (<code>noor_uid</code>):</strong> رمز UUID عشوائي يُولَّد تلقائياً عند أول استخدام للمكتبة. <strong>لا يحتوي على اسم أو بريد أو أي بيانات شخصية.</strong> غرضه الوحيد: تمييز الزوار الفريدين في الإحصائيات الإجمالية.</li>
+          <li><strong>إحصاء مشاهدات الكتب:</strong> عند فتح كتاب يزيد عداده في Firebase بمقدار 1 دون أي بيانات تعريفية. هذا ما يتيح ميزة "الأكثر مشاهدة".</li>
+          <li><strong>الحضور الآني (Online Presence):</strong> نبضة (timestamp) بمعرّفك المجهول تشير لاتصالك الحالي. تُحذف تلقائياً بعد 5 دقائق من انتهاء جلستك.</li>
+          <li><strong>عداد الزوار الفريدين:</strong> مرة واحدة كل 24 ساعة يُسجَّل حضور واحد باسمك المجهول لحساب إجمالي الزوار.</li>
+          <li><strong>شارات "رائج":</strong> تُحدَّث بناءً على إجمالي المشاهدات المجهولة المُجمَّعة في Firebase.</li>
+        </ul>
+        <div class="callout callout-warn">
+          <i class="fas fa-triangle-exclamation"></i>
+          <div class="callout-body">
+            <p>ما لا يُرسَل إلى Firebase مطلقاً</p>
+            <span>لا يُرسَل اسمك ولا بريدك ولا الكتب التي قرأتها ولا مفضلتك ولا سجل بحثك ولا أي معلومة شخصية. كل ذلك يبقى في جهازك حصراً (Local Storage).</span>
+          </div>
+        </div>
+        <div class="callout callout-note">
+          <i class="fas fa-external-link-alt"></i>
+          <div class="callout-body">
+            <p>سياسة Google / Firebase الرسمية</p>
+            <span>بيانات Firebase تخضع لسياسة خصوصية Google المتاحة على policies.google.com/privacy. نحن لا نُشارك هذه البيانات مع أي طرف ثالث.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ━━━ 5. CLARITY ━━━ -->
+    <div id="clarity" class="policy-block pb-amber">
+      <div class="block-hdr">
+        <div class="block-icon ic-amber"><i class="fas fa-chart-bar"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم الخامس</div>
+          <div class="block-title">تحليلات السلوك — Microsoft Clarity</div>
+          <div class="block-scope-tags"><span class="scope-tag st-lib">المكتبة الرقمية</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>
+          يستخدم تطبيق المكتبة الرقمية أداة <strong>Microsoft Clarity</strong> (معرف المشروع: ro0e5w8yvs)
+          لتحسين تجربة المستخدم وفهم كيفية تفاعل الزوار مع الأقسام والميزات المختلفة.
+        </p>
+        <ul>
+          <li><strong>خرائط الحرارة (Heatmaps):</strong> تُظهر المناطق الأكثر نقراً في الصفحات بشكل مجمَّع ومجهول.</li>
+          <li><strong>تسجيلات الجلسات المجهولة (Session Recordings):</strong> تسجيل حركة الماوس والنقرات والتمرير دون تسجيل أي هوية شخصية.</li>
+          <li><strong>أداء التطبيق:</strong> وقت التحميل، مسارات التنقل بين الأقسام، الأخطاء التقنية.</li>
+        </ul>
+        <p><strong>Clarity لا تجمع:</strong> اسمك أو بريدك. كما أنها لا تُسجّل نص ما تكتبه في خانة البحث (masked inputs). جميع البيانات مجهولة الهوية ومُجمَّعة إحصائياً.</p>
+        <div class="callout callout-note">
+          <i class="fas fa-sliders"></i>
+          <div class="callout-body">
+            <p>كيف تتحكم في تتبع Clarity</p>
+            <span>يمكنك إيقاف التتبع عبر إضافات حجب التتبع في متصفحك (مثل uBlock Origin أو Privacy Badger). لمزيد من التفاصيل: clarity.microsoft.com/privacy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"><i class="fas fa-cloud"></i> الخدمات والاستضافة الخارجية</div>
+
+    <!-- ━━━ 6. GOOGLE APIS ━━━ -->
+    <div id="google-apis" class="policy-block pb-ink">
+      <div class="block-hdr">
+        <div class="block-icon ic-ink"><i class="fab fa-google"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم السادس</div>
+          <div class="block-title">Google Drive وخدمات Google API</div>
+          <div class="block-scope-tags"><span class="scope-tag st-lib">المكتبة الرقمية</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>
+          لاستضافة المحتوى الضخم (آلاف الكتب، ملفات صوتية)، يعتمد التطبيق على <strong>Google Drive API</strong>
+          كمستودع سحابي للمحتوى — لا للمستخدمين.
+        </p>
+        <ul>
+          <li><strong>ملفات الكتب (PDF):</strong> مُستضافة في Google Drive. عند فتح كتاب، تتصل مباشرة بخوادم Google لتحميله أو عرضه.</li>
+          <li><strong>الصور المصغرة وأغلفة الكتب:</strong> تُجلَب من Google Drive بصيغة محسَّنة.</li>
+          <li><strong>بنية المجلدات والتصنيفات:</strong> يجلبها التطبيق تلقائياً من Drive عند تحميل أي قسم في المكتبة.</li>
+          <li><strong>الملفات الصوتية (حقيبة الأدعية والزيارات):</strong> مُستضافة في Google Drive. عند الاستماع لدعاء أو زيارة، تتصل بخوادم Google مباشرة.</li>
+          <li><strong>Google Sheets (قسم القنوات):</strong> بيانات قنوات يوتيوب ومقاطعها مُخزَّنة في جدول Google Sheets خاص بنا، يُجلبها التطبيق تلقائياً.</li>
+          <li><strong>ذاكرة التخزين المؤقت:</strong> بيانات الكتب تُحفظ في Local Storage لتسريع الزيارات اللاحقة وتقليل طلبات Google API.</li>
+        </ul>
+        <div class="callout callout-info">
+          <i class="fas fa-info-circle"></i>
+          <div class="callout-body">
+            <p>ملاحظة بشأن فتح الكتب والاستماع للأدعية</p>
+            <span>عند فتح أي كتاب أو ملف صوتي تتصل مباشرة بخوادم Google وتخضع لسياسة خصوصيتهم. نحن لا نرى ما تقرأه ولا نسجّل تفاصيل ما فتحته.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ━━━ 7. YOUTUBE ━━━ -->
+    <div id="youtube" class="policy-block pb-crimson">
+      <div class="block-hdr">
+        <div class="block-icon ic-crimson"><i class="fab fa-youtube"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم السابع</div>
+          <div class="block-title">قسم القنوات والمقاطع (YouTube)</div>
+          <div class="block-scope-tags"><span class="scope-tag st-lib">المكتبة الرقمية</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>تطبيق المكتبة يحتوي على قسم إعلامي لعرض القنوات الحوزوية الإسلامية ومقاطع المحاضرات والمواكب الدينية.</p>
+        <ul>
+          <li><strong>مشغّل YouTube المدمج (YouTube Iframe API):</strong> عند مشاهدة مقطع داخل التطبيق، يُفعَّل مشغل YouTube المضمّن وتتصل في هذه اللحظة مباشرة بخوادم Google/YouTube.</li>
+          <li><strong>جلب البيانات من Google Sheets:</strong> قائمة القنوات والمقاطع تُجلَب من جدول بياناتنا على Google Sheets.</li>
+          <li><strong>مفضلة يوتيوب:</strong> القنوات والمقاطع المحفوظة تُخزَّن في Local Storage فقط (<code>noor_yt_favorites</code>) ولا تُرسَل لأي خادم.</li>
+        </ul>
+        <div class="callout callout-warn">
+          <i class="fas fa-triangle-exclamation"></i>
+          <div class="callout-body">
+            <p>تنبيه: سياسة YouTube / Google</p>
+            <span>عند تشغيل أي مقطع داخل التطبيق، قد تقوم Google/YouTube بجمع بيانات معتادة إن كنت مسجّل الدخول على حسابك. نحن لا نتحكم في هذه البيانات ولا نصل إليها. راجع: youtube.com/t/privacy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ━━━ 8. NETLIFY ━━━ -->
+    <div id="netlify" class="policy-block pb-teal">
+      <div class="block-hdr">
+        <div class="block-icon ic-teal"><i class="fas fa-server"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم الثامن</div>
+          <div class="block-title">Netlify — شركة الاستضافة والبنية التحتية</div>
+          <div class="block-scope-tags"><span class="scope-tag st-all">جميع الأقسام</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>
+          تستضيف شركة <strong>Netlify</strong> جميع ملفات مشروع نور الحوزة الثابتة (Static Files)
+          وتوفر البنية التحتية لخدمة الموقع على المستخدمين حول العالم.
+        </p>
+        <ul>
+          <li><strong>شهادة SSL/TLS المجانية:</strong> Netlify توفر تشفيراً كاملاً لكل الاتصالات بين متصفحك وملفات الموقع (HTTPS).</li>
+          <li><strong>شبكة CDN العالمية:</strong> تُوزَّع ملفات الموقع على خوادم قريبة من موقعك الجغرافي لتسريع التحميل.</li>
+          <li><strong>سجلات الخادم:</strong> كأي شركة استضافة، قد تحتفظ Netlify تلقائياً بسجلات طلبات الخادم (IP مجهول، المتصفح، وقت الطلب) لأغراض أمنية وتشغيلية. نحن لا نطّلع على هذه السجلات ولا نعالجها.</li>
+          <li><strong>حماية DDoS:</strong> Netlify توفر حماية افتراضية من هجمات الحجب.</li>
+        </ul>
+        <div class="callout callout-note">
+          <i class="fas fa-external-link-alt"></i>
+          <div class="callout-body">
+            <p>سياسة خصوصية Netlify</p>
+            <span>للاطلاع على كيفية تعامل Netlify مع بيانات الخادم: netlify.com/privacy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ━━━ 9. AI ASSISTANT ━━━ -->
+    <div id="ai-assistant" class="policy-block pb-violet">
+      <div class="block-hdr">
+        <div class="block-icon ic-violet"><i class="fas fa-robot"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم التاسع</div>
+          <div class="block-title">المساعد الذكي الإسلامي</div>
+          <div class="block-scope-tags">
+            <span class="scope-tag st-lib">المكتبة</span>
+            <span class="scope-tag st-all">الموقع الرئيسي</span>
+          </div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>يُتيح تطبيق المكتبة والموقع الرئيسي الوصول إلى مساعد ذكي إسلامي متخصص. من الضروري فهم الطبيعة التقنية لهذه الخدمة:</p>
+        <ul>
+          <li><strong>خدمة خارجية بالكامل:</strong> المساعد الذكي مُستضاف لدى شركات خارجية (OpenAI لـChatGPT، أو Google لـGemini). يفتح التطبيق نافذة منبثقة (Popup Window) إلى الخدمة الخارجية مباشرة.</li>
+          <li><strong>لا نملك سجلات المحادثات:</strong> عند انتقالك للمحادثة، تنتقل بالكامل لبيئة الشركة المضيفة. لا يمكننا رؤية أسئلتك ولا إجاباتها ولا حفظها.</li>
+          <li><strong>تعدد النماذج:</strong> قد يتيح التطبيق الاختيار بين نماذج ذكاء اصطناعي متعددة (ChatGPT، Gemini). جميعها تعمل بمبدأ الخدمة الخارجية ذاتها.</li>
+          <li><strong>سياسات الشركات:</strong> المحادثات تخضع لسياسة OpenAI (openai.com/privacy) أو Google (policies.google.com/privacy).</li>
+        </ul>
+        <div class="callout callout-warn">
+          <i class="fas fa-triangle-exclamation"></i>
+          <div class="callout-body">
+            <p>تحذير مهم لجميع المستخدمين</p>
+            <span>رغم تخصيص المساعد للعلوم الحوزوية، نُشدد على <strong>عدم إدخال أي معلومات شخصية حساسة</strong> في خانة الدردشة — كالاسم، رقم الهاتف، البيانات المالية، أو المعلومات الصحية. بياناتك تُعالَج في خوادم خارجية لا نتحكم فيها.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-divider"><i class="fas fa-layer-group"></i> أقسام المشروع التفصيلية</div>
+
+    <!-- ━━━ 10. LIBRARY SECTION ━━━ -->
+    <div id="section-library" class="policy-block pb-emerald">
+      <div class="block-hdr">
+        <div class="block-icon ic-emerald"><i class="fas fa-book-open"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم العاشر</div>
+          <div class="block-title">المكتبة الرقمية</div>
+          <div class="block-scope-tags"><span class="scope-tag st-lib">hawza.netlify.app/book/</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>المكتبة الرقمية هي الخدمة الرئيسية في المشروع. تشمل الميزات التالية وكيفية تعاملها مع البيانات:</p>
+        <ul>
+          <li><strong>الكتب الحوزوية والإسلامية:</strong> آلاف الكتب في تصنيفات متعددة. القراءة مجهولة تماماً. قائمة المفضلة تُحفظ محلياً فقط ولا تُرسَل لأي خادم.</li>
+          <li><strong>استئناف القراءة:</strong> آخر 20 كتاباً فتحتها تظهر لك تلقائياً (سجل محلي). لا يُرسَل للخوادم.</li>
+          <li><strong>الأكثر مشاهدة وشارات "رائج":</strong> يعتمد على Firebase لتجميع عداد مشاهدات الكتب بشكل مجهول (انظر القسم الرابع).</li>
+          <li><strong>البحث الذكي (Fuse.js):</strong> مكتبة البحث تعمل محلياً بالكامل داخل متصفحك. سجل بحثك يُحفظ في Local Storage فقط.</li>
+          <li><strong>حقيبة الأدعية والزيارات:</strong> تُجلَب ملفات الصوت من Google Drive. لا يُسجَّل ما استمعت إليه.</li>
+          <li><strong>قسم القنوات الإعلامية:</strong> مقاطع يوتيوب وقنوات حوزوية (انظر القسم السابع).</li>
+          <li><strong>قسم التلخيصات والمصادر:</strong> محتوى ثابت للقراءة، لا يتتبع تفاعلك به بأي شكل.</li>
+          <li><strong>المكتبات المقترحة:</strong> روابط لمواقع حوزوية خارجية. نحن غير مسؤولين عن سياسات الخصوصية لتلك المواقع عند انتقالك إليها.</li>
+          <li><strong>إحصائيات الزوار المعروضة:</strong> الأرقام الإجمالية المعروضة (إجمالي الزيارات، الكتب المُفتوحة) مصدرها Firebase وتُعرض لجميع الزوار بشكل مجهول ومجمَّع.</li>
+        </ul>
+        <div class="callout callout-info">
+          <i class="fas fa-shield-alt"></i>
+          <div class="callout-body">
+            <p>بنية الأمان للمكتبة</p>
+            <span>الملفات الثابتة مُستضافة على Netlify مع شهادة SSL. Firebase محمي بقواعد أمان صارمة. لا يوجد خادم خلفي قابل للاختراق يحتوي على بيانات المستخدمين.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ━━━ 11. ZAAD ━━━ -->
+    <div id="section-zaad" class="policy-block pb-teal">
+      <div class="block-hdr">
+        <div class="block-icon ic-teal"><i class="fas fa-star-and-crescent"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم الحادي عشر</div>
+          <div class="block-title">قسم زاد المتقين</div>
+          <div class="block-scope-tags"><span class="scope-tag st-zaad">زاد المتقين</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>
+          <strong>زاد المتقين</strong> مجموعة أدوات روحية وتعبدية تفاعلية.
+          <strong>جميع بياناته تُحفظ محلياً في جهازك بالكامل ولا يُرسَل منها شيء لأي خادم — أي خادم.</strong>
+        </p>
+        <ul>
+          <li><strong>المسبحة الإلكترونية:</strong> تُحفظ الأعداد محلياً (<code>zaad_tasbih_count</code>). تُصفَّر بنقرة واحدة.</li>
+          <li><strong>زاد اليوم (المهام اليومية):</strong> قائمة المهام اليومية ونسبة إنجازها تُحفظ محلياً وتتجدد كل يوم تلقائياً.</li>
+          <li><strong>الأهداف الشهرية:</strong> تتبع تقدّمك نحو أهدافك الشهرية — محلي تماماً ولا يراه أحد.</li>
+          <li><strong>تحديات الـ40 يوماً:</strong> تقدّمك في تحديات مثل دعاء العهد وزيارة عاشوراء يُحفظ في Local Storage. أنت وحدك تُحدّده.</li>
+          <li><strong>الإهداء:</strong> نصوص إهدائك للشهداء أو المعصومين تُحفظ محلياً وتخصّك أنت فقط.</li>
+        </ul>
+        <div class="callout callout-info">
+          <i class="fas fa-heart"></i>
+          <div class="callout-body">
+            <p>خصوصيتك الروحية مصونة</p>
+            <span>تفاعلاتك في هذا القسم — من تسبيح وأدعية وأهداف — هي بينك وبين الله. لا نرى شيئاً منها، ولا يصل أي منها لأي خادم في أي مكان.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ━━━ 12. QURAN ━━━ -->
+    <div id="section-quran" class="policy-block pb-amber">
+      <div class="block-hdr">
+        <div class="block-icon ic-amber"><i class="fas fa-book-quran"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم الثاني عشر</div>
+          <div class="block-title">قسم القرآن الكريم</div>
+          <div class="block-scope-tags"><span class="scope-tag st-quran">القرآن الكريم</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>
+          قسم القرآن الكريم يوفر أدوات حفظ وتلاوة تفاعلية.
+          <strong>جميع بياناتك في هذا القسم محلية بالكامل ولا تُرفع لأي خادم.</strong>
+        </p>
+        <ul>
+          <li><strong>تقدّم الحفظ:</strong> السور المُحفوظة ونسبة التقدم تُخزَّن في جهازك.</li>
+          <li><strong>خطة الحفظ:</strong> السور النشطة في خطتك والأيام المُنجزة تُحفظ محلياً.</li>
+          <li><strong>حجم الخط:</strong> تفضيلك لحجم الخط في صفحات التلاوة يُحفظ محلياً.</li>
+          <li><strong>الصفحات والآيات المُنجزة:</strong> عند وضع علامة على صفحة أو آية، يُحفظ ذلك في جهازك فقط.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ━━━ 13. MAIN SITE ━━━ -->
+    <div id="section-main" class="policy-block pb-gold">
+      <div class="block-hdr">
+        <div class="block-icon ic-gold"><i class="fas fa-globe"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم الثالث عشر</div>
+          <div class="block-title">الموقع الرئيسي (hawza.netlify.app)</div>
+          <div class="block-scope-tags"><span class="scope-tag st-all">hawza.netlify.app</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>
+          الموقع الرئيسي هو بوابة التعريف بمشروع نور الحوزة ويُتيح الوصول لجميع الأقسام والخدمات.
+        </p>
+        <ul>
+          <li><strong>موقع ثابت (Static Site):</strong> مبني بالكامل على HTML/CSS/JavaScript. لا خادم خلفي، لا قاعدة بيانات للمستخدمين.</li>
+          <li><strong>إعدادات المظهر:</strong> تفضيل الوضع الليلي/النهاري يُحفظ في Local Storage فقط (<code>noor_library_theme</code>).</li>
+          <li><strong>الروابط الخارجية:</strong> يحتوي الموقع على روابط لمواقع حوزوية ومرجعيات دينية موثوقة. نحن غير مسؤولين عن ممارسات خصوصية تلك المواقع.</li>
+          <li><strong>شهادة SSL من Netlify:</strong> جميع الاتصالات مشفّرة بشهادة HTTPS/TLS.</li>
+          <li><strong>PWA (تطبيق ويب تقدمي):</strong> الموقع الرئيسي قابل للتثبيت كتطبيق مستقل (انظر القسم الخامس عشر).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sec-divider"><i class="fas fa-mobile-alt"></i> التطبيق والحماية</div>
+
+    <!-- ━━━ 14. EXT LINKS ━━━ -->
+    <div id="ext-links" class="policy-block pb-ink">
+      <div class="block-hdr">
+        <div class="block-icon ic-ink"><i class="fas fa-external-link-alt"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم الرابع عشر</div>
+          <div class="block-title">الروابط الخارجية والمواقع الموثوقة المقترحة</div>
+          <div class="block-scope-tags"><span class="scope-tag st-all">جميع الأقسام</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>يحتوي مشروع نور الحوزة على روابط خارجية للمواقع والمكتبات الحوزوية المقترحة والمرجعيات الدينية. يجب معرفة الآتي:</p>
+        <ul>
+          <li>عند النقر على أي رابط خارجي، تغادر بيئتنا وتنتقل إلى موقع مستقل.</li>
+          <li><strong>نحن غير مسؤولين</strong> عن ممارسات الخصوصية أو سياسات البيانات لتلك المواقع.</li>
+          <li>الروابط المُقترَحة تُختار بناءً على قيمتها العلمية والدينية، ولا تعني رعاية تجارية أو تبادل بيانات.</li>
+          <li>ننصح دائماً بمراجعة سياسة الخصوصية لأي موقع تزوره خارج نطاق hawza.netlify.app.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ━━━ 15. PWA ━━━ -->
+    <div id="pwa" class="policy-block pb-sapphire">
+      <div class="block-hdr">
+        <div class="block-icon ic-sapphire"><i class="fas fa-mobile-screen"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم الخامس عشر</div>
+          <div class="block-title">تطبيق الهاتف (PWA) وGoogle Play</div>
+          <div class="block-scope-tags">
+            <span class="scope-tag st-pwa">PWA</span>
+            <span class="scope-tag st-lib">المكتبة</span>
+          </div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>يمكن تثبيت تطبيق نور الحوزة على الهاتف كتطبيق مستقل (Progressive Web App) عبر Android وiOS وWindows.</p>
+        <ul>
+          <li><strong>ملف البيان (manifest.json):</strong> يُحدّد اسم التطبيق وأيقونته وألوانه فقط. لا يحتوي على بيانات شخصية.</li>
+          <li><strong>Service Worker:</strong> يُخزّن ملفات التطبيق الأساسية محلياً (Caching) لتسريع التحميل وتمكين العمل في الوضع دون اتصال (Offline). لا يجمع بيانات ولا يُرسل معلومات خارجية.</li>
+          <li><strong>Google Play Store:</strong> التطبيق متوفر على Google Play. تثبيته يخضع لشروط خدمة Google Play الإضافية التي تتضمن سياسات Google الخاصة.</li>
+          <li><strong>الإشعارات:</strong> لا يطلب التطبيق حالياً إذن إرسال الإشعارات.</li>
+          <li><strong>الأذونات المطلوبة:</strong> صفر أذونات حساسة. التطبيق لا يطلب: الكاميرا، الميكروفون، جهات الاتصال، الموقع الجغرافي، التخزين الخارجي، أو أي أذن حساس آخر.</li>
+        </ul>
+        <div class="app-pills">
+          <span class="app-pill"><i class="fab fa-android"></i> Android — Google Play</span>
+          <span class="app-pill"><i class="fab fa-apple"></i> iOS — Add to Home Screen</span>
+          <span class="app-pill"><i class="fab fa-windows"></i> Windows — Install PWA</span>
+          <span class="app-pill"><i class="fas fa-globe"></i> hawza.netlify.app/book/</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ━━━ 16. CHILDREN ━━━ -->
+    <div id="children" class="policy-block pb-emerald">
+      <div class="block-hdr">
+        <div class="block-icon ic-emerald"><i class="fas fa-child"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم السادس عشر</div>
+          <div class="block-title">خصوصية الأطفال والناشئة</div>
+          <div class="block-scope-tags"><span class="scope-tag st-all">جميع الأقسام</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>
+          محتوى جميع أقسام نور الحوزة <strong>ديني وتربوي وأخلاقي بالكامل</strong>، وهو آمن لجميع الفئات العمرية. تقييمات المحتوى المعتمدة رسمياً: ESRB (جميع الأعمار)، PEGI 3، IARC (+3 سنوات)، USK (جميع الأعمار).
+        </p>
+        <p>
+          الفئات العمرية المستهدفة المُعلنة رسمياً في Google Play: <strong>13–15 سنة، 16–17 سنة، 18 سنة فما فوق.</strong>
+        </p>
+        <p>
+          بما أننا لا نطلب أي بيانات شخصية إطلاقاً، فإننا بطبيعة الحال لا نجمع بيانات الأطفال. نُوصي أولياء الأمور بتوجيه أبنائهم عند تفاعلهم مع أداة المساعد الذكي الخارجية للتأكد من عدم مشاركتهم أي معلومات خاصة مع تلك الخدمات.
+        </p>
+      </div>
+    </div>
+
+    <!-- ━━━ 17. SECURITY ━━━ -->
+    <div id="security" class="policy-block pb-ink">
+      <div class="block-hdr">
+        <div class="block-icon ic-ink"><i class="fas fa-lock"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم السابع عشر</div>
+          <div class="block-title">الأمن والحماية</div>
+          <div class="block-scope-tags"><span class="scope-tag st-all">جميع الأقسام</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <ul>
+          <li><strong>HTTPS/TLS (Netlify):</strong> جميع الاتصالات مشفّرة بشهادة TLS. لا يمكن لأي طرف ثالث التجسس على ما تقرأه أو تبحث عنه.</li>
+          <li><strong>بنية الموقع الثابت (Static Architecture):</strong> لا توجد قواعد بيانات خلفية للمستخدمين قابلة للاختراق. <strong>مخاطر تسريب بيانات المستخدمين من جهتنا = صفر.</strong></li>
+          <li><strong>Firebase Security Rules:</strong> قاعدة بيانات الإحصائيات مُقيَّدة بقواعد أمان تمنع القراءة أو الكتابة غير المصرح بها من أي جهة.</li>
+          <li><strong>لا معرّفات إعلانية:</strong> التطبيق لا يستخدم Advertising ID (GAID/IDFA) على الإطلاق.</li>
+          <li><strong>عزل المتصفح:</strong> بيانات Local Storage محمية بسياسة Same-Origin الصارمة، مما يمنع أي تطبيق أو موقع آخر من الوصول إليها.</li>
+          <li><strong>ملاحظة بشأن إقرار Google Play:</strong> وفق المعيار القياسي لتطبيقات الويب، بيانات Local Storage غير مُشفَّرة بتشفير إضافي على مستوى التطبيق. حمايتها تأتي من عزل المتصفح المذكور أعلاه.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ━━━ 18. USER RIGHTS ━━━ -->
+    <div id="user-rights" class="policy-block pb-gold">
+      <div class="block-hdr">
+        <div class="block-icon ic-gold"><i class="fas fa-user-shield"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم الثامن عشر</div>
+          <div class="block-title">حقوقك والتحكم الكامل في بياناتك</div>
+          <div class="block-scope-tags"><span class="scope-tag st-all">جميع الأقسام</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>لأن جميع بياناتك الشخصية محلية في جهازك، فأنت تمتلك <strong>السيطرة الكاملة 100%</strong> عليها:</p>
+        <ul>
+          <li><strong>حذف الكتب من المفضلة:</strong> من داخل التطبيق، انقر على أيقونة المفضلة لأي كتاب لإزالته.</li>
+          <li><strong>مسح سجل القراءة:</strong> زر "مسح السجل" في قسم آخر الكتب المقروءة (استئناف القراءة).</li>
+          <li><strong>مسح سجل البحث:</strong> زر "مسح السجل" في نافذة اقتراحات البحث.</li>
+          <li><strong>تصفير المسبحة:</strong> زر "تصفير العداد" في قسم زاد المتقين.</li>
+          <li><strong>مسح كل شيء دفعة واحدة:</strong> إعدادات المتصفح ← "مسح بيانات التصفح" ← "ملفات تعريف الارتباط وبيانات الموقع" ← يُحذف كل شيء نهائياً.</li>
+          <li><strong>بشأن معرّفك في Firebase (<code>noor_uid</code>):</strong> مسح بيانات المتصفح يُولّد UUID جديد مجهول تماماً عند الزيارة التالية. يُعامَل جهازك كزائر جديد من الصفر.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ━━━ 19. GOOGLE PLAY ━━━ -->
+    <div id="playstore" class="policy-block pb-emerald">
+      <div class="block-hdr">
+        <div class="block-icon ic-emerald"><i class="fab fa-google-play"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم التاسع عشر</div>
+          <div class="block-title">إقرارات Google Play Console الرسمية</div>
+          <div class="block-scope-tags"><span class="scope-tag st-pwa">Google Play</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>فيما يلي ملخص الإقرارات الرسمية المُقدَّمة في Google Play Console (آخر تحديث: مايو 2026):</p>
+        <div class="play-decl">
+          <div class="play-item"><i class="fas fa-check-circle"></i><div><strong>ميزات الصحة</strong><span>لا يحتوي التطبيق على أي ميزات متعلقة بالصحة</span></div></div>
+          <div class="play-item"><i class="fas fa-check-circle"></i><div><strong>معرّف الإعلانات</strong><span>لا يستخدم التطبيق Advertising ID من أي نوع</span></div></div>
+          <div class="play-item"><i class="fas fa-check-circle"></i><div><strong>الميزات المالية</strong><span>لا يوفّر التطبيق أي خدمات أو ميزات مالية</span></div></div>
+          <div class="play-item"><i class="fas fa-check-circle"></i><div><strong>التطبيقات الحكومية</strong><span>التطبيق غير تابع لأي جهة حكومية</span></div></div>
+          <div class="play-item"><i class="fas fa-check-circle"></i><div><strong>الإعلانات</strong><span>لا يحتوي التطبيق على إعلانات من أي نوع</span></div></div>
+          <div class="play-item"><i class="fas fa-check-circle"></i><div><strong>وصول الوظائف</strong><span>جميع وظائف التطبيق متاحة بدون قيود أو اشتراكات</span></div></div>
+        </div>
+
+        <p style="margin-top:18px;font-weight:700;color:var(--ink-deep)">تقييمات المحتوى المعتمدة:</p>
+        <div class="rating-list">
+          <span class="rating-badge"><i class="fas fa-star"></i> جميع الأعمار — ESRB (أمريكا الشمالية)</span>
+          <span class="rating-badge"><i class="fas fa-star"></i> PEGI 3 — أوروبا</span>
+          <span class="rating-badge"><i class="fas fa-star"></i> جميع الأعمار — USK (ألمانيا)</span>
+          <span class="rating-badge"><i class="fas fa-star"></i> +3 سنوات — IARC (بقية دول العالم)</span>
+          <span class="rating-badge"><i class="fas fa-star"></i> جميع الأعمار — ClassInd (البرازيل)</span>
+          <span class="rating-badge"><i class="fas fa-star"></i> +3 سنوات — Google Play (روسيا وكوريا الجنوبية)</span>
+        </div>
+        <p style="margin-top:14px"><strong>الفئة العمرية المستهدفة:</strong> 13–15، 16–17، 18 سنة وأكثر.</p>
+
+        <div class="callout callout-warn" style="margin-top:18px">
+          <i class="fas fa-circle-info"></i>
+          <div class="callout-body">
+            <p>ملاحظة بشأن إعلان أمان البيانات</p>
+            <span>
+              يستخدم التطبيق <strong>Firebase</strong> لتسجيل معرّف مجهول عشوائي (UUID) لأغراض إحصاء الزوار والمشاهدات فقط.
+              ويستخدم <strong>Microsoft Clarity</strong> لتحليل سلوك المستخدم بصورة مجهولة.
+              يُنصح بمراجعة بيان أمان البيانات في Google Play Console لضمان دقة الإقرار الحالي.
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ━━━ 20. UPDATES ━━━ -->
+    <div id="updates" class="policy-block pb-gold">
+      <div class="block-hdr">
+        <div class="block-icon ic-gold"><i class="fas fa-rotate-right"></i></div>
+        <div class="block-hdr-text">
+          <div class="block-num">القسم العشرون</div>
+          <div class="block-title">تحديثات السياسة والتواصل معنا</div>
+          <div class="block-scope-tags"><span class="scope-tag st-all">جميع الأقسام</span></div>
+        </div>
+      </div>
+      <div class="block-body">
+        <p>
+          <strong>تحديث السياسة:</strong> مع تطور المشروع وإضافة ميزات جديدة، قد نُحدّث هذه الوثيقة. في حال وجود تغييرات جوهرية في طريقة معالجة البيانات، سنُحدّث التاريخ أدناه وننشر إشعاراً على قناة التيليجرام. استمرارك في الاستخدام بعد التحديث يُعدّ قبولاً ضمنياً للتغييرات.
+        </p>
+        <p>
+          <strong>آخر تحديث لهذه الوثيقة:</strong> 30 مايو 2026 &nbsp;|&nbsp;
+          <strong>رابط الصفحة الدائم:</strong> <a href="https://hawza.netlify.app/privacy" style="color:var(--gold);text-decoration:underline">hawza.netlify.app/privacy</a>
+        </p>
+        <p>
+          <strong>التواصل معنا:</strong> إذا كان لديك أي استفسار أو ملاحظة بشأن الخصوصية، نسعد بتواصلك معنا عبر:
+        </p>
+        <p style="text-align:center;margin-top:22px">
+          <a href="https://t.me/nwr_lhwz" target="_blank" class="fbtn fbtn-tg" style="display:inline-flex;margin:6px">
+            <i class="fab fa-telegram-plane"></i> قناة نور الحوزة على تيليجرام
+          </a>
+          <a href="https://t.me/twasl_noor_alhawza_bot" target="_blank" class="fbtn fbtn-bot" style="display:inline-flex;margin:6px">
+            <i class="fas fa-robot"></i> بوت التواصل المباشر
+          </a>
+        </p>
+      </div>
+    </div>
+
+  </div><!-- /.content-wrap -->
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo">نور الحوزة</div>
+      <p class="footer-tagline">مشروع رقمي يهدف إلى تيسير الوصول إلى المصادر الحوزوية والعلوم الإسلامية، مع الالتزام التام بحفظ خصوصية الباحثين والمؤمنين.</p>
+      <div class="footer-btns">
+        <a href="https://hawza.netlify.app" class="fbtn fbtn-home"><i class="fas fa-home"></i> الرئيسية</a>
+        <a href="https://hawza.netlify.app/book/" class="fbtn fbtn-home"><i class="fas fa-book"></i> المكتبة</a>
+        <a href="https://t.me/nwr_lhwz" target="_blank" class="fbtn fbtn-tg"><i class="fab fa-telegram"></i> تيليجرام</a>
+        <a href="https://t.me/twasl_noor_alhawza_bot" target="_blank" class="fbtn fbtn-bot"><i class="fas fa-robot"></i> تواصل</a>
+      </div>
+      <div class="footer-copy">
+        جميع الحقوق محفوظة © <script>document.write(new Date().getFullYear())</script> لخدام مشروع نور الحوزة &nbsp;—&nbsp;
+        <a href="https://hawza.netlify.app/privacy" style="color:var(--gold-light)">سياسة الخصوصية</a>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /.page-wrap -->
+
+<button class="mob-toc-btn" id="mobTocBtn">
+  <i class="fas fa-list-ul"></i> الفهرس
+</button>
+
+<script>
+/* ═══ THEME ═══ */
+const themeBtn = document.getElementById('themeBtn');
+themeBtn.addEventListener('click', () => {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const newTheme = isDark ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('noor_library_theme', newTheme);
+});
+
+/* ═══ HEADER SCROLL ═══ */
+const siteHeader = document.getElementById('siteHeader');
+window.addEventListener('scroll', () => {
+  siteHeader.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+/* ═══ READING PROGRESS ═══ */
+const progressBar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const docH = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = docH > 0 ? window.scrollY / docH : 0;
+  progressBar.style.transform = `scaleX(${pct})`;
+}, { passive: true });
+
+/* ═══ SIDEBAR ═══ */
+const sidebar   = document.getElementById('sidebar');
+const overlay   = document.getElementById('sidebarOverlay');
+const menuBtn   = document.getElementById('menuBtn');
+const mobTocBtn = document.getElementById('mobTocBtn');
+
+function openSidebar()  { sidebar.classList.add('open'); overlay.classList.add('show'); document.body.style.overflow = 'hidden'; }
+function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('show'); document.body.style.overflow = ''; }
+
+menuBtn.addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
+mobTocBtn.addEventListener('click', openSidebar);
+overlay.addEventListener('click', closeSidebar);
+
+/* ═══ SCROLL SPY ═══ */
+const sections = document.querySelectorAll('.policy-block[id]');
+const sbLinks  = document.querySelectorAll('.sb-link');
+let hdrH = siteHeader.offsetHeight;
+window.addEventListener('resize', () => { hdrH = siteHeader.offsetHeight; });
+
+function scrollSpy() {
+  let current = '';
+  const scrollPos = window.scrollY + hdrH + 90;
+  sections.forEach(s => { if (scrollPos >= s.offsetTop) current = s.id; });
+  sbLinks.forEach(l => {
+    const active = l.getAttribute('href') === '#' + current;
+    l.classList.toggle('active', active);
+    if (active && window.innerWidth > 820) {
+      const sbScroll = document.getElementById('sidebarScroll');
+      const lTop = l.offsetTop;
+      const lBot = lTop + l.offsetHeight;
+      if (lTop < sbScroll.scrollTop || lBot > sbScroll.scrollTop + sbScroll.clientHeight) {
+        sbScroll.scrollTo({ top: lTop - 80, behavior: 'smooth' });
+      }
+    }
+  });
+}
+window.addEventListener('scroll', scrollSpy, { passive: true });
+scrollSpy();
+
+/* ═══ CLOSE SIDEBAR ON LINK CLICK (mobile) ═══ */
+sbLinks.forEach(l => {
+  l.addEventListener('click', () => {
+    if (window.innerWidth <= 820) setTimeout(closeSidebar, 220);
+  });
+});
+</script>
+</body>
+</html>

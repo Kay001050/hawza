@@ -2,3 +2,11 @@ node_modules/
 npm-debug.log*
 .env
 
+
+.env
+
+# Local Netlify folder
+.netlify
+
+# Generated locally from reviewed source material; distribute with the iOS app release.
+knowledge/output/*.sqlite

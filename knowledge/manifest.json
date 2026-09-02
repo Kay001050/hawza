@@ -1,0 +1,41 @@
+{
+  "version": "1.2.0",
+  "chunking": {
+    "target_chars": 1500,
+    "overlap_chars": 220,
+    "min_chars": 180
+  },
+  "sources": [
+    {
+      "id": "diyafa-bi-ayn-al-amin",
+      "path": "../../diyafa_ramadan.pdf",
+      "title": "ضيافة بعين الأمين",
+      "author": "Abrar ghkh",
+      "category": "ramadan",
+      "enabled": true,
+      "version": "2026",
+      "notes": "Approved repository document. The path intentionally references the original file already stored at the repository root."
+    },
+    { "id": "durus-fikr-sadr", "path": "durus_mn_fekr_alsadr.pdf", "title": "دروس من فكر الإمام الصدر في العقيدة والتفسير والسيرة", "author": "", "category": "aqidah-tafsir-sirah", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "tabligh-dini", "path": "altabligh.pdf", "title": "التبليغ الديني: مفهومه، مضمونه، أساليبه", "author": "", "category": "tabligh", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "shakhsiyya-qiyadiyya", "path": "pdf_alchkhseya_alqeyadeya_llnabi_mohammad.pdf", "title": "الشخصية القيادية للنبي محمد في فكر الإمام الخامنئي", "author": "", "category": "sirah", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "durus-usul-aqidah", "path": "pdf_dourouss_fe_aosoul_alakida_alislameya.pdf", "title": "دروس في أصول العقيدة الإسلامية", "author": "", "category": "aqidah", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "wilayat-faqih", "path": "pdf_durus_tamhedeya_welaya.pdf", "title": "دروس تمهيدية في ولاية الفقيه", "author": "", "category": "wilayah", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "tarbiyah-wilaiyyah", "path": "pdf_altarbeya_alwelaeya.pdf", "title": "التربية الولائية", "author": "", "category": "ethics-wilayah", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "durus-sirah", "path": "pdf_durus_tamhedeya_serah.pdf", "title": "دروس تمهيدية في سيرة النبي والأئمة المعصومين", "author": "", "category": "sirah", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "durus-fikr-khamenei-1", "path": "durus_mn_fekr_alkhamenei-1.pdf", "title": "دروس من فكر الإمام الخامنئي - الجزء الأول", "author": "", "category": "islamic-thought", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "durus-fikr-khamenei-2", "path": "durus_mn_fekr_alkhamenei-2.pdf", "title": "دروس من فكر الإمام الخامنئي - الجزء الثاني", "author": "", "category": "islamic-thought", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "durus-fikr-khomeini", "path": "durus_mn_fekr_alkhomeini.pdf", "title": "دروس من فكر الإمام الخميني", "author": "", "category": "islamic-thought", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "madkhal-usul", "path": "ousoul.pdf", "title": "مدخل إلى علم الأصول", "author": "", "category": "usul", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "madkhal-fiqh", "path": "foqh.pdf", "title": "مدخل إلى علم الفقه", "author": "", "category": "fiqh", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "rihab-aqidah", "path": "aqida.pdf", "title": "في رحاب العقيدة", "author": "", "category": "aqidah", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "madkhal-kalam", "path": "kalam.pdf", "title": "مدخل إلى علم الكلام", "author": "", "category": "kalam", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "dirasat-ilahiyyat", "path": "dersat_fe_alelaheya.pdf", "title": "دراسات في الإلهيات", "author": "", "category": "kalam", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "thaqafat-intizar", "path": "thaqafat_alintethar.pdf", "title": "ثقافة الانتظار: رؤية جديدة على ضوء هداية القرآن والسنة والعقل", "author": "", "category": "mahdawiyyah", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "nahj-rasul", "path": "nahj_alrasoul_s.pdf", "title": "نهج الرسول: القيم الرسالية والإنسانية في حديث رسول الله", "author": "", "category": "hadith-ethics", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "maaref-islam", "path": "maaref_alislam_2018.pdf", "title": "معارف الإسلام", "author": "", "category": "islamic-thought", "enabled": true, "version": "2018", "notes": "Approved archive source." },
+    { "id": "risala-ilmiyya-sayyid-qaid", "path": "alresala_alilmiya_lilsayyid_alqaed.pdf", "title": "الرسالة العلمية للسيد القائد", "author": "", "category": "fiqh", "enabled": true, "version": "", "notes": "Approved archive source." },
+    { "id": "minhaj-salihin-1445", "path": "arabic-menhaj-1-1445.pdf", "title": "منهاج الصالحين", "author": "", "category": "fiqh", "enabled": true, "version": "1445", "notes": "Approved archive source." },
+    { "id": "risala-amaliyya-shirazi", "path": "alresala_alamaleia_alshirazi.pdf", "title": "الرسالة العملية للسيد رضا الشيرازي", "author": "السيد رضا الشيرازي", "category": "fiqh", "enabled": true, "version": "", "notes": "User-supplied approved source." }
+  ]
+}

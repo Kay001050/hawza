@@ -1,53 +1,77 @@
 # =====================================================
 # robots.txt | موقع "نور الحوزة"
-# إعداد احترافي لتوجيه محركات البحث وGooglebot بذكاء
+# https://hawza.netlify.app/
+# آخر تحديث: 2026-06-14
 # =====================================================
 
+
+# ══════════════════════════════════════════════════════
+# خرائط الموقع المعتمدة (تمت إزالة: sitemap-1.xml و
+# sitemap-google-1.xml لأنهما غير موجودَين فعلياً)
+# ══════════════════════════════════════════════════════
+Sitemap: https://hawza.netlify.app/sitemap.xml
+Sitemap: https://hawza.netlify.app/sitemap-google.xml
+Sitemap: https://hawza.netlify.app/book/sitemap.xml
+
+
+# ══════════════════════════════════════════════════════
+# تعليمات لجميع روبوتات البحث
+# ══════════════════════════════════════════════════════
 User-agent: *
-Disallow:
 
-# -------------------------------------
-# السماح الكامل بالزحف إلى الموقع
-# -------------------------------------
+# ─────────────────────────────────────────────────────
+# DISALLOW — صفحات يجب عدم فهرستها
+# ─────────────────────────────────────────────────────
+
+# صفحات تقنية / نظامية
+Disallow: /offline.html
+Disallow: /custom-404.html
+
+# صفحات تطوير / اختبار
+Disallow: /test.html
+Disallow: /ultimate_demo.html
+Disallow: /admin.html
+
+# ملفات الخادم والبنية التحتية
+Disallow: /server.js
+Disallow: /netlify/
+Disallow: /data/
+
+# ملفات إعداد المشروع
+Disallow: /package.json
+Disallow: /package-lock.json
+Disallow: /.env.example
+Disallow: /.gitignore
+Disallow: /README.md
+
+# ─────────────────────────────────────────────────────
+# ALLOW — السماح الصريح بالمحتوى المهم
+# (يضمن الأولوية على أي Disallow أعلى نطاقاً)
+# ─────────────────────────────────────────────────────
+
+# الصفحات الرئيسية
 Allow: /
+Allow: /book/
+Allow: /about.html
+Allow: /masadir.html
+Allow: /questions.html
+Allow: /answered.html
+Allow: /faq.html
+Allow: /r-1447.html
+Allow: /2025.html
+Allow: /privacy.html
 
-# -------------------------------------
-# دعم الزحف لملفات الصور (تحسين العرض على المنصات)
-# -------------------------------------
+# الوثائق والملفات
+Allow: /diyafa_ramadan.pdf
+
+# أصول العرض الضرورية لـ Googlebot (Rendering)
+Allow: /*.css$
+Allow: /*.js$
 Allow: /*.png$
 Allow: /*.jpg$
 Allow: /*.jpeg$
 Allow: /*.webp$
-Allow: /images/
-
-# -------------------------------------
-# السماح بفهرسة الصفحات الأساسية
-# -------------------------------------
-Allow: /$
-Allow: /about
-Allow: /about.html
-Allow: /masadir
-Allow: /masadir.html
-
-# -------------------------------------
-# الصفحات الثانوية (غير ذات أولوية عالية، لكن متاحة)
-# -------------------------------------
-Allow: /offline
-Allow: /offline.html
-Allow: /custom-404
-Allow: /custom-404.html
-
-# -------------------------------------
-# خريطة الموقع الأساسية لمحركات البحث
-# -------------------------------------
-Sitemap: https://hawza.netlify.app/sitemap.xml
-
-# خريطة مخصصة لـ Googlebot (تحوي صفحات محددة بدقة)
-Sitemap: https://hawza.netlify.app/sitemap-google.xml
-
-# -------------------------------------
-# ملاحظات هامة:
-# - لا يوجد حظر لأي مسار، الزحف الكامل مسموح.
-# - تأكد من أن ملفات Sitemap تُخدم بـ content-type الصحيح (application/xml).
-# - Googlebot يتجاهل Crawl-delay، لذلك لم يُدرج.
-# -------------------------------------
+Allow: /*.pdf$
+Allow: /*.xml$
+Allow: /*.ico$
+Allow: /.well-known/
