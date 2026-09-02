@@ -1,3 +1,4 @@
+
 # Hawza → Native Apple Foundation Models
 ## Complete zero-OpenAI-API implementation package
 
